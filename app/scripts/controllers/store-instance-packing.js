@@ -782,10 +782,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return;
       }
 
-      var itemMatch = lodash.findWhere(itemsOldList, { itemMasterId: offLoadItem.itemMasterId });
+      var itemMatch = lodash.findWhere(itemsOldList, { itemMasterId: offLoadItem.itemMasterId, countTypeId: 1 });
       if (itemsNewList) {
         var itemsList = angular.copy(itemsNewList.response);
-        itemMatch = lodash.findWhere(itemsList, { itemMasterId: offLoadItem.itemMasterId });
+        itemMatch = lodash.findWhere(itemsList, { itemMasterId: offLoadItem.itemMasterId, countTypeId: 1 });
       }
 
       if (itemMatch && itemMatch.wastage) {
