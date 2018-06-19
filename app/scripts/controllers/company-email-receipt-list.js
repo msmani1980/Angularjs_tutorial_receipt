@@ -105,8 +105,6 @@ angular.module('ts5App')
         limit: 100,
         offset: 0
       };
-
-      $scope.loadCompanyEmailReceipts();
     };
 
     $scope.toggleSearchPanel = function() {
