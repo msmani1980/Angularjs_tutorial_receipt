@@ -20,6 +20,7 @@ angular.module('ts5App')
     $scope.companyEmailReceipts = [];
     $scope.receiptTypes = [];
     $scope.isSearch = false;
+    $scope.isSearching = false;
     $scope.search = {};
 
     this.removeCompanyEmailReceiptSuccess = function (companyEmailReceiptId) {
@@ -104,8 +105,6 @@ angular.module('ts5App')
         limit: 100,
         offset: 0
       };
-
-      $scope.loadCompanyEmailReceipts();
     };
 
     $scope.toggleSearchPanel = function() {
@@ -118,6 +117,8 @@ angular.module('ts5App')
     };
 
     $scope.loadCompanyEmailReceipts = function() {
+      $scope.isSearching = true;
+
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
@@ -134,7 +135,7 @@ angular.module('ts5App')
       payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
       payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
 
-      companyEmailReceiptFactory.getCompanyEmailReceipts(payload).then($this.getCompanyEmailReceiptsSuccess);
+      companyEmailReceiptFactory.getCompanyEmailReceipts(payload).then($this.getCompanyEmailReceiptsSuccess).finally(function() { $scope.isSearching = false; });
 
       $this.meta.offset += $this.meta.limit;
       $scope.uiReady = true;
