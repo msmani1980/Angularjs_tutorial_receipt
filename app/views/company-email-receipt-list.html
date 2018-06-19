@@ -57,12 +57,12 @@
             </div>
             <div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
-                <label>Options</label>
-                <div>
-                  <label for="emailAsAttachment" style="font-weight: normal">
-                    <input type="checkbox" id="emailAsAttachment" ng-model="search.emailAsAttachment" ng-disabled="isDisabled(currency)"> As Attachment
-                  </label>
-                </div>
+                <label for="receiptType">As Attachment</label>
+                <select name="receiptType" id="receiptType" class="form-control" ng-model="search.emailAsAttachment">
+                  <option value="">Please Select</option>
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select>
               </div>
             </div>
           </div>
@@ -70,7 +70,7 @@
         </div>
         <div class="panel-footer text-right">
           <button type="button" class="btn btn-default" ng-click="clearSearchForm()">Clear</button>
-          <button type="submit" class="btn btn-primary">Search</button>
+          <button type="submit" class="btn btn-primary" ng-disabled="isSearching">Search</button>
         </div>
       </form>
     </div>

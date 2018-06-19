@@ -747,7 +747,7 @@ angular.module('ts5App')
           role: 'BACKOFFICECONFIG'
         }]
       }, {
-        title: 'Company Receipts',
+        title: 'Retail Company Receipts',
         menuItems: [{
             name: 'Company Receipts',
             route: '/#/company-receipts',
