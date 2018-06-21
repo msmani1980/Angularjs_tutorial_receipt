@@ -8,11 +8,12 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PriceupdaterCreateCtrl', function($scope, $q, $location, dateUtility, $routeParams, priceupdaterFactory, messageService, currencyFactory) {
+  .controller('PriceupdaterCreateCtrl', function($scope, $q, $location, dateUtility, $routeParams, priceupdaterFactory, messageService, currencyFactory, companiesFactory) {
 
     var $this = this;
     $scope.viewName = 'Price Update Rule';
     $scope.shouldDisableEndDate = false;
+    $scope.stations = [];
     $scope.rule = {
       startDate: '',
       endDate: ''
@@ -228,6 +229,18 @@ angular.module('ts5App')
       $scope.priceCurrencies = response.response;
     };
 
+    this.setStationsList = function(response) {
+      $scope.stations = response.response;
+    };
+
+    this.getGlobalStationList = function(startDate, endDate) {
+      var stationsFilter = {
+        startDate: dateUtility.formatDateForAPI(startDate),
+        endDate: dateUtility.formatDateForAPI(endDate)
+      };
+      return companiesFactory.getGlobalStationList(stationsFilter).then($this.setStationsList);
+    };
+
     this.getPriceCurrenciesList = function (startDate, endDate) {
       var currencyFilters = {
         startDate: dateUtility.formatDateForAPI(startDate),
@@ -238,8 +251,12 @@ angular.module('ts5App')
     };
 
     $scope.$watchGroup(['rule.startDate', 'rule.endDate'], function () {
-      if ($scope.rule && $scope.rule.startDate && $scope.rule.endDate && $scope.isCreate) {
-        $this.getPriceCurrenciesList($scope.rule.startDate, $scope.rule.endDate);
+      if ($scope.rule && $scope.rule.startDate && $scope.rule.endDate) {
+        if ($scope.isCreate) {  
+          $this.getPriceCurrenciesList($scope.rule.startDate, $scope.rule.endDate);
+        }
+
+        $this.getGlobalStationList($scope.rule.startDate, $scope.rule.endDate);
       }
     });
 

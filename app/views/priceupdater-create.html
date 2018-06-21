@@ -73,14 +73,22 @@
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="station">Station Exception</label>
+                			<select name="Station Exception" ng-model="rule.stationId" ng-disabled="isDisabled()" class="form-control"
+							   ng-options="station.id as (station.code + ' (' + station.name +')') for station in stations">
+						    </select>
+						</div>	
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-4">
 						<label class="invisible">Checkbox</label>
                 		<div class="form-group">
 							<input ng-model="rule.percentage" ng-disabled="isDisabled()" id="percentage" type="checkbox"/>
                 			<label>Is Percentage</label>
 						</div>
 					</div>
-				</div>
-				<div class="row">
 					<div class="col-xs-12 col-sm-4" ng-hide="rule.percentage">
 						<div class="form-group">
 							<label for="currencyList">Currencies List*</label>
