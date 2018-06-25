@@ -88,6 +88,8 @@ angular.module('ts5App')
         receiptTemplateTypeId: $scope.companyReceipt.receiptTypeId,
         logoUrl: $scope.companyReceipt.logoUrl,
         receiptTemplateText: $scope.companyReceipt.template,
+        receiptHeader: $scope.companyReceipt.header,
+        receiptFooter: $scope.companyReceipt.footer,
         startDate: dateUtility.formatDateForAPI($scope.companyReceipt.startDate),
         endDate: dateUtility.formatDateForAPI($scope.companyReceipt.endDate)
       };
@@ -104,6 +106,8 @@ angular.module('ts5App')
         receiptTemplateTypeId: $scope.companyReceipt.receiptTypeId,
         logoUrl: $scope.companyReceipt.logoUrl,
         receiptTemplateText: $scope.companyReceipt.template,
+        receiptHeader: $scope.companyReceipt.header,
+        receiptFooter: $scope.companyReceipt.footer,
         startDate: dateUtility.formatDateForAPI($scope.companyReceipt.startDate),
         endDate: dateUtility.formatDateForAPI($scope.companyReceipt.endDate)
       };
@@ -137,6 +141,8 @@ angular.module('ts5App')
         receiptTypeId: response.receiptTemplateTypeId,
         logoUrl: response.logoUrl,
         template: response.receiptTemplateText,
+        header: response.receiptHeader,
+        footer: response.receiptFooter,
         startDate: startDate,
         endDate: endDate
       };
