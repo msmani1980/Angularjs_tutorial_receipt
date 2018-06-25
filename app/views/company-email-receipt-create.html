@@ -86,6 +86,14 @@
           <div class="row">
             <div class="col-xs-12 col-sm-12">
               <div class="form-group">
+                <label for="emailHeader">Header</label>
+                <textarea ng-model="companyEmailReceipt.emailHeader" ng-disabled="isDisabled()" rows="25" class="form-control" id="emailHeader" name="emailHeader"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12">
+              <div class="form-group">
                 <label for="emailBody">Body *</label>
                 <textarea ng-model="companyEmailReceipt.emailBody" ng-disabled="isDisabled()" required="true" rows="25" class="form-control" id="emailBody" name="emailBody"></textarea>
               </div>
