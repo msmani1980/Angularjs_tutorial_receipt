@@ -116,6 +116,7 @@ angular.module('ts5App')
       $scope.minDate = dateUtility.dateNumDaysAfterTodayFormattedDatePicker(1);
       $scope.today = dateUtility.nowFormattedDatePicker();
       $scope.isEditing = false;
+      $scope.formData.storeNumber = '';
       resetSearchMeta();
     }
 
@@ -233,4 +234,29 @@ angular.module('ts5App')
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
     };
+    
+    $scope.searchStoreNumber = function() {
+      var searchStartDate = ($scope.formData.startDate === null || $scope.formData.startDate === '') ? dateUtility.nowFormattedDatePicker() : $scope.formData.startDate;
+      var searchEndDate = $scope.formData.endDate; 
+      $scope.displayError = false;
+      $scope.editing = false;
+      $scope.storeNumbersList = [];
+
+      var payload = {
+        companyId: globalMenuService.company.get(),
+        storeNumber: $scope.formData.storeNumber,
+        startDate: dateUtility.formatDateForAPI(searchStartDate),
+        limit: 100,
+        offset: 0,
+        count: undefined
+      };
+      if (searchEndDate !== null && searchEndDate !== '') {
+        payload.endDate = dateUtility.formatDateForAPI(searchEndDate);
+      } 
+      
+      showLoadingBar();
+      companyStoresService.getStoreList(payload).then(getStoreNumbers, showApiErrors);
+      $this.meta.offset += $this.meta.limit;
+    };
+    
   });
