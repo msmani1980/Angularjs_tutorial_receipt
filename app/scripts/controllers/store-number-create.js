@@ -13,7 +13,7 @@ angular.module('ts5App')
 
     var $this = this;
     this.meta = {
-      limit: 100,
+      limit: 1500,
       offset: 0
     };
 
@@ -27,7 +27,7 @@ angular.module('ts5App')
 
     function resetSearchMeta() {
       $this.meta = {
-        limit: 100,
+        limit: 1500,
         offset: 0,
         count: undefined
       };
@@ -246,7 +246,7 @@ angular.module('ts5App')
         companyId: globalMenuService.company.get(),
         storeNumber: $scope.formData.storeNumber,
         startDate: dateUtility.formatDateForAPI(searchStartDate),
-        limit: 100,
+        limit: 1500,
         offset: 0,
         count: undefined
       };
