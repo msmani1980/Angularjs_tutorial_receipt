@@ -262,6 +262,11 @@ angular.module('ts5App')
       $scope.getTransactions();
     };
 
+    $scope.getSeatNumber = function (seatNumber) {
+      var result = (seatNumber === 0 ? '' : seatNumber);
+      return result; 
+    };
+
     $scope.showTransactionDetails = function (transaction) {
       window.open('/transactions/index.html?transactionId=' + transaction.transactionId);
     };
