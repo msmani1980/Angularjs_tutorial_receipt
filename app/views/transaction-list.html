@@ -295,7 +295,7 @@
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccTransactionStatus') }}</td>
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccAuthorizationStatus') }}</td>
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'paymentId') }}</td>
-      <td ng-show="displayColumns.seatNumber">{{ transaction.seatNumberRow }}{{ transaction.seatNumberLoc }}</td>
+      <td ng-show="displayColumns.seatNumber">{{ getSeatNumber(transaction.seatNumberRow) }}{{ transaction.seatNumberLoc }}</td>
       <td>{{ printTransactionAmount(transaction) }}</td>
       <td ng-show="displayColumns.scheduleNumber">{{ transaction.scheduleNumber }}</td>
       <td ng-show="displayColumns.scheduleDate">{{ transaction.instanceDate }}</td>
