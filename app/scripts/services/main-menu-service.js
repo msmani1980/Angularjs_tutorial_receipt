@@ -746,6 +746,31 @@ angular.module('ts5App')
           package: 'BACKOFFICECONFIG',
           role: 'BACKOFFICECONFIG'
         }]
+      }, {
+        title: 'Retail Company Receipts',
+        menuItems: [{
+            name: 'Company Receipts',
+            route: '/#/company-receipts',
+            icon: 'icon-manage-discount',
+            className: 'dashboard-company-receipts-config',
+            package: 'COMPANYRECEIPTS',
+            role: 'COMPANYRECEIPTS',
+            permissions: [{
+              apiName: '/api/company-receipts',
+              permissionCodes: ['R']
+            }]
+          }, {
+            name: 'Company E-mail Receipts',
+            route: '/#/company-email-receipts',
+            icon: 'icon-manage-discount',
+            className: 'dashboard-company-email-receipts-config',
+            package: 'COMPANYRECEIPTS',
+            role: 'COMPANYEMAILRECEIPTS',
+            permissions: [{
+              apiName: '/api/company-email-receipts',
+              permissionCodes: ['R']
+            }]
+          }]
       }];
     };
 

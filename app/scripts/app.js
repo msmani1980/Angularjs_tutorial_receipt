@@ -478,6 +478,22 @@ angular.module('ts5App', [
     templateUrl: 'views/priceupdater-create.html',
     controller: 'PriceupdaterCreateCtrl',
     controllerAs: 'priceupdaterCreate'
+  }).when('/company-receipts/:action/:id?', {
+    templateUrl: 'views/company-receipt-create.html',
+    controller: 'CompanyReceiptCreateCtrl',
+    controllerAs: 'companyReceiptCreate'
+  }).when('/company-receipts', {
+    templateUrl: 'views/company-receipt-list.html',
+    controller: 'CompanyReceiptListCtrl',
+    controllerAs: 'companyReceiptList'
+  }).when('/company-email-receipts', {
+    templateUrl: 'views/company-email-receipt-list.html',
+    controller: 'CompanyEmailReceiptListCtrl',
+    controllerAs: 'companyEmailReceiptList'
+  }).when('/company-email-receipts/:action/:id?', {
+    templateUrl: 'views/company-email-receipt-create.html',
+    controller: 'CompanyEmailReceiptCreateCtrl',
+    controllerAs: 'companyEmailReceiptCreate'
   }).otherwise({
     redirectTo: '/'
   });
