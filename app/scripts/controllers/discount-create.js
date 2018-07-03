@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('DiscountCreateCtrl', function($scope, $q, $location, $routeParams, dateUtility, discountFactory,
-    recordsService, currencyFactory, companiesFactory, itemsFactory) {
+    recordsService, currencyFactory, companiesFactory, itemsFactory, lodash) {
 
     var $this = this;
 
@@ -43,7 +43,12 @@ angular.module('ts5App')
           restrictedItems: [],
           amountDiscountValue: {},
           amountLimitPerShopValue: {},
-          amountLimitPerTransactionValue: {}
+          amountLimitPerTransactionValue: {},
+          discountAmountLimitPerShopValue: {},
+          discountAmountLimitPerTransactionValue: {},
+          limitByShopDiscountType: {},
+          limitByTransactionDiscountType: {},
+          limitBySeatDiscountType: {}
         };
       } else {
         return {
@@ -52,7 +57,12 @@ angular.module('ts5App')
           restrictedItems: [],
           amountDiscountValue: {},
           amountLimitPerShopValue: {},
-          amountLimitPerTransactionValue: {}
+          amountLimitPerTransactionValue: {},
+          discountAmountLimitPerShopValue: {},
+          discountAmountLimitPerTransactionValue: {},
+          limitByShopDiscountType: {},
+          limitByTransactionDiscountType: {},
+          limitBySeatDiscountType: {}
         };
       }
     };
@@ -232,6 +242,7 @@ angular.module('ts5App')
       $scope.formData.barCode = discountData.barcode;
       $scope.formData.description = discountData.description;
       $scope.formData.note = discountData.note;
+      $scope.formData.limitByShopDiscountType = lodash.find($scope.discountLimitationTypes, { id: discountData.limitByShopDiscountType});
       $scope.formData.startDate = dateUtility.formatDateForApp(discountData.startDate);
       $scope.formData.endDate = dateUtility.formatDateForApp(discountData.endDate);
     };
@@ -246,6 +257,7 @@ angular.module('ts5App')
     };
 
     this.deserializeLimitationPerShop = function(discountData) {
+      // Item
       $scope.formData.itemQtyLimitPerShop = discountData.itemQuantityLimitByShop;
 
       if (discountData.limitsByShop.length > 0) {
@@ -254,6 +266,17 @@ angular.module('ts5App')
 
       angular.forEach(discountData.limitsByShop, function(rate) {
         $scope.formData.amountLimitPerShopValue[rate.companyCurrencyId] = Number(rate.amount).toFixed(2);
+      });
+
+      // Discount
+      $scope.formData.discountQtyLimitPerShop = discountData.discountQuantityLimitByShop;
+
+      if (discountData.discountLimitsByShop.length > 0) {
+        $scope.formData.isDiscountAmountLimitPerShop = true;
+      }
+
+      angular.forEach(discountData.discountLimitsByShop, function(rate) {
+        $scope.formData.discountAmountLimitPerShopValue[rate.companyCurrencyId] = Number(rate.amount).toFixed(2);
       });
     };
 
@@ -339,6 +362,9 @@ angular.module('ts5App')
     };
 
     this.serializeLimitationPerShop = function(formData, discount) {
+      discount.limitByShopDiscountType = formData.limitByShopDiscountType.id;
+
+      // Item
       discount.itemQuantityLimitByShop = formData.itemQtyLimitPerShop;
       if ($scope.formData.isAmountLimitPerShop === true) {
         angular.forEach(formData.amountLimitPerShopValue, function(amount, currencyId) {
@@ -356,9 +382,30 @@ angular.module('ts5App')
       } else {
         discount.limitsByShop = [];
       }
+
+      // Discount
+      discount.discountQuantityLimitByShop = formData.discountQtyLimitPerShop;
+      if ($scope.formData.isDiscountAmountLimitPerShop === true) {
+        angular.forEach(formData.discountAmountLimitPerShopValue, function(amount, currencyId) {
+          var original = $this.originalLimitsByShopValueForCurrency(currencyId);
+          if (original) {
+            original.amount = amount;
+            discount.discountLimitsByShop.push(original);
+          } else {
+            discount.discountLimitsByShop.push({
+              amount: amount,
+              companyCurrencyId: currencyId
+            });
+          }
+        });
+      } else {
+        discount.discountLimitsByShop = [];
+      }
     };
 
     this.serializeLimitationPerTransaction = function(formData, discount) {
+      discount.limitByTransactionDiscountType = formData.limitByTransactionDiscountType.id;
+
       discount.itemQuantityLimitByTransaction = formData.itemQtyLimitPerTransaction;
       if ($scope.formData.isAmountLimitPerTransaction === true) {
         angular.forEach(formData.amountLimitPerTransactionValue, function(amount, currencyId) {
@@ -380,6 +427,7 @@ angular.module('ts5App')
 
     this.serializeLimitationPerSeat = function(formData, discount) {
       discount.seatNumberRequired = formData.requireSeatEntry;
+      discount.limitBySeatDiscountType = formData.limitBySeatDiscountType.id;
       discount.itemQuantityLimitBySeatNumber = formData.itemQtyLimitPerSeat;
     };
 
@@ -463,7 +511,9 @@ angular.module('ts5App')
       var discount = {
         rates: [],
         limitsByShop: [],
+        discountLimitsByShop: [],
         limitsByTransaction: [],
+        discountLimitsByTransaction: [],
         restrictedCategories: [],
         restrictedItems: []
       };
