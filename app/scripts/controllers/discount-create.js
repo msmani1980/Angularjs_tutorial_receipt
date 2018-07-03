@@ -30,6 +30,10 @@ angular.module('ts5App')
     $scope.salesCategoriesList = [];
     $scope.salesCategoriesMap = {};
     $scope.addRestrictedItemsNumber = 1;
+    $scope.discountLimitationTypes = [
+      { id: 1, name: 'Item'},
+      { id: 2, name: 'Discount'}
+    ];
 
     this.getCleanFormData = function() {
       var path = $location.path();
