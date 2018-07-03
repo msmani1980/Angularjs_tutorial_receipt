@@ -721,6 +721,18 @@ angular.module('ts5App')
           );
         }
       }
+
+      if ($scope.formData.isDiscountAmountLimitPerShop === true) {
+        if (!($scope.formData.discountQtyLimitPerShop === '' || typeof $scope.formData.discountQtyLimitPerShop === 'undefined' || $scope.formData.discounttyLimitPerShop === null)) {
+          $scope.errorCustom.push(
+            {
+              field: 'Limitation Per Shop',
+              code: 'custom',
+              value: 'Either the "Discount Qty Limit Per Shop" or "Discount Amount Limit Per Shop Value" is allowed, not both'
+            }
+          );
+        }
+      }
     };
 
     this.init = function() {
