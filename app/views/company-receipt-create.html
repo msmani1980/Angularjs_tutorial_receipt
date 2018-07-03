@@ -31,7 +31,7 @@
               <div class="form-group">
                 <label for="logoUrl">Logo Url</label>
                 <input ng-model="companyReceipt.logoUrl" type="text" ng-disabled="isDisabled()"
-                       maxlength="50" class="form-control" id="logoUrl" name="logoUrl" placeholder="http://logo-url.com">
+                       maxlength="50" class="form-control" id="logoUrl" name="logoUrl" placeholder="http://domain.com/logo.jpg">
               </div>
             </div>
             <div class="col-xs-12 col-sm-3">
@@ -66,8 +66,24 @@
           <div class="row">
             <div class="col-xs-12 col-sm-12">
               <div class="form-group">
+                <label for="header">Header</label>
+                <textarea ng-model="companyReceipt.header" ng-disabled="isDisabled()" rows="15" class="form-control" id="header" name="header"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12">
+              <div class="form-group">
                 <label for="template">Template</label>
                 <textarea ng-model="companyReceipt.template" ng-disabled="isDisabled()" rows="25" class="form-control" id="template" name="template"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-sm-12">
+              <div class="form-group">
+                <label for="footer">Footer</label>
+                <textarea ng-model="companyReceipt.footer" ng-disabled="isDisabled()" rows="15" class="form-control" id="footer" name="footer"></textarea>
               </div>
             </div>
           </div>
