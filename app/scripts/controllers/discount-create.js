@@ -243,6 +243,7 @@ angular.module('ts5App')
       $scope.formData.description = discountData.description;
       $scope.formData.note = discountData.note;
       $scope.formData.limitByShopDiscountType = lodash.find($scope.discountLimitationTypes, { id: discountData.limitByShopDiscountType});
+      $scope.formData.limitByTransactionDiscountType = lodash.find($scope.discountLimitationTypes, { id: discountData.limitByTransactionDiscountType});
       $scope.formData.startDate = dateUtility.formatDateForApp(discountData.startDate);
       $scope.formData.endDate = dateUtility.formatDateForApp(discountData.endDate);
     };
@@ -281,6 +282,7 @@ angular.module('ts5App')
     };
 
     this.deserializeLimitationPerTransaction = function(discountData) {
+      // Item
       $scope.formData.itemQtyLimitPerTransaction = discountData.itemQuantityLimitByTransaction;
 
       if (discountData.limitsByTransaction.length > 0) {
@@ -290,11 +292,24 @@ angular.module('ts5App')
       angular.forEach(discountData.limitsByTransaction, function(rate) {
         $scope.formData.amountLimitPerTransactionValue[rate.companyCurrencyId] = Number(rate.amount).toFixed(2);
       });
+
+      // Discount
+      $scope.formData.discountQtyLimitPerTransaction = discountData.discountQuantityLimitByTransaction;
+
+      if (discountData.discountLimitsByTransaction.length > 0) {
+        $scope.formData.isDiscountAmountLimitPerTransaction = true;
+      }
+
+      angular.forEach(discountData.discountLimitsByTransaction, function(rate) {
+        $scope.formData.discountAmountLimitPerTransactionValue[rate.companyCurrencyId] = Number(rate.amount).toFixed(2);
+      });
+
     };
 
     this.deserializeLimitationPerSeat = function(discountData) {
       $scope.formData.requireSeatEntry = discountData.seatNumberRequired;
       $scope.formData.itemQtyLimitPerSeat = discountData.itemQuantityLimitBySeatNumber;
+      $scope.formData.discountQtyLimitPerSeat = discountData.discountQuantityLimitBySeatNumber;
     };
 
     this.deserializeRestrictions = function(discountData) {
@@ -406,6 +421,7 @@ angular.module('ts5App')
     this.serializeLimitationPerTransaction = function(formData, discount) {
       discount.limitByTransactionDiscountType = formData.limitByTransactionDiscountType.id;
 
+      // Item
       discount.itemQuantityLimitByTransaction = formData.itemQtyLimitPerTransaction;
       if ($scope.formData.isAmountLimitPerTransaction === true) {
         angular.forEach(formData.amountLimitPerTransactionValue, function(amount, currencyId) {
@@ -423,12 +439,32 @@ angular.module('ts5App')
       } else {
         discount.limitsByTransaction = [];
       }
+
+      // Discount
+      discount.discountQuantityLimitByTransaction = formData.discountQtyLimitPerTransaction;
+      if ($scope.formData.isDiscountAmountLimitPerTransaction === true) {
+        angular.forEach(formData.discountAmountLimitPerTransactionValue, function(amount, currencyId) {
+          var original = $this.originalLimitsByTransactionValueForCurrency(currencyId);
+          if (original) {
+            original.amount = amount;
+            discount.discountLimitsByTransaction.push(original);
+          } else {
+            discount.discountLimitsByTransaction.push({
+              amount: amount,
+              companyCurrencyId: currencyId
+            });
+          }
+        });
+      } else {
+        discount.discountLimitsByTransaction = [];
+      }
     };
 
     this.serializeLimitationPerSeat = function(formData, discount) {
       discount.seatNumberRequired = formData.requireSeatEntry;
       discount.limitBySeatDiscountType = formData.limitBySeatDiscountType.id;
       discount.itemQuantityLimitBySeatNumber = formData.itemQtyLimitPerSeat;
+      discount.discountQuantityLimitBySeatNumber = formData.discountQtyLimitPerSeat;
     };
 
     this.serializeRestrictions = function(formData, discount) {
@@ -702,6 +738,18 @@ angular.module('ts5App')
               field: 'Limitation Per Transaction',
               code: 'custom',
               value: 'Either the "Item Qty Limit Per Transaction" or "Amount Limit Per Transaction Value" is allowed, not both'
+            }
+          );
+        }
+      }
+
+      if ($scope.formData.isDiscountAmountLimitPerTransaction === true) {
+        if (!($scope.formData.discountQtyLimitPerTransaction === '' || typeof $scope.formData.discountQtyLimitPerTransaction === 'undefined' || $scope.formData.discountQtyLimitPerTransaction === null)) {
+          $scope.errorCustom.push(
+            {
+              field: 'Limitation Per Transaction',
+              code: 'custom',
+              value: 'Either the "Discount Qty Limit Per Transaction" or "Discount Amount Limit Per Transaction Value" is allowed, not both'
             }
           );
         }
