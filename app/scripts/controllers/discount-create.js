@@ -244,6 +244,7 @@ angular.module('ts5App')
       $scope.formData.note = discountData.note;
       $scope.formData.limitByShopDiscountType = lodash.find($scope.discountLimitationTypes, { id: discountData.limitByShopDiscountType});
       $scope.formData.limitByTransactionDiscountType = lodash.find($scope.discountLimitationTypes, { id: discountData.limitByTransactionDiscountType});
+      $scope.formData.limitBySeatDiscountType = lodash.find($scope.discountLimitationTypes, { id: discountData.limitBySeatDiscountType});
       $scope.formData.startDate = dateUtility.formatDateForApp(discountData.startDate);
       $scope.formData.endDate = dateUtility.formatDateForApp(discountData.endDate);
     };
@@ -771,7 +772,7 @@ angular.module('ts5App')
       }
 
       if ($scope.formData.isDiscountAmountLimitPerShop === true) {
-        if (!($scope.formData.discountQtyLimitPerShop === '' || typeof $scope.formData.discountQtyLimitPerShop === 'undefined' || $scope.formData.discounttyLimitPerShop === null)) {
+        if (!($scope.formData.discountQtyLimitPerShop === '' || typeof $scope.formData.discountQtyLimitPerShop === 'undefined' || $scope.formData.discountQtyLimitPerShop === null)) {
           $scope.errorCustom.push(
             {
               field: 'Limitation Per Shop',
