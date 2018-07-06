@@ -145,6 +145,7 @@
 											<label>Station *</label>
 											<select name="Station Exception" ng-model="rule.bulkRuleStationException.stationId" 
 												ng-disabled="isDisabled()" class="form-control"
+												ng-required="rule.bulkRuleStationException.startDate && rule.bulkRuleStationException.endDate"
 							   					ng-options="station.id as (station.code + ' (' + station.name +')') for station in stations">
 						   					</select>
 										</div>
@@ -155,9 +156,11 @@
 										<div class="form-group" ng-disabled="isDisabled()" 
 										ng-class="{ 'has-error' : !rule.bulkRuleStationException.taxIs , 'has-success' : rule.bulkRuleStationException.taxIs }">
 											<label>Tax Is *</label>
-											<select name="Tax Is" required 
+											<select name="Tax Is" 
 												ng-disabled="!rule.bulkRuleStationException.startDate && !rule.bulkRuleStationException.endDate || isDisabled()" 
-												ng-model="rule.bulkRuleStationException.taxIs" class="form-control">
+												ng-model="rule.bulkRuleStationException.taxIs"
+												ng-required="rule.bulkRuleStationException.startDate && rule.bulkRuleStationException.endDate" 
+												class="form-control">
 												<option value="Included">Included</option>
 												<option value="Excluded">Excluded</option>
 												<option value="Exempt">Exempt</option>
@@ -173,13 +176,13 @@
 									</div>
 									<div class="col-xs-12 col-sm-4" ng-hide="rule.bulkRuleStationException.percentage">
 										<div class="form-group">
-											<label for="currencyList">Currencies List*</label>
-											<div class="form-group" ng-repeat="(currencyKey,currency) in stationPriceCurrencies track by $index">
+											<label for="stationCurrencyList">Currencies List*</label>
+											<div class="form-group" ng-repeat="(stnCurrencyKey,stnCurrency) in stationPriceCurrencies track by $index">
 												<div class="input-group">
 													<div class="input-group-addon">
-				    	          						{{ currency.code }} *
+				    	          						{{ stnCurrency.code }} *
 													</div>
-													<input name="Currencies List - {{ currency.code }}" ng-model="rule.bulkRuleStationException.currency.price" ng-required="!rule.bulkRuleStationException.percentage"  
+													<input name="Station Currencies List - {{ stnCurrency.code }}" ng-model="stnCurrency.price" ng-required="!rule.bulkRuleStationException.percentage"  
 															ng-disabled="isDisabled()" type="text" class="form-control" maxlength="8" placeholder="1.00"/>
 												</div>
 											</div>
