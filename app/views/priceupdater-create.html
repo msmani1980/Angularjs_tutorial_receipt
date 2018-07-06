@@ -73,22 +73,14 @@
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-4">
-						<div class="form-group">
-							<label for="station">Station Exception</label>
-                			<select name="Station Exception" ng-model="rule.stationId" ng-disabled="isDisabled()" class="form-control"
-							   ng-options="station.id as (station.code + ' (' + station.name +')') for station in stations">
-						    </select>
-						</div>	
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12 col-sm-4">
 						<label class="invisible">Checkbox</label>
                 		<div class="form-group">
 							<input ng-model="rule.percentage" ng-disabled="isDisabled()" id="percentage" type="checkbox"/>
                 			<label>Is Percentage</label>
 						</div>
 					</div>
+				</div>
+				<div class="row">
 					<div class="col-xs-12 col-sm-4" ng-hide="rule.percentage">
 						<div class="form-group">
 							<label for="currencyList">Currencies List*</label>
@@ -110,6 +102,103 @@
                 				placeholder="10%" ng-disabled="isDisabled()" ng-pattern="regexp.percentage">
               			</div>
 					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-12 col-sm-12">
+						<!-- StationException Section-->
+						<div class="panel panel-default">
+						   <div class="panel-heading">
+	    						<p class="panel-title">
+								<i class="fa fa-tags"></i> Station Exception
+								</p>
+	  					   </div>
+						   <div class="panel-body">
+							<div class="row">
+								<div class="col-xs-12 col-sm-12">
+								   <div class="row">
+							          <div class="col-xs-12 col-sm-4">
+							            <date-picker-field 
+							            	ng-if="minDate" 
+							            	disable="isDisabled()" 
+							              	form="form" 
+							              	label="Effective From"
+							              	name="StationExceptionEffectiveFrom" 
+							              	disable-past="true"
+							              	ng-model="rule.bulkRuleStationException.startDate">
+							            </date-picker-field>
+	         						 </div>
+						            <div class="col-xs-12 col-sm-4">
+							            <date-picker-field 
+							            	ng-if="minDate" 
+							            	disable="readOnly || shouldDisableEndDate" 
+							              	form="form" 
+							              	label="Effective To"
+							                name="StationExceptionEffectiveTo" 
+							                custom-effective="true"
+											custom-date="stationException.endDate"
+							                ng-model="rule.bulkRuleStationException.endDate">
+							            </date-picker-field>
+	          						</div>
+	          						<div class="col-xs-12 col-sm-4" ng-show="rule.bulkRuleStationException.startDate && rule.bulkRuleStationException.endDate && stations.length > 0">
+										<div class="form-group" ng-disabled="isDisabled()" 
+										ng-class="{ 'has-error' : !rule.bulkRuleStationException.stationId , 'has-success' : rule.bulkRuleStationException.stationId }">
+											<label>Station *</label>
+											<select name="Station Exception" ng-model="rule.bulkRuleStationException.stationId" 
+												ng-disabled="isDisabled()" class="form-control"
+							   					ng-options="station.id as (station.code + ' (' + station.name +')') for station in stations">
+						   					</select>
+										</div>
+									</div>
+						           </div>
+		   						   <div class="row" ng-show="rule.bulkRuleStationException.startDate && rule.bulkRuleStationException.endDate && stations.length > 0">
+			       					<div class="col-xs-12 col-sm-4">
+										<div class="form-group" ng-disabled="isDisabled()" 
+										ng-class="{ 'has-error' : !rule.bulkRuleStationException.taxIs , 'has-success' : rule.bulkRuleStationException.taxIs }">
+											<label>Tax Is *</label>
+											<select name="Tax Is" required 
+												ng-disabled="!rule.bulkRuleStationException.startDate && !rule.bulkRuleStationException.endDate || isDisabled()" 
+												ng-model="rule.bulkRuleStationException.taxIs" class="form-control">
+												<option value="Included">Included</option>
+												<option value="Excluded">Excluded</option>
+												<option value="Exempt">Exempt</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-4">
+										<label class="invisible">Checkbox</label>
+				                		<div class="form-group">
+											<input ng-model="rule.bulkRuleStationException.percentage" ng-disabled="isDisabled()" id="stnpercentage" type="checkbox"/>
+				                			<label>Is Percentage</label>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-4" ng-hide="rule.bulkRuleStationException.percentage">
+										<div class="form-group">
+											<label for="currencyList">Currencies List*</label>
+											<div class="form-group" ng-repeat="(currencyKey,currency) in stationPriceCurrencies track by $index">
+												<div class="input-group">
+													<div class="input-group-addon">
+				    	          						{{ currency.code }} *
+													</div>
+													<input name="Currencies List - {{ currency.code }}" ng-model="rule.bulkRuleStationException.currency.price" ng-required="!rule.bulkRuleStationException.percentage"  
+															ng-disabled="isDisabled()" type="text" class="form-control" maxlength="8" placeholder="1.00"/>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-4" ng-show="rule.bulkRuleStationException.percentage">
+										<div class="form-group">
+				                			<label for="percentValue">Percentage Value*</label>
+				                			<input ng-model="rule.bulkRuleStationException.percentValue" type="text" class="form-control" name = "stnPercentageValue" id="stnPercentValue" 
+				                				ng-required="rule.bulkRuleStationException.percentage" placeholder="10%" ng-disabled="isDisabled()" ng-pattern="regexp.percentage">
+				              			</div>
+									</div>
+								   </div>
+								</div>
+						     </div>
+						   </div>
+						</div>
+						<!-- /StationException Section -->
+      				</div>
 				</div>	
 			</div>
 			<div class="panel-footer text-right">
