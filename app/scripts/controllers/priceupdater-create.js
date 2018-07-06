@@ -132,14 +132,18 @@ angular.module('ts5App')
     };
 
     this.formatStationException = function(rule) {
-      return {
+      var stationExpCurrencies = [];
+      var ruleException = {
         startDate: dateUtility.formatDateForAPI(rule.bulkRuleStationException.startDate),
         endDate: dateUtility.formatDateForAPI(rule.bulkRuleStationException.endDate),
         taxIs: rule.bulkRuleStationException.taxIs,
         percentage: rule.bulkRuleStationException.percentage,
+        stationId: rule.bulkRuleStationException.stationId,
         percentValue: rule.bulkRuleStationException.percentValue,
-        bulkRuleStationExceptionCurrencies: $this.formatStationCurrencies(rule.bulkRuleStationException.percentage)
+        bulkRuleStationExceptionCurrencies: $this.formatStationCurrencies(rule.bulkRuleStationException.percentage)	
       };
+      stationExpCurrencies.push(ruleException);
+      return stationExpCurrencies;
     };
 
     this.createPriceUpdaterRule = function() {
@@ -151,7 +155,7 @@ angular.module('ts5App')
         percentage: $scope.rule.percentage,
         stationId: $scope.rule.stationId,
         percentValue: $scope.rule.percentValue,
-        bulkRuleStationException: $this.formatStationException($scope.rule),
+        bulkRuleStationException: $scope.rule.bulkRuleStationException ? $this.formatStationException($scope.rule) : [],
         prices: $this.formatPriceCurrencies($scope.rule.percentage),
         startDate: dateUtility.formatDateForAPI($scope.rule.startDate),
         endDate: dateUtility.formatDateForAPI($scope.rule.endDate)
@@ -170,7 +174,6 @@ angular.module('ts5App')
         priceTypeId: $scope.rule.priceTypeId,
         taxFilter: $scope.rule.taxFilter,
         percentage: $scope.rule.percentage,
-        stationId: $scope.rule.stationId,
         percentValue: $scope.rule.percentValue,
         companyId: $scope.rule.companyId,
         prices: $this.formatPriceCurrencies($scope.rule.percentage),
@@ -214,19 +217,32 @@ angular.module('ts5App')
       return priceCurrencies;
     };
 
+    this.formatStnViewCurrency = function(response) {
+      return {
+        startDate: dateUtility.formatDateForApp(response.startDate),
+        endDate: dateUtility.formatDateForApp(response.endDate),
+        taxIs: response.taxIs,
+        percentage: response.percentage,
+        stationId: response.stationId,
+        percentValue: response.percentValue	
+      };
+    };
+
     this.priceUpdaterRuleSuccess = function(response) {
       $scope.viewStartDate = dateUtility.formatDateForApp(response.startDate);
       $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
       $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker($scope.viewStartDate);
       $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker($scope.viewEndDate);
       $scope.priceCurrencies = $this.setPriceCurrencies(response.prices);
+      $scope.stationPriceCurrencies = response.bulkRuleStationException[0] ? 
+        $this.setPriceCurrencies(response.bulkRuleStationException[0].bulkRuleStationExceptionCurrencies) : [];
       $scope.rule = {
         id: response.id,
         categoryId: response.categoryId,
         priceTypeId: response.priceTypeId,
         percentage: response.percentage,
         percentValue: response.percentValue,
-        stationId: response.stationId,
+        bulkRuleStationException: response.bulkRuleStationException[0] ? $this.formatStnViewCurrency(response.bulkRuleStationException[0]) : [],
         taxFilter: response.taxFilter === null ? 'null' : response.taxFilter,
         startDate: $scope.viewStartDate,
         companyId: response.companyId,
@@ -291,13 +307,15 @@ angular.module('ts5App')
       currencyFactory.getCompanyCurrencies(currencyFilters).then($this.setStationPriceCurrenciesList);
     };
 
-    $scope.$watchGroup(['rule.startDate', 'rule.endDate', 'rule.bulkRuleStationException.startDate', 'rule.bulkRuleStationException.endDate'], function () {
+    $scope.$watchGroup(['rule.startDate', 'rule.endDate'], function () {
       if ($scope.rule && $scope.rule.startDate && $scope.rule.endDate) {
         if ($scope.isCreate) {  
           $this.getPriceCurrenciesList($scope.rule.startDate, $scope.rule.endDate);
         }        
-      }
-   
+      }  
+    });
+
+    $scope.$watchGroup(['rule.bulkRuleStationException.startDate', 'rule.bulkRuleStationException.endDate'], function () {
       if ($scope.rule && $scope.rule.bulkRuleStationException && $scope.rule.bulkRuleStationException.startDate && $scope.rule.bulkRuleStationException.endDate) {
         if ($scope.isCreate) {  
           $this.getStationPriceCurrenciesList($scope.rule.bulkRuleStationException.startDate, $scope.rule.bulkRuleStationException.endDate);
