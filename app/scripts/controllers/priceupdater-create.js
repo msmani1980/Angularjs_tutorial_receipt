@@ -138,6 +138,7 @@ angular.module('ts5App')
         endDate: dateUtility.formatDateForAPI(rule.bulkRuleStationException.endDate),
         taxIs: rule.bulkRuleStationException.taxIs,
         percentage: rule.bulkRuleStationException.percentage,
+        stationId: rule.bulkRuleStationException.stationId,
         percentValue: rule.bulkRuleStationException.percentValue,
         bulkRuleStationExceptionCurrencies: $this.formatStationCurrencies(rule.bulkRuleStationException.percentage)	
       };
@@ -173,7 +174,6 @@ angular.module('ts5App')
         priceTypeId: $scope.rule.priceTypeId,
         taxFilter: $scope.rule.taxFilter,
         percentage: $scope.rule.percentage,
-        stationId: $scope.rule.stationId,
         percentValue: $scope.rule.percentValue,
         companyId: $scope.rule.companyId,
         prices: $this.formatPriceCurrencies($scope.rule.percentage),
