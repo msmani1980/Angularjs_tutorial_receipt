@@ -217,19 +217,32 @@ angular.module('ts5App')
       return priceCurrencies;
     };
 
+    this.formatStnViewCurrency = function(response) {
+      return {
+        startDate: dateUtility.formatDateForApp(response.startDate),
+        endDate: dateUtility.formatDateForApp(response.endDate),
+        taxIs: response.taxIs,
+        percentage: response.percentage,
+        stationId: response.stationId,
+        percentValue: response.percentValue	
+      };
+    };
+
     this.priceUpdaterRuleSuccess = function(response) {
       $scope.viewStartDate = dateUtility.formatDateForApp(response.startDate);
       $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
       $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker($scope.viewStartDate);
       $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker($scope.viewEndDate);
       $scope.priceCurrencies = $this.setPriceCurrencies(response.prices);
+      $scope.stationPriceCurrencies = response.bulkRuleStationException[0] ? 
+        $this.setPriceCurrencies(response.bulkRuleStationException[0].bulkRuleStationExceptionCurrencies) : [];
       $scope.rule = {
         id: response.id,
         categoryId: response.categoryId,
         priceTypeId: response.priceTypeId,
         percentage: response.percentage,
         percentValue: response.percentValue,
-        stationId: response.stationId,
+        bulkRuleStationException: response.bulkRuleStationException[0] ? $this.formatStnViewCurrency(response.bulkRuleStationException[0]) : [],
         taxFilter: response.taxFilter === null ? 'null' : response.taxFilter,
         startDate: $scope.viewStartDate,
         companyId: response.companyId,
