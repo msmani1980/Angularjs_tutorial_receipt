@@ -228,19 +228,19 @@
       <div class="row">
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
-            <label  for="limitByTransactionDiscountType">Limitation Type</label>
-            <select
-              name="limitByTransactionDiscountType"
-              class="form-control"
-              id="limitByTransactionDiscountType"
-              ng-model="formData.limitByTransactionDiscountType"
-              ng-options="limitationType as limitationType.name for limitationType in discountLimitationTypes">
-              <option selected default value="">Select Limitation Type</option>
-            </select>
+            <div class="radio">
+              <label>
+                <input type="radio" value="1" ng-model="formData.limitByTransactionDiscountType" />Item
+              </label>
+              &nbsp;&nbsp;
+              <label>
+                <input type="radio" value="2" ng-model="formData.limitByTransactionDiscountType" />Discount
+              </label>
+            </div>
           </div>
         </div>
       </div>
-      <div class="row" ng-if="formData.limitByTransactionDiscountType.id === 1">
+      <div class="row" ng-if="formData.limitByTransactionDiscountType == 1">
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
             <label class="control-label">Item Qty Limit Per Transaction</label>
@@ -269,7 +269,7 @@
           </fieldset>
         </div>
       </div>
-      <div class="row" ng-if="formData.limitByTransactionDiscountType.id === 2">
+      <div class="row" ng-if="formData.limitByTransactionDiscountType == 2">
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
             <label class="control-label">Discount Qty Limit Per Transaction</label>

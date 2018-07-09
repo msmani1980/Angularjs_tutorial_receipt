@@ -47,7 +47,7 @@ angular.module('ts5App')
           discountAmountLimitPerShopValue: {},
           discountAmountLimitPerTransactionValue: {},
           limitByShopDiscountType: {},
-          limitByTransactionDiscountType: {},
+          limitByTransactionDiscountType: 1,
           limitBySeatDiscountType: 1
         };
       } else {
@@ -61,7 +61,7 @@ angular.module('ts5App')
           discountAmountLimitPerShopValue: {},
           discountAmountLimitPerTransactionValue: {},
           limitByShopDiscountType: {},
-          limitByTransactionDiscountType: {},
+          limitByTransactionDiscountType: 1,
           limitBySeatDiscountType: 1
         };
       }
@@ -243,7 +243,7 @@ angular.module('ts5App')
       $scope.formData.description = discountData.description;
       $scope.formData.note = discountData.note;
       $scope.formData.limitByShopDiscountType = lodash.find($scope.discountLimitationTypes, { id: discountData.limitByShopDiscountType});
-      $scope.formData.limitByTransactionDiscountType = lodash.find($scope.discountLimitationTypes, { id: discountData.limitByTransactionDiscountType});
+      $scope.formData.limitByTransactionDiscountType = parseInt(discountData.limitByTransactionDiscountType);
       $scope.formData.limitBySeatDiscountType = parseInt(discountData.limitBySeatDiscountType);
       $scope.formData.startDate = dateUtility.formatDateForApp(discountData.startDate);
       $scope.formData.endDate = dateUtility.formatDateForApp(discountData.endDate);
@@ -420,7 +420,7 @@ angular.module('ts5App')
     };
 
     this.serializeLimitationPerTransaction = function(formData, discount) {
-      discount.limitByTransactionDiscountType = formData.limitByTransactionDiscountType.id;
+      discount.limitByTransactionDiscountType = formData.limitByTransactionDiscountType;
 
       // Item
       discount.itemQuantityLimitByTransaction = formData.itemQtyLimitPerTransaction;
