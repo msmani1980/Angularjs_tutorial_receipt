@@ -48,7 +48,7 @@ angular.module('ts5App')
           discountAmountLimitPerTransactionValue: {},
           limitByShopDiscountType: {},
           limitByTransactionDiscountType: {},
-          limitBySeatDiscountType: {}
+          limitBySeatDiscountType: 1
         };
       } else {
         return {
@@ -62,7 +62,7 @@ angular.module('ts5App')
           discountAmountLimitPerTransactionValue: {},
           limitByShopDiscountType: {},
           limitByTransactionDiscountType: {},
-          limitBySeatDiscountType: {}
+          limitBySeatDiscountType: 1
         };
       }
     };
@@ -244,7 +244,7 @@ angular.module('ts5App')
       $scope.formData.note = discountData.note;
       $scope.formData.limitByShopDiscountType = lodash.find($scope.discountLimitationTypes, { id: discountData.limitByShopDiscountType});
       $scope.formData.limitByTransactionDiscountType = lodash.find($scope.discountLimitationTypes, { id: discountData.limitByTransactionDiscountType});
-      $scope.formData.limitBySeatDiscountType = lodash.find($scope.discountLimitationTypes, { id: discountData.limitBySeatDiscountType});
+      $scope.formData.limitBySeatDiscountType = parseInt(discountData.limitBySeatDiscountType);
       $scope.formData.startDate = dateUtility.formatDateForApp(discountData.startDate);
       $scope.formData.endDate = dateUtility.formatDateForApp(discountData.endDate);
     };
@@ -463,7 +463,7 @@ angular.module('ts5App')
 
     this.serializeLimitationPerSeat = function(formData, discount) {
       discount.seatNumberRequired = formData.requireSeatEntry;
-      discount.limitBySeatDiscountType = formData.limitBySeatDiscountType.id;
+      discount.limitBySeatDiscountType = parseInt(formData.limitBySeatDiscountType);
       discount.itemQuantityLimitBySeatNumber = formData.itemQtyLimitPerSeat;
       discount.discountQuantityLimitBySeatNumber = formData.discountQtyLimitPerSeat;
     };

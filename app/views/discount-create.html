@@ -303,19 +303,19 @@
       <div class="row">
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
-            <label  for="limitBySeatDiscountType">Limitation Type</label>
-            <select
-              name="limitBySeatDiscountType"
-              class="form-control"
-              id="limitBySeatDiscountType"
-              ng-model="formData.limitBySeatDiscountType"
-              ng-options="limitationType as limitationType.name for limitationType in discountLimitationTypes">
-              <option selected default value="">Select Limitation Type</option>
-            </select>
+            <div class="radio">
+              <label>
+                <input type="radio" value="1" ng-model="formData.limitBySeatDiscountType" />Item
+              </label>
+              &nbsp;&nbsp;
+              <label>
+                <input type="radio" value="2" ng-model="formData.limitBySeatDiscountType" />Discount
+              </label>
+            </div>
           </div>
         </div>
       </div>
-      <div class="row" ng-if="formData.limitBySeatDiscountType.id === 1">
+      <div class="row" ng-if="formData.limitBySeatDiscountType == 1">
         <div class="col-xs-12 col-sm-6">
           <fieldset ng-disabled="isDisabled()">
             <div class="row">
@@ -329,7 +329,7 @@
           </fieldset>
         </div>
       </div>
-      <div class="row" ng-if="formData.limitBySeatDiscountType.id === 2">
+      <div class="row" ng-if="formData.limitBySeatDiscountType == 2">
         <div class="col-xs-12 col-sm-6">
           <fieldset ng-disabled="isDisabled()">
             <div class="row">
