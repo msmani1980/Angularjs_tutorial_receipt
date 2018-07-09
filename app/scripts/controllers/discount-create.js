@@ -684,8 +684,10 @@ angular.module('ts5App')
     $scope.submitForm = function(formData) {
       $scope.errorCustom = [];
       $this.validateRestrictions();
-      $this.validateLimitPerShop();
-      $this.validateLimitPerTransaction();
+      $this.validateItemLimitPerShop();
+      $this.validateDiscountLimitPerShop();
+      $this.validateItemLimitPerTransaction();
+      $this.validateDiscountLimitPerTransaction();
 
       $scope.form.$setSubmitted(true);
       if (formData && $this.validateForm() && $scope.errorCustom.length === 0) {
@@ -726,8 +728,7 @@ angular.module('ts5App')
       }
     };
 
-    this.validateLimitPerTransaction = function() {
-
+    this.validateItemLimitPerTransaction = function() {
       if ($scope.formData.isAmountLimitPerTransaction === true) {
         if (!($scope.formData.itemQtyLimitPerTransaction === '' || typeof $scope.formData.itemQtyLimitPerTransaction === 'undefined' || $scope.formData.itemQtyLimitPerTransaction === null)) {
           $scope.errorCustom.push(
@@ -739,7 +740,9 @@ angular.module('ts5App')
           );
         }
       }
+    };
 
+    this.validateDiscountLimitPerTransaction = function() {
       if ($scope.formData.isDiscountAmountLimitPerTransaction === true) {
         if (!($scope.formData.discountQtyLimitPerTransaction === '' || typeof $scope.formData.discountQtyLimitPerTransaction === 'undefined' || $scope.formData.discountQtyLimitPerTransaction === null)) {
           $scope.errorCustom.push(
@@ -753,7 +756,7 @@ angular.module('ts5App')
       }
     };
 
-    this.validateLimitPerShop = function() {
+    this.validateItemLimitPerShop = function() {
 
       if ($scope.formData.isAmountLimitPerShop === true) {
         if (!($scope.formData.itemQtyLimitPerShop === '' || typeof $scope.formData.itemQtyLimitPerShop === 'undefined' || $scope.formData.itemQtyLimitPerShop === null)) {
@@ -766,7 +769,9 @@ angular.module('ts5App')
           );
         }
       }
+    };
 
+    this.validateDiscountLimitPerShop = function() {
       if ($scope.formData.isDiscountAmountLimitPerShop === true) {
         if (!($scope.formData.discountQtyLimitPerShop === '' || typeof $scope.formData.discountQtyLimitPerShop === 'undefined' || $scope.formData.discountQtyLimitPerShop === null)) {
           $scope.errorCustom.push(
