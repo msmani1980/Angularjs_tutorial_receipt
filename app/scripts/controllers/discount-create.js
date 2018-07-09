@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('DiscountCreateCtrl', function($scope, $q, $location, $routeParams, dateUtility, discountFactory,
-    recordsService, currencyFactory, companiesFactory, itemsFactory, lodash) {
+    recordsService, currencyFactory, companiesFactory, itemsFactory) {
 
     var $this = this;
 
@@ -30,10 +30,6 @@ angular.module('ts5App')
     $scope.salesCategoriesList = [];
     $scope.salesCategoriesMap = {};
     $scope.addRestrictedItemsNumber = 1;
-    $scope.discountLimitationTypes = [
-      { id: 1, name: 'Item'},
-      { id: 2, name: 'Discount'}
-    ];
 
     this.getCleanFormData = function() {
       var path = $location.path();
