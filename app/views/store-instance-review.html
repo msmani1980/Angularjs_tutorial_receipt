@@ -17,7 +17,7 @@
                  placeholder="Filter list by item code or name"/>
           <div class="input-group-btn">
             <button type="button" class="btn btn-default" ng-click="clearFilteredPackingList()"><i class="fa fa-times"></i></button>
-            <button type="button" class="btn btn-default" ng-click="filterPackingList()"><i class="fa fa-search"></i> Search</button>
+            <button type="button" class="btn btn-default" ng-click="filterPackingList()"><i class="fa fa-search"></i> Search </button>
           </div>
         </div>
       </div>
@@ -65,7 +65,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in items | filter:{itemDescription: filterItemDetails} | orderBy:itemSortOrder"
+            <tr ng-repeat="item in items | filter:{itemDescription: itemFilterText} | orderBy:itemSortOrder"
                 ng-class="hasDiscrepancy(item)" ng-switch on="action">
               <td>
                 <input type="text" class="form-control" ng-model="item.itemDescription" disabled>

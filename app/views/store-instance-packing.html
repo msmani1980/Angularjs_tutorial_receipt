@@ -53,7 +53,7 @@
           placeholder="Filter list by item code or name"/>
           <div class="input-group-btn">
             <button type="button" class="btn btn-default" ng-click="clearFilteredPackingList()"><i class="fa fa-times"></i></button>
-            <button type="button" class="btn btn-default" ng-click="filterPackingList()"><i class="fa fa-search"></i> Search</button>
+            <button type="button" class="btn btn-default" ng-click="filterPackingList()"><i class="fa fa-search"></i> Search </button>
           </div>
         </div>
       </div>
@@ -100,8 +100,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:itemSortOrder"
-            ng-class="showVarianceWarningClass(item)" class="item-{{item.itemMasterId}}">
+        <tr ng-repeat="item in pickListItems | filter:{itemDescription: itemFilterText} | orderBy:itemSortOrder" ng-class="showVarianceWarningClass(item)" class="item-{{item.itemMasterId}}">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
@@ -275,7 +274,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in offloadListItems | filter:{itemDescription: filterItemDetails} | orderBy:offLoadItemsSortOrder">
+        <tr ng-repeat="item in offloadListItems | filter:{itemDescription: itemFilterText} | orderBy:offLoadItemsSortOrder">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
