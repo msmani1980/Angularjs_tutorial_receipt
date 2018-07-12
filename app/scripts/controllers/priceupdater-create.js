@@ -159,7 +159,10 @@ angular.module('ts5App')
         ruleException.id = bulk.id;
       }
 
-      stationExpCurrencies.push(ruleException);
+      if (bulk.startDate && bulk.endDate) {
+        stationExpCurrencies.push(ruleException);
+      }
+
       return stationExpCurrencies;
     };
 
@@ -237,6 +240,11 @@ angular.module('ts5App')
 
     this.formatStnViewCurrency = function(response) {
       $scope.hasStationCurrencies = true;
+      if (response.percentage && !$scope.isDisabled()) {
+        $scope.hasStationCurrencies = false;
+        $this.getStationPriceCurrenciesList(dateUtility.formatDateForApp(response.startDate), dateUtility.formatDateForApp(response.endDate)); 
+      }
+
       return {
         startDate: dateUtility.formatDateForApp(response.startDate),
         endDate: dateUtility.formatDateForApp(response.endDate),
@@ -270,7 +278,7 @@ angular.module('ts5App')
       };
       if (response.percentage && !$scope.isDisabled()) {
         $this.getPriceCurrenciesList($scope.rule.startDate, $scope.rule.endDate); 
-      } 
+      }
     };
 
     this.initDependenciesSuccess = function(responseCollection) {
