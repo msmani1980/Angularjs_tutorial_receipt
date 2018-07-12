@@ -90,7 +90,7 @@
     	          						{{ currency.code }} *
 									</div>
 									<input name="Currencies List - {{ currency.code }}" ng-model="currency.price" ng-required="!rule.percentage"  
-											ng-disabled="isDisabled()" type="text" class="form-control" maxlength="8" placeholder="1.00"/>
+											ng-disabled="isDisabled()" type="text" custom-validity custom-pattern="numberOrDecimal" class="form-control" maxlength="8" placeholder="1.00"/>
 								</div>
 							</div>
 						</div>
@@ -185,7 +185,8 @@
 				    	          						{{ stnCurrency.code }} *
 													</div>
 													<input name="Station Currencies List - {{ stnCurrency.code }}" ng-model="stnCurrency.price" ng-required="!rule.bulkRuleStationException.percentage"  
-															ng-disabled="isDisabled()" type="text" class="form-control" maxlength="8" placeholder="1.00"/>
+															ng-disabled="isDisabled()" custom-validity custom-pattern="numberOrDecimal" 
+															type="text" class="form-control" maxlength="8" placeholder="1.00"/>
 												</div>
 											</div>
 										</div>
