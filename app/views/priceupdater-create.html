@@ -122,7 +122,8 @@
 							            	disable="isDisabled()" 
 							              	form="form" 
 							              	label="Effective From"
-							              	name="StationExceptionEffectiveFrom" 
+							              	name="StationExceptionEffectiveFrom"
+							              	ng-required="rule.bulkRuleStationException.endDate" 
 							              	disable-past="true"
 							              	ng-model="rule.bulkRuleStationException.startDate">
 							            </date-picker-field>
@@ -135,6 +136,7 @@
 							              	label="Effective To"
 							                name="StationExceptionEffectiveTo" 
 							                custom-effective="true"
+							                ng-required="rule.bulkRuleStationException.startDate"
 											custom-date="stationException.endDate"
 							                ng-model="rule.bulkRuleStationException.endDate">
 							            </date-picker-field>
@@ -143,7 +145,7 @@
 										<div class="form-group" ng-disabled="isDisabled()" 
 										ng-class="{ 'has-error' : !rule.bulkRuleStationException.stationId , 'has-success' : rule.bulkRuleStationException.stationId }">
 											<label>Station *</label>
-											<select name="Station Exception" ng-model="rule.bulkRuleStationException.stationId" 
+											<select name="Station" ng-model="rule.bulkRuleStationException.stationId" 
 												ng-disabled="isDisabled()" class="form-control"
 												ng-required="rule.bulkRuleStationException.startDate && rule.bulkRuleStationException.endDate"
 							   					ng-options="station.id as (station.code + ' (' + station.name +')') for station in stations">
@@ -191,7 +193,7 @@
 									<div class="col-xs-12 col-sm-4" ng-show="rule.bulkRuleStationException.percentage">
 										<div class="form-group">
 				                			<label for="percentValue">Percentage Value*</label>
-				                			<input ng-model="rule.bulkRuleStationException.percentValue" type="text" class="form-control" name = "stnPercentageValue" id="stnPercentValue" 
+				                			<input ng-model="rule.bulkRuleStationException.percentValue" type="text" class="form-control" name = "stationPercentageValue" id="stnPercentValue" 
 				                				ng-required="rule.bulkRuleStationException.percentage" placeholder="10%" ng-disabled="isDisabled()" ng-pattern="regexp.percentage">
 				              			</div>
 									</div>
