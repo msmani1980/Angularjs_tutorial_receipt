@@ -258,10 +258,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $scope.filterPickListItems = function() {
       $scope.filteredItemsList = lodash.filter($scope.masterItemsList, function(item) {
         var pickListMatch = (lodash.findWhere($scope.pickListItems, {
-          itemMasterId: item.id
+          itemMasterId: item.id,
+          itemDescription: item.itemCode + ' - ' + item.itemName
         }));
         var newPickListMatch = (lodash.findWhere($scope.newPickListItems, {
-          masterItem: item
+          masterItem: item,
+          itemDescription: item.itemCode + ' - ' + item.itemName
         }));
         return !pickListMatch && !newPickListMatch;
       });
@@ -337,6 +339,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
     };
 
+    $scope.setItemDescription = function(item) {
+      item.itemDescription = item.masterItem.itemCode + ' - ' + item.masterItem.itemName; 
+    }
+
     this.addItemsToArray = function(array, itemNumber, isInOffload) {
       for (var i = 0; i < itemNumber; i++) {
         var newItem = {
@@ -349,7 +355,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           oldInboundQuantity: -1,
           isMenuItem: false,
           isNewItem: true,
-          isInOffload: isInOffload
+          isInOffload: isInOffload,
+          itemDescription:''
         };
         array.push(newItem);
       }
