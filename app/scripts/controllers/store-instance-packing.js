@@ -341,7 +341,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.setItemDescription = function(item) {
       item.itemDescription = item.masterItem.itemCode + ' - ' + item.masterItem.itemName; 
-    }
+    };
 
     this.addItemsToArray = function(array, itemNumber, isInOffload) {
       for (var i = 0; i < itemNumber; i++) {
