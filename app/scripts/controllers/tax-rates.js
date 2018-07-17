@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('TaxRatesCtrl', function ($scope, $q, $route, $filter, taxRatesFactory, dateUtility, messageService, accessService) {
+  .controller('TaxRatesCtrl', function ($scope, $q, $route, $filter, taxRatesFactory, dateUtility, messageService, accessService, lodash) {
 
     var $this = this;
 
@@ -41,7 +41,7 @@ angular.module('ts5App')
     };
 
     this.setTaxTypesList = function (dataFromAPI) {
-      $scope.taxTypesList = angular.copy(dataFromAPI.response);
+      $scope.taxTypesList = lodash.filter(angular.copy(dataFromAPI.response), { applicableTo: 'Station' });
     };
 
     this.setTaxRateTypesList = function (dataFromAPI) {
