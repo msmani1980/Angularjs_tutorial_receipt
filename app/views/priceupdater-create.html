@@ -184,7 +184,7 @@
 													<div class="input-group-addon">
 				    	          						{{ stnCurrency.code }} *
 													</div>
-													<input name="Station Currencies List - {{ stnCurrency.code }}" ng-model="stnCurrency.price" ng-required="!rule.bulkRuleStationException.percentage"  
+													<input name="Station Currencies List - {{ stnCurrency.code }}" ng-model="stnCurrency.price" ng-required="!rule.bulkRuleStationException.percentage && rule.bulkRuleStationException.startDate && rule.bulkRuleStationException.endDate"  
 															ng-disabled="isDisabled()" custom-validity custom-pattern="numberOrDecimal" 
 															type="text" class="form-control" maxlength="8" placeholder="1.00"/>
 												</div>
@@ -195,7 +195,7 @@
 										<div class="form-group">
 				                			<label for="percentValue">Percentage Value*</label>
 				                			<input ng-model="rule.bulkRuleStationException.percentValue" type="text" class="form-control" name = "stationPercentageValue" id="stnPercentValue" 
-				                				ng-required="rule.bulkRuleStationException.percentage" placeholder="10%" ng-disabled="isDisabled()" ng-pattern="regexp.percentage">
+				                				ng-required="rule.bulkRuleStationException.percentage && rule.bulkRuleStationException.startDate && rule.bulkRuleStationException.endDate" placeholder="10%" ng-disabled="isDisabled()" ng-pattern="regexp.percentage">
 				              			</div>
 									</div>
 								   </div>
