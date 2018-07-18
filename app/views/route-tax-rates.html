@@ -1,0 +1,341 @@
+<div class="fluid-container module-container tax-rates-container" ng-show="viewIsReady">
+  <div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-4">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+      <div class="col-xs-8 text-right">
+        <button class="btn btn-primary" tabindex="-1" ng-show="isCRUD" ng-click="createNewTaxRate()"><span class="fa fa-plus"></span><span class="hidden-xs">  Create Tax Rate</span></button>
+        <button class="btn btn-default" tabindex="-1" data-toggle="collapse" data-target="#filter-controls" aria-expanded="false" aria-controls="search-collapse" ng-click="searchUiSelectReady()" id="filterTaxRatesId">
+          <span class="fa fa-filter" aria-hidden="true"></span>
+          <span class="hidden-sm hidden-xs">Filter</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel panel-default in" id="filter-controls">
+      <form name="taxRatesSearchForm" class="form">
+        <div class="panel-body">
+          <div class="row">
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="tax-rates-type">Tax Type</label>
+                <ui-select ng-model="search.taxType" theme="bootstrap" name="searchTaxType">
+                  <ui-select-match placeholder="Search by Tax Type">
+                    {{ $select.selected.taxTypeCode }}
+                  </ui-select-match>
+                  <ui-select-choices repeat="taxType in taxTypesList | filter: $select.search | orderBy:'taxTypeCode'">
+                    <div ng-bind-html="taxType.taxTypeCode | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="tax-rates-country">Country</label>
+                <ui-select ng-model="search.country" theme="bootstrap" name="searchCountry" ng-change="filterSearchStationsByCountry(search.country.countryName)">
+                  <ui-select-match placeholder="Search by Country">
+                    {{ $select.selected.countryName }}
+                  </ui-select-match>
+                  <ui-select-choices repeat="country in countriesList | filter: $select.search | orderBy:'countryName'">
+                    <div ng-bind-html="country.countryName | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="tax-rates-station">Station</label>
+                <ui-select ng-if="uiSelectReady" multiple ng-model="search.stations" theme="bootstrap" sortable="true" close-on-select="false" ng-disabled="!enableSearchStations" style="min-height:35px">
+                  <ui-select-match placeholder="Search by Station">{{ $item.stationCode }} - {{ $item.stationName }}</ui-select-match>
+                  <ui-select-choices group-by="'countryName'" repeat="station in stationsListSearch | filter: $select.search | orderBy:'countryName'">
+                    <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="tax-rates-rate-type">Rate Type</label>
+                <ui-select ng-model="search.taxRateType" theme="bootstrap" name="searchRateType">
+                  <ui-select-match placeholder="Search by Tax Rate Type">
+                    {{ $select.selected.taxRateType }}
+                  </ui-select-match>
+                  <ui-select-choices repeat="taxRate in taxRatesList | filter: $select.search | orderBy:'taxRateType'">
+                    <div ng-bind-html="taxRate.taxRateType | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="tax-rates-rate">Rate</label>
+                <input ng-model="search.taxRate" type="text" name="searchTaxRate" class="form-control" placeholder="Search by Tax Rate">
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="tax-rates-currency">Currency</label>
+                <ui-select ng-model="search.currency" theme="bootstrap" name="searchCurrency">
+                  <ui-select-match placeholder="Search by Currency">
+                    {{ $select.selected.code + ' - ' + $select.selected.name }}
+                  </ui-select-match>
+                  <ui-select-choices repeat="currency in currenciesList | filter: $select.search | orderBy:'name'">
+                    <div ng-bind-html="currency.code + ' - ' + currency.name | highlight: $select.search"></div>
+                  </ui-select-choices>
+                </ui-select>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <date-picker-field ng-model="dateRange.startDate" label="Effective From" custom-effective="true"></date-picker-field>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <date-picker-field ng-model="dateRange.endDate" label="Effective To" custom-effective="true"></date-picker-field>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="panel-footer text-right">
+          <button class="btn btn-default" ng-click="clearSearchFilters()" ng-show="showClearButton()" type="button" id="clearTaxRatesId">
+            <span>Clear</span>
+          </button>
+          <button class="btn btn-primary btn-search" ng-click="searchRecords()" id="searchTaxRatesId">
+            <span class="fa fa-search" aria-hidden="true"></span>
+            <span class="hidden-sm hidden-xs btn-label">Search</span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div> <!-- End of list-controls -->
+
+  <alert ng-hide="companyTaxRatesList.length" type="info">
+    <span class="fa fa-flag"></span> Your search returned no results. Please try again!
+  </alert>
+
+  <error-dialog error-response="errorResponse" display="displayError"></error-dialog>
+
+  <div class="table table-responsive table-hover show-white-space" ng-show="companyTaxRatesList.length" ng-if="viewIsReady">
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Tax Type *</th>
+        <th>Country *</th>
+        <th>Station *</th>
+        <th>Rate Type *</th>
+        <th>Currency *</th>
+        <th>Rate *</th>
+        <th>Effective From *</th>
+        <th>Effective To *</th>
+        <th>Updated Date/Time</th>
+        <th>Updated User</th>
+        <th ng-show="isCRUD">Actions</th>
+      </tr>
+      </thead>
+      <!-- Switch ON taxRate.action - Table row -->
+      <tr tabindex="0" class="animate-switch-container" ng-repeat="taxRate in companyTaxRatesList | orderBy: 'created' track by $index" ng-switch on="taxRate.action" ng-class="taxRateRowClass(taxRate)">
+        <!-- Switch for taxTypeCode -->
+        <td class="animate-switch col-xs-2" ng-switch-when="read">{{ taxRate.taxTypeCode.taxTypeCode }}</td>
+        <td class="animate-switch tax-rates-ui-select col-xs-2" ng-switch-when="edit">
+          <ui-select ng-model="taxRate.taxTypeCode" theme="bootstrap" name="taxTypeCode" ng-disabled="isDisabled(taxRate)">
+            <ui-select-match placeholder="Tax Type">
+              {{ $select.selected.taxTypeCode }}
+            </ui-select-match>
+            <ui-select-choices repeat="taxType in taxTypesList | filter: $select.search | orderBy:'taxTypeCode'" position={{taxRate.position}}>
+              <div ng-bind-html="taxType.taxTypeCode | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <td class="animate-switch tax-rates-ui-select col-xs-2" ng-switch-when="create">
+          <ui-select ng-model="taxRate.taxTypeCode" theme="bootstrap" name="taxTypeCode">
+            <ui-select-match placeholder="Tax Type">
+              {{ $select.selected.taxTypeCode }}
+            </ui-select-match>
+            <ui-select-choices repeat="taxType in taxTypesList | filter: $select.search | orderBy:'taxTypeCode'" position='auto'>
+              <div ng-bind-html="taxType.taxTypeCode | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <!-- Switch for countryName -->
+        <td class="animate-switch col-xs-1" ng-switch-when="read">{{ taxRate.countryName.countryName }}</td>
+        <td class="animate-switch tax-rates-ui-select col-xs-1" ng-switch-when="edit">
+          <ui-select ng-model="taxRate.countryName" theme="bootstrap" name="taxRateCountry" ng-disabled="isTaxRateCountryFieldDisabled(taxRate)" ng-change="filterTaxRateStations(taxRate)">
+            <ui-select-match placeholder="Country">
+              {{ $select.selected.countryName }}
+            </ui-select-match>
+            <ui-select-choices repeat="country in countriesList | filter: $select.search | orderBy:'countryName'" position="down">
+              <div ng-bind-html="country.countryName | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <td class="animate-switch tax-rates-ui-select col-xs-1" ng-switch-when="create">
+          <ui-select ng-model="taxRate.countryName" theme="bootstrap" name="taxRateCountry" ng-disabled="isTaxRateCountryFieldDisabledForCreate(taxRate)" ng-change="filterTaxRateStations(taxRate)">
+            <ui-select-match placeholder="Country">
+              {{ $select.selected.countryName }}
+            </ui-select-match>
+            <ui-select-choices repeat="country in countriesList | filter: $select.search | orderBy:'countryName'" position="down">
+              <div ng-bind-html="country.countryName | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <!-- Switch for companyTaxRateStations -->
+        <td class="animate-switch col-xs-1" ng-switch-when="read">
+          <p class="label label-primary tax-label" ng-repeat="station in taxRate.companyTaxRateStations | orderBy:'stationCode'">
+            {{ station.stationCode }}
+          </p>
+        </td>
+        <td class="animate-switch tax-rates-multi-select col-xs-1" ng-switch-when="edit">
+          <ui-select ng-if="taxRateSelectReady(taxRate)"  on-select="onUiSelect($select)"  multiple ng-model="taxRate.companyTaxRateStations" theme="bootstrap" sortable="true" close-on-select="true" ng-disabled="isTaxRateStationsDisabled(taxRate)" style="margin-bottom:10px; min-height:35px;">
+            <ui-select-match placeholder="Stations">{{ $item.stationCode }}</ui-select-match>
+            <ui-select-choices group-by="'countryName'" repeat="station in taxRate.availableStations | filter: $select.search | orderBy:'stationCode'" position={{taxRate.position}}>
+              <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <td class="animate-switch tax-rates-multi-select col-xs-1" ng-switch-when="create">
+          <ui-select ng-if="viewIsReady"  on-select="onUiSelect($select)"  multiple ng-model="taxRate.companyTaxRateStations" theme="bootstrap" sortable="true" close-on-select="false" ng-disabled="isTaxRateStationsDisabledForCreate(taxRate)" style="margin-bottom:10px; min-height:35px;">
+            <ui-select-match placeholder="Stations">{{ $item.stationCode }}</ui-select-match>
+            <ui-select-choices group-by="'countryName'" repeat="station in taxRate.availableStations | filter: $select.search | orderBy:'stationCode'" position='auto'>
+              <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <!-- Switch for taxRateType -->
+        <td class="animate-switch col-xs-1" ng-switch-when="read">{{ taxRate.taxRateType.taxRateType }}</td>
+        <td class="animate-switch tax-rates-ui-select col-xs-1" ng-switch-when="edit">
+          <ui-select ng-model="taxRate.taxRateType" theme="bootstrap" name="taxRateType" ng-disabled="isDisabled(taxRate)" ng-change="shouldTaxRateCurrencyBeClear(taxRate)">
+            <ui-select-match placeholder="Rate Type">
+              {{ $select.selected.taxRateType }}
+            </ui-select-match>
+            <ui-select-choices repeat="taxRate in taxRatesList | filter: $select.search | orderBy:'taxRateType'" position={{taxRate.position}}>
+              <div ng-bind-html="taxRate.taxRateType | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <td class="animate-switch tax-rates-ui-select col-xs-1" ng-switch-when="create">
+          <ui-select ng-model="taxRate.taxRateType" theme="bootstrap" name="taxRateType" ng-change="shouldTaxRateCurrencyBeClear(taxRate)">
+            <ui-select-match placeholder="Rate Type">
+              {{ $select.selected.taxRateType }}
+            </ui-select-match>
+            <ui-select-choices repeat="taxRate in taxRatesList | filter: $select.search | orderBy:'taxRateType'" position='auto'>
+              <div ng-bind-html="taxRate.taxRateType | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <!-- Switch for showCompanyCurrency -->
+        <td class="animate-switch col-xs-1" ng-switch-when="read">
+          {{ taxRate.currency.code }}
+        </td>
+        <td class="animate-switch tax-rates-ui-select col-xs-1" ng-switch-when="edit">
+          <ui-select ng-model="taxRate.currency" theme="bootstrap" name="currencyCode" ng-disabled="isTaxRateCurrencyCodeDisabled(taxRate)">
+            <ui-select-match placeholder="Currency">
+              {{ $select.selected.code }}
+            </ui-select-match>
+            <ui-select-choices repeat="currency in currenciesList | filter: $select.search | orderBy:'name'" position={{taxRate.position}}>
+              <div ng-bind-html="currency.code + ' - ' + currency.name | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <td class="animate-switch tax-rates-ui-select col-xs-1" ng-switch-when="create">
+          <ui-select ng-model="taxRate.currency" theme="bootstrap" name="currencyCode" ng-disabled="isTaxRateTypePercentage(taxRate)">
+            <ui-select-match placeholder="Currency">
+              {{ $select.selected.code }}
+            </ui-select-match>
+            <ui-select-choices repeat="currency in currenciesList | filter: $select.search | orderBy:'name'" position='auto'>
+              <div ng-bind-html="currency.code + ' - ' + currency.name | highlight: $select.search"></div>
+            </ui-select-choices>
+          </ui-select>
+        </td>
+        <!-- Switch for taxRateValue -->
+        <td class="animate-switch col-xs-1" ng-switch-when="read">{{ taxRate.taxRateValue }}<span ng-show="isTaxRateTypePercentage(taxRate)"> %</span></td>
+        <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="edit">
+          <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate" ng-disabled="isDisabled(taxRate)">
+        </td>
+        <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="create">
+          <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate">
+        </td>
+        <!-- Switch for startDate -->
+        <td class="animate-switch col-xs-1" ng-switch-when="read">{{ taxRate.startDate }}</td>
+        <td class="animate-switch tax-rates-dates col-xs-1" ng-switch-when="edit">
+          <date-picker-field disable-past="true" ng-model="taxRate.startDate" disable="isDisabled(taxRate)" min-date="determineMinDate(taxRate.startDate)" orientation="determineDatePickerOrientation(taxRate)"></date-picker-field>
+        </td>
+        <td class="animate-switch tax-rates-dates col-xs-1" ng-switch-when="create">
+          <date-picker-field disable-past="true" ng-model="taxRate.startDate" min-date="determineMinDate()"></date-picker-field>
+        </td>
+        <!-- Switch for endDate -->
+        <td class="animate-switch col-xs-1" style="position:relative !important" ng-switch-when="read">{{ taxRate.endDate }}</td>
+        <td class="animate-switch tax-rates-dates col-xs-1" style="position:relative !important" ng-switch-when="edit" >
+          <date-picker-field
+            min-date="minDate"
+            custom-effective="true"
+            custom-date="taxRate.endDate"
+            disable="isDisabledEndDateForm(taxRate)"
+            ng-model="taxRate.endDate"
+            orientation="determineDatePickerOrientation(taxRate)" ></date-picker-field>
+        </td>
+        <td class="animate-switch tax-rates-dates col-xs-1" style="position:relative !important" ng-switch-when="create">
+          <date-picker-field
+            min-date="minDate"
+            custom-effective="true"
+            custom-date="taxRate.endDate"
+            ng-model="taxRate.endDate"></date-picker-field>
+        </td>
+        <td ng-switch-when="read">{{ getUpdatedOn(taxRate) }}</td>
+        <td ng-switch-when="edit" style="padding-top:15px;">{{ getUpdatedOn(taxRate) }}</td>
+        <td ng-switch-when="create">{{ getUpdatedOn(taxRate) }}</td>
+        <td ng-switch-when="read">{{ getUpdateBy(taxRate) }}</td>
+        <td ng-switch-when="edit" style="padding-top:15px;">{{ getUpdateBy(taxRate) }}</td>
+        <td ng-switch-when="create">{{ getUpdateBy(taxRate) }}</td>
+        <!-- Buttons for Read -->
+        <td class="animate-switch col-xs-1" ng-switch-when="read" ng-show="isCRUD">
+          <a class="btn btn-primary btn-xs" ng-show="isTaxRateEditable(taxRate)" ng-click="editCompanyTaxRate(taxRate)">
+            <span class="fa fa-pencil"></span>
+          </a>
+          <a class="btn btn-danger btn-xs" ng-show="showDeleteButton(taxRate)" ng-click="displayConfirmDialog(taxRate)">
+            <span class="fa fa-trash"></span>
+          </a>
+        </td>
+        <!-- Buttons for Edit -->
+        <td class="animate-switch tax-rates-action col-xs-1" ng-switch-when="edit" ng-show="isCRUD">
+          <a tabindex="0" class="btn btn-primary btn-xs" ng-click="saveTaxRateEdits(taxRate)">
+            <span class="fa fa-save"></span>
+          </a>
+          <a tabindex="0" class="btn btn-default btn-xs" ng-click="cancelTaxRateEdit(taxRate)">
+            <span class="fa fa-remove"></span>
+          </a>
+        </td>
+        <!-- Buttons for Create -->
+        <td class="animate-switch tax-rates-action col-xs-1" ng-switch-when="create" ng-show="isCRUD">
+          <a class="btn btn-primary btn-xs" ng-click="createNewTaxRatePayload(taxRate)">
+            <span class="fa fa-save"></span>
+          </a>
+          <a class="btn btn-danger btn-xs" ng-click="cancelNewTaxRate(taxRate)">
+            <span class="fa fa-remove"></span>
+          </a>
+        </td>
+        <!-- End of Tax Rate Row-->
+      </tr>
+    </table>
+  </div>
+  <!-- Container End -->
+</div>
+
+<confirmation-modal
+  title="You are about to remove a Company Tax Rate."
+  body="Are you sure that you want to permenantly remove Tax Rate ID: {{taxRateToRemove.id}} ?"
+  confirmation-callback="deleteCompanyTaxRate(taxRateToRemove)"
+  confirmation-label="Yes, Delete."
+  cancel-label="Cancel">
+</confirmation-modal>
+
+<form-success-modal></form-success-modal>
+<dynamic-left-nav></dynamic-left-nav>
