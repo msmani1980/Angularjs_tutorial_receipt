@@ -223,6 +223,10 @@
               <image-upload image-type="receiptImage" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
             </div>
 
+            <input-text ng-if="formData.companyTypeId==6" label="Virtual Item Receipt Header" name="virtualItemReceiptHeader" max-length="30"></input-text>
+
+            <input-text ng-if="formData.companyTypeId==6" label="Virtual Item Receipt Footer" name="virtualItemReceiptFooter" max-length="30"></input-text>
+
           </div>
           <div ng-if="formData.companyTypeId==1" class="col-xs-12 col-sm-6" id="images-container">
             <br>
