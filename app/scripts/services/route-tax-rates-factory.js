@@ -8,7 +8,8 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('routeTaxRatesFactory', function (routeTaxRatesService, globalMenuService) {
+  .factory('routeTaxRatesFactory', function (routeTaxRatesService, globalMenuService, taxRateTypesService,
+      taxTypesService, countriesService, stationsService, currenciesService) {
     this.getRouteTaxRate = function (id) {
       return routeTaxRatesService.getRouteTaxRate(id);
     };
@@ -33,12 +34,42 @@ angular.module('ts5App')
       return globalMenuService.company.get();
     };
 
+    this.getTaxTypesList = function() {
+      var payload = {};
+      payload.companyId = globalMenuService.company.get();
+      return taxTypesService.getTaxTypesList(payload);
+    };
+
+    this.getTaxRateTypes = function() {
+      var companyId = globalMenuService.company.get();
+      return taxRateTypesService.getTaxRateTypes(companyId);
+    };
+
+    this.getCountriesList = function() {
+      var companyId = globalMenuService.company.get();
+      return countriesService.getCountriesList(companyId);
+    };
+
+    this.getStationsList = function() {
+      var companyId = globalMenuService.company.get();
+      return stationsService.getStationList(companyId, 0);
+    };
+
+    this.getCompanyCurrencies = function(payload) {
+      return currenciesService.getCompanyCurrencies(payload);
+    };
+
     return {
       getRouteTaxRate: this.getRouteTaxRate,
       getRouteTaxRates: this.getRouteTaxRates,
       createRouteTaxRate: this.createRouteTaxRate,
       updateRouteTaxRate: this.updateRouteTaxRate,
       removeRouteTaxRate: this.removeRouteTaxRate,
-      getCompanyId: this.getCompanyId
+      getCompanyId: this.getCompanyId,
+      getTaxTypesList: this.getTaxTypesList,
+      getTaxRateTypes: this.getTaxRateTypes,
+      getCountriesList: this.getCountriesList,
+      getStationsList: this.getStationsList,
+      getCompanyCurrencies: this.getCompanyCurrencies
     };
   });
