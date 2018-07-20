@@ -145,8 +145,8 @@
       <!-- Switch ON taxRate.action - Table row -->
       <tr tabindex="0" class="animate-switch-container" ng-repeat="taxRate in companyTaxRatesList | orderBy: 'created' track by $index" ng-switch on="taxRate.action" ng-class="taxRateRowClass(taxRate)">
         <!-- Switch for taxTypeCode -->
-        <td class="animate-switch col-xs-2" ng-switch-when="read">{{ taxRate.taxTypeCode.taxTypeCode }}</td>
-        <td class="animate-switch tax-rates-ui-select col-xs-2" ng-switch-when="edit">
+        <td class="animate-switch col-xs-1" ng-switch-when="read">{{ taxRate.taxTypeCode.taxTypeCode }}</td>
+        <td class="animate-switch tax-rates-ui-select col-xs-1" ng-switch-when="edit">
           <ui-select ng-model="taxRate.taxTypeCode" theme="bootstrap" name="taxTypeCode" ng-disabled="isDisabled(taxRate)">
             <ui-select-match placeholder="Tax Type">
               {{ $select.selected.taxTypeCode }}
@@ -156,7 +156,7 @@
             </ui-select-choices>
           </ui-select>
         </td>
-        <td class="animate-switch tax-rates-ui-select col-xs-2" ng-switch-when="create">
+        <td class="animate-switch tax-rates-ui-select col-xs-1" ng-switch-when="create">
           <ui-select ng-model="taxRate.taxTypeCode" theme="bootstrap" name="taxTypeCode">
             <ui-select-match placeholder="Tax Type">
               {{ $select.selected.taxTypeCode }}
