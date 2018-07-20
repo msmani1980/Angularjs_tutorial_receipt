@@ -143,17 +143,23 @@ angular.module('ts5App')
     };
 
     this.formatTaxTypeDepartureCountryName = function (taxRate) {
-      taxRate.departureStationsCountryName = {
+      return {
         countryName: taxRate.departureStationsCountryName
       };
-      return taxRate.departureStationsCountryName;
     };
 
     this.formatTaxTypeArrivalCountryName = function (taxRate) {
-      taxRate.arrivalStationsCountryName = {
+      return {
         countryName: taxRate.arrivalStationsCountryName
       };
-      return taxRate.arrivalStationsCountryName;
+    };
+
+    this.formatDepartureCompanyTaxRateStations = function (taxRate) {
+      return lodash.filter(taxRate.stations, { direction: 'Departure' });
+    };
+
+    this.formatArrivalCompanyTaxRateStations = function (taxRate) {
+      return lodash.filter(taxRate.stations, { direction: 'Arrival' });
     };
 
     this.formatTaxRateType = function (taxRate) {
@@ -173,6 +179,8 @@ angular.module('ts5App')
       taxRate.currency = $this.setCompanyCurrency(taxRate);
       taxRate.departureStationsCountryName = $this.formatTaxTypeDepartureCountryName(taxRate);
       taxRate.arrivalStationsCountryName = $this.formatTaxTypeArrivalCountryName(taxRate);
+      taxRate.departureCompanyTaxRateStations = $this.formatDepartureCompanyTaxRateStations(taxRate);
+      taxRate.arrivalCompanyTaxRateStations = $this.formatArrivalCompanyTaxRateStations(taxRate);
       taxRate.taxTypeCode = $this.formatTaxTypeCode(taxRate);
       taxRate.taxRateType = $this.formatTaxRateType(taxRate);
       if (angular.isDefined(dates) && dates === true) {

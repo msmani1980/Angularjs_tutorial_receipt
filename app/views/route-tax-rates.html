@@ -190,7 +190,7 @@
         </td>
         <!-- Switch for departure companyTaxRateStations -->
         <td class="animate-switch col-xs-1" ng-switch-when="read">
-          <p class="label label-primary tax-label" ng-repeat="station in taxRate.companyTaxRateStations | orderBy:'stationCode'">
+          <p class="label label-primary tax-label" ng-repeat="station in taxRate.departureCompanyTaxRateStations | orderBy:'stationCode'">
             {{ station.stationCode }}
           </p>
         </td>
@@ -234,7 +234,7 @@
         </td>
         <!-- Switch for arrival companyTaxRateStations -->
         <td class="animate-switch col-xs-1" ng-switch-when="read">
-          <p class="label label-primary tax-label" ng-repeat="station in taxRate.companyTaxRateStations | orderBy:'stationCode'">
+          <p class="label label-primary tax-label" ng-repeat="station in taxRate.arrivalCompanyTaxRateStations | orderBy:'stationCode'">
             {{ station.stationCode }}
           </p>
         </td>
@@ -277,7 +277,12 @@
           </ui-select>
         </td>
         <!-- Switch for rate -->
-        <td class="animate-switch col-xs-1" ng-switch-when="read">{{ taxRate.taxRateValue }}<span ng-show="isTaxRateTypePercentage(taxRate)"> %</span></td>
+        <td class="animate-switch col-xs-1" ng-switch-when="read">
+          <div ng-show="isTaxRateTypePercentage(taxRate)">{{ taxRate.taxRateValue }}  %</div>
+          <div ng-show="!isTaxRateTypePercentage(taxRate)">
+            <div ng-repeat="currency in taxRate.taxRateAmounts">{{ currency.amount }}</div>
+          </div>
+        </td>
         <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="edit">
           <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate" ng-disabled="isDisabled(taxRate)">
         </td>
@@ -318,7 +323,6 @@
         <td ng-switch-when="create">{{ getUpdateBy(taxRate) }}</td>
         <!-- Buttons for Read -->
         <td class="animate-switch col-xs-1" ng-switch-when="read" ng-show="isCRUD">
-          {{taxRate | json}}
           <a class="btn btn-primary btn-xs" ng-show="isTaxRateEditable(taxRate)" ng-click="editCompanyTaxRate(taxRate)">
             <span class="fa fa-pencil"></span>
           </a>
