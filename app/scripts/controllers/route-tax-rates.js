@@ -84,19 +84,16 @@ angular.module('ts5App')
       return 'auto';
     };
 
-    this.setCompanyCurrency = function (taxRate) {
-      var payload;
-      if (angular.isDefined(taxRate.companyCurrencyId) && angular.isDefined($scope.currenciesList)) {
+    $scope.findCompanyCurrencyCode = function (companyCurrencyId) {
+      var currencyCode = '';
+      if (angular.isDefined(companyCurrencyId) && angular.isDefined($scope.currenciesList)) {
         angular.forEach($scope.currenciesList, function (currency) {
-          if (currency.id === taxRate.companyCurrencyId) {
-            payload = {
-              id: taxRate.companyCurrencyId,
-              code: currency.code
-            };
+          if (currency.id === companyCurrencyId) {
+            currencyCode = currency.code;
           }
         });
 
-        return payload;
+        return currencyCode;
       }
     };
 
@@ -176,7 +173,6 @@ angular.module('ts5App')
     this.formatTaxRateObject = function (taxRate, dates) {
       taxRate.action = 'read';
       taxRate.availableStations = $this.setTaxRateAvailableStations(taxRate);
-      taxRate.currency = $this.setCompanyCurrency(taxRate);
       taxRate.departureStationsCountryName = $this.formatTaxTypeDepartureCountryName(taxRate);
       taxRate.arrivalStationsCountryName = $this.formatTaxTypeArrivalCountryName(taxRate);
       taxRate.departureCompanyTaxRateStations = $this.formatDepartureCompanyTaxRateStations(taxRate);

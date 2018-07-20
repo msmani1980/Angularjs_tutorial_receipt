@@ -280,7 +280,7 @@
         <td class="animate-switch col-xs-1" ng-switch-when="read">
           <div ng-show="isTaxRateTypePercentage(taxRate)">{{ taxRate.taxRateValue }}  %</div>
           <div ng-show="!isTaxRateTypePercentage(taxRate)">
-            <div ng-repeat="currency in taxRate.taxRateAmounts">{{ currency.amount }}</div>
+            <div ng-repeat="currency in taxRate.taxRateAmounts">{{ findCompanyCurrencyCode(currency.companyCurrencyId) }} {{ currency.amount }}</div>
           </div>
         </td>
         <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="edit">
