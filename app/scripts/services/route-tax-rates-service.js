@@ -8,10 +8,10 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('routeTaxRatesService', function (ENV, $resource) {
+  .service('routeTaxRatesService', function (ENV, $resource, globalMenuService) {
     var requestURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/route-tax-rates/:id';
     var requestParameters = {
-      companyId: '@companyId',
+      companyId: globalMenuService.company.get(),
       id: '@id'
     };
 
@@ -39,8 +39,8 @@ angular.module('ts5App')
       return requestResource.getRouteTaxRates(payload).$promise;
     };
 
-    var getRouteTaxRate = function (id) {
-      return requestResource.getRouteTaxRate({ id: id }).$promise;
+    var getRouteTaxRate = function (companyId, id) {
+      return requestResource.getRouteTaxRate({ companyId: companyId, id: id }).$promise;
     };
 
     var createRouteTaxRate = function (payload) {
