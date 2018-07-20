@@ -273,7 +273,7 @@ angular.module('ts5App')
             permissionCodes: ['R']
           }]
         }, {
-          name: 'Manage Route Taxes',
+          name: 'Route Tax Management',
           route: '/#/route-tax-rates',
           icon: 'icon-manage-taxes',
           className: 'dashboard-manageTaxes',
