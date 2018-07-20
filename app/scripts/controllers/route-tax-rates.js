@@ -8,7 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('RouteTaxRatesCtrl', function ($scope, $q, $route, $filter, taxRatesFactory, dateUtility, messageService, accessService, lodash) {
+  .controller('RouteTaxRatesCtrl', function ($scope, $q, $route, $filter, routeTaxRatesFactory, dateUtility, messageService, accessService, lodash) {
+
     var $this = this;
 
     this.createScopeVariables = function () {
@@ -84,7 +85,7 @@ angular.module('ts5App')
     };
 
     this.setCompanyCurrency = function (taxRate) {
-      var payload = {};
+      var payload;
       if (angular.isDefined(taxRate.companyCurrencyId) && angular.isDefined($scope.currenciesList)) {
         angular.forEach($scope.currenciesList, function (currency) {
           if (currency.id === taxRate.companyCurrencyId) {
@@ -141,11 +142,18 @@ angular.module('ts5App')
       }
     };
 
-    this.formatTaxTypeCountryName = function (taxRate) {
-      taxRate.countryName = {
-        countryName: taxRate.countryName
+    this.formatTaxTypeDepartureCountryName = function (taxRate) {
+      taxRate.departureStationsCountryName = {
+        countryName: taxRate.departureStationsCountryName
       };
-      return taxRate.countryName;
+      return taxRate.departureStationsCountryName;
+    };
+
+    this.formatTaxTypeArrivalCountryName = function (taxRate) {
+      taxRate.arrivalStationsCountryName = {
+        countryName: taxRate.arrivalStationsCountryName
+      };
+      return taxRate.arrivalStationsCountryName;
     };
 
     this.formatTaxRateType = function (taxRate) {
@@ -163,7 +171,8 @@ angular.module('ts5App')
       taxRate.action = 'read';
       taxRate.availableStations = $this.setTaxRateAvailableStations(taxRate);
       taxRate.currency = $this.setCompanyCurrency(taxRate);
-      taxRate.countryName = $this.formatTaxTypeCountryName(taxRate);
+      taxRate.departureStationsCountryName = $this.formatTaxTypeDepartureCountryName(taxRate);
+      taxRate.arrivalStationsCountryName = $this.formatTaxTypeArrivalCountryName(taxRate);
       taxRate.taxTypeCode = $this.formatTaxTypeCode(taxRate);
       taxRate.taxRateType = $this.formatTaxRateType(taxRate);
       if (angular.isDefined(dates) && dates === true) {
@@ -186,7 +195,7 @@ angular.module('ts5App')
       return taxRatesList;
     };
 
-    this.createCompanyTaxRates = function (taxRatesList) {
+    this.createRouteTaxRates = function (taxRatesList) {
       var newTaxRatesList = [];
       angular.forEach(taxRatesList, function (taxRate, key) {
         taxRate.position = $this.uiSelectPosition(taxRatesList.length, key);
@@ -211,31 +220,31 @@ angular.module('ts5App')
     this.setCompanyTaxRatesList = function (dataFromAPI) {
       $scope.companyTaxRatesList = [];
       var masterRatesList = angular.copy(dataFromAPI);
-      var taxRatesList = angular.copy(dataFromAPI.taxRates);
+      var taxRatesList = angular.copy(dataFromAPI.response);
       $this.setMasterCompanyTaxRatesList(masterRatesList);
       if (angular.isDefined(taxRatesList)) {
-        $scope.companyTaxRatesList = $this.createCompanyTaxRates(taxRatesList);
+        $scope.companyTaxRatesList = $this.createRouteTaxRates(taxRatesList);
       }
     };
 
     this.setMasterCompanyTaxRatesList = function (dataFromAPI) {
       $scope.masterTaxRates = [];
-      var masterRatesList = angular.copy(dataFromAPI.taxRates);
+      var masterRatesList = angular.copy(dataFromAPI.response);
       if (angular.isDefined(masterRatesList)) {
         $scope.masterTaxRates = $this.createMasterCompanyTaxRates(masterRatesList);
       }
     };
 
     this.getTaxTypesList = function () {
-      return taxRatesFactory.getTaxTypesList().then($this.setTaxTypesList);
+      return routeTaxRatesFactory.getTaxTypesList().then($this.setTaxTypesList);
     };
 
     this.getTaxRateTypesList = function () {
-      return taxRatesFactory.getTaxRateTypes().then($this.setTaxRateTypesList);
+      return routeTaxRatesFactory.getTaxRateTypes().then($this.setTaxRateTypesList);
     };
 
     this.getStationsList = function () {
-      return taxRatesFactory.getStationsList().then($this.setStationsList);
+      return routeTaxRatesFactory.getStationsList().then($this.setStationsList);
     };
 
     this.getCurrenciesList = function () {
@@ -246,17 +255,17 @@ angular.module('ts5App')
         isOperatedCurrency: true
       };
 
-      return taxRatesFactory.getCompanyCurrencies(payload).then($this.setCurrenciesList);
+      return routeTaxRatesFactory.getCompanyCurrencies(payload).then($this.setCurrenciesList);
     };
 
-    this.getCompanyTaxRatesList = function (query) {
+    this.getRouteTaxRates = function (query) {
       var q = query || {};
-      return taxRatesFactory.getCompanyTaxRatesList(q).then($this.setCompanyTaxRatesList);
+      return routeTaxRatesFactory.getRouteTaxRates(q).then($this.setCompanyTaxRatesList);
     };
 
     this.getCompanyMasterTaxRatesList = function (query) {
       var q = query || {};
-      return taxRatesFactory.getCompanyTaxRatesList(q).then($this.setMasterCompanyTaxRatesList);
+      return routeTaxRatesFactory.getRouteTaxRates(q).then($this.setMasterCompanyTaxRatesList);
     };
 
     this.errorHandler = function (dataFromAPI) {
@@ -272,7 +281,7 @@ angular.module('ts5App')
 
     this.createTaxRatePromises = function () {
       return [
-        $this.getCompanyTaxRatesList()
+        $this.getRouteTaxRates()
       ];
     };
 
@@ -307,7 +316,7 @@ angular.module('ts5App')
     };
 
     this.init = function () {
-      $scope.isCRUD = accessService.crudAccessGranted('TAX', 'ROUTETAX', 'ROUTETAXCRUD');
+      $scope.isCRUD = accessService.crudAccessGranted('TAX', 'TAX', 'CRUDTAX');
       $this.createScopeVariables();
       $this.showLoadingModal('Loading data for Tax Management...');
       $this.makePromises();
@@ -401,7 +410,7 @@ angular.module('ts5App')
     this.createSearchPromises = function () {
       var query = $this.createSearchPayload();
       return [
-        $this.getCompanyTaxRatesList(query)
+        $this.getRouteTaxRates(query)
       ];
     };
 
@@ -438,7 +447,7 @@ angular.module('ts5App')
 
     this.createDeletePromises = function (id) {
       return [
-        taxRatesFactory.removeCompanyTaxRate(id)
+        routeTaxRatesFactory.removeRouteTaxRate(id)
       ];
     };
 
@@ -546,7 +555,7 @@ angular.module('ts5App')
 
     this.createEditPromises = function (taxRate) {
       return [
-        taxRatesFactory.updateCompanyTaxRate(taxRate)
+        routeTaxRatesFactory.updateRouteTaxRate(taxRate)
       ];
     };
 
@@ -696,7 +705,7 @@ angular.module('ts5App')
 
     this.createNewTaxRatePromises = function (payload) {
       return [
-        taxRatesFactory.createCompanyTaxRate(payload)
+        routeTaxRatesFactory.createRouteTaxRate(payload)
       ];
     };
 
@@ -726,7 +735,7 @@ angular.module('ts5App')
     };
 
     this.getTaxRateById = function (id) {
-      taxRatesFactory.getCompanyTaxRate(id).then($this.setTaxRateById);
+      routeTaxRatesFactory.getRouteTaxRate(id).then($this.setTaxRateById);
     };
 
     this.createNewTaxRateSuccess = function (response) {
@@ -947,4 +956,6 @@ angular.module('ts5App')
 
       return taxRate.updatedOn ? dateUtility.formatTimestampForApp(taxRate.updatedOn) : dateUtility.formatTimestampForApp(taxRate.createdOn);
     };
+
   });
+
