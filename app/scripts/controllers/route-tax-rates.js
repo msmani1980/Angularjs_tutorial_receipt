@@ -97,7 +97,6 @@ angular.module('ts5App')
       }
     };
 
-    // TODO: something screwed up - duplicates
     this.checkForExistingDepartureStations = function (taxRate, currentStation) {
       var existingStation = [];
       angular.forEach(taxRate.departureCompanyTaxRateStations, function (station) {
@@ -185,11 +184,19 @@ angular.module('ts5App')
     };
 
     this.formatDepartureCompanyTaxRateStations = function (taxRate) {
-      return lodash.filter(taxRate.stations, { direction: 'Departure' });
+      var stations = lodash.filter(taxRate.stations, { direction: 'Departure' });
+
+      return stations.map(function (station) {
+        return lodash.find(taxRate.departureAvailableStations, { stationCode: station.stationCode });
+      });
     };
 
     this.formatArrivalCompanyTaxRateStations = function (taxRate) {
-      return lodash.filter(taxRate.stations, { direction: 'Arrival' });
+      var stations = lodash.filter(taxRate.stations, { direction: 'Arrival' });
+
+      return stations.map(function (station) {
+        return lodash.find(taxRate.arrivalAvailableStations, { stationCode: station.stationCode });
+      });
     };
 
     this.formatTaxRateType = function (taxRate) {
