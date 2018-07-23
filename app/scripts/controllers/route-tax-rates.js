@@ -355,10 +355,22 @@ angular.module('ts5App')
       return isActive;
     };
 
-    this.generateCompanyStationIds = function () {
+    this.generateDepartureCompanyStationIds = function () {
       var companyStationIds = [];
-      for (var key in $scope.search.stations) {
-        var station = $scope.search.stations[key];
+      for (var key in $scope.search.departureStations) {
+        var station = $scope.search.departureStations[key];
+        if (station.stationId) {
+          companyStationIds.push(station.stationId);
+        }
+      }
+
+      return encodeURI(companyStationIds);
+    };
+
+    this.generateArrivalCompanyStationIds = function () {
+      var companyStationIds = [];
+      for (var key in $scope.search.arrivalStations) {
+        var station = $scope.search.arrivalStations[key];
         if (station.stationId) {
           companyStationIds.push(station.stationId);
         }
@@ -372,15 +384,15 @@ angular.module('ts5App')
         limit: 100
       };
       if ($scope.search.taxType) {
-        query.taxTypeCode = $scope.search.taxType.taxTypeCode;
+        query.companyTaxTypeId = $scope.search.taxType.id;
       }
 
-      if ($scope.search.country) {
-        query.countryName = $scope.search.country.countryName;
+      if ($scope.search.departureCountry) {
+        query.departureStationsCountryName = $scope.search.departureCountry.countryName;
       }
 
-      if ($scope.search.currency) {
-        query.companyCurrencyId = $scope.search.currency.id;
+      if ($scope.search.arrivalCountry) {
+        query.arrivalStationsCountryName = $scope.search.arrivalCountry.countryName;
       }
 
       if ($scope.search.taxRateType) {
@@ -392,8 +404,13 @@ angular.module('ts5App')
 
     this.createSearchPayload = function () {
       var query = $this.createUiSelectSearchPayload();
-      if (angular.isDefined($scope.search.stations) && $scope.search.stations.length) {
-        query.companyStationIds = $this.generateCompanyStationIds();
+
+      if (angular.isDefined($scope.search.departureStations) && $scope.search.departureStations.length) {
+        query.departureStationIds = $this.generateDepartureCompanyStationIds();
+      }
+
+      if (angular.isDefined($scope.search.arrivalStations) && $scope.search.arrivalStations.length) {
+        query.arrivalStationIds = $this.generateArrivalCompanyStationIds();
       }
 
       if ($scope.search.taxRate) {
