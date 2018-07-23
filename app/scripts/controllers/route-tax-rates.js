@@ -41,7 +41,7 @@ angular.module('ts5App')
     };
 
     this.setTaxTypesList = function (dataFromAPI) {
-      $scope.taxTypesList = lodash.filter(angular.copy(dataFromAPI.response), { applicableTo: 'Station' });
+      $scope.taxTypesList = lodash.filter(angular.copy(dataFromAPI.response), { applicableTo: 'Route' });
     };
 
     this.setTaxRateTypesList = function (dataFromAPI) {
@@ -183,6 +183,11 @@ angular.module('ts5App')
         taxRate.startDate = $this.formatTaxRateDate(taxRate.startDate);
         taxRate.endDate = $this.formatTaxRateDate(taxRate.endDate);
       }
+      taxRate.taxRateValue = Number(taxRate.taxRateValue).toFixed(2);
+      taxRate.taxRateAmounts = taxRate.taxRateAmounts.map(function(amount) {
+        amount.amount = Number(amount.amount).toFixed(2);
+        return amount;
+      });
 
       if (taxRate.availableStations) {
         return taxRate;
