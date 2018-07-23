@@ -1282,7 +1282,33 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
     };
 
+    function isTaxesValid () {
+      var taxArray = $scope.formData.taxes;
+      if (angular.isDefined(taxArray) && taxArray.length > 0) {
+        var setTax =   new Set();
+        for (var key in taxArray) {
+          var companyTaxId = taxArray[key].companyTaxId;
+          setTax.add(companyTaxId);
+        }
+
+        return taxArray.length === setTax.size;
+      }
+
+      return true;
+    }
+
+    function showCustomError(errorField, errorMessage) {
+      $scope.errorCustom = [{ field: errorField, value: errorMessage }];
+      $scope.displayError = true;
+    }
+
     this.updateItem = function(itemData) {
+      var isValid =	isTaxesValid();
+      if (!isValid) {
+        showCustomError('Tax Type', 'Must be unique');
+        return;
+      }
+
       var $this = this;
       angular.element('#loading').modal('show').find('p').text('We are updating your item');
 
@@ -1296,6 +1322,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.createItem = function(itemData) {
+      var isValid =	isTaxesValid();
+      if (!isValid) {
+        showCustomError('Tax Type', 'Must be unique');
+        return;
+      }
+
       angular.element('#loading').modal('show').find('p').text('We are creating your item');
       var newItemPayload = {
         retailItem: itemData
