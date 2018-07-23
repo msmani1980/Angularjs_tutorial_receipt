@@ -922,12 +922,20 @@ angular.module('ts5App')
       $scope.search.arrivalStations = [];
     };
 
-    $scope.isTaxRateCountryFieldDisabled = function (taxRate) {
-      return $scope.isDisabled(taxRate) || (angular.isDefined(taxRate.companyTaxRateStations) && taxRate.companyTaxRateStations.length);
+    $scope.isTaxRateDepartureCountryFieldDisabled = function (taxRate) {
+      return $scope.isDisabled(taxRate) || (angular.isDefined(taxRate.departureCompanyTaxRateStations) && taxRate.departureCompanyTaxRateStations.length);
     };
 
-    $scope.isTaxRateCountryFieldDisabledForCreate = function (taxRate) {
-      return angular.isDefined(taxRate.companyTaxRateStations) && taxRate.companyTaxRateStations.length;
+    $scope.isTaxRateArrivalCountryFieldDisabled = function (taxRate) {
+      return $scope.isDisabled(taxRate) || (angular.isDefined(taxRate.arrivalCompanyTaxRateStations) && taxRate.arrivalCompanyTaxRateStations.length);
+    };
+
+    $scope.isTaxRateDepartureCountryFieldDisabledForCreate = function (taxRate) {
+      return angular.isDefined(taxRate.departureCompanyTaxRateStations) && taxRate.departureCompanyTaxRateStations.length;
+    };
+
+    $scope.isTaxRateArrivalCountryFieldDisabledForCreate = function (taxRate) {
+      return angular.isDefined(taxRate.arrivalCompanyTaxRateStations) && taxRate.arrivalCompanyTaxRateStations.length;
     };
 
     $scope.isTaxRateStationsDisabled = function (taxRate) {
