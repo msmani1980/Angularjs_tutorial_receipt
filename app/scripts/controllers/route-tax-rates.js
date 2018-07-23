@@ -775,7 +775,8 @@ angular.module('ts5App')
           startDate: '',
           endDate: ''
         };
-        $scope.enableSearchStations = false;
+        $scope.enableDepartureSearchStations = false;
+        $scope.enableArrivalSearchStations = false;
       }
 
       $scope.companyTaxRatesList = [];
@@ -881,13 +882,22 @@ angular.module('ts5App')
       taxRate.action = 'deleted';
     };
 
-    $scope.filterSearchStationsByCountry = function (countryName) {
-      $scope.enableSearchStations = true;
-      $scope.stationsListSearch = angular.copy($scope.masterStationsList);
-      $scope.stationsListSearch = $filter('filter')($scope.stationsListSearch, {
+    $scope.filterSearchDepartureStationsByCountry = function (countryName) {
+      $scope.enableDepartureSearchStations = true;
+      $scope.departureStationsListSearch = angular.copy($scope.masterStationsList);
+      $scope.departureStationsListSearch = $filter('filter')($scope.departureStationsListSearch, {
         countryName: countryName
       }, true);
-      $scope.search.stations = [];
+      $scope.search.departureStations = [];
+    };
+
+    $scope.filterSearchArrivalStationsByCountry = function (countryName) {
+      $scope.enableArrivalSearchStations = true;
+      $scope.arrivalStationsListSearch = angular.copy($scope.masterStationsList);
+      $scope.arrivalStationsListSearch = $filter('filter')($scope.arrivalStationsListSearch, {
+        countryName: countryName
+      }, true);
+      $scope.search.arrivalStations = [];
     };
 
     $scope.isTaxRateCountryFieldDisabled = function (taxRate) {
