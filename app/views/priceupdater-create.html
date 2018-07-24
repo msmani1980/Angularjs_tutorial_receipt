@@ -170,13 +170,26 @@
 										</div>
 									</div>
 									<div class="col-xs-12 col-sm-4">
-										<label class="invisible">Checkbox</label>
+										<div class="form-group">
+											<label for="stationCurrencyList">Currencies List*</label>
+											<div class="form-group" ng-repeat="(stnCurrencyKey,stnCurrency) in stationPriceCurrencies track by $index">
+												<div class="input-group">
+													<div class="input-group-addon">
+				    	          						{{ stnCurrency.code }} *
+													</div>
+													<input name="Station Currencies List - {{ stnCurrency.code }}" ng-model="stnCurrency.price" ng-required="rule.bulkRuleStationException.startDate && rule.bulkRuleStationException.endDate"  
+															ng-disabled="isDisabled()" custom-validity custom-pattern="numberOrDecimal" 
+															type="text" class="form-control" maxlength="8" placeholder="1.00"/>
+												</div>
+											</div>
+										</div>
+										<!-- <label class="invisible">Checkbox</label>
 				                		<div class="form-group">
 											<input ng-model="rule.bulkRuleStationException.percentage" ng-disabled="isDisabled()" id="stnpercentage" type="checkbox"/>
 				                			<label>Is Percentage</label>
-										</div>
+										</div> -->
 									</div>
-									<div class="col-xs-12 col-sm-4" ng-hide="rule.bulkRuleStationException.percentage">
+									<!-- <div class="col-xs-12 col-sm-4" ng-hide="rule.bulkRuleStationException.percentage">
 										<div class="form-group">
 											<label for="stationCurrencyList">Currencies List*</label>
 											<div class="form-group" ng-repeat="(stnCurrencyKey,stnCurrency) in stationPriceCurrencies track by $index">
@@ -197,7 +210,7 @@
 				                			<input ng-model="rule.bulkRuleStationException.percentValue" type="text" class="form-control" name = "stationPercentageValue" id="stnPercentValue" 
 				                				ng-required="rule.bulkRuleStationException.percentage && rule.bulkRuleStationException.startDate && rule.bulkRuleStationException.endDate" placeholder="10%" ng-disabled="isDisabled()" ng-pattern="regexp.percentage">
 				              			</div>
-									</div>
+									</div> -->
 								   </div>
 								</div>
 						     </div>
