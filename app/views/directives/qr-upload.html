@@ -10,8 +10,7 @@
     ngf-multiple="false"
     ngf-allow-dir="true"
     ngf-accept="'.jpg,.png,.gif'"
-    ngf-min-size='10'
-		ngf-max-size='10000'
+    ngf-validate = "{size: {max: '10kb', min: '10B'}, height: {max: 128}, width: {max: 128}}"
 	>
 
 	<b>Drop QR Codes, or Click.</b>
@@ -20,20 +19,14 @@
 
 	</div>
 
-	<p class="alert alert-danger" ng-show="rejQr.length">
-
-		<b>Your file doesn't meet the requirements:</b>
-		<br>
-
-		<i ng-show="rejQr[0].size > 10000">
-			max size: 10kb and 128 x 128 pixels.
-		</i>
-
-		<i ng-show="rejQr[0].size < 10001">
-			'{{rejQr[0].name}}' is invalid, OR '{{rejQr[0].type}}' is not an accepted file type.
-		</i>
-
-	</p>
+  <p class="alert alert-danger" ng-show="rejQr.length" ng-repeat="f in rejQr">
+    <b>Your file doesn't meet the requirements:</b>
+    <br/>
+    <i ng-show="f.$error === 'height.max' || f.$error === 'size.max'">File {{f.name}} has exceed maximum allowed size: 10kb and 128 x 128 pixels.</i>
+    <i ng-show="f.$error === 'accept'">
+      '{{f.name}}' is invalid, OR '{{f.type}}' is not an accepted file type. Accepted types: .jpg, .png, .gif.
+    </i>
+  </p>
 
 	<p class="alert alert-danger" ng-model="files" ng-show="qrTooLarge">
 
