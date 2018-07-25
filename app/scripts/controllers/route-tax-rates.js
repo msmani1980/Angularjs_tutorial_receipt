@@ -613,14 +613,31 @@ angular.module('ts5App')
     };
 
     this.createStationsPayload = function (taxRate) {
-      var companyTaxRateStations = [];
-      angular.forEach(taxRate.companyTaxRateStations, function (station) {
-        companyTaxRateStations.push({
-          companyStationId: station.stationId ? station.stationId : station.companyStationId
-        });
+      var departureStations = taxRate.departureStations.map(function (station) {
+        var existingStation = lodash.find(taxRate.stations, { stationCode: station.stationCode, direction: 'Departure' });
+
+        return {
+          id: existingStation ? existingStation.id : null,
+          companyStationId: station.companyStationId,
+          direction: "Departure"
+        };
       });
 
-      return companyTaxRateStations;
+      var arrivalStations = taxRate.arrivalStations.map(function (station) {
+        var existingStation = lodash.find(taxRate.stations, { stationCode: station.stationCode, direction: 'Arrival' });
+
+        return {
+          id: existingStation ? existingStation.id : null,
+          companyStationId: station.companyStationId,
+          direction: "Arrival"
+        };
+      });
+
+      return departureStations.concat(arrivalStations)
+    };
+
+    this.createTaxRateAmountsPayload = function (taxRate) {
+
     };
 
     this.editSuccess = function () {
@@ -634,7 +651,7 @@ angular.module('ts5App')
 
     this.createEditPromises = function (taxRate) {
       return [
-        routeTaxRatesFactory.updateRouteTaxRate(taxRate)
+        routeTaxRatesFactory.updateRouteTaxRate(taxRate.id, taxRate)
       ];
     };
 
@@ -651,16 +668,20 @@ angular.module('ts5App')
       delete taxRate.readOnly;
       taxRate.action = 'read';
       taxRate.saved = true;
+
       var payload = {
         id: taxRate.id,
-        taxRateValue: taxRate.taxRateValue,
+        taxRateValue: taxRate.taxRateType.taxRateType === 'Percentage' ? taxRate.taxRateValue : null,
         taxRateType: taxRate.taxRateType.taxRateType,
         startDate: dateUtility.formatDateForAPI(taxRate.startDate),
         endDate: dateUtility.formatDateForAPI(taxRate.endDate),
         companyTaxTypeId: taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId,
-        companyTaxRateStations: $this.createStationsPayload(taxRate),
-        companyCurrencyId: $scope.isTaxRateTypePercentage(taxRate) ? null : taxRate.currency.id
+        stations: $this.createStationsPayload(taxRate),
+        taxRateAmounts: taxRate.taxRateType.taxRateType === 'Amount' ? $this.createTaxRateAmountsPayload(taxRate) : null
       };
+
+      console.log(payload)
+
       $this.makeEditPromises(payload);
     };
 
