@@ -296,7 +296,14 @@
           </div>
         </td>
         <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="edit">
-          <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate" ng-disabled="isDisabled(taxRate)">
+          <div ng-show="isTaxRateTypePercentage(taxRate)">
+            <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate" ng-disabled="isDisabled(taxRate)">
+          </div>
+          <div ng-show="!isTaxRateTypePercentage(taxRate)">
+            <a class="btn btn-info btn-s" ng-click="showCompanyTaxAmountModal(taxRate)">
+              <span class="fa fa-pencil"></span> Apply Amounts
+            </a>
+          </div>
         </td>
         <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="create">
           <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate">

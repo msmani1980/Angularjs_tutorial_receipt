@@ -1067,6 +1067,10 @@ angular.module('ts5App')
       return (dateUtility.isTodayOrEarlierDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
     };
 
+    $scope.showCompanyTaxAmountModal = function (taxRate) {
+      // TODO: show modal with currencies
+    };
+
     $scope.getUpdateBy = function (taxRate) {
       if (taxRate.updatedByPerson) {
         return taxRate.updatedByPerson.userName;
