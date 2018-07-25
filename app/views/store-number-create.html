@@ -9,6 +9,7 @@
       <div class="col-xs-6 text-right">
         <fieldset>
           <a class="btn btn-default" ng-href="#/" class="btn">Back</a>
+          <button type="button" class="btn btn-default" id="searchStoreNumberListId" ng-click="searchStoreNumber()" id="searchStoreNumber">Search</button>
           <button class="btn btn-primary" type="submit" ng-disabled="formDefault()">
             <span class="fa fa-check-square-o" aria-hidden="true"></span>
             <span class="hidden-xs">{{ submitText }}</span>
@@ -89,8 +90,8 @@
   </tr>
   </thead>
   <tbody>
-  <tr
-    ng-repeat="store in storeNumbersList track by $index">
+  <tr id="store-{{$index}}"
+        ng-repeat="store in storeNumbersList | toArray:false | filter:{storeNumber: formData.storeNumber} | orderBy: 'startDate' track by $index">
     <td>{{ store.storeNumber }}</td>
     <td>{{ store.startDate }}</td>
     <td>{{ store.endDate }}</td>

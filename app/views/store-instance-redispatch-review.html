@@ -17,7 +17,7 @@
                placeholder="Filter list by item code or name"/>
         <div class="input-group-btn">
           <button type="button" class="btn btn-default" ng-click="clearFilteredPackingList()"><i class="fa fa-times"></i></button>
-          <button type="button" class="btn btn-default" ng-click="filterPackingList()"><i class="fa fa-search"></i> Search</button>
+          <button type="button" class="btn btn-default" ng-click="filterPackingList()"><i class="fa fa-search"></i> Search </button>
         </div>
       </div>
       </div>
@@ -34,7 +34,6 @@
               <button type="button" class="btn btn-info" ng-click="redirectTo('InboundSeals')">Edit</button>
             </div>
           </div>
-
           <div ng-if="storeDetails.tampered">
             <input type="checkbox" ng-model="storeDetails.tampered" disabled/><span>Inbound Seals Tampered</span>
             <textarea class="form-control no-resize" disabled>{{storeDetails.note}}</textarea>
@@ -102,7 +101,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:itemSortOrder"
+            <tr ng-repeat="item in pickListItems | filter:{itemDescription: itemFilterText} | orderBy:itemSortOrder"
                 ng-class="hasDiscrepancy(item)">
               <td>
                 <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
@@ -151,7 +150,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in offloadItemList | filter:{itemDescription: filterItemDetails} | orderBy:itemSortOrder"
+            <tr ng-repeat="item in offloadItemList | filter:{itemDescription: itemFilterText} | orderBy:itemSortOrder"
                 ng-class="hasDiscrepancy(item)">
               <td>
                 <input type="text" class="form-control" ng-model="item.itemDescription" disabled>

@@ -31,21 +31,12 @@ angular.module('ts5App')
       angular.element('.modal-backdrop').remove();
     }
 
-    function showLoadingModal(text) {
-      angular.element('#loading').modal('show').find('p').text(text);
-    }
-
-    function hideLoadingModal() {
-      angular.element('#loading').modal('hide');
-    }
-
     function setDataList(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       if (dataFromAPI.response) {
         $scope.commissionData = $scope.commissionData.concat(angular.copy(dataFromAPI.response));
       }
 
-      hideLoadingModal();
       hideLoadingBar();
     }
 
@@ -71,7 +62,6 @@ angular.module('ts5App')
     }
 
     function searchCommissionData() {
-      showLoadingModal('Searching');
       var payload = {};
       if ($scope.search.crewBaseType) {
         payload.crewBaseTypeId = $scope.search.crewBaseType.id;
@@ -217,13 +207,11 @@ angular.module('ts5App')
     }
 
     function initSuccess() {
-      hideLoadingModal();
       initDone = true;
       $scope.searchCommissionData();
     }
 
     function init() {
-      showLoadingModal('initializing data dependencies');
       $scope.isCRUD = accessService.crudAccessGranted('EMLOYEECOMMISSION', 'EMLOYEECOMMISSION', 'CRUDEC');
       var initPromises = [
         getCommissionPayableTypes(),
