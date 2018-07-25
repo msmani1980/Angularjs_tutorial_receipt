@@ -202,14 +202,14 @@
         </td>
         <!-- Switch for departure companyTaxRateStations -->
         <td class="animate-switch col-xs-1" ng-switch-when="read">
-          <p class="label label-primary tax-label" ng-repeat="station in taxRate.departureCompanyTaxRateStations | orderBy:'stationCode'">
+          <p class="label label-primary tax-label" ng-repeat="station in taxRate.departureStations | orderBy:'stationCode'">
             {{ station.stationCode }}
           </p>
         </td>
         <td class="animate-switch tax-rates-multi-select col-xs-1" ng-switch-when="edit">
-          <ui-select ng-if="taxRateSelectReady(taxRate)"  on-select="onUiSelect($select)"  multiple ng-model="taxRate.departureCompanyTaxRateStations" theme="bootstrap" sortable="true" close-on-select="true" ng-disabled="isTaxRateDepartureStationsDisabled(taxRate)" style="margin-bottom:10px; min-height:35px;">
+          <ui-select ng-if="taxRateSelectReady(taxRate)"  on-select="onUiSelect($select)"  multiple ng-model="taxRate.departureStations" theme="bootstrap" sortable="true" close-on-select="true" ng-disabled="isTaxRateDepartureStationsDisabled(taxRate)" style="margin-bottom:10px; min-height:35px;">
             <ui-select-match placeholder="Stations">{{ $item.stationCode }}</ui-select-match>
-            <ui-select-choices group-by="'countryName'" repeat="station in taxRate.departureAvailableStations | filter: $select.search | orderBy:'stationCode'" position={{taxRate.position}}>
+            <ui-select-choices group-by="'countryName'" repeat="station in taxRate.availableDepartureStations | filter: $select.search | orderBy:'stationCode'" position={{taxRate.position}}>
               <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
@@ -217,7 +217,7 @@
         <td class="animate-switch tax-rates-multi-select col-xs-1" ng-switch-when="create">
           <ui-select ng-if="viewIsReady"  on-select="onUiSelect($select)"  multiple ng-model="taxRate.companyTaxRateStations" theme="bootstrap" sortable="true" close-on-select="false" ng-disabled="isTaxRateStationsDisabledForCreate(taxRate)" style="margin-bottom:10px; min-height:35px;">
             <ui-select-match placeholder="Stations">{{ $item.stationCode }}</ui-select-match>
-            <ui-select-choices group-by="'countryName'" repeat="station in taxRate.departureAvailableStations | filter: $select.search | orderBy:'stationCode'" position='auto'>
+            <ui-select-choices group-by="'countryName'" repeat="station in taxRate.availableDepartureStations | filter: $select.search | orderBy:'stationCode'" position='auto'>
               <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
@@ -246,14 +246,14 @@
         </td>
         <!-- Switch for arrival companyTaxRateStations -->
         <td class="animate-switch col-xs-1" ng-switch-when="read">
-          <p class="label label-primary tax-label" ng-repeat="station in taxRate.arrivalCompanyTaxRateStations | orderBy:'stationCode'">
+          <p class="label label-primary tax-label" ng-repeat="station in taxRate.arrivalStations | orderBy:'stationCode'">
             {{ station.stationCode }}
           </p>
         </td>
         <td class="animate-switch tax-rates-multi-select col-xs-1" ng-switch-when="edit">
-          <ui-select ng-if="taxRateSelectReady(taxRate)"  on-select="onUiSelect($select)"  multiple ng-model="taxRate.arrivalCompanyTaxRateStations" theme="bootstrap" sortable="true" close-on-select="true" ng-disabled="isTaxRateArrivalStationsDisabled(taxRate)" style="margin-bottom:10px; min-height:35px;">
+          <ui-select ng-if="taxRateSelectReady(taxRate)"  on-select="onUiSelect($select)"  multiple ng-model="taxRate.arrivalStations" theme="bootstrap" sortable="true" close-on-select="true" ng-disabled="isTaxRateArrivalStationsDisabled(taxRate)" style="margin-bottom:10px; min-height:35px;">
             <ui-select-match placeholder="Stations">{{ $item.stationCode }}</ui-select-match>
-            <ui-select-choices group-by="'countryName'" repeat="station in taxRate.arrivalAvailableStations | filter: $select.search | orderBy:'stationCode'" position={{taxRate.position}}>
+            <ui-select-choices group-by="'countryName'" repeat="station in taxRate.availableArrivalStations | filter: $select.search | orderBy:'stationCode'" position={{taxRate.position}}>
               <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
@@ -261,7 +261,7 @@
         <td class="animate-switch tax-rates-multi-select col-xs-1" ng-switch-when="create">
           <ui-select ng-if="viewIsReady"  on-select="onUiSelect($select)"  multiple ng-model="taxRate.companyTaxRateStations" theme="bootstrap" sortable="true" close-on-select="false" ng-disabled="isTaxRateStationsDisabledForCreate(taxRate)" style="margin-bottom:10px; min-height:35px;">
             <ui-select-match placeholder="Stations">{{ $item.stationCode }}</ui-select-match>
-            <ui-select-choices group-by="'countryName'" repeat="station in taxRate.arrivalAvailableStations | filter: $select.search | orderBy:'stationCode'" position='auto'>
+            <ui-select-choices group-by="'countryName'" repeat="station in taxRate.availableArrivalStations | filter: $select.search | orderBy:'stationCode'" position='auto'>
               <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
