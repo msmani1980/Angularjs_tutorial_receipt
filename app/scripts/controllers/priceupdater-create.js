@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PriceupdaterCreateCtrl', function($scope, $q, $location, dateUtility, $routeParams, priceupdaterFactory, messageService, currencyFactory, companiesFactory) {
+  .controller('PriceupdaterCreateCtrl', function($scope, $q, $location, dateUtility, $routeParams, priceupdaterFactory, messageService, currencyFactory, companiesFactory, lodash) {
 
     var $this = this;
     $scope.viewName = 'Price Update Rule';
@@ -316,7 +316,14 @@ angular.module('ts5App')
     };
 
     this.setStationsList = function(response, stationIndex) {
-      $scope.rule.bulkRuleStationException[stationIndex].stations = response.response;
+      var stationsTotList = response.response;
+      angular.forEach($scope.rule.bulkRuleStationException, function (bulk) {
+        var stationMatch = lodash.findWhere(stationsTotList, { id: bulk.stationId });
+        var index = stationsTotList.indexOf(stationMatch);
+        stationsTotList.splice(index, 1);
+      });
+
+      $scope.rule.bulkRuleStationException[stationIndex].stations = stationsTotList;
     };
 
     this.getGlobalStationList = function(startDate, endDate, stationIndex) {
