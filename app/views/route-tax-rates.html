@@ -386,7 +386,14 @@
       </div>
 
       <div class="modal-body">
-        <h2>{{ body }}</h2>
+        <div class="table table-responsive table-hover">
+          <table class="table">
+            <tr ng-repeat="currency in currenciesList">
+              <td>{{ currency.code }}</td>
+              <td><input ng-model="taxRateAmounts[currency.id].amount" type="text" name="amount[{{currency.code}}]" class="form-control"></td>
+            </tr>
+          </table>
+        </div>
       </div>
 
       <div class="modal-footer">

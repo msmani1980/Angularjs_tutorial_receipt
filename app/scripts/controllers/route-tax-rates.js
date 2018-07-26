@@ -1068,6 +1068,12 @@ angular.module('ts5App')
     };
 
     $scope.showCompanyTaxAmountModal = function (taxRate) {
+      $scope.taxRateAmounts = [];
+
+      taxRate.taxRateAmounts.forEach(function (taxRateAmount) {
+        $scope.taxRateAmounts[taxRateAmount.companyCurrencyId] = taxRateAmount;
+      });
+
       var modal = angular.element('#currency-amounts-modal');
       modal.modal('show');
     };
