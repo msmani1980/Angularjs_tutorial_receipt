@@ -129,8 +129,7 @@
       </form>
     </div>
   </div> <!-- End of list-controls -->
-
-  <alert ng-hide="companyTaxRatesList.length" type="info">
+  <alert ng-hide="companyTaxRatesList.length > 0" type="info">
     <span class="fa fa-flag"></span> Your search returned no results. Please try again!
   </alert>
 
@@ -300,8 +299,8 @@
             <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate" ng-disabled="isDisabled(taxRate)">
           </div>
           <div ng-show="!isTaxRateTypePercentage(taxRate)">
-            <a class="btn btn-info btn-s" ng-click="showCompanyTaxAmountModal(taxRate)">
-              <span class="fa fa-pencil"></span> Apply Amounts
+            <a class="btn btn-info" ng-click="showCompanyTaxAmountModal(taxRate)">
+              <span class="fa fa-pencil"></span> Amounts
             </a>
           </div>
         </td>
@@ -375,6 +374,36 @@
 
   <!-- Container End -->
 </div>
+
+<div class="modal" id="currency-amounts-modal" data-backdrop="static" data-keyboard="false">
+
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <strong class="modal-title">Enter Rate Amounts:</strong>
+      </div>
+
+      <div class="modal-body">
+        <h2>{{ body }}</h2>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-default btn-cancel" data-dismiss="modal">
+          <i class="fa fa-close"></i> Cancel
+        </button>
+        <button class="btn btn-success btn-primary" ng-click="confirmation()">
+          <i class="fa fa-check"></i> Done
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
 
 <confirmation-modal
   title="You are about to remove a Company Tax Rate."

@@ -1068,7 +1068,8 @@ angular.module('ts5App')
     };
 
     $scope.showCompanyTaxAmountModal = function (taxRate) {
-      // TODO: show modal with currencies
+      var modal = angular.element('#currency-amounts-modal');
+      modal.modal('show');
     };
 
     $scope.getUpdateBy = function (taxRate) {
