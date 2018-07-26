@@ -317,12 +317,6 @@ angular.module('ts5App')
 
     this.setStationsList = function(response, stationIndex) {
       var stationsTotList = response.response;
-      angular.forEach($scope.rule.bulkRuleStationException, function (bulk) {
-        var stationMatch = lodash.findWhere(stationsTotList, { id: bulk.stationId });
-        var index = stationsTotList.indexOf(stationMatch);
-        stationsTotList.splice(index, 1);
-      });
-
       $scope.rule.bulkRuleStationException[stationIndex].stations = stationsTotList;
     };
 
