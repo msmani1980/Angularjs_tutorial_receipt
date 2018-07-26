@@ -13,11 +13,10 @@ angular.module('ts5App')
     var $this = this;
     $scope.viewName = 'Price Update Rule';
     $scope.shouldDisableEndDate = false;
-    $scope.hasStationCurrencies = false;
-    $scope.stations = [];
     $scope.rule = {
       startDate: '',
-      endDate: ''
+      endDate: '',
+      bulkRuleStationException: []
     };
     $scope.taxIs = [{
       name: 'Included',
@@ -108,9 +107,9 @@ angular.module('ts5App')
       };
     };
 
-    this.generateStationCurrency = function(currency) {
+    this.generateStationCurrency = function(currency, stnIndex) {
       return {
-        currencyId: ($scope.isCreate || !$scope.hasStationCurrencies) ? currency.id : currency.currencyId,
+        currencyId: ($scope.rule.bulkRuleStationException[stnIndex].id) ? currency.currencyId : currency.id,
         code: currency.code,
         amend: currency.price
       };
@@ -128,40 +127,38 @@ angular.module('ts5App')
       return priceCurrencies;
     };
 
-    this.formatStationCurrencies = function(percentVal) {
+    this.formatStationCurrencies = function(stationCurrList, index) {
       var stationCurrencies = [];
-      if (!percentVal) {
-        angular.forEach($scope.stationPriceCurrencies, function (currency) {
-          var newCurrency = $this.generateStationCurrency(currency);
-          if ($scope.viewEditItem && $scope.hasStationCurrencies) {
-            newCurrency.id = currency.id;
-          }
+      angular.forEach(stationCurrList, function (currency) {
+        var newCurrency = $this.generateStationCurrency(currency, index);
+        if ($scope.rule.bulkRuleStationException[index].id) {
+          newCurrency.id = currency.id;
+        }
 
-          stationCurrencies.push(newCurrency);
-        });
-      }  
+        stationCurrencies.push(newCurrency);
+      });
 
       return stationCurrencies;
     };
 
-    this.formatStationException = function(bulk) {
+    this.formatStationException = function(bulkArray) {
       var stationExpCurrencies = [];
-      var ruleException = {
-        startDate: dateUtility.formatDateForAPI(bulk.startDate),
-        endDate: dateUtility.formatDateForAPI(bulk.endDate),
-        taxIs: bulk.taxIs,
-        percentage: bulk.percentage,
-        stationId: bulk.stationId,
-        percentValue: bulk.percentValue,
-        bulkRuleStationExceptionCurrencies: $this.formatStationCurrencies(bulk.percentage)	
-      };
-      if ($scope.viewEditItem && bulk.id) {
-        ruleException.id = bulk.id;
-      }
+      angular.forEach(bulkArray, function (bulk, index) {
+        var ruleException = {
+          startDate: dateUtility.formatDateForAPI(bulk.startDate),
+          endDate: dateUtility.formatDateForAPI(bulk.endDate),
+          taxIs: bulk.taxIs,
+          stationId: bulk.stationId,
+          bulkRuleStationExceptionCurrencies: $this.formatStationCurrencies(bulk.stationPriceCurrencies, index)	
+        };
+        if ($scope.viewEditItem && bulk.id) {
+          ruleException.id = bulk.id;
+        }
 
-      if (bulk.startDate && bulk.endDate) {
-        stationExpCurrencies.push(ruleException);
-      }
+        if (bulk.startDate && bulk.endDate) {
+          stationExpCurrencies.push(ruleException);
+        }
+      });
 
       return stationExpCurrencies;
     };
@@ -197,8 +194,7 @@ angular.module('ts5App')
         percentValue: $scope.rule.percentValue,
         companyId: $scope.rule.companyId,
         prices: $this.formatPriceCurrencies($scope.rule.percentage),
-        bulkRuleStationException: ($scope.rule.bulkRuleStationException && $scope.rule.bulkRuleStationException.startDate) ? 
-          $this.formatStationException($scope.rule.bulkRuleStationException) : [],
+        bulkRuleStationException: $scope.rule.bulkRuleStationException ? $this.formatStationException($scope.rule.bulkRuleStationException) : [],
         startDate: dateUtility.formatDateForAPI($scope.rule.startDate),
         endDate: dateUtility.formatDateForAPI($scope.rule.endDate)
       };
@@ -206,6 +202,19 @@ angular.module('ts5App')
       priceupdaterFactory.updatePriceUpdaterRule(payload).then(
         $this.saveFormSuccess, $this.saveFormFailure
       );
+    };
+
+    $scope.addStationException = function() {
+      $scope.rule.bulkRuleStationException.push({
+        startDate: '',
+        endDate: '',
+        stations: [],
+        stationPriceCurrencies: []
+      });
+    };
+
+    $scope.removeStationException = function(key) {
+      $scope.rule.bulkRuleStationException.splice(key, 1);
     };
 
     $scope.formSave = function() {
@@ -239,21 +248,24 @@ angular.module('ts5App')
     };
 
     this.formatStnViewCurrency = function(response) {
-      $scope.hasStationCurrencies = true;
-      if (response.percentage && !$scope.isDisabled()) {
-        $scope.hasStationCurrencies = false;
-        $this.getStationPriceCurrenciesList(dateUtility.formatDateForApp(response.startDate), dateUtility.formatDateForApp(response.endDate)); 
-      }
-
       return {
         startDate: dateUtility.formatDateForApp(response.startDate),
         endDate: dateUtility.formatDateForApp(response.endDate),
         taxIs: response.taxIs,
         id: response.id,
-        percentage: response.percentage,
         stationId: response.stationId,
-        percentValue: response.percentValue	
+        stationPriceCurrencies: $this.setPriceCurrencies(response.bulkRuleStationExceptionCurrencies)
       };
+    };
+
+    this.formatStnViewCurrencyList = function(bulkList) {
+      var bulkStationException = [];
+      angular.forEach(bulkList, function (bulk) {
+        var exception = $this.formatStnViewCurrency(bulk);
+        bulkStationException.push(exception);
+      });
+
+      return bulkStationException; 
     };
 
     this.priceUpdaterRuleSuccess = function(response) {
@@ -262,15 +274,13 @@ angular.module('ts5App')
       $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker($scope.viewStartDate);
       $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker($scope.viewEndDate);
       $scope.priceCurrencies = $this.setPriceCurrencies(response.prices);
-      $scope.stationPriceCurrencies = response.bulkRuleStationException[0] ? 
-        $this.setPriceCurrencies(response.bulkRuleStationException[0].bulkRuleStationExceptionCurrencies) : [];
       $scope.rule = {
         id: response.id,
         categoryId: response.categoryId,
         priceTypeId: response.priceTypeId,
         percentage: response.percentage,
         percentValue: response.percentValue,
-        bulkRuleStationException: response.bulkRuleStationException[0] ? $this.formatStnViewCurrency(response.bulkRuleStationException[0]) : [],
+        bulkRuleStationException: response.bulkRuleStationException[0] ? $this.formatStnViewCurrencyList(response.bulkRuleStationException) : [],
         taxFilter: response.taxFilter === null ? 'null' : response.taxFilter,
         startDate: $scope.viewStartDate,
         companyId: response.companyId,
@@ -301,20 +311,22 @@ angular.module('ts5App')
       $scope.priceCurrencies = response.response;
     };
 
-    this.setStationPriceCurrenciesList = function (response) {
-      $scope.stationPriceCurrencies = response.response;
+    this.setStationPriceCurrenciesList = function (response, stationIndex) {
+      $scope.rule.bulkRuleStationException[stationIndex].stationPriceCurrencies = response.response;
     };
 
-    this.setStationsList = function(response) {
-      $scope.stations = response.response;
+    this.setStationsList = function(response, stationIndex) {
+      $scope.rule.bulkRuleStationException[stationIndex].stations = response.response;
     };
 
-    this.getGlobalStationList = function(startDate, endDate) {
+    this.getGlobalStationList = function(startDate, endDate, stationIndex) {
       var stationsFilter = {
         startDate: dateUtility.formatDateForAPI(startDate),
         endDate: dateUtility.formatDateForAPI(endDate)
       };
-      return companiesFactory.getGlobalStationList(stationsFilter).then($this.setStationsList);
+      return companiesFactory.getGlobalStationList(stationsFilter).then(function(data) {
+        $this.setStationsList(data, stationIndex);
+      });
     };
 
     this.getPriceCurrenciesList = function (startDate, endDate) {
@@ -326,13 +338,15 @@ angular.module('ts5App')
       currencyFactory.getCompanyCurrencies(currencyFilters).then($this.setPriceCurrenciesList);
     };
 
-    this.getStationPriceCurrenciesList = function (startDate, endDate) {
+    this.getStationPriceCurrenciesList = function (startDate, endDate, stationIndex) {
       var currencyFilters = {
         startDate: dateUtility.formatDateForAPI(startDate),
         endDate: dateUtility.formatDateForAPI(endDate),
         isOperatedCurrency: true
       };
-      currencyFactory.getCompanyCurrencies(currencyFilters).then($this.setStationPriceCurrenciesList);
+      currencyFactory.getCompanyCurrencies(currencyFilters).then(function(data) {
+        $this.setStationPriceCurrenciesList(data, stationIndex);
+      });
     };
 
     $scope.$watchGroup(['rule.startDate', 'rule.endDate'], function () {
@@ -343,15 +357,42 @@ angular.module('ts5App')
       }  
     });
 
-    $scope.$watchGroup(['rule.bulkRuleStationException.startDate', 'rule.bulkRuleStationException.endDate'], function () {
-      if ($scope.rule && $scope.rule.bulkRuleStationException && $scope.rule.bulkRuleStationException.startDate && $scope.rule.bulkRuleStationException.endDate) {
-        if (!$scope.rule.bulkRuleStationException.id) {  
-          $this.getStationPriceCurrenciesList($scope.rule.bulkRuleStationException.startDate, $scope.rule.bulkRuleStationException.endDate);
-        }
-
-        $this.getGlobalStationList($scope.rule.bulkRuleStationException.startDate, $scope.rule.bulkRuleStationException.endDate);  
+    this.updateStationCurrencies = function(stationIndex) {
+      var stationException = $scope.rule.bulkRuleStationException[stationIndex];
+      if (!(stationException && stationException.startDate && stationException.endDate)) {
+        return false;
       }
-    });
+
+      if (!stationException.id) {  
+        $this.getStationPriceCurrenciesList(stationException.startDate, stationException.endDate, stationIndex);
+      }
+
+      $this.getGlobalStationList(stationException.startDate, stationException.endDate, stationIndex);  
+    };
+
+    this.checkStationExceptionUpdate = function(newData, oldData, stationIndex) {
+      var newStationException = newData[stationIndex];
+      var oldStationException = oldData[stationIndex];
+
+      if ((oldStationException && (newStationException.startDate !== oldStationException.startDate || 
+        newStationException.endDate !== oldStationException.endDate)) || !oldStationException) {
+        $this.updateStationCurrencies(stationIndex);
+      }
+    };
+
+    this.watchStationExceptions = function (newData, oldData) {
+      if (!oldData) {
+        return false;
+      }
+	
+      for (var stationIndex in $scope.rule.bulkRuleStationException) {
+        $this.checkStationExceptionUpdate(newData, oldData, stationIndex);
+      }
+    };
+
+    $scope.$watch('rule.bulkRuleStationException', function (newData, oldData) {
+      $this.watchStationExceptions(newData, oldData);
+    }, true);
 
     this.init = function() {
       $this.showLoadingModal('Loading Data');
