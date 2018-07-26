@@ -1083,8 +1083,6 @@ angular.module('ts5App')
         return;
       }
 
-      console.log($scope.taxRateToEditAmounts)
-
       var taxRateAmounts = [];
       $scope.taxRateToEditAmounts.forEach(function (taxRateAmount, companyCurrencyId) {
         var amount = {};
