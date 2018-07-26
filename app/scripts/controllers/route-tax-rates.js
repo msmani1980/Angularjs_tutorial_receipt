@@ -1068,14 +1068,21 @@ angular.module('ts5App')
     };
 
     $scope.showCompanyTaxAmountModal = function (taxRate) {
-      $scope.taxRateAmounts = [];
+      $scope.taxRateToEdit = taxRate;
+      $scope.taxRateToEditAmounts = [];
 
       taxRate.taxRateAmounts.forEach(function (taxRateAmount) {
-        $scope.taxRateAmounts[taxRateAmount.companyCurrencyId] = taxRateAmount;
+        $scope.taxRateToEditAmounts[taxRateAmount.companyCurrencyId] = taxRateAmount;
       });
 
       var modal = angular.element('#currency-amounts-modal');
       modal.modal('show');
+    };
+
+    $scope.saveRateAmounts = function () {
+      if (!$scope.taxRateAmountsForm.$valid) {
+        console.log('ne moze save')
+      }
     };
 
     $scope.getUpdateBy = function (taxRate) {
