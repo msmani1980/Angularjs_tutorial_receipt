@@ -637,7 +637,7 @@ angular.module('ts5App')
     };
 
     this.createTaxRateAmountsPayload = function (taxRate) {
-
+      return taxRate.taxRateAmounts;
     };
 
     this.editSuccess = function () {
@@ -677,7 +677,7 @@ angular.module('ts5App')
         endDate: dateUtility.formatDateForAPI(taxRate.endDate),
         companyTaxTypeId: taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId,
         stations: $this.createStationsPayload(taxRate),
-        taxRateAmounts: taxRate.taxRateType.taxRateType === 'Amount' ? $this.createTaxRateAmountsPayload(taxRate) : null
+        taxRateAmounts: taxRate.taxRateType.taxRateType === 'Amount' ? $this.createTaxRateAmountsPayload(taxRate) : []
       };
 
       console.log(payload)
