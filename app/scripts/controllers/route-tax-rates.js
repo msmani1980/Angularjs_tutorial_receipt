@@ -680,8 +680,6 @@ angular.module('ts5App')
         taxRateAmounts: taxRate.taxRateType.taxRateType === 'Amount' ? $this.createTaxRateAmountsPayload(taxRate) : []
       };
 
-      console.log(payload)
-
       $this.makeEditPromises(payload);
     };
 
