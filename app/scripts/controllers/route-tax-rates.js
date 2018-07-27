@@ -238,6 +238,7 @@ angular.module('ts5App')
         taxRate.startDate = $this.formatTaxRateDate(taxRate.startDate);
         taxRate.endDate = $this.formatTaxRateDate(taxRate.endDate);
       }
+
       taxRate.taxRateValue = Number(taxRate.taxRateValue).toFixed(2);
       taxRate.taxRateAmounts = taxRate.taxRateAmounts.map(function(amount) {
         amount.amount = Number(amount.amount).toFixed(2);
@@ -619,7 +620,7 @@ angular.module('ts5App')
         return {
           id: existingStation ? existingStation.id : null,
           companyStationId: station.companyStationId,
-          direction: "Departure"
+          direction: 'Departure'
         };
       });
 
@@ -629,7 +630,7 @@ angular.module('ts5App')
         return {
           id: existingStation ? existingStation.id : null,
           companyStationId: station.companyStationId,
-          direction: "Arrival"
+          direction: 'Arrival'
         };
       });
 
