@@ -634,7 +634,7 @@ angular.module('ts5App')
         };
       });
 
-      return departureStations.concat(arrivalStations)
+      return departureStations.concat(arrivalStations);
     };
 
     this.createTaxRateAmountsPayload = function (taxRate) {
