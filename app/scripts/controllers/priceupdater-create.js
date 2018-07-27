@@ -8,11 +8,12 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PriceupdaterCreateCtrl', function($scope, $q, $location, dateUtility, $routeParams, priceupdaterFactory, messageService, currencyFactory, companiesFactory) {
+  .controller('PriceupdaterCreateCtrl', function($scope, $q, $location, dateUtility, $routeParams, priceupdaterFactory, messageService, currencyFactory, companiesFactory, lodash) {
 
     var $this = this;
     $scope.viewName = 'Price Update Rule';
     $scope.shouldDisableEndDate = false;
+    $scope.stations = [];
     $scope.rule = {
       startDate: '',
       endDate: '',
@@ -315,9 +316,21 @@ angular.module('ts5App')
       $scope.rule.bulkRuleStationException[stationIndex].stationPriceCurrencies = response.response;
     };
 
+    this.removeStation = function (station, stationIndex, bulkIndex) {
+      var index = $scope.stations.indexOf(station);
+      if (index > -1 && parseInt(stationIndex) !== parseInt(bulkIndex)) {
+        $scope.stations.splice(index, 1);
+      }
+    };
+
     this.setStationsList = function(response, stationIndex) {
-      var stationsTotList = response.response;
-      $scope.rule.bulkRuleStationException[stationIndex].stations = stationsTotList;
+      $scope.stations = response.response;
+      angular.forEach($scope.rule.bulkRuleStationException, function (bulk, bulkIndex) {
+        var stationMatch = lodash.findWhere($scope.stations, { id: bulk.stationId });
+        $this.removeStation(stationMatch, stationIndex, bulkIndex);
+      });
+
+      $scope.rule.bulkRuleStationException[stationIndex].stations = $scope.stations;
     };
 
     this.getGlobalStationList = function(startDate, endDate, stationIndex) {
@@ -364,7 +377,7 @@ angular.module('ts5App')
         return false;
       }
 
-      if (!stationException.id) {  
+      if (!stationException.id) {
         $this.getStationPriceCurrenciesList(stationException.startDate, stationException.endDate, stationIndex);
       }
 
