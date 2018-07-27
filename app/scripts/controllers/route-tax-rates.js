@@ -830,8 +830,13 @@ angular.module('ts5App')
           taxRate.createdByPerson = dataFromAPI.createdByPerson;
           taxRate.updatedOn = dataFromAPI.updatedOn;
           taxRate.updatedByPerson = dataFromAPI.updatedByPerson;
-
-          // TODO: reload stations and currencies
+          taxRate.stations = dataFromAPI.stations;
+          taxRate.departureStations = $this.formatDepartureStations(dataFromAPI);
+          taxRate.arrivalStations = $this.formatArrivalStations(dataFromAPI);
+          taxRate.taxRateAmounts = dataFromAPI.taxRateAmounts.map(function(amount) {
+            amount.amount = Number(amount.amount).toFixed(2);
+            return amount;
+          });
         }
       });
     };

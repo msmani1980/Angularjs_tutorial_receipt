@@ -11,7 +11,7 @@ angular.module('ts5App')
   .factory('routeTaxRatesFactory', function (routeTaxRatesService, globalMenuService, taxRateTypesService,
       taxTypesService, countriesService, stationsService, currenciesService) {
     this.getRouteTaxRate = function (id) {
-      return routeTaxRatesService.getRouteTaxRate(id);
+      return routeTaxRatesService.getRouteTaxRate(globalMenuService.company.get(), id);
     };
 
     this.getRouteTaxRates = function (payload) {
