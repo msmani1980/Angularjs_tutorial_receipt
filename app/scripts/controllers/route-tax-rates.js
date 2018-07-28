@@ -381,7 +381,7 @@ angular.module('ts5App')
     this.init = function () {
       $scope.isCRUD = accessService.crudAccessGranted('TAX', 'TAX', 'CRUDTAX');
       $this.createScopeVariables();
-      $this.showLoadingModal('Loading data for Tax Management...');
+      $this.showLoadingModal('Loading data for Route Tax Management...');
       $this.makePromises();
       $scope.minDate = dateUtility.nowFormattedDatePicker();
     };
@@ -515,7 +515,7 @@ angular.module('ts5App')
         }
       }
 
-      var message = 'Searching Tax Rates...';
+      var message = 'Searching Route Tax Rates...';
       if (clear) {
         message = 'Clearing Search...';
       }
@@ -530,7 +530,7 @@ angular.module('ts5App')
         taxRate.deleted = true;
       }
 
-      var message = 'Deleting Tax Rate ID: ' + taxRate.id;
+      var message = 'Deleting Route Tax Rate ID: ' + taxRate.id;
       $this.showLoadingModal(message);
 
       return routeTaxRatesFactory.removeRouteTaxRate(taxRate.id).then($this.deleteSuccess, $this.errorHandler);
@@ -550,7 +550,7 @@ angular.module('ts5App')
 
     this.deleteSuccess = function () {
       var id = angular.copy($scope.taxRateToRemove.id);
-      messageService.display('success', 'Successfully Deleted <b>Tax Rate ID: </b>' + id);
+      messageService.display('success', 'Successfully Deleted <b>Route Tax Rate ID: </b>' + id);
       $scope.taxRateToRemove = [];
       $this.hideLoadingModal();
       return $this.removeTaxRateFromList(id);
@@ -646,7 +646,7 @@ angular.module('ts5App')
       $this.getCompanyMasterTaxRatesList();
       $this.clearCustomErrors();
 
-      messageService.display('success', 'Successfully Saved <b>Tax Rate ID: </b>' + taxRate.id);
+      messageService.display('success', 'Successfully Saved <b>Route Tax Rate ID: </b>' + taxRate.id);
     };
 
     this.saveTaxRateEdits = function (taxRate) {
@@ -684,7 +684,7 @@ angular.module('ts5App')
       };
 
       if ($scope.displayError !== true) {
-        $this.showLoadingModal('Saving Edits for Tax Rate ID: ' + taxRate.id);
+        $this.showLoadingModal('Saving Edits for Route Tax Rate ID: ' + taxRate.id);
 
         return routeTaxRatesFactory.updateRouteTaxRate(taxRate.id, payload).then(function () {
           $this.editSuccess(taxRate);
@@ -875,7 +875,7 @@ angular.module('ts5App')
       $this.setIdOnTaxRateObjectOnSuccess(id);
       $this.getTaxRateById(id);
       $this.hideLoadingModal();
-      messageService.display('success', 'Successfully Created <b>Tax Rate ID: </b>' + id);
+      messageService.display('success', 'Successfully Created <b>Route Tax Rate ID: </b>' + id);
       $scope.taxRateToCreate = [];
     };
 
@@ -889,7 +889,7 @@ angular.module('ts5App')
     };
 
     this.makeCreatePromises = function (payload) {
-      $this.showLoadingModal('Creating new Tax Rate...');
+      $this.showLoadingModal('Creating new Route Tax Rate...');
 
       return routeTaxRatesFactory.createRouteTaxRate(payload).then($this.createNewTaxRateSuccess, $this.createNewTaxRateError);
     };
