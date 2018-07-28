@@ -641,34 +641,23 @@ angular.module('ts5App')
       return taxRate.taxRateAmounts;
     };
 
-    this.editSuccess = function () {
-      $this.hideLoadingModal();
-      var id = angular.copy($scope.taxRateSaved);
-      $this.getTaxRateById(id);
-      messageService.display('success', 'Successfully Saved <b>Tax Rate ID: </b>' + id);
-      $scope.taxRateSaved = [];
-      $this.getCompanyMasterTaxRatesList();
-    };
-
-    this.createEditPromises = function (taxRate) {
-      return [
-        routeTaxRatesFactory.updateRouteTaxRate(taxRate.id, taxRate)
-      ];
-    };
-
-    this.makeEditPromises = function (taxRate) {
-      var message = 'Saving Edits for Tax Rate ID: ' + taxRate.id;
-      $this.showLoadingModal(message);
-      $scope.taxRateSaved = taxRate.id;
-      var promises = $this.createEditPromises(taxRate);
-      $q.all(promises).then($this.editSuccess, $this.errorHandler);
-    };
-
-    this.saveTaxRateEdits = function (taxRate) {
+    this.editSuccess = function (taxRate) {
       delete taxRate.edited;
       delete taxRate.readOnly;
       taxRate.action = 'read';
       taxRate.saved = true;
+
+      $this.hideLoadingModal();
+      $this.getTaxRateById(taxRate.id);
+      $this.getCompanyMasterTaxRatesList();
+      $this.clearCustomErrors();
+
+      messageService.display('success', 'Successfully Saved <b>Tax Rate ID: </b>' + id);
+    };
+
+    this.saveTaxRateEdits = function (taxRate) {
+      $this.showLoadingModal('Saving Edits for Tax Rate ID: ' + taxRate.id);
+      $this.clearCustomErrors();
 
       var payload = {
         id: taxRate.id,
@@ -681,7 +670,9 @@ angular.module('ts5App')
         taxRateAmounts: taxRate.taxRateType.taxRateType === 'Amount' ? $this.createTaxRateAmountsPayload(taxRate) : []
       };
 
-      $this.makeEditPromises(payload);
+      return routeTaxRatesFactory.updateRouteTaxRate(taxRate.id, payload).then(function () {
+        $this.editSuccess(taxRate);
+      }, $this.errorHandler);
     };
 
     this.determineMinDate = function (date) {
@@ -752,18 +743,20 @@ angular.module('ts5App')
     };
 
     this.createNewTaxRate = function () {
-      var length = parseInt($scope.companyTaxRatesList.length);
+      var length = $scope.companyTaxRatesList.length;
       var payload = {
         action: 'create',
         position: 'up',
         key: length + 1,
         taxRateValue: undefined,
+        taxRateAmounts: [],
         taxRateType: undefined,
         startDate: undefined,
         endDate: undefined,
         taxTypeCode: undefined,
-        companyTaxRateStations: undefined,
-        companyCurrencyId: undefined,
+        stations: [],
+        departureStations: [],
+        arrivalStations: [],
         created: true
       };
       $scope.companyTaxRatesList.push(payload);
@@ -829,6 +822,7 @@ angular.module('ts5App')
           taxRate.createdByPerson = dataFromAPI.createdByPerson;
           taxRate.updatedOn = dataFromAPI.updatedOn;
           taxRate.updatedByPerson = dataFromAPI.updatedByPerson;
+          taxRate.taxRateValue = Number(dataFromAPI.taxRateValue).toFixed(2);
           taxRate.stations = dataFromAPI.stations;
           taxRate.departureStations = $this.formatDepartureStations(dataFromAPI);
           taxRate.arrivalStations = $this.formatArrivalStations(dataFromAPI);
@@ -1069,7 +1063,7 @@ angular.module('ts5App')
 
     $scope.shouldTaxRateCurrencyBeClear = function (taxRate) {
       if ($scope.isTaxRateTypePercentage(taxRate) && angular.isDefined(taxRate.taxRateAmounts)) {
-        taxRate.taxRateAmounts = null;
+        taxRate.taxRateAmounts = [];
       }
     };
 
@@ -1101,7 +1095,7 @@ angular.module('ts5App')
       $scope.taxRateToEditAmounts.forEach(function (taxRateAmount, companyCurrencyId) {
         var amount = {};
 
-        if (taxRateAmount.amount && parseFloat(taxRateAmount.amount) !== NaN) {
+        if (taxRateAmount.amount && !isNaN(parseFloat(taxRateAmount.amount))) {
           amount.companyCurrencyId = companyCurrencyId;
           amount.amount = parseFloat(taxRateAmount.amount);
 
