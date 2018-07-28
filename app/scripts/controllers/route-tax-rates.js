@@ -525,21 +525,15 @@ angular.module('ts5App')
       $q.all(promises).then($this.searchSuccess, $this.errorHandler);
     };
 
-    this.createDeletePromises = function (id) {
-      return [
-        routeTaxRatesFactory.removeRouteTaxRate(id)
-      ];
-    };
-
-    this.makeDeletePromises = function (taxRate) {
+    this.deleteTaxRate = function (taxRate) {
       if (angular.isDefined(taxRate)) {
         taxRate.deleted = true;
       }
 
       var message = 'Deleting Tax Rate ID: ' + taxRate.id;
       $this.showLoadingModal(message);
-      var promises = $this.createDeletePromises(taxRate.id);
-      $q.all(promises).then($this.deleteSuccess, $this.errorHandler);
+
+      return routeTaxRatesFactory.removeRouteTaxRate(taxRate.id).then($this.deleteSuccess, $this.errorHandler);
     };
 
     this.removeTaxRateFromList = function (id) {
@@ -763,21 +757,37 @@ angular.module('ts5App')
     };
 
     this.parseNewTaxRatePayload = function (taxRate) {
-      var stations = $this.createStationsPayload(taxRate);
-      var taxTypeId = taxRate.taxTypeCode ? taxRate.taxTypeCode.id : null;
+      $this.clearCustomErrors();
+
       var taxRateType = taxRate.taxRateType ? taxRate.taxRateType.taxRateType : null;
-      var companyCurrencyId = taxRate.currency ? taxRate.currency.id : null;
-      var payload = {
-        taxRateValue: $this.validateNewData('taxRateValue', taxRate.taxRateValue, taxRate),
-        taxRateType: $this.validateNewData('taxRateType', taxRateType, taxRate),
-        startDate: $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate),
-        endDate: $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate),
-        companyTaxTypeId: $this.validateNewData('companyTaxTypeId', taxTypeId, taxRate),
-        companyTaxRateStations: $this.validateNewData('companyTaxRateStations', stations, taxRate)
-      };
-      if (!$scope.isTaxRateTypePercentage(taxRate)) {
-        payload.companyCurrencyId = $this.validateNewData('companyCurrencyId', companyCurrencyId, taxRate);
+      var companyTaxTypeId = taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId;
+      var taxRateValue = taxRateType === 'Percentage' ? taxRate.taxRateValue : null;
+      var taxRateAmounts = taxRateType === 'Amount' ? $this.createTaxRateAmountsPayload(taxRate) : [];
+
+      if ($scope.isTaxRateTypePercentage(taxRate)) {
+        $this.validateNewData('rate', taxRateValue, taxRate);
       }
+
+      if ($scope.isTaxRateTypeAmount(taxRate)) {
+        $this.validateNewData('rate', taxRateAmounts, taxRate);
+      }
+
+      $this.validateNewData('rateType', taxRateType, taxRate);
+      $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate);
+      $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate);
+      $this.validateNewData('taxType', companyTaxTypeId, taxRate);
+      $this.validateNewData('arrivalStations', taxRate.arrivalStations, taxRate);
+      $this.validateNewData('departureStations', taxRate.departureStations, taxRate);
+
+      var payload = {
+        taxRateValue: taxRateValue,
+        taxRateType: taxRateType,
+        startDate: dateUtility.formatDateForAPI(taxRate.startDate),
+        endDate: dateUtility.formatDateForAPI(taxRate.endDate),
+        companyTaxTypeId: companyTaxTypeId,
+        stations: $this.createStationsPayload(taxRate),
+        taxRateAmounts: taxRateAmounts
+      };
 
       return payload;
     };
@@ -887,7 +897,7 @@ angular.module('ts5App')
     };
 
     $scope.deleteCompanyTaxRate = function (taxRate) {
-      return $this.makeDeletePromises(taxRate);
+      return $this.deleteTaxRate(taxRate);
     };
 
     $scope.showDeleteButton = function (taxRate) {
