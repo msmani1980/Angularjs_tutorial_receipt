@@ -236,7 +236,7 @@ angular.module('ts5App')
     };
 
     this.getStationsList = function () {
-      return taxRatesFactory.getStationsList().then($this.setStationsList);
+      return taxRatesFactory.getStationListWithoutUsageValidation().then($this.setStationsList);
     };
 
     this.getCurrenciesList = function () {

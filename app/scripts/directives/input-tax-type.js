@@ -11,7 +11,7 @@ angular.module('ts5App')
     return {
       templateUrl: '/views/directives/input-tax-type.html',
       restrict: 'E',
-      scope: false,
+      scope: true,
       controller: function ($scope) {
         $scope.appliedTaxTypes = [{
           name: 'Gross'
