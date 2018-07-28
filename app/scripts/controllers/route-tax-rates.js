@@ -1026,8 +1026,12 @@ angular.module('ts5App')
       return this.isDisabled(taxRate) || (!taxRate.arrivalStationsCountryName || $scope.isFieldReadOnly(taxRate));
     };
 
-    $scope.isTaxRateStationsDisabledForCreate = function (taxRate) {
-      return !taxRate.countryName || $scope.isFieldReadOnly(taxRate);
+    $scope.isTaxRateDepartureStationsDisabledForCreate = function (taxRate) {
+      return !taxRate.departureStationsCountryName || $scope.isFieldReadOnly(taxRate);
+    };
+
+    $scope.isTaxRateArrivalStationsDisabledForCreate = function (taxRate) {
+      return !taxRate.arrivalStationsCountryName || $scope.isFieldReadOnly(taxRate);
     };
 
     $scope.showCurrencyCode = function (taxRate) {
