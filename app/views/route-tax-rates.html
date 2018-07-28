@@ -290,7 +290,7 @@
         <!-- Switch for rate -->
         <td class="animate-switch col-xs-1" ng-switch-when="read">
           <div ng-show="isTaxRateTypePercentage(taxRate)">{{ taxRate.taxRateValue }}  %</div>
-          <div ng-show="!isTaxRateTypePercentage(taxRate)">
+          <div ng-show="isTaxRateTypeAmount(taxRate)">
             <div ng-repeat="currency in taxRate.taxRateAmounts">{{ findCompanyCurrencyCode(currency.companyCurrencyId) }} {{ currency.amount }}</div>
           </div>
         </td>
@@ -298,14 +298,21 @@
           <div ng-show="isTaxRateTypePercentage(taxRate)">
             <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate" ng-disabled="isDisabled(taxRate)">
           </div>
-          <div ng-show="!isTaxRateTypePercentage(taxRate)">
+          <div ng-show="isTaxRateTypeAmount(taxRate)">
             <a class="btn btn-info" ng-click="showCompanyTaxAmountModal(taxRate)">
-              <span class="fa fa-pencil"></span> Amounts
+              Amounts
             </a>
           </div>
         </td>
         <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="create">
-          <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate">
+          <div ng-show="isTaxRateTypePercentage(taxRate)">
+            <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate" ng-disabled="isDisabled(taxRate)">
+          </div>
+          <div ng-show="isTaxRateTypeAmount(taxRate)">
+            <a class="btn btn-info" ng-click="showCompanyTaxAmountModal(taxRate)">
+              Amounts
+            </a>
+          </div>
         </td>
         <!-- Switch for startDate -->
         <td class="animate-switch col-xs-1" ng-switch-when="read">{{ taxRate.startDate }}</td>

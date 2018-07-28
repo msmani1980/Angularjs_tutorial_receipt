@@ -977,6 +977,10 @@ angular.module('ts5App')
       return angular.isDefined(taxRate.taxRateType) && taxRate.taxRateType.taxRateType === 'Percentage';
     };
 
+    $scope.isTaxRateTypeAmount = function (taxRate) {
+      return angular.isDefined(taxRate.taxRateType) && taxRate.taxRateType.taxRateType === 'Amount';
+    };
+
     $scope.cancelNewTaxRate = function (taxRate) {
       $this.clearCustomErrors();
       $scope.errorResponse = [];
@@ -1064,8 +1068,8 @@ angular.module('ts5App')
     };
 
     $scope.shouldTaxRateCurrencyBeClear = function (taxRate) {
-      if ($scope.isTaxRateTypePercentage(taxRate) && angular.isDefined(taxRate.currency)) {
-        taxRate.currency = null;
+      if ($scope.isTaxRateTypePercentage(taxRate) && angular.isDefined(taxRate.taxRateAmounts)) {
+        taxRate.taxRateAmounts = null;
       }
     };
 
