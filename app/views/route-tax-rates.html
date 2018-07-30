@@ -213,7 +213,7 @@
           </p>
         </td>
         <td class="animate-switch tax-rates-multi-select col-xs-1" ng-switch-when="edit">
-            <div class="height-20"><input ng-model="taxRate.allDepartureStations" ng-click="addAllDepartureStations(taxRate)" type="checkbox"/> All</div>
+            <div class="height-20"><input ng-model="taxRate.allDepartureStations" ng-click="addAllDepartureStations(taxRate)" ng-disabled="isTaxRateDepartureStationsDisabled(taxRate)" type="checkbox"/> All</div>
             <ui-select ng-if="taxRateSelectReady(taxRate)"  on-select="onUiSelect($select)"  multiple ng-model="taxRate.departureStations" theme="bootstrap" sortable="true" close-on-select="false" ng-disabled="isTaxRateDepartureStationsDisabled(taxRate)" style="margin-bottom:10px; min-height:35px;">
               <ui-select-match placeholder="Stations">{{ $item.stationCode }}</ui-select-match>
               <ui-select-choices group-by="'countryName'" repeat="station in taxRate.availableDepartureStations | filter: $select.search | orderBy:'stationCode'" position={{taxRate.position}}>
@@ -222,7 +222,7 @@
             </ui-select>
         </td>
         <td class="animate-switch tax-rates-multi-select col-xs-1" ng-switch-when="create">
-          <div class="height-20"><input ng-model="taxRate.allDepartureStations" ng-click="addAllDepartureStations(taxRate)" type="checkbox"/> All</div>
+          <div class="height-20"><input ng-model="taxRate.allDepartureStations" ng-click="addAllDepartureStations(taxRate)" ng-disabled="isTaxRateDepartureStationsDisabledForCreate(taxRate)" type="checkbox"/> All</div>
           <ui-select ng-if="viewIsReady"  on-select="onUiSelect($select)"  multiple ng-model="taxRate.departureStations" theme="bootstrap" sortable="true" close-on-select="false" ng-disabled="isTaxRateDepartureStationsDisabledForCreate(taxRate)" style="margin-bottom:10px; min-height:35px;">
             <ui-select-match placeholder="Stations">{{ $item.stationCode }}</ui-select-match>
             <ui-select-choices group-by="'countryName'" repeat="station in taxRate.availableDepartureStations | filter: $select.search | orderBy:'stationCode'" position='auto'>
@@ -262,7 +262,7 @@
           </p>
         </td>
         <td class="animate-switch tax-rates-multi-select col-xs-1" ng-switch-when="edit">
-          <div class="height-20"><input ng-model="taxRate.allArrivalStations" ng-click="addAllArrivalStations(taxRate)" type="checkbox"/> All</div>
+          <div class="height-20"><input ng-model="taxRate.allArrivalStations" ng-click="addAllArrivalStations(taxRate)" ng-disabled="isTaxRateArrivalStationsDisabled(taxRate)" type="checkbox"/> All</div>
           <ui-select ng-if="taxRateSelectReady(taxRate)"  on-select="onUiSelect($select)"  multiple ng-model="taxRate.arrivalStations" theme="bootstrap" sortable="true" close-on-select="false" ng-disabled="isTaxRateArrivalStationsDisabled(taxRate)" style="margin-bottom:10px; min-height:35px;">
             <ui-select-match placeholder="Stations">{{ $item.stationCode }}</ui-select-match>
             <ui-select-choices group-by="'countryName'" repeat="station in taxRate.availableArrivalStations | filter: $select.search | orderBy:'stationCode'" position={{taxRate.position}}>
@@ -271,7 +271,7 @@
           </ui-select>
         </td>
         <td class="animate-switch tax-rates-multi-select col-xs-1" ng-switch-when="create">
-          <div class="height-20"><input ng-model="taxRate.allArrivalStations" ng-click="addAllArrivalStations(taxRate)" type="checkbox"/> All</div>
+          <div class="height-20"><input ng-model="taxRate.allArrivalStations" ng-click="addAllArrivalStations(taxRate)" ng-disabled="isTaxRateArrivalStationsDisabledForCreate(taxRate)" type="checkbox"/> All</div>
           <ui-select ng-if="viewIsReady"  on-select="onUiSelect($select)"  multiple ng-model="taxRate.arrivalStations" theme="bootstrap" sortable="true" close-on-select="false" ng-disabled="isTaxRateArrivalStationsDisabledForCreate(taxRate)" style="margin-bottom:10px; min-height:35px;">
             <ui-select-match placeholder="Stations">{{ $item.stationCode }}</ui-select-match>
             <ui-select-choices group-by="'countryName'" repeat="station in taxRate.availableArrivalStations | filter: $select.search | orderBy:'stationCode'" position='auto'>
