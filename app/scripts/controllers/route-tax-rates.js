@@ -851,9 +851,6 @@ angular.module('ts5App')
     this.setTaxRateById = function (dataFromAPI) {
       angular.forEach($scope.companyTaxRatesList, function (taxRate) {
         if (taxRate.id === dataFromAPI.id) {
-          console.log(taxRate.id)
-          console.log(dataFromAPI.id)
-          console.log(dataFromAPI)
           taxRate.createdOn = dataFromAPI.createdOn;
           taxRate.createdByPerson = dataFromAPI.createdByPerson;
           taxRate.updatedOn = dataFromAPI.updatedOn;
