@@ -1060,6 +1060,7 @@ angular.module('ts5App')
     };
 
     $scope.isTaxRateArrivalStationsDisabledForCreate = function (taxRate) {
+      console.log(taxRate.arrivalStationsCountryName)
       return !taxRate.arrivalStationsCountryName || $scope.isFieldReadOnly(taxRate);
     };
 
