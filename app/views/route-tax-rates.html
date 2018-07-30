@@ -208,7 +208,7 @@
           </p>
         </td>
         <td class="animate-switch tax-rates-multi-select col-xs-1" ng-switch-when="edit">
-            <div style="height:20px"><input ng-model="formData.isPrintReceipt" type="checkbox"/> All</div>
+            <div style="height:20px"><input ng-click="addAllDepartureStations(taxRate)" type="checkbox"/> All</div>
             <ui-select ng-if="taxRateSelectReady(taxRate)"  on-select="onUiSelect($select)"  multiple ng-model="taxRate.departureStations" theme="bootstrap" sortable="true" close-on-select="false" ng-disabled="isTaxRateDepartureStationsDisabled(taxRate)" style="margin-bottom:10px; min-height:35px;">
               <ui-select-match placeholder="Stations">{{ $item.stationCode }}</ui-select-match>
               <ui-select-choices group-by="'countryName'" repeat="station in taxRate.availableDepartureStations | filter: $select.search | orderBy:'stationCode'" position={{taxRate.position}}>
@@ -254,7 +254,7 @@
           </p>
         </td>
         <td class="animate-switch tax-rates-multi-select col-xs-1" ng-switch-when="edit">
-          <div style="height:20px"><input ng-model="formData.isPrintReceipt" type="checkbox"/> All</div>
+          <div style="height:20px"><input ng-click="addAllArrivalStations(taxRate)" type="checkbox"/> All</div>
           <ui-select ng-if="taxRateSelectReady(taxRate)"  on-select="onUiSelect($select)"  multiple ng-model="taxRate.arrivalStations" theme="bootstrap" sortable="true" close-on-select="false" ng-disabled="isTaxRateArrivalStationsDisabled(taxRate)" style="margin-bottom:10px; min-height:35px;">
             <ui-select-match placeholder="Stations">{{ $item.stationCode }}</ui-select-match>
             <ui-select-choices group-by="'countryName'" repeat="station in taxRate.availableArrivalStations | filter: $select.search | orderBy:'stationCode'" position={{taxRate.position}}>

@@ -1175,5 +1175,27 @@ angular.module('ts5App')
       return taxRate.updatedOn ? dateUtility.formatTimestampForApp(taxRate.updatedOn) : dateUtility.formatTimestampForApp(taxRate.createdOn);
     };
 
+    $scope.addAllDepartureStations = function (taxRate) {
+      taxRate.allDepartureStations = !taxRate.allDepartureStations;
+
+      if (taxRate.allDepartureStations) {
+        taxRate.departureStationsBackup = taxRate.departureStations;
+        taxRate.departureStations = taxRate.availableDepartureStations;
+      } else {
+        taxRate.departureStations = taxRate.departureStationsBackup;
+      }
+    };
+
+    $scope.addAllArrivalStations = function (taxRate) {
+      taxRate.allArrivalStations = !taxRate.allArrivalStations;
+
+      if (taxRate.allArrivalStations) {
+        taxRate.arrivalStationsBackup = taxRate.arrivalStations;
+        taxRate.arrivalStations = taxRate.availableArrivalStations;
+      } else {
+        taxRate.arrivalStations = taxRate.arrivalStationsBackup;
+      }
+    };
+
   });
 
