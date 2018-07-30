@@ -226,6 +226,8 @@ angular.module('ts5App')
 
     this.formatTaxRateObject = function (taxRate, dates) {
       taxRate.action = 'read';
+      taxRate.allDepartureStations = false;
+      taxRate.allArrivalStations = false;
       taxRate.availableDepartureStations = $this.setTaxRateAvailableDepartureStations(taxRate);
       taxRate.availableArrivalStations = $this.setTaxRateAvailableArrivalStations(taxRate);
       taxRate.departureStationsCountryName = $this.formatTaxTypeDepartureCountryName(taxRate);
@@ -640,6 +642,8 @@ angular.module('ts5App')
       delete taxRate.readOnly;
       taxRate.action = 'read';
       taxRate.saved = true;
+      taxRate.allDepartureStations = false;
+      taxRate.allArrivalStations = false;
 
       $this.hideLoadingModal();
       $this.getTaxRateById(taxRate.id);
@@ -676,6 +680,8 @@ angular.module('ts5App')
         id: taxRate.id,
         taxRateValue: taxRateValue,
         taxRateType: taxRateType,
+        allDepartureStations: taxRate.allDepartureStations,
+        allArrivalStations: taxRate.allArrivalStations,
         startDate: dateUtility.formatDateForAPI(taxRate.startDate),
         endDate: dateUtility.formatDateForAPI(taxRate.endDate),
         companyTaxTypeId: companyTaxTypeId,
@@ -1176,8 +1182,6 @@ angular.module('ts5App')
     };
 
     $scope.addAllDepartureStations = function (taxRate) {
-      taxRate.allDepartureStations = !taxRate.allDepartureStations;
-
       if (taxRate.allDepartureStations) {
         taxRate.departureStationsBackup = taxRate.departureStations;
         taxRate.departureStations = taxRate.availableDepartureStations;
@@ -1187,8 +1191,6 @@ angular.module('ts5App')
     };
 
     $scope.addAllArrivalStations = function (taxRate) {
-      taxRate.allArrivalStations = !taxRate.allArrivalStations;
-
       if (taxRate.allArrivalStations) {
         taxRate.arrivalStationsBackup = taxRate.arrivalStations;
         taxRate.arrivalStations = taxRate.availableArrivalStations;
@@ -1196,6 +1198,5 @@ angular.module('ts5App')
         taxRate.arrivalStations = taxRate.arrivalStationsBackup;
       }
     };
-
   });
 
