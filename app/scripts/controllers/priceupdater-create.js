@@ -286,9 +286,6 @@ angular.module('ts5App')
         companyId: response.companyId,
         endDate: $scope.viewEndDate
       };
-      if (!$scope.isDisabled()) {
-        $this.getPriceCurrenciesList($scope.rule.startDate, $scope.rule.endDate); 
-      }
     };
 
     this.initDependenciesSuccess = function(responseCollection) {
