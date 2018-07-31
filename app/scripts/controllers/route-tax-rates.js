@@ -653,7 +653,14 @@ angular.module('ts5App')
       messageService.display('success', 'Successfully Saved <b>Route Tax Rate ID: </b>' + taxRate.id);
     };
 
-    this.validateTaxRate = function (taxRate) {
+    this.saveTaxRateEdits = function (taxRate) {
+      $this.clearCustomErrors();
+
+      var taxRateType = taxRate.taxRateType ? taxRate.taxRateType.taxRateType : null;
+      var companyTaxTypeId = taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId;
+      var taxRateValue = taxRateType === 'Percentage' ? taxRate.taxRateValue : null;
+      var taxRateAmounts = taxRateType === 'Amount' ? $this.createTaxRateAmountsPayload(taxRate) : [];
+
       if ($scope.isTaxRateTypePercentage(taxRate)) {
         $this.validateNewData('rate', taxRateValue, taxRate);
       }
@@ -668,17 +675,6 @@ angular.module('ts5App')
       $this.validateNewData('taxType', companyTaxTypeId, taxRate);
       $this.validateNewData('arrivalStations', taxRate.arrivalStations, taxRate);
       $this.validateNewData('departureStations', taxRate.departureStations, taxRate);
-    };
-
-    this.saveTaxRateEdits = function (taxRate) {
-      $this.clearCustomErrors();
-
-      var taxRateType = taxRate.taxRateType ? taxRate.taxRateType.taxRateType : null;
-      var companyTaxTypeId = taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId;
-      var taxRateValue = taxRateType === 'Percentage' ? taxRate.taxRateValue : null;
-      var taxRateAmounts = taxRateType === 'Amount' ? $this.createTaxRateAmountsPayload(taxRate) : [];
-
-      $this.validateTaxRate(taxRate);
 
       var payload = {
         id: taxRate.id,
@@ -797,7 +793,20 @@ angular.module('ts5App')
       var taxRateValue = taxRateType === 'Percentage' ? taxRate.taxRateValue : null;
       var taxRateAmounts = taxRateType === 'Amount' ? $this.createTaxRateAmountsPayload(taxRate) : [];
 
-      $this.validateTaxRate(taxRate);
+      if ($scope.isTaxRateTypePercentage(taxRate)) {
+        $this.validateNewData('rate', taxRateValue, taxRate);
+      }
+
+      if ($scope.isTaxRateTypeAmount(taxRate)) {
+        $this.validateNewData('rate', taxRateAmounts, taxRate);
+      }
+
+      $this.validateNewData('rateType', taxRateType, taxRate);
+      $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate);
+      $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate);
+      $this.validateNewData('taxType', companyTaxTypeId, taxRate);
+      $this.validateNewData('arrivalStations', taxRate.arrivalStations, taxRate);
+      $this.validateNewData('departureStations', taxRate.departureStations, taxRate);
 
       var payload = {
         taxRateValue: taxRateValue,
