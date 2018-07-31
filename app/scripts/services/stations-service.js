@@ -11,7 +11,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
 
   var globalRequestURL = ENV.apiUrl + '/rsvr/api/company-station-globals';
   var stationListRequestURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/stations/:companyStationId';
-  var stationListWithoutUsageValidationRequestURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/stations/:companyStationId/without-usage-validation';
+  var stationListWithUsageValidationRequestURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/stations/:companyStationId/with-usage-validation';
   var stationBulkRequestURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/stations/bulk';
   var stationRequestURL = ENV.apiUrl + '/rsvr/api/stations/:stationId';
 
@@ -39,7 +39,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
         method: 'GET',
         headers: {}
       },
-      getStationListWithoutUsageValidation: {
+      getStationListWithUsageValidation: {
         method: 'GET'
       },
       getStation: {
@@ -66,7 +66,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     };
   var globalRequestResource = $resource(globalRequestURL, null, actions);
   var stationListRequestResource = $resource(stationListRequestURL, stationListRequestParameters, actions);
-  var stationListWithoutUsageValidationRequestResource = $resource(stationListWithoutUsageValidationRequestURL, stationListRequestParameters, actions);
+  var stationListWithUsageValidationRequestResource = $resource(stationListWithUsageValidationRequestURL, stationListRequestParameters, actions);
   var stationBulkRequestResource = $resource(stationBulkRequestURL, stationBulkRequestParameters, actions);
   var stationRequestResource = $resource(stationRequestURL, stationRequestParameters, actions);
 
@@ -110,7 +110,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     return stationListRequestResource.getStationList(customPayload || payload).$promise;
   };
 
-  var getCompanyStationListWithoutUsageValidation = function (companyId, offset, customPayload) {
+  var getCompanyStationListWithUsageValidation = function (companyId, offset, customPayload) {
     var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
     var payload = {
       companyId: companyId,
@@ -129,7 +129,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     }
 
     actions.getStationList.headers.companyId = companyId;
-    return stationListWithoutUsageValidationRequestResource.getStationListWithoutUsageValidation(customPayload || payload).$promise;
+    return stationListWithUsageValidationRequestResource.getStationListWithUsageValidation(customPayload || payload).$promise;
   };
 
   var getCompanyStation = function (companyId, id) {
@@ -168,7 +168,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     getGlobalStationList: getGlobalStationList,
     getStations: getStations,
     getStationList: getCompanyStationList,
-    getStationListWithoutUsageValidation: getCompanyStationListWithoutUsageValidation,
+    getStationListWithUsageValidation: getCompanyStationListWithUsageValidation,
     getStation: getStation,
     getCompanyStation: getCompanyStation,
     bulkUpdateStation: bulkUpdateCompanyStation,
