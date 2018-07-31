@@ -32,11 +32,6 @@ angular.module('ts5App')
       return stationsService.getStationList(companyId, 0);
     };
 
-    var getStationListWithoutUsageValidation = function() {
-      var companyId = globalMenuService.company.get();
-      return stationsService.getStationListWithoutUsageValidation(companyId, 0);
-    };
-
     var getCompanyCurrencies = function(payload) {
       return currenciesService.getCompanyCurrencies(payload);
     };
@@ -66,7 +61,6 @@ angular.module('ts5App')
       getTaxRateTypes: getTaxRateTypes,
       getCountriesList: getCountriesList,
       getStationsList: getStationsList,
-      getStationListWithoutUsageValidation: getStationListWithoutUsageValidation,
       getCompanyCurrencies: getCompanyCurrencies,
       getCompanyTaxRatesList: getCompanyTaxRatesList,
       getCompanyTaxRate: getCompanyTaxRate,
