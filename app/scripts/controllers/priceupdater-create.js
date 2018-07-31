@@ -102,9 +102,10 @@ angular.module('ts5App')
 
     this.generateCurrency = function(currency, percentVal) {
       return {
-        currencyId: ($scope.viewEditItem && !percentVal) ? currency.currencyId : currency.id,
+        currencyId: ($scope.viewEditItem) ? currency.currencyId : currency.id,
         code: currency.code,
-        amend: currency.price
+        amend: (percentVal) ? '0.00' : currency.price,
+        limitPrice: currency.limitPrice
       };
     };
 
@@ -118,12 +119,10 @@ angular.module('ts5App')
 
     this.formatPriceCurrencies = function(percentVal) {
       var priceCurrencies = [];
-      if (!percentVal) {
-        angular.forEach($scope.priceCurrencies, function (currency) {
-          var newCurrency = $this.generateCurrency(currency, percentVal);
-          priceCurrencies.push(newCurrency);
-        });
-      }  
+      angular.forEach($scope.priceCurrencies, function (currency) {
+        var newCurrency = $this.generateCurrency(currency, percentVal);
+        priceCurrencies.push(newCurrency);
+      }); 
 
       return priceCurrencies;
     };
@@ -287,9 +286,6 @@ angular.module('ts5App')
         companyId: response.companyId,
         endDate: $scope.viewEndDate
       };
-      if (response.percentage && !$scope.isDisabled()) {
-        $this.getPriceCurrenciesList($scope.rule.startDate, $scope.rule.endDate); 
-      }
     };
 
     this.initDependenciesSuccess = function(responseCollection) {
