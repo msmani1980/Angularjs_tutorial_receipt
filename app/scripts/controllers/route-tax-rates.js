@@ -1,5 +1,5 @@
 'use strict';
-
+/*jshint maxcomplexity:9 */
 /**
  * @ngdoc function
  * @name ts5App.controller:RouteTaxRatesCtrl
