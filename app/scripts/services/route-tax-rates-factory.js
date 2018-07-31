@@ -52,7 +52,7 @@ angular.module('ts5App')
 
     this.getStationsList = function() {
       var companyId = globalMenuService.company.get();
-      return stationsService.getStationListWithoutUsageValidation(companyId, 0);
+      return stationsService.getStationList(companyId, 0);
     };
 
     this.getCompanyCurrencies = function(payload) {
