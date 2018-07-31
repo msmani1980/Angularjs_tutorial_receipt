@@ -1,19 +1,19 @@
 'use strict';
-
+/*jshint maxcomplexity:9 */
 /**
  * @ngdoc function
- * @name ts5App.controller:TaxRatesCtrl
+ * @name ts5App.controller:RouteTaxRatesCtrl
  * @description
- * # TaxRatesCtrl
+ * # RouteTaxRatesCtrl
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('TaxRatesCtrl', function ($scope, $q, $route, $filter, taxRatesFactory, dateUtility, messageService, accessService, lodash) {
+  .controller('RouteTaxRatesCtrl', function ($scope, $q, $route, $filter, routeTaxRatesFactory, dateUtility, messageService, accessService, lodash) {
 
     var $this = this;
 
     this.createScopeVariables = function () {
-      $scope.viewName = 'Tax Management';
+      $scope.viewName = 'Route Tax Management';
       $scope.taxRatesList = [];
       $scope.taxTypesList = [];
       $scope.stationsList = [];
@@ -41,7 +41,7 @@ angular.module('ts5App')
     };
 
     this.setTaxTypesList = function (dataFromAPI) {
-      $scope.taxTypesList = lodash.filter(angular.copy(dataFromAPI.response), { applicableTo: 'Station' });
+      $scope.taxTypesList = lodash.filter(angular.copy(dataFromAPI.response), { applicableTo: 'Route' });
     };
 
     this.setTaxRateTypesList = function (dataFromAPI) {
@@ -84,25 +84,22 @@ angular.module('ts5App')
       return 'auto';
     };
 
-    this.setCompanyCurrency = function (taxRate) {
-      var payload;
-      if (angular.isDefined(taxRate.companyCurrencyId) && angular.isDefined($scope.currenciesList)) {
+    $scope.findCompanyCurrencyCode = function (companyCurrencyId) {
+      var currencyCode = '';
+      if (angular.isDefined(companyCurrencyId) && angular.isDefined($scope.currenciesList)) {
         angular.forEach($scope.currenciesList, function (currency) {
-          if (currency.id === taxRate.companyCurrencyId) {
-            payload = {
-              id: taxRate.companyCurrencyId,
-              code: currency.code
-            };
+          if (currency.id === companyCurrencyId) {
+            currencyCode = currency.code;
           }
         });
 
-        return payload;
+        return currencyCode;
       }
     };
 
-    this.checkForExistingStations = function (taxRate, currentStation) {
+    this.checkForExistingDepartureStations = function (taxRate, currentStation) {
       var existingStation = [];
-      angular.forEach(taxRate.companyTaxRateStations, function (station) {
+      angular.forEach(taxRate.departureStations, function (station) {
         if (station.stationCode === currentStation.stationCode) {
           existingStation.push(station);
         }
@@ -111,12 +108,44 @@ angular.module('ts5App')
       return (!existingStation.length);
     };
 
-    this.setTaxRateAvailableStations = function (taxRate) {
+    this.checkForExistingArrivalStations = function (taxRate, currentStation) {
+      var existingStation = [];
+      angular.forEach(taxRate.arrivalStations, function (station) {
+        if (station.stationCode === currentStation.stationCode) {
+          existingStation.push(station);
+        }
+      });
+
+      return (!existingStation.length);
+    };
+
+    this.setTaxRateAvailableDepartureStations = function (taxRate) {
       var availableStations = [];
       if ($scope.stationsList.length > 0) {
         angular.forEach($scope.stationsList, function (station) {
-          if ($this.checkForExistingStations(taxRate, station)) {
-            if (taxRate.countryName === station.countryName) {
+          if ($this.checkForExistingDepartureStations(taxRate, station)) {
+            if (taxRate.departureStationsCountryName === station.countryName) {
+              var payload = {
+                companyStationId: station.stationId,
+                stationCode: station.stationCode,
+                stationName: station.stationName,
+                countryName: station.countryName
+              };
+              availableStations.push(payload);
+            }
+          }
+        });
+      }
+
+      return availableStations;
+    };
+
+    this.setTaxRateAvailableArrivalStations = function (taxRate) {
+      var availableStations = [];
+      if ($scope.stationsList.length > 0) {
+        angular.forEach($scope.stationsList, function (station) {
+          if ($this.checkForExistingArrivalStations(taxRate, station)) {
+            if (taxRate.arrivalStationsCountryName === station.countryName) {
               var payload = {
                 companyStationId: station.stationId,
                 stationCode: station.stationCode,
@@ -142,11 +171,46 @@ angular.module('ts5App')
       }
     };
 
-    this.formatTaxTypeCountryName = function (taxRate) {
-      taxRate.countryName = {
-        countryName: taxRate.countryName
+    this.formatTaxTypeDepartureCountryName = function (taxRate) {
+      return {
+        countryName: taxRate.departureStationsCountryName
       };
-      return taxRate.countryName;
+    };
+
+    this.formatTaxTypeArrivalCountryName = function (taxRate) {
+      return {
+        countryName: taxRate.arrivalStationsCountryName
+      };
+    };
+
+    this.formatDepartureStations = function (taxRate) {
+      var stations = lodash.filter(taxRate.stations, { direction: 'Departure' });
+
+      return stations.map(function (station) {
+        var departureStation = lodash.find($scope.stationsList, { stationCode: station.stationCode });
+
+        return {
+          companyStationId: departureStation.stationId,
+          stationCode: departureStation.stationCode,
+          stationName: departureStation.stationName,
+          countryName: departureStation.countryName
+        };
+      });
+    };
+
+    this.formatArrivalStations = function (taxRate) {
+      var stations = lodash.filter(taxRate.stations, { direction: 'Arrival' });
+
+      return stations.map(function (station) {
+        var arrivalStation = lodash.find($scope.stationsList, { stationCode: station.stationCode });
+
+        return {
+          companyStationId: arrivalStation.stationId,
+          stationCode: arrivalStation.stationCode,
+          stationName: arrivalStation.stationName,
+          countryName: arrivalStation.countryName
+        };
+      });
     };
 
     this.formatTaxRateType = function (taxRate) {
@@ -162,9 +226,14 @@ angular.module('ts5App')
 
     this.formatTaxRateObject = function (taxRate, dates) {
       taxRate.action = 'read';
-      taxRate.availableStations = $this.setTaxRateAvailableStations(taxRate);
-      taxRate.currency = $this.setCompanyCurrency(taxRate);
-      taxRate.countryName = $this.formatTaxTypeCountryName(taxRate);
+      taxRate.allDepartureStations = false;
+      taxRate.allArrivalStations = false;
+      taxRate.availableDepartureStations = $this.setTaxRateAvailableDepartureStations(taxRate);
+      taxRate.availableArrivalStations = $this.setTaxRateAvailableArrivalStations(taxRate);
+      taxRate.departureStationsCountryName = $this.formatTaxTypeDepartureCountryName(taxRate);
+      taxRate.arrivalStationsCountryName = $this.formatTaxTypeArrivalCountryName(taxRate);
+      taxRate.departureStations = $this.formatDepartureStations(taxRate);
+      taxRate.arrivalStations = $this.formatArrivalStations(taxRate);
       taxRate.taxTypeCode = $this.formatTaxTypeCode(taxRate);
       taxRate.taxRateType = $this.formatTaxRateType(taxRate);
       if (angular.isDefined(dates) && dates === true) {
@@ -172,9 +241,13 @@ angular.module('ts5App')
         taxRate.endDate = $this.formatTaxRateDate(taxRate.endDate);
       }
 
-      if (taxRate.availableStations) {
-        return taxRate;
-      }
+      taxRate.taxRateValue = Number(taxRate.taxRateValue).toFixed(2);
+      taxRate.taxRateAmounts = taxRate.taxRateAmounts.map(function(amount) {
+        amount.amount = Number(amount.amount).toFixed(2);
+        return amount;
+      });
+
+      return taxRate;
     };
 
     this.formatTaxRatesAfterCreation = function (newTaxRatesList) {
@@ -187,7 +260,7 @@ angular.module('ts5App')
       return taxRatesList;
     };
 
-    this.createCompanyTaxRates = function (taxRatesList) {
+    this.createRouteTaxRates = function (taxRatesList) {
       var newTaxRatesList = [];
       angular.forEach(taxRatesList, function (taxRate, key) {
         taxRate.position = $this.uiSelectPosition(taxRatesList.length, key);
@@ -212,31 +285,31 @@ angular.module('ts5App')
     this.setCompanyTaxRatesList = function (dataFromAPI) {
       $scope.companyTaxRatesList = [];
       var masterRatesList = angular.copy(dataFromAPI);
-      var taxRatesList = angular.copy(dataFromAPI.taxRates);
+      var taxRatesList = angular.copy(dataFromAPI.response);
       $this.setMasterCompanyTaxRatesList(masterRatesList);
       if (angular.isDefined(taxRatesList)) {
-        $scope.companyTaxRatesList = $this.createCompanyTaxRates(taxRatesList);
+        $scope.companyTaxRatesList = $this.createRouteTaxRates(taxRatesList);
       }
     };
 
     this.setMasterCompanyTaxRatesList = function (dataFromAPI) {
       $scope.masterTaxRates = [];
-      var masterRatesList = angular.copy(dataFromAPI.taxRates);
+      var masterRatesList = angular.copy(dataFromAPI.response);
       if (angular.isDefined(masterRatesList)) {
         $scope.masterTaxRates = $this.createMasterCompanyTaxRates(masterRatesList);
       }
     };
 
     this.getTaxTypesList = function () {
-      return taxRatesFactory.getTaxTypesList().then($this.setTaxTypesList);
+      return routeTaxRatesFactory.getTaxTypesList().then($this.setTaxTypesList);
     };
 
     this.getTaxRateTypesList = function () {
-      return taxRatesFactory.getTaxRateTypes().then($this.setTaxRateTypesList);
+      return routeTaxRatesFactory.getTaxRateTypes().then($this.setTaxRateTypesList);
     };
 
     this.getStationsList = function () {
-      return taxRatesFactory.getStationsList().then($this.setStationsList);
+      return routeTaxRatesFactory.getStationsList().then($this.setStationsList);
     };
 
     this.getCurrenciesList = function () {
@@ -247,17 +320,17 @@ angular.module('ts5App')
         isOperatedCurrency: true
       };
 
-      return taxRatesFactory.getCompanyCurrencies(payload).then($this.setCurrenciesList);
+      return routeTaxRatesFactory.getCompanyCurrencies(payload).then($this.setCurrenciesList);
     };
 
-    this.getCompanyTaxRatesList = function (query) {
+    this.getRouteTaxRates = function (query) {
       var q = query || {};
-      return taxRatesFactory.getCompanyTaxRatesList(q).then($this.setCompanyTaxRatesList);
+      return routeTaxRatesFactory.getRouteTaxRates(q).then($this.setCompanyTaxRatesList);
     };
 
     this.getCompanyMasterTaxRatesList = function (query) {
       var q = query || {};
-      return taxRatesFactory.getCompanyTaxRatesList(q).then($this.setMasterCompanyTaxRatesList);
+      return routeTaxRatesFactory.getRouteTaxRates(q).then($this.setMasterCompanyTaxRatesList);
     };
 
     this.errorHandler = function (dataFromAPI) {
@@ -273,7 +346,7 @@ angular.module('ts5App')
 
     this.createTaxRatePromises = function () {
       return [
-        $this.getCompanyTaxRatesList()
+        $this.getRouteTaxRates()
       ];
     };
 
@@ -310,7 +383,7 @@ angular.module('ts5App')
     this.init = function () {
       $scope.isCRUD = accessService.crudAccessGranted('TAX', 'TAX', 'CRUDTAX');
       $this.createScopeVariables();
-      $this.showLoadingModal('Loading data for Tax Management...');
+      $this.showLoadingModal('Loading data for Route Tax Management...');
       $this.makePromises();
       $scope.minDate = dateUtility.nowFormattedDatePicker();
     };
@@ -343,10 +416,22 @@ angular.module('ts5App')
       return isActive;
     };
 
-    this.generateCompanyStationIds = function () {
+    this.generateDepartureCompanyStationIds = function () {
       var companyStationIds = [];
-      for (var key in $scope.search.stations) {
-        var station = $scope.search.stations[key];
+      for (var key in $scope.search.departureStations) {
+        var station = $scope.search.departureStations[key];
+        if (station.stationId) {
+          companyStationIds.push(station.stationId);
+        }
+      }
+
+      return encodeURI(companyStationIds);
+    };
+
+    this.generateArrivalCompanyStationIds = function () {
+      var companyStationIds = [];
+      for (var key in $scope.search.arrivalStations) {
+        var station = $scope.search.arrivalStations[key];
         if (station.stationId) {
           companyStationIds.push(station.stationId);
         }
@@ -360,15 +445,15 @@ angular.module('ts5App')
         limit: 100
       };
       if ($scope.search.taxType) {
-        query.taxTypeCode = $scope.search.taxType.taxTypeCode;
+        query.companyTaxTypeId = $scope.search.taxType.id;
       }
 
-      if ($scope.search.country) {
-        query.countryName = $scope.search.country.countryName;
+      if ($scope.search.departureCountry) {
+        query.departureStationsCountryName = $scope.search.departureCountry.countryName;
       }
 
-      if ($scope.search.currency) {
-        query.companyCurrencyId = $scope.search.currency.id;
+      if ($scope.search.arrivalCountry) {
+        query.arrivalStationsCountryName = $scope.search.arrivalCountry.countryName;
       }
 
       if ($scope.search.taxRateType) {
@@ -380,8 +465,13 @@ angular.module('ts5App')
 
     this.createSearchPayload = function () {
       var query = $this.createUiSelectSearchPayload();
-      if (angular.isDefined($scope.search.stations) && $scope.search.stations.length) {
-        query.companyStationIds = $this.generateCompanyStationIds();
+
+      if (angular.isDefined($scope.search.departureStations) && $scope.search.departureStations.length) {
+        query.departureStationIds = $this.generateDepartureCompanyStationIds();
+      }
+
+      if (angular.isDefined($scope.search.arrivalStations) && $scope.search.arrivalStations.length) {
+        query.arrivalStationIds = $this.generateArrivalCompanyStationIds();
       }
 
       if ($scope.search.taxRate) {
@@ -402,7 +492,7 @@ angular.module('ts5App')
     this.createSearchPromises = function () {
       var query = $this.createSearchPayload();
       return [
-        $this.getCompanyTaxRatesList(query)
+        $this.getRouteTaxRates(query)
       ];
     };
 
@@ -427,7 +517,7 @@ angular.module('ts5App')
         }
       }
 
-      var message = 'Searching Tax Rates...';
+      var message = 'Searching Route Tax Rates...';
       if (clear) {
         message = 'Clearing Search...';
       }
@@ -437,21 +527,15 @@ angular.module('ts5App')
       $q.all(promises).then($this.searchSuccess, $this.errorHandler);
     };
 
-    this.createDeletePromises = function (id) {
-      return [
-        taxRatesFactory.removeCompanyTaxRate(id)
-      ];
-    };
-
-    this.makeDeletePromises = function (taxRate) {
+    this.deleteTaxRate = function (taxRate) {
       if (angular.isDefined(taxRate)) {
         taxRate.deleted = true;
       }
 
-      var message = 'Deleting Tax Rate ID: ' + taxRate.id;
+      var message = 'Deleting Route Tax Rate ID: ' + taxRate.id;
       $this.showLoadingModal(message);
-      var promises = $this.createDeletePromises(taxRate.id);
-      $q.all(promises).then($this.deleteSuccess, $this.errorHandler);
+
+      return routeTaxRatesFactory.removeRouteTaxRate(taxRate.id).then($this.deleteSuccess, $this.errorHandler);
     };
 
     this.removeTaxRateFromList = function (id) {
@@ -468,7 +552,7 @@ angular.module('ts5App')
 
     this.deleteSuccess = function () {
       var id = angular.copy($scope.taxRateToRemove.id);
-      messageService.display('success', 'Successfully Deleted <b>Tax Rate ID: </b>' + id);
+      messageService.display('success', 'Successfully Deleted <b>Route Tax Rate ID: </b>' + id);
       $scope.taxRateToRemove = [];
       $this.hideLoadingModal();
       return $this.removeTaxRateFromList(id);
@@ -526,55 +610,92 @@ angular.module('ts5App')
     };
 
     this.createStationsPayload = function (taxRate) {
-      var companyTaxRateStations = [];
-      angular.forEach(taxRate.companyTaxRateStations, function (station) {
-        companyTaxRateStations.push({
-          companyStationId: station.stationId ? station.stationId : station.companyStationId
-        });
+      var departureStations = taxRate.departureStations.map(function (station) {
+        var existingStation = lodash.find(taxRate.stations, { stationCode: station.stationCode, direction: 'Departure' });
+
+        return {
+          id: existingStation ? existingStation.id : null,
+          companyStationId: station.companyStationId,
+          direction: 'Departure'
+        };
       });
 
-      return companyTaxRateStations;
+      var arrivalStations = taxRate.arrivalStations.map(function (station) {
+        var existingStation = lodash.find(taxRate.stations, { stationCode: station.stationCode, direction: 'Arrival' });
+
+        return {
+          id: existingStation ? existingStation.id : null,
+          companyStationId: station.companyStationId,
+          direction: 'Arrival'
+        };
+      });
+
+      return departureStations.concat(arrivalStations);
     };
 
-    this.editSuccess = function () {
-      $this.hideLoadingModal();
-      var id = angular.copy($scope.taxRateSaved);
-      $this.getTaxRateById(id);
-      messageService.display('success', 'Successfully Saved <b>Tax Rate ID: </b>' + id);
-      $scope.taxRateSaved = [];
-      $this.getCompanyMasterTaxRatesList();
+    this.createTaxRateAmountsPayload = function (taxRate) {
+      return taxRate.taxRateAmounts;
     };
 
-    this.createEditPromises = function (taxRate) {
-      return [
-        taxRatesFactory.updateCompanyTaxRate(taxRate)
-      ];
-    };
-
-    this.makeEditPromises = function (taxRate) {
-      var message = 'Saving Edits for Tax Rate ID: ' + taxRate.id;
-      $this.showLoadingModal(message);
-      $scope.taxRateSaved = taxRate.id;
-      var promises = $this.createEditPromises(taxRate);
-      $q.all(promises).then($this.editSuccess, $this.errorHandler);
-    };
-
-    this.saveTaxRateEdits = function (taxRate) {
+    this.editSuccess = function (taxRate) {
       delete taxRate.edited;
       delete taxRate.readOnly;
       taxRate.action = 'read';
       taxRate.saved = true;
+      taxRate.allDepartureStations = false;
+      taxRate.allArrivalStations = false;
+
+      $this.hideLoadingModal();
+      $this.getTaxRateById(taxRate.id);
+      $this.getCompanyMasterTaxRatesList();
+      $this.clearCustomErrors();
+
+      messageService.display('success', 'Successfully Saved <b>Route Tax Rate ID: </b>' + taxRate.id);
+    };
+
+    this.saveTaxRateEdits = function (taxRate) {
+      $this.clearCustomErrors();
+
+      var taxRateType = taxRate.taxRateType ? taxRate.taxRateType.taxRateType : null;
+      var companyTaxTypeId = taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId;
+      var taxRateValue = taxRateType === 'Percentage' ? taxRate.taxRateValue : null;
+      var taxRateAmounts = taxRateType === 'Amount' ? $this.createTaxRateAmountsPayload(taxRate) : [];
+
+      if ($scope.isTaxRateTypePercentage(taxRate)) {
+        $this.validateNewData('rate', taxRateValue, taxRate);
+      }
+
+      if ($scope.isTaxRateTypeAmount(taxRate)) {
+        $this.validateNewData('rate', taxRateAmounts, taxRate);
+      }
+
+      $this.validateNewData('rateType', taxRateType, taxRate);
+      $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate);
+      $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate);
+      $this.validateNewData('taxType', companyTaxTypeId, taxRate);
+      $this.validateNewData('arrivalStations', taxRate.arrivalStations, taxRate);
+      $this.validateNewData('departureStations', taxRate.departureStations, taxRate);
+
       var payload = {
         id: taxRate.id,
-        taxRateValue: taxRate.taxRateValue,
-        taxRateType: taxRate.taxRateType.taxRateType,
+        taxRateValue: taxRateValue,
+        taxRateType: taxRateType,
+        allDepartureStations: taxRate.allDepartureStations,
+        allArrivalStations: taxRate.allArrivalStations,
         startDate: dateUtility.formatDateForAPI(taxRate.startDate),
         endDate: dateUtility.formatDateForAPI(taxRate.endDate),
-        companyTaxTypeId: taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId,
-        companyTaxRateStations: $this.createStationsPayload(taxRate),
-        companyCurrencyId: $scope.isTaxRateTypePercentage(taxRate) ? null : taxRate.currency.id
+        companyTaxTypeId: companyTaxTypeId,
+        stations: $this.createStationsPayload(taxRate),
+        taxRateAmounts: taxRateAmounts
       };
-      $this.makeEditPromises(payload);
+
+      if ($scope.displayError !== true) {
+        $this.showLoadingModal('Saving Edits for Route Tax Rate ID: ' + taxRate.id);
+
+        return routeTaxRatesFactory.updateRouteTaxRate(taxRate.id, payload).then(function () {
+          $this.editSuccess(taxRate);
+        }, $this.errorHandler);
+      }
     };
 
     this.determineMinDate = function (date) {
@@ -645,39 +766,57 @@ angular.module('ts5App')
     };
 
     this.createNewTaxRate = function () {
-      var length = parseInt($scope.companyTaxRatesList.length);
+      var length = $scope.companyTaxRatesList.length;
       var payload = {
         action: 'create',
         position: 'up',
         key: length + 1,
         taxRateValue: undefined,
+        taxRateAmounts: [],
         taxRateType: undefined,
         startDate: undefined,
         endDate: undefined,
         taxTypeCode: undefined,
-        companyTaxRateStations: undefined,
-        companyCurrencyId: undefined,
+        stations: [],
+        departureStations: [],
+        arrivalStations: [],
         created: true
       };
       $scope.companyTaxRatesList.push(payload);
     };
 
     this.parseNewTaxRatePayload = function (taxRate) {
-      var stations = $this.createStationsPayload(taxRate);
-      var taxTypeId = taxRate.taxTypeCode ? taxRate.taxTypeCode.id : null;
+      $this.clearCustomErrors();
+
       var taxRateType = taxRate.taxRateType ? taxRate.taxRateType.taxRateType : null;
-      var companyCurrencyId = taxRate.currency ? taxRate.currency.id : null;
-      var payload = {
-        taxRateValue: $this.validateNewData('taxRateValue', taxRate.taxRateValue, taxRate),
-        taxRateType: $this.validateNewData('taxRateType', taxRateType, taxRate),
-        startDate: $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate),
-        endDate: $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate),
-        companyTaxTypeId: $this.validateNewData('companyTaxTypeId', taxTypeId, taxRate),
-        companyTaxRateStations: $this.validateNewData('companyTaxRateStations', stations, taxRate)
-      };
-      if (!$scope.isTaxRateTypePercentage(taxRate)) {
-        payload.companyCurrencyId = $this.validateNewData('companyCurrencyId', companyCurrencyId, taxRate);
+      var companyTaxTypeId = taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId;
+      var taxRateValue = taxRateType === 'Percentage' ? taxRate.taxRateValue : null;
+      var taxRateAmounts = taxRateType === 'Amount' ? $this.createTaxRateAmountsPayload(taxRate) : [];
+
+      if ($scope.isTaxRateTypePercentage(taxRate)) {
+        $this.validateNewData('rate', taxRateValue, taxRate);
       }
+
+      if ($scope.isTaxRateTypeAmount(taxRate)) {
+        $this.validateNewData('rate', taxRateAmounts, taxRate);
+      }
+
+      $this.validateNewData('rateType', taxRateType, taxRate);
+      $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate);
+      $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate);
+      $this.validateNewData('taxType', companyTaxTypeId, taxRate);
+      $this.validateNewData('arrivalStations', taxRate.arrivalStations, taxRate);
+      $this.validateNewData('departureStations', taxRate.departureStations, taxRate);
+
+      var payload = {
+        taxRateValue: taxRateValue,
+        taxRateType: taxRateType,
+        startDate: dateUtility.formatDateForAPI(taxRate.startDate),
+        endDate: dateUtility.formatDateForAPI(taxRate.endDate),
+        companyTaxTypeId: companyTaxTypeId,
+        stations: $this.createStationsPayload(taxRate),
+        taxRateAmounts: taxRateAmounts
+      };
 
       return payload;
     };
@@ -693,12 +832,6 @@ angular.module('ts5App')
         taxRate.new = true;
         $this.makeCreatePromises(payload);
       }
-    };
-
-    this.createNewTaxRatePromises = function (payload) {
-      return [
-        taxRatesFactory.createCompanyTaxRate(payload)
-      ];
     };
 
     this.setIdOnTaxRateObjectOnSuccess = function (id) {
@@ -722,21 +855,30 @@ angular.module('ts5App')
           taxRate.createdByPerson = dataFromAPI.createdByPerson;
           taxRate.updatedOn = dataFromAPI.updatedOn;
           taxRate.updatedByPerson = dataFromAPI.updatedByPerson;
+          taxRate.taxRateValue = Number(dataFromAPI.taxRateValue).toFixed(2);
+          taxRate.stations = dataFromAPI.stations;
+          taxRate.departureStations = $this.formatDepartureStations(dataFromAPI);
+          taxRate.arrivalStations = $this.formatArrivalStations(dataFromAPI);
+          taxRate.taxRateAmounts = dataFromAPI.taxRateAmounts.map(function(amount) {
+            amount.amount = Number(amount.amount).toFixed(2);
+            return amount;
+          });
         }
       });
     };
 
     this.getTaxRateById = function (id) {
-      taxRatesFactory.getCompanyTaxRate(id).then($this.setTaxRateById);
+      routeTaxRatesFactory.getRouteTaxRate(id).then($this.setTaxRateById);
     };
 
     this.createNewTaxRateSuccess = function (response) {
-      var id = response[0].id;
+      var id = response.id;
+
       $this.getCompanyMasterTaxRatesList();
       $this.setIdOnTaxRateObjectOnSuccess(id);
       $this.getTaxRateById(id);
       $this.hideLoadingModal();
-      messageService.display('success', 'Successfully Created <b>Tax Rate ID: </b>' + id);
+      messageService.display('success', 'Successfully Created <b>Route Tax Rate ID: </b>' + id);
       $scope.taxRateToCreate = [];
     };
 
@@ -750,9 +892,9 @@ angular.module('ts5App')
     };
 
     this.makeCreatePromises = function (payload) {
-      $this.showLoadingModal('Creating new Tax Rate...');
-      var promises = $this.createNewTaxRatePromises(payload);
-      $q.all(promises).then($this.createNewTaxRateSuccess, $this.createNewTaxRateError);
+      $this.showLoadingModal('Creating new Route Tax Rate...');
+
+      return routeTaxRatesFactory.createRouteTaxRate(payload).then($this.createNewTaxRateSuccess, $this.createNewTaxRateError);
     };
 
     // Place $scope functions here
@@ -763,7 +905,8 @@ angular.module('ts5App')
           startDate: '',
           endDate: ''
         };
-        $scope.enableSearchStations = false;
+        $scope.enableDepartureSearchStations = false;
+        $scope.enableArrivalSearchStations = false;
       }
 
       $scope.companyTaxRatesList = [];
@@ -778,7 +921,7 @@ angular.module('ts5App')
     };
 
     $scope.deleteCompanyTaxRate = function (taxRate) {
-      return $this.makeDeletePromises(taxRate);
+      return $this.deleteTaxRate(taxRate);
     };
 
     $scope.showDeleteButton = function (taxRate) {
@@ -862,6 +1005,10 @@ angular.module('ts5App')
       return angular.isDefined(taxRate.taxRateType) && taxRate.taxRateType.taxRateType === 'Percentage';
     };
 
+    $scope.isTaxRateTypeAmount = function (taxRate) {
+      return angular.isDefined(taxRate.taxRateType) && taxRate.taxRateType.taxRateType === 'Amount';
+    };
+
     $scope.cancelNewTaxRate = function (taxRate) {
       $this.clearCustomErrors();
       $scope.errorResponse = [];
@@ -869,29 +1016,54 @@ angular.module('ts5App')
       taxRate.action = 'deleted';
     };
 
-    $scope.filterSearchStationsByCountry = function (countryName) {
-      $scope.enableSearchStations = true;
-      $scope.stationsListSearch = angular.copy($scope.masterStationsList);
-      $scope.stationsListSearch = $filter('filter')($scope.stationsListSearch, {
+    $scope.filterSearchDepartureStationsByCountry = function (countryName) {
+      $scope.enableDepartureSearchStations = true;
+      $scope.departureStationsListSearch = angular.copy($scope.masterStationsList);
+      $scope.departureStationsListSearch = $filter('filter')($scope.departureStationsListSearch, {
         countryName: countryName
       }, true);
-      $scope.search.stations = [];
+      $scope.search.departureStations = [];
     };
 
-    $scope.isTaxRateCountryFieldDisabled = function (taxRate) {
-      return $scope.isDisabled(taxRate) || (angular.isDefined(taxRate.companyTaxRateStations) && taxRate.companyTaxRateStations.length);
+    $scope.filterSearchArrivalStationsByCountry = function (countryName) {
+      $scope.enableArrivalSearchStations = true;
+      $scope.arrivalStationsListSearch = angular.copy($scope.masterStationsList);
+      $scope.arrivalStationsListSearch = $filter('filter')($scope.arrivalStationsListSearch, {
+        countryName: countryName
+      }, true);
+      $scope.search.arrivalStations = [];
     };
 
-    $scope.isTaxRateCountryFieldDisabledForCreate = function (taxRate) {
-      return angular.isDefined(taxRate.companyTaxRateStations) && taxRate.companyTaxRateStations.length;
+    $scope.isTaxRateDepartureCountryFieldDisabled = function (taxRate) {
+      return $scope.isDisabled(taxRate) || (angular.isDefined(taxRate.departureStations) && taxRate.departureStations.length);
     };
 
-    $scope.isTaxRateStationsDisabled = function (taxRate) {
-      return this.isDisabled(taxRate) || (!taxRate.countryName || $scope.isFieldReadOnly(taxRate));
+    $scope.isTaxRateArrivalCountryFieldDisabled = function (taxRate) {
+      return $scope.isDisabled(taxRate) || (angular.isDefined(taxRate.arrivalStations) && taxRate.arrivalStations.length);
     };
 
-    $scope.isTaxRateStationsDisabledForCreate = function (taxRate) {
-      return !taxRate.countryName || $scope.isFieldReadOnly(taxRate);
+    $scope.isTaxRateDepartureCountryFieldDisabledForCreate = function (taxRate) {
+      return angular.isDefined(taxRate.departureStations) && taxRate.departureStations.length;
+    };
+
+    $scope.isTaxRateArrivalCountryFieldDisabledForCreate = function (taxRate) {
+      return angular.isDefined(taxRate.arrivalStations) && taxRate.arrivalStations.length;
+    };
+
+    $scope.isTaxRateDepartureStationsDisabled = function (taxRate) {
+      return this.isDisabled(taxRate) || (!taxRate.departureStationsCountryName || $scope.isFieldReadOnly(taxRate));
+    };
+
+    $scope.isTaxRateArrivalStationsDisabled = function (taxRate) {
+      return this.isDisabled(taxRate) || (!taxRate.arrivalStationsCountryName || $scope.isFieldReadOnly(taxRate));
+    };
+
+    $scope.isTaxRateDepartureStationsDisabledForCreate = function (taxRate) {
+      return !taxRate.departureStationsCountryName || $scope.isFieldReadOnly(taxRate);
+    };
+
+    $scope.isTaxRateArrivalStationsDisabledForCreate = function (taxRate) {
+      return !taxRate.arrivalStationsCountryName || $scope.isFieldReadOnly(taxRate);
     };
 
     $scope.showCurrencyCode = function (taxRate) {
@@ -903,21 +1075,41 @@ angular.module('ts5App')
       return $scope.isDisabled(taxRate) || $scope.isTaxRateTypePercentage(taxRate);
     };
 
-    $scope.filterTaxRateStations = function (taxRate) {
-      taxRate.availableStations = angular.copy($scope.masterStationsList);
-      taxRate.availableStations = $filter('filter')(taxRate.availableStations, {
-        countryName: taxRate.countryName.countryName
-      }, true);
-      taxRate.companyTaxRateStations = [];
+    $scope.filterDepartureTaxRateStations = function (taxRate) {
+      taxRate.availableDepartureStations = lodash.filter($scope.masterStationsList, { countryName: taxRate.departureStationsCountryName.countryName })
+        .map(function (station) {
+          return {
+            companyStationId: station.stationId,
+            stationCode: station.stationCode,
+            stationName: station.stationName,
+            countryName: station.countryName
+          };
+        });
+
+      taxRate.departureStations = [];
+    };
+
+    $scope.filterArrivalTaxRateStations = function (taxRate) {
+      taxRate.availableArrivalStations = lodash.filter($scope.masterStationsList, { countryName: taxRate.arrivalStationsCountryName.countryName })
+        .map(function (station) {
+          return {
+            companyStationId: station.stationId,
+            stationCode: station.stationCode,
+            stationName: station.stationName,
+            countryName: station.countryName
+          };
+        });
+
+      taxRate.arrivalStations = [];
     };
 
     $scope.taxRateSelectReady = function (taxRate) {
-      return ($scope.viewIsReady && taxRate.action === 'edit' && taxRate.availableStations);
+      return ($scope.viewIsReady && taxRate.action === 'edit' && taxRate.availableDepartureStations && taxRate.availableArrivalStations);
     };
 
     $scope.shouldTaxRateCurrencyBeClear = function (taxRate) {
-      if ($scope.isTaxRateTypePercentage(taxRate) && angular.isDefined(taxRate.currency)) {
-        taxRate.currency = null;
+      if ($scope.isTaxRateTypePercentage(taxRate) && angular.isDefined(taxRate.taxRateAmounts)) {
+        taxRate.taxRateAmounts = [];
       }
     };
 
@@ -927,6 +1119,43 @@ angular.module('ts5App')
 
     $scope.isCurrentEffectiveDate = function (taxRate) {
       return (dateUtility.isTodayOrEarlierDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
+    };
+
+    $scope.showCompanyTaxAmountModal = function (taxRate) {
+      $scope.taxRateToEdit = taxRate;
+      $scope.taxRateToEditAmounts = [];
+
+      taxRate.taxRateAmounts.forEach(function (taxRateAmount) {
+        $scope.taxRateToEditAmounts[taxRateAmount.companyCurrencyId] = taxRateAmount;
+      });
+
+      angular.element('#currency-amounts-modal').modal('show');
+    };
+
+    $scope.saveRateAmounts = function () {
+      if (!$scope.taxRateAmountsForm.$valid) {
+        return;
+      }
+
+      var taxRateAmounts = [];
+      $scope.taxRateToEditAmounts.forEach(function (taxRateAmount, companyCurrencyId) {
+        var amount = {};
+
+        if (taxRateAmount.amount && !isNaN(parseFloat(taxRateAmount.amount))) {
+          amount.companyCurrencyId = companyCurrencyId;
+          amount.amount = parseFloat(taxRateAmount.amount);
+
+          if (taxRateAmount.id) {
+            amount.id = taxRateAmount.id;
+          }
+
+          taxRateAmounts.push(amount);
+        }
+      });
+
+      $scope.taxRateToEdit.taxRateAmounts = taxRateAmounts;
+
+      angular.element('#currency-amounts-modal').modal('hide');
     };
 
     $scope.getUpdateBy = function (taxRate) {
@@ -949,4 +1178,22 @@ angular.module('ts5App')
       return taxRate.updatedOn ? dateUtility.formatTimestampForApp(taxRate.updatedOn) : dateUtility.formatTimestampForApp(taxRate.createdOn);
     };
 
+    $scope.addAllDepartureStations = function (taxRate) {
+      if (taxRate.allDepartureStations) {
+        taxRate.departureStationsBackup = taxRate.departureStations;
+        taxRate.departureStations = taxRate.availableDepartureStations;
+      } else {
+        taxRate.departureStations = taxRate.departureStationsBackup;
+      }
+    };
+
+    $scope.addAllArrivalStations = function (taxRate) {
+      if (taxRate.allArrivalStations) {
+        taxRate.arrivalStationsBackup = taxRate.arrivalStations;
+        taxRate.arrivalStations = taxRate.availableArrivalStations;
+      } else {
+        taxRate.arrivalStations = taxRate.arrivalStationsBackup;
+      }
+    };
   });
+

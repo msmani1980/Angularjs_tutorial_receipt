@@ -494,6 +494,10 @@ angular.module('ts5App', [
     templateUrl: 'views/company-email-receipt-create.html',
     controller: 'CompanyEmailReceiptCreateCtrl',
     controllerAs: 'companyEmailReceiptCreate'
+  }).when('/route-tax-rates', {
+    templateUrl: 'views/route-tax-rates.html',
+    controller: 'RouteTaxRatesCtrl',
+    controllerAs: 'routeTaxRates'
   }).otherwise({
     redirectTo: '/'
   });
