@@ -10,6 +10,7 @@ angular.module('ts5App')
   .directive('qrUpload', function () {
 
     var qrUploadController = function ($scope, Upload, ENV, $http) {
+      $scope.files = [];
 
       // set header param 'type' = item
       $http.defaults.headers.common.type = 'item';
@@ -18,8 +19,10 @@ angular.module('ts5App')
       $scope.qrUploadProgress = '0';
 
       // watch for files
-      $scope.$watch('files', function (files) {
-        $scope.files = files;
+      $scope.$watch('fileToUpload', function (file) {
+        if (file) {
+          $scope.files.push(file);
+        }
       });
 
       // clear current qr codes
@@ -96,7 +99,7 @@ angular.module('ts5App')
 
       templateUrl: 'views/directives/qr-upload.html',
       restrict: 'E',
-      scope: false, //isolate scope to parent
+      scope: true, //isolate scope to parent
       controller: qrUploadController
 
     };

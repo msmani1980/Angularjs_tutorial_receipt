@@ -53,7 +53,7 @@
           placeholder="Filter list by item code or name"/>
           <div class="input-group-btn">
             <button type="button" class="btn btn-default" ng-click="clearFilteredPackingList()"><i class="fa fa-times"></i></button>
-            <button type="button" class="btn btn-default" ng-click="filterPackingList()"><i class="fa fa-search"></i> Search</button>
+            <button type="button" class="btn btn-default" ng-click="filterPackingList()"><i class="fa fa-search"></i> Search </button>
           </div>
         </div>
       </div>
@@ -100,8 +100,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in pickListItems | filter:{itemDescription: filterItemDetails} | orderBy:itemSortOrder"
-            ng-class="showVarianceWarningClass(item)" class="item-{{item.itemMasterId}}">
+        <tr ng-repeat="item in pickListItems | filter:{itemDescription: itemFilterText} | orderBy:itemSortOrder" ng-class="showVarianceWarningClass(item)" class="item-{{item.itemMasterId}}">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
@@ -178,9 +177,10 @@
         </tr>
 
         <!-- New Pick List Items-->
-        <tr ng-repeat="item in newPickListItems track by $index" ng-hide="readOnly">
+        <tr ng-repeat="item in newPickListItems | filter:{itemDescription: itemFilterText} | orderBy:itemSortOrder" ng-hide="readOnly">
           <td>
-            <ui-select required="required" ng-model="item.masterItem" theme="bootstrap" on-select="filterPickListItems()" name="newPickListItem{{ $index }}">
+            <input type="text" ng-model="item.itemDescription" disabled ng-hide="true"/>
+            <ui-select required="required" ng-model="item.masterItem" theme="bootstrap" on-select="filterPickListItems()" name="newPickListItem{{ $index }}" ng-change="setItemDescription(item)">
               <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{
                 $select.selected.itemName }}
               </ui-select-match>
@@ -275,7 +275,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in offloadListItems | filter:{itemDescription: filterItemDetails} | orderBy:offLoadItemsSortOrder">
+        <tr ng-repeat="item in offloadListItems | filter:{itemDescription: itemFilterText} | orderBy:offLoadItemsSortOrder">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
@@ -323,9 +323,10 @@
         </tr>
 
         <!-- New Offload List Items-->
-        <tr ng-repeat="item in newOffloadListItems track by $index" ng-hide="readOnly">
+        <tr ng-repeat="item in newOffloadListItems | filter:{itemDescription: itemFilterText}  | orderBy:offLoadItemsSortOrder" ng-hide="readOnly">
           <td>
-            <ui-select required="required" ng-model="item.masterItem" theme="bootstrap" on-select="filterOffloadListItems()" name="newOffloadListItem{{ $index }}">
+            <input type="text" ng-model="item.itemDescription" disabled ng-hide="true"/>
+            <ui-select required="required" ng-model="item.masterItem" theme="bootstrap" on-select="filterOffloadListItems()" name="newOffloadListItem{{ $index }}" ng-change="setItemDescription(item)">
               <ui-select-match placeholder="Select item from list">{{$select.selected.itemCode }} - {{
                 $select.selected.itemName }}
               </ui-select-match>

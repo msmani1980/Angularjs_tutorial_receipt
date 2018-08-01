@@ -90,7 +90,7 @@
     	          						{{ currency.code }} *
 									</div>
 									<input name="Currencies List - {{ currency.code }}" ng-model="currency.price" ng-required="!rule.percentage"  
-											ng-disabled="isDisabled()" type="text" class="form-control" maxlength="8" placeholder="1.00"/>
+											ng-disabled="isDisabled()" type="text" custom-validity custom-pattern="numberOrDecimal" class="form-control" maxlength="8" placeholder="1.00"/>
 								</div>
 							</div>
 						</div>
@@ -102,7 +102,137 @@
                 				placeholder="10%" ng-disabled="isDisabled()" ng-pattern="regexp.percentage">
               			</div>
 					</div>
-				</div>	
+				</div>
+				<div class="row">
+				  <div class="col-xs-12 col-sm-4">
+				  <p>
+					<button type="button" ng-disabled="isDisabled()" class="btn btn-primary" ng-click="addStationException()">
+           				<i class="fa fa-plus"></i> Add Station Exception
+        			</button>
+        		  </p>	
+        		  </div>	
+        		</div>
+        		<div ng-repeat="(key, bulkStationException) in rule.bulkRuleStationException track by $index">
+					<div class="row">
+						<div class="col-xs-12 col-sm-12">
+							<!-- StationException Section-->
+							<div class="panel panel-default">
+							   <div class="panel-heading">
+		    						<p class="panel-title">
+									<i class="fa fa-tags"></i> Station Exception {{ key+1 }}
+									<span class="pull-right btn btn-danger btn-xs" ng-hide="isDisabled()" ng-click="removeStationException(key)">
+        								<i class="fa fa-close"></i>
+      								</span>
+									</p>
+		  					   </div>
+							   <div class="panel-body">
+								<div class="row">
+									<div class="col-xs-12 col-sm-12">
+									   <div class="row">
+								          <div class="col-xs-12 col-sm-4">
+								            <date-picker-field 
+								            	ng-if="minDate" 
+								            	disable="isDisabled()" 
+								              	form="form" 
+								              	label="Effective From"
+								              	name="StationExceptionEffectiveFrom"
+								              	ng-required="bulkStationException.endDate" 
+								              	disable-past="true"
+								              	ng-model="bulkStationException.startDate">
+								            </date-picker-field>
+		         						 </div>
+							            <div class="col-xs-12 col-sm-4">
+								            <date-picker-field 
+								            	ng-if="minDate" 
+								            	disable="readOnly || shouldDisableEndDate" 
+								              	form="form" 
+								              	label="Effective To"
+								                name="StationExceptionEffectiveTo" 
+								                custom-effective="true"
+								                ng-required="bulkStationException.startDate"
+												custom-date="stationException.endDate"
+								                ng-model="bulkStationException.endDate">
+								            </date-picker-field>
+		          						</div>
+		          						<div class="col-xs-12 col-sm-4" ng-show="bulkStationException.startDate && bulkStationException.endDate && bulkStationException.stations.length > 0">
+											<div class="form-group" ng-disabled="isDisabled()" 
+											ng-class="{ 'has-error' : !bulkStationException.stationId , 'has-success' : bulkStationException.stationId }">
+												<label>Station *</label>
+												<select name="Station" ng-model="bulkStationException.stationId" 
+													ng-disabled="isDisabled()" class="form-control"
+													ng-required="bulkStationException.startDate && bulkStationException.endDate"
+								   					ng-options="station.id as (station.code + ' (' + station.name +')') for station in bulkStationException.stations">
+							   					</select>
+											</div>
+										</div>
+							           </div>
+			   						   <div class="row" ng-show="bulkStationException.startDate && bulkStationException.endDate && bulkStationException.stations.length > 0">
+				       					<div class="col-xs-12 col-sm-4">
+											<div class="form-group" ng-disabled="isDisabled()" 
+											ng-class="{ 'has-error' : !bulkStationException.taxIs , 'has-success' : bulkStationException.taxIs }">
+												<label>Tax Is *</label>
+												<select name="Tax Is" 
+													ng-disabled="!bulkStationException.startDate && !bulkStationException.endDate || isDisabled()" 
+													ng-model="bulkStationException.taxIs"
+													ng-required="bulkStationException.startDate && bulkStationException.endDate" 
+													class="form-control">
+													<option value="Included">Included</option>
+													<option value="Excluded">Excluded</option>
+													<option value="Exempt">Exempt</option>
+												</select>
+											</div>
+										</div>
+										<div class="col-xs-12 col-sm-4">
+											<div class="form-group">
+												<label for="stationCurrencyList">Currencies List*</label>
+												<div class="form-group" ng-repeat="(stnCurrencyKey,stnCurrency) in bulkStationException.stationPriceCurrencies track by $index">
+													<div class="input-group">
+														<div class="input-group-addon">
+					    	          						{{ stnCurrency.code }} *
+														</div>
+														<input name="Station Currencies List - {{ stnCurrency.code }}" ng-model="stnCurrency.price" ng-required="bulkStationException.startDate && bulkStationException.endDate"  
+																ng-disabled="isDisabled()" custom-validity custom-pattern="numberOrDecimal" 
+																type="text" class="form-control" maxlength="8" placeholder="1.00"/>
+													</div>
+												</div>
+											</div>
+											<!-- <label class="invisible">Checkbox</label>
+					                		<div class="form-group">
+												<input ng-model="bulkStationException.percentage" ng-disabled="isDisabled()" id="stnpercentage" type="checkbox"/>
+					                			<label>Is Percentage</label>
+											</div> -->
+										</div>
+										<!-- <div class="col-xs-12 col-sm-4" ng-hide="bulkStationException.percentage">
+											<div class="form-group">
+												<label for="stationCurrencyList">Currencies List*</label>
+												<div class="form-group" ng-repeat="(stnCurrencyKey,stnCurrency) in stationPriceCurrencies track by $index">
+													<div class="input-group">
+														<div class="input-group-addon">
+					    	          						{{ stnCurrency.code }} *
+														</div>
+														<input name="Station Currencies List - {{ stnCurrency.code }}" ng-model="stnCurrency.price" ng-required="!bulkStationException.percentage && bulkStationException.startDate && bulkStationException.endDate"  
+																ng-disabled="isDisabled()" custom-validity custom-pattern="numberOrDecimal" 
+																type="text" class="form-control" maxlength="8" placeholder="1.00"/>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-xs-12 col-sm-4" ng-show="bulkStationException.percentage">
+											<div class="form-group">
+					                			<label for="percentValue">Percentage Value*</label>
+					                			<input ng-model="bulkStationException.percentValue" type="text" class="form-control" name = "stationPercentageValue" id="stnPercentValue" 
+					                				ng-required="bulkStationException.percentage && bulkStationException.startDate && bulkStationException.endDate" placeholder="10%" ng-disabled="isDisabled()" ng-pattern="regexp.percentage">
+					              			</div>
+										</div> -->
+									   </div>
+									</div>
+							     </div>
+							   </div>
+							</div>
+							<!-- /StationException Section -->
+	      				</div>
+					</div>	
+				</div>
 			</div>
 			<div class="panel-footer text-right">
 				<a href="#/priceupdater-list" class="btn btn-default" ng-hide="readOnly">Cancel</a>
