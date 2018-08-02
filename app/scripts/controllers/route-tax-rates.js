@@ -324,7 +324,9 @@ angular.module('ts5App')
     };
 
     this.getRouteTaxRates = function (query) {
-      var q = query || {};
+      var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+      var q = query || { startDate: nowDate };
+
       return routeTaxRatesFactory.getRouteTaxRates(q).then($this.setCompanyTaxRatesList);
     };
 
@@ -662,19 +664,20 @@ angular.module('ts5App')
       var taxRateAmounts = taxRateType === 'Amount' ? $this.createTaxRateAmountsPayload(taxRate) : [];
 
       if ($scope.isTaxRateTypePercentage(taxRate)) {
-        $this.validateNewData('rate', taxRateValue, taxRate);
+        $this.validateFieldEmpty('rate', taxRateValue, taxRate);
+        $this.validateIsNumber('rate', taxRateValue, taxRate);
       }
 
       if ($scope.isTaxRateTypeAmount(taxRate)) {
-        $this.validateNewData('rate', taxRateAmounts, taxRate);
+        $this.validateFieldEmpty('rate', taxRateAmounts, taxRate);
       }
 
-      $this.validateNewData('rateType', taxRateType, taxRate);
-      $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate);
-      $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate);
-      $this.validateNewData('taxType', companyTaxTypeId, taxRate);
-      $this.validateNewData('arrivalStations', taxRate.arrivalStations, taxRate);
-      $this.validateNewData('departureStations', taxRate.departureStations, taxRate);
+      $this.validateFieldEmpty('rateType', taxRateType, taxRate);
+      $this.validateFieldEmpty('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate);
+      $this.validateFieldEmpty('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate);
+      $this.validateFieldEmpty('taxType', companyTaxTypeId, taxRate);
+      $this.validateFieldEmpty('arrivalStations', taxRate.arrivalStations, taxRate);
+      $this.validateFieldEmpty('departureStations', taxRate.departureStations, taxRate);
 
       var payload = {
         id: taxRate.id,
@@ -742,7 +745,7 @@ angular.module('ts5App')
       });
     };
 
-    this.showValidationError = function (field) {
+    this.showFieldEmptyValidationError = function (field) {
       var payload = {
         field: field,
         value: 'is a required field. Please update and try again!'
@@ -751,10 +754,28 @@ angular.module('ts5App')
       $scope.displayError = true;
     };
 
-    this.validateNewData = function (field, value, taxRate) {
+    this.showFieldNotANumberValidationError = function (field) {
+      var payload = {
+        field: field,
+        value: 'should be numeric. Please update and try again!'
+      };
+      $scope.errorCustom.push(payload);
+      $scope.displayError = true;
+    };
+
+    this.validateFieldEmpty = function (field, value, taxRate) {
       if (value === undefined || value === null || value.length === 0 || value === 'Invalid date') {
         taxRate.deleted = true;
-        $this.showValidationError(field);
+        $this.showFieldEmptyValidationError(field);
+      }
+
+      return value;
+    };
+
+    this.validateIsNumber = function (field, value, taxRate) {
+      if (!value || isNaN(value) || !angular.isNumber(+value)) {
+        taxRate.deleted = true;
+        $this.showFieldNotANumberValidationError(field);
       }
 
       return value;
@@ -794,19 +815,20 @@ angular.module('ts5App')
       var taxRateAmounts = taxRateType === 'Amount' ? $this.createTaxRateAmountsPayload(taxRate) : [];
 
       if ($scope.isTaxRateTypePercentage(taxRate)) {
-        $this.validateNewData('rate', taxRateValue, taxRate);
+        $this.validateFieldEmpty('rate', taxRateValue, taxRate);
+        $this.validateIsNumber('rate', taxRateValue, taxRate);
       }
 
       if ($scope.isTaxRateTypeAmount(taxRate)) {
-        $this.validateNewData('rate', taxRateAmounts, taxRate);
+        $this.validateFieldEmpty('rate', taxRateAmounts, taxRate);
       }
 
-      $this.validateNewData('rateType', taxRateType, taxRate);
-      $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate);
-      $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate);
-      $this.validateNewData('taxType', companyTaxTypeId, taxRate);
-      $this.validateNewData('arrivalStations', taxRate.arrivalStations, taxRate);
-      $this.validateNewData('departureStations', taxRate.departureStations, taxRate);
+      $this.validateFieldEmpty('rateType', taxRateType, taxRate);
+      $this.validateFieldEmpty('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate);
+      $this.validateFieldEmpty('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate);
+      $this.validateFieldEmpty('taxType', companyTaxTypeId, taxRate);
+      $this.validateFieldEmpty('arrivalStations', taxRate.arrivalStations, taxRate);
+      $this.validateFieldEmpty('departureStations', taxRate.departureStations, taxRate);
 
       var payload = {
         taxRateValue: taxRateValue,
