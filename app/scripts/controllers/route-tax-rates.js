@@ -383,7 +383,7 @@ angular.module('ts5App')
     };
 
     this.init = function () {
-      $scope.isCRUD = accessService.crudAccessGranted('TAX', 'TAX', 'CRUDTAX');
+      $scope.isCRUD = accessService.crudAccessGranted('TAX', 'ROUTETAX', 'ROUTETAXCRUD');
       $this.createScopeVariables();
       $this.showLoadingModal('Loading data for Route Tax Management...');
       $this.makePromises();
