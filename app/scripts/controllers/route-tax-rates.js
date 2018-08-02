@@ -1148,7 +1148,7 @@ angular.module('ts5App')
       $scope.taxRateToEditAmounts = [];
 
       taxRate.taxRateAmounts.forEach(function (taxRateAmount) {
-        $scope.taxRateToEditAmounts[taxRateAmount.companyCurrencyId] = taxRateAmount;
+        $scope.taxRateToEditAmounts[taxRateAmount.companyCurrencyId] = angular.copy(taxRateAmount);
       });
 
       angular.element('#currency-amounts-modal').modal('show');
@@ -1175,7 +1175,7 @@ angular.module('ts5App')
         }
       });
 
-      $scope.taxRateToEdit.taxRateAmounts = taxRateAmounts;
+      $scope.taxRateToEdit.taxRateAmounts = angular.copy(taxRateAmounts);
 
       angular.element('#currency-amounts-modal').modal('hide');
     };
