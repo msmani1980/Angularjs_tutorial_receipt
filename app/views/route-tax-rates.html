@@ -425,7 +425,8 @@
         <div class="modal-body">
           <div ng-if="!taxRateAmountsForm.$valid">
             <div class="panel panel-danger" id="error-dialog">
-              <div class="panel-heading">Amounts format is not correct.</div>
+              <div ng-repeat="required in taxRateAmountsForm.$error.required" class="panel-heading"><strong>{{ getCurrencyFromName(required.$name) }}</strong> - amount should not be empty</div>
+              <div ng-repeat="pattern in taxRateAmountsForm.$error.pattern" class="panel-heading"><strong>{{ getCurrencyFromName(pattern.$name) }}</strong> - amount should be a number</div>
             </div>
 
           </div>
@@ -434,7 +435,7 @@
               <tr ng-repeat="currency in currenciesList">
                 <td>{{ currency.code }}</td>
                 <td>
-                  <input ng-model="taxRateToEditAmounts[currency.id].amount" type="text" name="taxRateAmount[{{currency.code}}]" class="form-control" ng-pattern="regexp.price" placeholder="0.00">
+                  <input ng-model="taxRateToEditAmounts[currency.id].amount" type="text" name="amount[{{currency.code}}]" class="form-control" ng-required="true" ng-pattern="regexp.price" placeholder="0.00">
                 </td>
               </tr>
             </table>
@@ -445,7 +446,7 @@
           <button class="btn btn-default btn-cancel" data-dismiss="modal">
             <i class="fa fa-close"></i> Cancel
           </button>
-          <button class="btn btn-success btn-primary" ng-click="saveRateAmounts()">
+          <button class="btn btn-success btn-primary" ng-click="saveRateAmounts()" ng-disabled="!taxRateAmountsForm.$valid">
             <i class="fa fa-check"></i> Done
           </button>
         </div>

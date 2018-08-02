@@ -1180,6 +1180,10 @@ angular.module('ts5App')
       angular.element('#currency-amounts-modal').modal('hide');
     };
 
+    $scope.getCurrencyFromName = function (value) {
+      return value.match(/\[(.*)\]/)[1];
+    };
+
     $scope.getUpdateBy = function (taxRate) {
       if (taxRate.updatedByPerson) {
         return taxRate.updatedByPerson.userName;
