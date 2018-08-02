@@ -607,6 +607,9 @@ angular.module('ts5App')
       if (angular.isDefined(taxRate)) {
         taxRate.action = 'read';
         delete taxRate.readOnly;
+        $scope.errorResponse = [];
+        $this.clearCustomErrors();
+
         $this.resetTaxRateEdit(taxRate);
       }
     };
@@ -642,6 +645,7 @@ angular.module('ts5App')
     this.editSuccess = function (taxRate) {
       delete taxRate.edited;
       delete taxRate.readOnly;
+      delete taxRate.error;
       taxRate.action = 'read';
       taxRate.saved = true;
       taxRate.allDepartureStations = false;
@@ -765,7 +769,7 @@ angular.module('ts5App')
 
     this.validateFieldEmpty = function (field, value, taxRate) {
       if (value === undefined || value === null || value.length === 0 || value === 'Invalid date') {
-        taxRate.deleted = true;
+        taxRate.error = true;
         $this.showFieldEmptyValidationError(field);
       }
 
@@ -774,7 +778,7 @@ angular.module('ts5App')
 
     this.validateIsNumber = function (field, value, taxRate) {
       if (!value || isNaN(value) || !angular.isNumber(+value)) {
-        taxRate.deleted = true;
+        taxRate.error = true;
         $this.showFieldNotANumberValidationError(field);
       }
 
@@ -862,6 +866,7 @@ angular.module('ts5App')
           taxRate.id = id;
           delete taxRate.new;
           delete taxRate.deleted;
+          delete taxRate.error;
           taxRate.saved = true;
           taxRate.action = 'read';
           taxRate.created = true;
@@ -908,7 +913,7 @@ angular.module('ts5App')
       $this.errorHandler(response);
       angular.forEach($scope.companyTaxRatesList, function (taxRate) {
         if (taxRate.new) {
-          taxRate.deleted = true;
+          taxRate.error = true;
         }
       });
     };
@@ -984,16 +989,16 @@ angular.module('ts5App')
     };
 
     $scope.taxRateRowClass = function (taxRate) {
+      if (taxRate.deleted || taxRate.error) {
+        return 'bg-danger';
+      }
+
       if (taxRate.edited) {
         return 'bg-warning';
       }
 
       if (taxRate.saved) {
         return 'bg-success';
-      }
-
-      if (taxRate.deleted) {
-        return 'bg-danger';
       }
 
       if (taxRate.created) {
@@ -1034,8 +1039,10 @@ angular.module('ts5App')
     $scope.cancelNewTaxRate = function (taxRate) {
       $this.clearCustomErrors();
       $scope.errorResponse = [];
+
       taxRate.deleted = true;
-      taxRate.action = 'deleted';
+
+      $scope.companyTaxRatesList = lodash.reject($scope.companyTaxRatesList, { deleted: true });
     };
 
     $scope.filterSearchDepartureStationsByCountry = function (countryName) {
