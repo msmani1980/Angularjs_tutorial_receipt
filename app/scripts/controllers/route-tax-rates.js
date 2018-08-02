@@ -324,7 +324,9 @@ angular.module('ts5App')
     };
 
     this.getRouteTaxRates = function (query) {
-      var q = query || {};
+      var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+      var q = query || { startDate: nowDate };
+
       return routeTaxRatesFactory.getRouteTaxRates(q).then($this.setCompanyTaxRatesList);
     };
 
@@ -381,7 +383,7 @@ angular.module('ts5App')
     };
 
     this.init = function () {
-      $scope.isCRUD = accessService.crudAccessGranted('TAX', 'TAX', 'CRUDTAX');
+      $scope.isCRUD = accessService.crudAccessGranted('TAX', 'ROUTETAX', 'ROUTETAXCRUD');
       $this.createScopeVariables();
       $this.showLoadingModal('Loading data for Route Tax Management...');
       $this.makePromises();
@@ -605,6 +607,9 @@ angular.module('ts5App')
       if (angular.isDefined(taxRate)) {
         taxRate.action = 'read';
         delete taxRate.readOnly;
+        $scope.errorResponse = [];
+        $this.clearCustomErrors();
+
         $this.resetTaxRateEdit(taxRate);
       }
     };
@@ -640,6 +645,7 @@ angular.module('ts5App')
     this.editSuccess = function (taxRate) {
       delete taxRate.edited;
       delete taxRate.readOnly;
+      delete taxRate.error;
       taxRate.action = 'read';
       taxRate.saved = true;
       taxRate.allDepartureStations = false;
@@ -662,19 +668,20 @@ angular.module('ts5App')
       var taxRateAmounts = taxRateType === 'Amount' ? $this.createTaxRateAmountsPayload(taxRate) : [];
 
       if ($scope.isTaxRateTypePercentage(taxRate)) {
-        $this.validateNewData('rate', taxRateValue, taxRate);
+        $this.validateFieldEmpty('rate', taxRateValue, taxRate);
+        $this.validateIsNumber('rate', taxRateValue, taxRate);
       }
 
       if ($scope.isTaxRateTypeAmount(taxRate)) {
-        $this.validateNewData('rate', taxRateAmounts, taxRate);
+        $this.validateFieldEmpty('rate', taxRateAmounts, taxRate);
       }
 
-      $this.validateNewData('rateType', taxRateType, taxRate);
-      $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate);
-      $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate);
-      $this.validateNewData('taxType', companyTaxTypeId, taxRate);
-      $this.validateNewData('arrivalStations', taxRate.arrivalStations, taxRate);
-      $this.validateNewData('departureStations', taxRate.departureStations, taxRate);
+      $this.validateFieldEmpty('rateType', taxRateType, taxRate);
+      $this.validateFieldEmpty('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate);
+      $this.validateFieldEmpty('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate);
+      $this.validateFieldEmpty('taxType', companyTaxTypeId, taxRate);
+      $this.validateFieldEmpty('arrivalStations', taxRate.arrivalStations, taxRate);
+      $this.validateFieldEmpty('departureStations', taxRate.departureStations, taxRate);
 
       var payload = {
         id: taxRate.id,
@@ -742,7 +749,7 @@ angular.module('ts5App')
       });
     };
 
-    this.showValidationError = function (field) {
+    this.showFieldEmptyValidationError = function (field) {
       var payload = {
         field: field,
         value: 'is a required field. Please update and try again!'
@@ -751,10 +758,28 @@ angular.module('ts5App')
       $scope.displayError = true;
     };
 
-    this.validateNewData = function (field, value, taxRate) {
+    this.showFieldNotANumberValidationError = function (field) {
+      var payload = {
+        field: field,
+        value: 'should be numeric. Please update and try again!'
+      };
+      $scope.errorCustom.push(payload);
+      $scope.displayError = true;
+    };
+
+    this.validateFieldEmpty = function (field, value, taxRate) {
       if (value === undefined || value === null || value.length === 0 || value === 'Invalid date') {
-        taxRate.deleted = true;
-        $this.showValidationError(field);
+        taxRate.error = true;
+        $this.showFieldEmptyValidationError(field);
+      }
+
+      return value;
+    };
+
+    this.validateIsNumber = function (field, value, taxRate) {
+      if (!value || isNaN(value) || !angular.isNumber(+value)) {
+        taxRate.error = true;
+        $this.showFieldNotANumberValidationError(field);
       }
 
       return value;
@@ -794,19 +819,20 @@ angular.module('ts5App')
       var taxRateAmounts = taxRateType === 'Amount' ? $this.createTaxRateAmountsPayload(taxRate) : [];
 
       if ($scope.isTaxRateTypePercentage(taxRate)) {
-        $this.validateNewData('rate', taxRateValue, taxRate);
+        $this.validateFieldEmpty('rate', taxRateValue, taxRate);
+        $this.validateIsNumber('rate', taxRateValue, taxRate);
       }
 
       if ($scope.isTaxRateTypeAmount(taxRate)) {
-        $this.validateNewData('rate', taxRateAmounts, taxRate);
+        $this.validateFieldEmpty('rate', taxRateAmounts, taxRate);
       }
 
-      $this.validateNewData('rateType', taxRateType, taxRate);
-      $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate);
-      $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate);
-      $this.validateNewData('taxType', companyTaxTypeId, taxRate);
-      $this.validateNewData('arrivalStations', taxRate.arrivalStations, taxRate);
-      $this.validateNewData('departureStations', taxRate.departureStations, taxRate);
+      $this.validateFieldEmpty('rateType', taxRateType, taxRate);
+      $this.validateFieldEmpty('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate);
+      $this.validateFieldEmpty('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate);
+      $this.validateFieldEmpty('taxType', companyTaxTypeId, taxRate);
+      $this.validateFieldEmpty('arrivalStations', taxRate.arrivalStations, taxRate);
+      $this.validateFieldEmpty('departureStations', taxRate.departureStations, taxRate);
 
       var payload = {
         taxRateValue: taxRateValue,
@@ -840,6 +866,7 @@ angular.module('ts5App')
           taxRate.id = id;
           delete taxRate.new;
           delete taxRate.deleted;
+          delete taxRate.error;
           taxRate.saved = true;
           taxRate.action = 'read';
           taxRate.created = true;
@@ -886,7 +913,7 @@ angular.module('ts5App')
       $this.errorHandler(response);
       angular.forEach($scope.companyTaxRatesList, function (taxRate) {
         if (taxRate.new) {
-          taxRate.deleted = true;
+          taxRate.error = true;
         }
       });
     };
@@ -962,16 +989,16 @@ angular.module('ts5App')
     };
 
     $scope.taxRateRowClass = function (taxRate) {
+      if (taxRate.deleted || taxRate.error) {
+        return 'bg-danger';
+      }
+
       if (taxRate.edited) {
         return 'bg-warning';
       }
 
       if (taxRate.saved) {
         return 'bg-success';
-      }
-
-      if (taxRate.deleted) {
-        return 'bg-danger';
       }
 
       if (taxRate.created) {
@@ -1012,8 +1039,10 @@ angular.module('ts5App')
     $scope.cancelNewTaxRate = function (taxRate) {
       $this.clearCustomErrors();
       $scope.errorResponse = [];
+
       taxRate.deleted = true;
-      taxRate.action = 'deleted';
+
+      $scope.companyTaxRatesList = lodash.reject($scope.companyTaxRatesList, { deleted: true });
     };
 
     $scope.filterSearchDepartureStationsByCountry = function (countryName) {
@@ -1126,7 +1155,7 @@ angular.module('ts5App')
       $scope.taxRateToEditAmounts = [];
 
       taxRate.taxRateAmounts.forEach(function (taxRateAmount) {
-        $scope.taxRateToEditAmounts[taxRateAmount.companyCurrencyId] = taxRateAmount;
+        $scope.taxRateToEditAmounts[taxRateAmount.companyCurrencyId] = angular.copy(taxRateAmount);
       });
 
       angular.element('#currency-amounts-modal').modal('show');
@@ -1153,9 +1182,13 @@ angular.module('ts5App')
         }
       });
 
-      $scope.taxRateToEdit.taxRateAmounts = taxRateAmounts;
+      $scope.taxRateToEdit.taxRateAmounts = angular.copy(taxRateAmounts);
 
       angular.element('#currency-amounts-modal').modal('hide');
+    };
+
+    $scope.getCurrencyFromName = function (value) {
+      return value.match(/\[(.*)\]/)[1];
     };
 
     $scope.getUpdateBy = function (taxRate) {
