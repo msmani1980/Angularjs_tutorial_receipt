@@ -87,7 +87,7 @@ angular.module('ts5App')
 
       $this.meta.offset += $this.meta.limit;
 
-      return stationsFactory.getStationList($this.meta.offset, payload).then(this.setStationList).finally(this.hideLoadingBar);
+      return stationsFactory.getStationListWithUsageValidation($this.meta.offset, payload).then(this.setStationList).finally(this.hideLoadingBar);
     };
 
     this.setCityList = function(dataFromAPI) {
