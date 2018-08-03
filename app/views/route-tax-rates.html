@@ -318,9 +318,9 @@
             <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate" ng-disabled="isDisabled(taxRate)">
           </div>
           <div ng-show="isTaxRateTypeAmount(taxRate)">
-            <a class="btn btn-info" ng-click="showCompanyTaxAmountModal(taxRate)">
+            <button class="btn btn-info" ng-click="showCompanyTaxAmountModal(taxRate)" ng-disabled="isDisabled(taxRate)">
               Amounts
-            </a>
+            </button>
           </div>
         </td>
         <td class="animate-switch tax-rates-input" ng-switch-when="create">
@@ -329,9 +329,9 @@
             <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate">
           </div>
           <div ng-show="isTaxRateTypeAmount(taxRate)">
-            <a class="btn btn-info" ng-click="showCompanyTaxAmountModal(taxRate)">
+            <button class="btn btn-info" ng-click="showCompanyTaxAmountModal(taxRate)">
               Amounts
-            </a>
+            </button>
           </div>
         </td>
 
