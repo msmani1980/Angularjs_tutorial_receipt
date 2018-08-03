@@ -596,6 +596,9 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         company.defaultEposLanguage = null;
       }
 
+      company.virtualItemReceiptHeader = $this.setString(company.virtualItemReceiptHeader);
+      company.virtualItemReceiptFooter = $this.setString(company.virtualItemReceiptFooter);
+
       return company;
     };
 
