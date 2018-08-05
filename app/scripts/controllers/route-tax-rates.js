@@ -670,6 +670,7 @@ angular.module('ts5App')
       if ($scope.isTaxRateTypePercentage(taxRate)) {
         $this.validateFieldEmpty('rate', taxRateValue, taxRate);
         $this.validateIsNumber('rate', taxRateValue, taxRate);
+        $this.validateNumberMax('rate', taxRateValue, taxRate);
       }
 
       if ($scope.isTaxRateTypeAmount(taxRate)) {
@@ -767,6 +768,15 @@ angular.module('ts5App')
       $scope.displayError = true;
     };
 
+    this.showFieldNumberTooHighValidationError = function (field) {
+      var payload = {
+        field: field,
+        value: 'should be lower than or equal to 9999999.99. Please update and try again!'
+      };
+      $scope.errorCustom.push(payload);
+      $scope.displayError = true;
+    };
+
     this.validateFieldEmpty = function (field, value, taxRate) {
       if (value === undefined || value === null || value.length === 0 || value === 'Invalid date') {
         taxRate.error = true;
@@ -780,6 +790,15 @@ angular.module('ts5App')
       if (!value || isNaN(value) || !angular.isNumber(+value)) {
         taxRate.error = true;
         $this.showFieldNotANumberValidationError(field);
+      }
+
+      return value;
+    };
+
+    this.validateNumberMax = function (field, value, taxRate) {
+      if (value && angular.isNumber(+value) && parseFloat(value) > 9999999.99) {
+        taxRate.error = true;
+        $this.showFieldNumberTooHighValidationError(field);
       }
 
       return value;
@@ -821,6 +840,7 @@ angular.module('ts5App')
       if ($scope.isTaxRateTypePercentage(taxRate)) {
         $this.validateFieldEmpty('rate', taxRateValue, taxRate);
         $this.validateIsNumber('rate', taxRateValue, taxRate);
+        $this.validateNumberMax('rate', taxRateValue, taxRate);
       }
 
       if ($scope.isTaxRateTypeAmount(taxRate)) {
