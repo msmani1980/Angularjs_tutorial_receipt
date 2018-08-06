@@ -8,6 +8,7 @@
         <input type="text"
                ng-model="startDateModel"
                placeholder="{{placeholder}}"
+               autocomplete="off"
                name="{{ nameFrom || labelFrom }}"
                ng-disabled="shouldDisableStartDate || disableStartDate"
                class="startDate form-control"
@@ -23,6 +24,7 @@
                ng-model="endDateModel"
                placeholder="{{placeholder}}"
                name="{{ nameTo || labelTo }}"
+               autocomplete="off"
                ng-disabled="shouldDisableEndDate || disableEndDate"
                ng-required="required && !isSearchField"
                class="endDate form-control"/>
