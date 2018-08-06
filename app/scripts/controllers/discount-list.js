@@ -88,6 +88,10 @@ angular.module('ts5App')
       $location.path('/discounts/edit/' + discount.id);
     };
 
+    $scope.copyDiscount = function(discount) {
+      $location.path('/discounts/copy/' + discount.id);
+    };
+
     $scope.clearForm = function() {
       $scope.search = {};
       $scope.discountList = [];

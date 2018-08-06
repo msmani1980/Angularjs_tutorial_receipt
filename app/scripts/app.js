@@ -324,7 +324,7 @@ angular.module('ts5App', [
   }).when('/discounts/create', {
     templateUrl: 'views/discount-create.html',
     controller: 'DiscountCreateCtrl'
-  }).when('/discounts/edit/:id', {
+  }).when('/discounts/:state/:id', {
     templateUrl: 'views/discount-create.html',
     controller: 'DiscountCreateCtrl'
   }).when('/promotions', {
