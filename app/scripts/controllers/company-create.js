@@ -205,6 +205,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         countryVats: $this.setCountryVat(company.countryVats),
         dbaName: $this.setString(company.dbaName),
         ediName: $this.setString(company.ediName),
+        virtualItemReceiptHeader: $this.setString(company.virtualItemReceiptHeader),
+        virtualItemReceiptFooter: $this.setString(company.virtualItemReceiptFooter),
         exchangeRateVariance: $this.setString(company.exchangeRateVariance),
         id: company.id,
         isActive: company.isActive,
@@ -595,6 +597,9 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       } else {
         company.defaultEposLanguage = null;
       }
+
+      company.virtualItemReceiptHeader = $this.setString(company.virtualItemReceiptHeader);
+      company.virtualItemReceiptFooter = $this.setString(company.virtualItemReceiptFooter);
 
       return company;
     };

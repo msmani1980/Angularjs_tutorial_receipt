@@ -217,21 +217,25 @@
         <div class="row">
           <div class="col-xs-12 col-sm-6">
 
-            <image-upload ng-if="formData.companyTypeId==1" image-type="homeLogo" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
-            <image-upload ng-if="formData.companyTypeId==1" image-type="cornerLogo" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
-            <div ng-if="formData.companyTypeId==6">
+            <image-upload ng-if="formData.companyTypeId == 1" image-type="homeLogo" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
+            <image-upload ng-if="formData.companyTypeId == 1" image-type="cornerLogo" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
+            <div ng-if="formData.companyTypeId == 6">
               <image-upload image-type="receiptImage" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
             </div>
 
+            <input-text ng-if="formData.companyTypeId == 6" label="Virtual Item Receipt Header" name="virtualItemReceiptHeader" max-length="30"></input-text>
+
+            <input-text ng-if="formData.companyTypeId == 6" label="Virtual Item Receipt Footer" name="virtualItemReceiptFooter" max-length="30"></input-text>
+
           </div>
-          <div ng-if="formData.companyTypeId==1" class="col-xs-12 col-sm-6" id="images-container">
+          <div ng-if="formData.companyTypeId == 1" class="col-xs-12 col-sm-6" id="images-container">
             <br>
             <div ng-repeat="(key,image) in formData.images track by $index">
               <input-item-image-upload-confirm></input-item-image-upload-confirm>
             </div>
 
           </div>
-          <div ng-if="formData.companyTypeId==6" class="col-xs-12 col-sm-6" id="images-container2">
+          <div ng-if="formData.companyTypeId == 6" class="col-xs-12 col-sm-6" id="images-container2">
             <br>
             <div ng-repeat="(key,image) in formData.images track by $index">
               <input-virtual-image></input-virtual-image>
