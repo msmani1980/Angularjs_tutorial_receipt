@@ -1,3 +1,4 @@
+/*jshint maxcomplexity:6 */
 'use strict';
 /**
  * @ngdoc function
@@ -83,12 +84,15 @@ angular.module('ts5App')
 
     function getDashboardDependencies() {
 
+      var menu = [];
+      var companyData = globalMenuService.getCompanyData();
+      console.log('companyData', companyData);
+      if (!companyData.isMenuSorted) {
+        filterMenuWithIAM(mainMenuService.getMenu());
+        return;
+      }
+        
       mainMenuOrderService.getMenuOrderList().then(function (response) {
-      	var companyData = globalMenuService.getCompanyData();
-        console.log ('companyData', companyData);
-
-        var menu = [];
-        if (companyData.isMenuSorted) {
         if (angular.isDefined(response) && response.length > 0) {
           var responseSorted  = $filter('orderBy')(response, 'menuSortOrder');
           for (var i = 0; i < responseSorted.length; i++) {
@@ -120,22 +124,24 @@ angular.module('ts5App')
             menu.push(menuModule);    
           }
         }
-        }
-        else {
-        	
-        }
-        identityAccessService.featuresInRole().then(function (response) {
-          $localStorage.featuresInRole = angular.copy(response);
-          if (!angular.isDefined($localStorage.buttons)) {
-            $localStorage.buttons = [];
-          }
 
-          addButton('UNRSI', 'unreceive');
-          $scope.dashboardMenu = menuWithFeaturePermissions(menu, response);
-        });
-
-        assignMenuToCompanyType();
+        console.log('menu ', menu);
+        filterMenuWithIAM(menu);
       });
+    }
+
+    function filterMenuWithIAM (menu) {
+      identityAccessService.featuresInRole().then(function (response) {
+        $localStorage.featuresInRole = angular.copy(response);
+        if (!angular.isDefined($localStorage.buttons)) {
+          $localStorage.buttons = [];
+        }
+
+        addButton('UNRSI', 'unreceive');
+        $scope.dashboardMenu = menuWithFeaturePermissions(menu, response);
+      });
+
+      assignMenuToCompanyType();
     }
 
     function addButton (taskCode, buttonCode) {
