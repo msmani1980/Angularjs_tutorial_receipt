@@ -8,29 +8,8 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('mainMenuService', function ($resource, ENV) {
+  .service('mainMenuService', function () {
 
-	    var requestURL = ENV.apiUrl + '/rsvr/api/records/languages';
-	    var requestParameters = {};
-
-	    var actions = {
-	      getLanguagesList: {
-	        method: 'GET',
-	        isArray: true
-	      }
-	    };
-
-	    var requestResource = $resource(requestURL, requestParameters, actions);
-
-	    var getLanguagesList = function () {
-	      return requestResource.getLanguagesList().$promise;
-	    };
-
-	    return {
-	      getLanguagesList: getLanguagesList
-	    };
-	  
-	  
     this.getMenu = function () {
       return [{
         title: 'Company Management',
@@ -792,8 +771,7 @@ angular.module('ts5App')
               permissionCodes: ['R']
             }]
           }]
-      }
-     ];
+      }];
     };
 
   });

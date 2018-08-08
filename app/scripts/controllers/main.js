@@ -8,7 +8,7 @@
  */
 angular.module('ts5App')
   .controller('MainCtrl',
-  function ($localStorage, $rootScope, $scope, mainMenuService, globalMenuService, identityAccessService,
+  function ($localStorage, $rootScope, $scope, $filter, mainMenuService, mainMenuOrderService, globalMenuService, identityAccessService,
             identityAccessFactory, lodash, $q, menuService) {
 
     $scope.viewName = 'TS5 Dashboard';
@@ -82,17 +82,60 @@ angular.module('ts5App')
     }
 
     function getDashboardDependencies() {
-      identityAccessService.featuresInRole().then(function (response) {
-        $localStorage.featuresInRole = angular.copy(response);
-        if (!angular.isDefined($localStorage.buttons)) {
-          $localStorage.buttons = [];
+
+      mainMenuOrderService.getMenuOrderList().then(function (response) {
+      	var companyData = globalMenuService.getCompanyData();
+        console.log ('companyData', companyData);
+
+        var menu = [];
+        if (companyData.isMenuSorted) {
+        if (angular.isDefined(response) && response.length > 0) {
+          var responseSorted  = $filter('orderBy')(response, 'menuSortOrder');
+          for (var i = 0; i < responseSorted.length; i++) {
+            var menuModule = { 
+              title: responseSorted[i].menuName,
+              menuItems:[]
+            };
+            var menuItemsSorted = $filter('orderBy')(responseSorted[i].menuItems, 'menuItemSortOrder');
+            for (var j = 0; j < menuItemsSorted.length; j++) {
+              var menuItem = {
+                name: menuItemsSorted[j].menuItemName,
+                route:menuItemsSorted[j].menuItemRoute,
+                icon:menuItemsSorted[j].menuIcon,
+                className:menuItemsSorted[j].menuItemClassName,
+                package:menuItemsSorted[j].menuItemPackage,
+                role:menuItemsSorted[j].menuItemRole
+              };
+              if (menuItemsSorted[j].menuItemPermissionApiName !== null && menuItemsSorted[j].menuItemPermissionCode !== null) {
+                var permission = {
+                  apiName: menuItemsSorted[j].menuItemPermissionApiName,
+                  permissionCodes:[menuItemsSorted[j].menuItemPermissionCode]
+                };
+                menuItem.permissions = [permission];
+              }
+
+              menuModule.menuItems.push(menuItem);
+            }
+
+            menu.push(menuModule);    
+          }
         }
+        }
+        else {
+        	
+        }
+        identityAccessService.featuresInRole().then(function (response) {
+          $localStorage.featuresInRole = angular.copy(response);
+          if (!angular.isDefined($localStorage.buttons)) {
+            $localStorage.buttons = [];
+          }
 
-        addButton('UNRSI', 'unreceive');
-        $scope.dashboardMenu = menuWithFeaturePermissions(mainMenuService.getMenu(), response);
+          addButton('UNRSI', 'unreceive');
+          $scope.dashboardMenu = menuWithFeaturePermissions(menu, response);
+        });
+
+        assignMenuToCompanyType();
       });
-
-      assignMenuToCompanyType();
     }
 
     function addButton (taskCode, buttonCode) {
