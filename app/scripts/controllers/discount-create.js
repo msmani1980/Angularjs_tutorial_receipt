@@ -79,7 +79,7 @@ angular.module('ts5App')
     };
 
     $scope.isDisabledForEndDate = function() {
-      return $scope.shouldDisableEndDate;
+      return $scope.shouldDisableEndDate && !$scope.cloneDiscount;
     };
 
     this.determineMinDate = function () {
