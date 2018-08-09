@@ -86,7 +86,6 @@ angular.module('ts5App')
 
       var menu = [];
       var companyData = globalMenuService.getCompanyData();
-      console.log('companyData', companyData);
       if (!companyData.isMenuSorted) {
         filterMenuWithIAM(mainMenuService.getMenu());
         return;
@@ -111,11 +110,18 @@ angular.module('ts5App')
                 role:menuItemsSorted[j].menuItemRole
               };
               if (menuItemsSorted[j].menuItemPermissionApiName !== null && menuItemsSorted[j].menuItemPermissionCode !== null) {
-                var permission = {
+                var permissionApiCode = {
                   apiName: menuItemsSorted[j].menuItemPermissionApiName,
                   permissionCodes:[menuItemsSorted[j].menuItemPermissionCode]
                 };
-                menuItem.permissions = [permission];
+                menuItem.permissions = [permissionApiCode];
+              }
+
+              if (menuItemsSorted[j].menuItemPermissionApiName === null && menuItemsSorted[j].menuItemPermissionCode !== null) {
+                var permissionCode = {
+                  permissionCodes:[menuItemsSorted[j].menuItemPermissionCode]
+                };
+                menuItem.permissions = [permissionCode];
               }
 
               menuModule.menuItems.push(menuItem);
@@ -125,7 +131,6 @@ angular.module('ts5App')
           }
         }
 
-        console.log('menu ', menu);
         filterMenuWithIAM(menu);
       });
     }

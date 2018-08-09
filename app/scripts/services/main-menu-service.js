@@ -12,6 +12,7 @@ angular.module('ts5App')
 
     this.getMenu = function () {
       return [{
+        //done
         title: 'Company Management',
         menuItems: [{
           name: 'Manage Companies',
@@ -37,6 +38,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done
         title: 'Currency & Exchange Rate Management',
         menuItems: [{
           name: 'Currency Setup',
@@ -71,6 +73,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Retail Item Management',
         menuItems: [{
           name: 'Manage Items',
@@ -115,6 +118,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Discount Management',
         menuItems: [{
           name: 'Manage Discounts',
@@ -140,6 +144,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Schedule Management',
         menuItems: [{
           name: 'Manage Schedules',
@@ -153,6 +158,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Manage Reason Code',
         menuItems: [{
           name: 'Manage Reason Code',
@@ -166,6 +172,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Employee Management',
         menuItems: [{
           name: 'Manage Employees',
@@ -189,6 +196,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Employee Messages',
         menuItems: [{
           name: 'Manage Messages',
@@ -214,6 +222,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Promotion Management',
         menuItems: [{
           name: 'Manage Promotions',
@@ -261,6 +270,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Tax Management',
         menuItems: [{
           name: 'Manage Taxes',
@@ -274,6 +284,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Menu Management',
         menuItems: [{
           name: 'Manage Menus',
@@ -299,6 +310,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Menu Assignment',
         menuItems: [{
           name: 'Menu Assignments',
@@ -335,6 +347,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Menu-Catering Station Relationship',
         menuItems: [{
           name: 'Manage Relationships',
@@ -360,6 +373,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done 
         title: 'Company Stations',
         menuItems: [{
           name: 'Manage Company Stations',
@@ -385,6 +399,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done
         title: 'Receipt Rule',
         menuItems: [{
           name: 'Manage Rules',
@@ -410,6 +425,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        // not done  
         title: 'Manage Reasons',
         menuItems: [{
           name: 'Reason Codes',
@@ -427,6 +443,7 @@ angular.module('ts5App')
           role: 'REASONCOMPANY'
         }]
       }, {
+        //done  
         title: 'Excise Duty',
         menuItems: [{
           name: 'Manage Excise Duty',
@@ -452,6 +469,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Employee Commission',
         menuItems: [{
           name: 'Employee Commission',
@@ -477,6 +495,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Stock Manager',
         menuItems: [{
           name: 'Stock Dashboard',
@@ -512,6 +531,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Manage Store Number',
         menuItems: [{
           name: 'Store Number Create',
@@ -526,6 +546,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Station Operations',
         menuItems: [{
           name: 'Store Dispatch',
@@ -551,6 +572,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Transaction Retrieval',
         menuItems: [{
           name: 'Manage Transactions',
@@ -561,6 +583,7 @@ angular.module('ts5App')
           role: 'TRANSACTION'
         }]
       }, {
+        //done  
         title: 'Post Trip Data',
         menuItems: [{
           name: 'Manage Post Trip Data',
@@ -586,6 +609,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Reconciliation',
         menuItems: [{
           name: 'Reconciliation Dashboard',
@@ -610,6 +634,7 @@ angular.module('ts5App')
           role: 'RECONCILIATION'
         }]
       }, {
+        //done  
         title: 'Survey Management',
         menuItems: [{
           name: 'Survey Questions',
@@ -646,6 +671,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //not done  
         title: 'Cash Management',
         menuItems: [{
           name: 'Daily Exchange Rate',
@@ -670,6 +696,7 @@ angular.module('ts5App')
           role: 'CASHBAGSUBMIT'
         }]
       }, {
+        //not done  
         title: 'StockOwner Item Management',
         menuItems: [{
           name: 'Manage Items',
@@ -706,6 +733,7 @@ angular.module('ts5App')
           }]
         }]
       }, {
+        //done  
         title: 'Reports',
         menuItems: [{
           name: 'Reports',
@@ -730,6 +758,7 @@ angular.module('ts5App')
           role: 'REPORT'
         }]
       }, {
+        //done 
         title: 'Configuration Settings',
         menuItems: [{
             name: 'ePOS Configuration Settings',
@@ -747,6 +776,7 @@ angular.module('ts5App')
           role: 'BACKOFFICECONFIG'
         }]
       }, {
+        //done 
         title: 'Retail Company Receipts',
         menuItems: [{
             name: 'Company Receipts',
