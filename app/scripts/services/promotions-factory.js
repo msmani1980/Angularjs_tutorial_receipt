@@ -16,6 +16,10 @@ angular.module('ts5App')
       return itemsService.getItemsList(searchParams, true);
     }
 
+    function getMasterItem(id) {
+      return itemsService.getMasterItem(id);
+    }
+
     function getBenefitTypes() {
       return recordsService.getBenefitTypes();
     }
@@ -92,6 +96,7 @@ angular.module('ts5App')
 
     return {
       getMasterItems: getMasterItems,
+      getMasterItem: getMasterItem,
       getBenefitTypes: getBenefitTypes,
       getDiscountTypes: getDiscountTypes,
       getCompanyId: getCompanyId,

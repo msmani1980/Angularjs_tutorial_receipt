@@ -12,6 +12,7 @@ angular.module('ts5App')
 
     $scope.readOnly = true;
     $scope.editing = false;
+    $scope.cloning = false;
     $scope.viewName = 'Create Promotion';
     $scope.saveButtonText = 'Create';
     $scope.activeBtn = 'promotion-information';
@@ -812,6 +813,13 @@ angular.module('ts5App')
       getPromotionMetaData();
     };
 
+    states.copyInit = function () {
+      $scope.cloning = true;
+      $scope.viewName = 'Clone Promotion';
+
+      getPromotion();
+    };
+
     states.editInit = function () {
       $scope.editing = true;
       $scope.viewName = 'Edit Promotion';
@@ -828,8 +836,20 @@ angular.module('ts5App')
       createPromotion();
     };
 
+    states.copySave = function () {
+      createPromotion();
+    };
+
     states.editSave = function () {
       savePromotion();
+    };
+
+    $scope.isCopy = function () {
+      return $routeParams.state === 'copy';
+    };
+
+    $scope.isCreate = function () {
+      return $routeParams.state === 'create';
     };
 
     function init() {
@@ -914,8 +934,19 @@ angular.module('ts5App')
       $scope.repeatableProductPurchasePromotionCategoryIds.splice($index, 1);
     };
 
-    $scope.itemSelectInit = function ($index) {
+    $scope.itemSelectInit = function ($index, selectedItem) {
       $scope.repeatableItemListSelectOptions[$index] = $scope.selectOptions.masterItems;
+
+      if (selectedItem && !$scope.readOnly && !lodash.find($scope.repeatableItemListSelectOptions[$index], { id: selectedItem.itemId })) {
+
+        promotionsFactory.getMasterItem(selectedItem.itemId).then(function (dataFromAPI) {
+          dataFromAPI.isExpired = !dataFromAPI.hasActiveItemVersions;
+
+          $scope.repeatableItemListSelectOptions[$index].push(dataFromAPI);
+
+          selectedItem.retailItem = dataFromAPI;
+        });
+      }
     };
 
     $scope.itemSelectChanged = function ($index) {
@@ -926,6 +957,10 @@ angular.module('ts5App')
       if (itemFromSnapshot) {
         $scope.promotion.items[$index] = itemFromSnapshot;
       }
+    };
+
+    $scope.isAnyRetailItemExpired = function () {
+      return lodash.find($scope.promotion.items, { retailItem: { isExpired: true } }) ? true : false;
     };
 
     $scope.disabledItems = function (item) {
