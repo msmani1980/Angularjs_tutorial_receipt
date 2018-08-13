@@ -113,6 +113,10 @@ angular.module('ts5App')
       return '';
     };
 
+    $scope.copyPromotion = function(menu) {
+      $location.path('promotions/copy/' + menu.id);
+    };
+
     this.setPromotionsList = function(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       var promotionList = angular.copy(dataFromAPI.promotions);
