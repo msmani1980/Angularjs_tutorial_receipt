@@ -86,7 +86,7 @@ angular.module('ts5App')
 
       var menu = [];
       var companyData = globalMenuService.getCompanyData();
-      if (!companyData.isMenuSorted) {
+      if (!companyData.isMenuSorted || companyData.companyTypeId !== 1) {
         filterMenuWithIAM(mainMenuService.getMenu());
         return;
       }
