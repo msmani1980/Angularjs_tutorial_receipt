@@ -146,7 +146,12 @@ angular.module('ts5App')
       $this.showSuccessMessage('Password has been updated!');
 
       identityAccessFactory.login($scope.loginCredentials).then(function () {
-        $location.path('/#/');
+        if ($scope.hasSessionToken) {
+          $location.path('/#/'); 
+        } else {
+          $location.search('sessionToken', null);
+          $location.path('/login');
+        }
       });
     }
 
