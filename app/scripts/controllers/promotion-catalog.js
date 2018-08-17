@@ -12,7 +12,8 @@ angular.module('ts5App')
 
     $scope.itemList = [];
     $scope.promotionCatalog = {};
-    $scope.minDate = $scope.minDate = $routeParams.action === 'view' ? '' : dateUtility.dateNumDaysAfterTodayFormattedDatePicker(1);
+    $scope.viewName = 'Promotion Catalog';
+    $scope.minDate = $scope.minDate = $routeParams.action === 'view' || $routeParams.action === 'copy' ? '' : dateUtility.dateNumDaysAfterTodayFormattedDatePicker(1);
     $scope.startMinDate = $routeParams.action === 'create' ? $scope.minDate : '';
     var $this = this;
 
@@ -108,7 +109,7 @@ angular.module('ts5App')
       showLoadingModal('Saving Record');
       var payload = formatPayload();
 
-      if ($routeParams.id) {
+      if ($routeParams.id && $routeParams.action !== 'copy') {
         promotionCatalogFactory.updatePromotionCatalog($routeParams.id, payload).then(completeSave, showErrors);
       } else {
         promotionCatalogFactory.createPromotionCatalog(payload).then(completeSave, showErrors);
@@ -219,7 +220,7 @@ angular.module('ts5App')
         $scope.isViewOnly = isInPast;
       } else {
         $scope.isViewOnly = $routeParams.action === 'view';
-        canEdit = $routeParams.action === 'create';
+        canEdit = $routeParams.action === 'create' || $routeParams.action === 'copy';
       }
 
       $scope.disableEditField = !canEdit || $scope.isViewOnly;
@@ -245,7 +246,7 @@ angular.module('ts5App')
     init();
 
     $scope.$watchGroup(['promotionCatalog.startDate', 'promotionCatalog.endDate'], function () {
-      if ($scope.promotionCatalog && $scope.promotionCatalog.startDate && $scope.promotionCatalog.endDate) {
+      if ($scope.promotionCatalog && $scope.promotionCatalog.startDate && $scope.promotionCatalog.endDate && dateUtility.isAfterOrEqual($scope.promotionCatalog.endDate, $scope.promotionCatalog.startDate)) {
         getPromotionList();
       }
     });
