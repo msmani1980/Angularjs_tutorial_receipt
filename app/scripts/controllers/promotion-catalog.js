@@ -12,7 +12,7 @@ angular.module('ts5App')
 
     $scope.itemList = [];
     $scope.promotionCatalog = {};
-    $scope.viewName = 'Promotion Catalog';
+    $scope.viewName = 'Create Promotion Catalog';
     $scope.minDate = $scope.minDate = $routeParams.action === 'view' || $routeParams.action === 'copy' ? '' : dateUtility.dateNumDaysAfterTodayFormattedDatePicker(1);
     $scope.startMinDate = $routeParams.action === 'create' ? $scope.minDate : '';
     var $this = this;
@@ -210,6 +210,14 @@ angular.module('ts5App')
       $scope.promotionCatalog = promotionCatalog;
     }
 
+    this.setViewNames = function () {
+      if ($routeParams.action === 'copy') {
+        $scope.viewName = 'Clone Promotion Catalog';
+      } else {
+        $scope.viewName = 'View Promotion Catalog';
+      }
+    };
+
     this.setViewVariables = function () {
       var canEdit = false;
 
@@ -218,7 +226,9 @@ angular.module('ts5App')
         var isInPast = dateUtility.isYesterdayOrEarlierDatePicker($scope.promotionCatalog.endDate);
         canEdit = isInFuture;
         $scope.isViewOnly = isInPast;
+        $scope.viewName = 'Edit Promotion Catalog';
       } else {
+        $this.setViewNames();
         $scope.isViewOnly = $routeParams.action === 'view';
         canEdit = $routeParams.action === 'create' || $routeParams.action === 'copy';
       }
