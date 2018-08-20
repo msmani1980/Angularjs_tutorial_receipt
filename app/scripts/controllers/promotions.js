@@ -981,7 +981,10 @@ angular.module('ts5App')
     };
 
     $scope.isAnyPromotionCategoryExpired = function () {
-      return lodash.find($scope.promotion.promotionCategories, { promotionCategory: { isExpired: true } }) ? true : false;
+      var foundExpiredPromotionCategories = lodash.find($scope.promotion.promotionCategories, { promotionCategory: { isExpired: true } });
+      var foundExpiredSpendLimitPromotionCategories = $scope.promotion.spendLimitCategory && $scope.promotion.spendLimitCategory.isExpired ? true : false;
+      
+      return foundExpiredPromotionCategories || foundExpiredSpendLimitPromotionCategories;
     };
 
     $scope.disabledItems = function (item) {
