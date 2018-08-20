@@ -543,10 +543,32 @@ angular.module('ts5App')
     }
 
     function setMasterItems(dataFromAPI) {
+      console.log('setMasterItems')
       $scope.selectOptions.masterItems = dataFromAPI.masterItems;
+
+      // Check if retail items expired for provided start/end dates
+      $scope.promotion.items.forEach(function (value, index) {
+        if ($scope.itemCategorySelects[index]) {
+          return;
+        }
+
+        $scope.repeatableItemListSelectOptions[index] = dataFromAPI.masterItems;
+
+        if (!value.retailItem) {
+          return;
+        }
+
+        if (!lodash.find($scope.repeatableItemListSelectOptions[index], { id: value.retailItem.id })) {
+          value.retailItem.isExpired = true;
+        } else {
+          value.retailItem.isExpired = false;
+        }
+      });
+
     }
 
     function getMasterItems() {
+      console.log('getMasterItems')
       var startDate = dateUtility.formatDateForAPI($scope.promotion.startDate);
       var endDate =  dateUtility.formatDateForAPI($scope.promotion.endDate);
 
@@ -642,6 +664,7 @@ angular.module('ts5App')
         return;
       }
 
+      console.log('refreshRetailItemsByDates')
       getMasterItems();
 
       cachedRetailItemsByCatId = [];
@@ -666,6 +689,7 @@ angular.module('ts5App')
         $scope.promotion.endDate = dateUtility.formatDateForApp(angular.copy(promotionDataFromAPI.endDate));
 
         setCrudFlags($scope.promotion.startDate);
+        console.log('handlePromiseSuccessHandler')
         getMasterItems().then(function() {
           setScopePromotionForViewFromAPIdata(angular.copy(promotionDataFromAPI));
         });
@@ -953,17 +977,6 @@ angular.module('ts5App')
 
     $scope.itemSelectInit = function ($index, selectedItem) {
       $scope.repeatableItemListSelectOptions[$index] = $scope.selectOptions.masterItems;
-
-      if (selectedItem && !$scope.readOnly && !lodash.find($scope.repeatableItemListSelectOptions[$index], { id: selectedItem.itemId })) {
-
-        promotionsFactory.getMasterItem(selectedItem.itemId).then(function (dataFromAPI) {
-          dataFromAPI.isExpired = !dataFromAPI.hasActiveItemVersions;
-
-          $scope.repeatableItemListSelectOptions[$index].push(dataFromAPI);
-
-          selectedItem.retailItem = dataFromAPI;
-        });
-      }
     };
 
     $scope.itemSelectChanged = function ($index) {
@@ -983,7 +996,7 @@ angular.module('ts5App')
     $scope.isAnyPromotionCategoryExpired = function () {
       var foundExpiredPromotionCategories = lodash.find($scope.promotion.promotionCategories, { promotionCategory: { isExpired: true } });
       var foundExpiredSpendLimitPromotionCategories = $scope.promotion.spendLimitCategory && $scope.promotion.spendLimitCategory.isExpired ? true : false;
-      
+
       return foundExpiredPromotionCategories || foundExpiredSpendLimitPromotionCategories;
     };
 
@@ -1069,8 +1082,21 @@ angular.module('ts5App')
       };
 
       displayLoadingModal();
+      console.log('itemCategoryChanged')
       promotionsFactory.getMasterItems(payload).then(function (dataFromAPI) {
         $scope.repeatableItemListSelectOptions[index] = dataFromAPI.masterItems;
+        console.log('setting ' + index)
+        console.log(dataFromAPI)
+        var value = $scope.promotion.items[index];
+
+        if (value && value.retailItem) {
+          // Check if retail items expired for provided start/end dates
+          if (!lodash.find($scope.repeatableItemListSelectOptions[index], { id: value.retailItem.id })) {
+            value.retailItem.isExpired = true;
+          } else {
+            value.retailItem.isExpired = false;
+          }
+        }
 
         cachedRetailItemsByCatId[categoryId] = dataFromAPI.masterItems;
         hideLoadingModal();
