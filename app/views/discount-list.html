@@ -92,6 +92,9 @@
                 <button class="btn btn-primary btn-xs" ng-click="editDiscount(discount)" ng-show="isDiscountEditable(discount)">
                     <i class="fa fa-pencil"></i>
                 </button>
+                <button class="btn btn-warning btn-xs" ng-click="copyDiscount(discount)">
+          			<i class="fa fa-copy"></i>
+        		</button>
                 <button class="btn btn-danger btn-xs" ng-click="showDeleteConfirmation($index, discount)" ng-hide="isDiscountReadOnly(discount)">
                     <i class="fa fa-trash"></i>
                 </button>

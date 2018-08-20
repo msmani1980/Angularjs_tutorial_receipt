@@ -33,7 +33,7 @@ angular.module('ts5App')
 
     this.getCleanFormData = function() {
       var path = $location.path();
-      if (path.search('/discounts/edit') !== -1 && $routeParams.id) {
+      if ((path.search('/discounts/edit') !== -1 || path.search('/discounts/copy') !== -1) && $routeParams.id) {
         return {
           restrictedCategories: [],
           restrictedItems: [],
@@ -71,11 +71,15 @@ angular.module('ts5App')
         $scope.editingDiscount = true;
         $scope.viewName = 'Edit Discount';
         $scope.buttonText = 'Save';
+      } else if (path.search('/discounts/copy') !== -1 && $routeParams.id) {
+        $scope.cloneDiscount = true;
+        $scope.viewName = 'Clone Discount';
+        $scope.buttonText = 'Save';
       }
     };
 
     $scope.isDisabledForEndDate = function() {
-      return $scope.shouldDisableEndDate;
+      return $scope.shouldDisableEndDate && !$scope.cloneDiscount;
     };
 
     this.determineMinDate = function () {
@@ -170,7 +174,7 @@ angular.module('ts5App')
     this.dependenciesSuccess = function() {
       $this.setDefaultRetailItems();
 
-      if ($scope.editingDiscount) {
+      if ($scope.editingDiscount || $scope.cloneDiscount) {
         $this.getDiscount($routeParams.id);
       } else {
         $scope.calendarsReady = true;
@@ -624,7 +628,7 @@ angular.module('ts5App')
     };
 
     $scope.isDisabled = function() {
-      return $scope.shouldDisableStartDate;
+      return $scope.shouldDisableStartDate && !$scope.cloneDiscount;
     };
 
     $scope.showAddRestrictionSection = function() {

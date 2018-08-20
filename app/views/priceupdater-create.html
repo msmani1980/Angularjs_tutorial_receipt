@@ -83,13 +83,13 @@
 				<div class="row">
 					<div class="col-xs-12 col-sm-4" ng-hide="rule.percentage">
 						<div class="form-group">
-							<label for="currencyList">Currencies List*</label>
+							<label for="currencyList">Price Increase/Decrease By*</label>
 							<div class="form-group" ng-repeat="(currencyKey,currency) in priceCurrencies track by $index">
 								<div class="input-group">
 									<div class="input-group-addon">
     	          						{{ currency.code }} *
 									</div>
-									<input name="Currencies List - {{ currency.code }}" ng-model="currency.price" ng-required="!rule.percentage"  
+									<input name="Price Increase/Decrease By - {{ currency.code }}" ng-model="currency.price" ng-required="!rule.percentage"  
 											ng-disabled="isDisabled()" type="text" custom-validity custom-pattern="numberOrDecimal" class="form-control" maxlength="8" placeholder="1.00"/>
 								</div>
 							</div>
@@ -101,6 +101,20 @@
                 			<input ng-model="rule.percentValue" type="text" class="form-control" name = "percentageValue" id="percentValue" ng-required="rule.percentage"
                 				placeholder="10%" ng-disabled="isDisabled()" ng-pattern="regexp.percentage">
               			</div>
+					</div>
+					<div class="col-xs-12 col-sm-4">
+						<div class="form-group">
+							<label for="currencyList">Threshold Limit*</label>
+							<div class="form-group" ng-repeat="(currencyKey,currency) in priceCurrencies track by $index">
+								<div class="input-group">
+									<div class="input-group-addon">
+    	          						{{ currency.code }} *
+									</div>
+									<input name="Threshold Limit - {{ currency.code }}" ng-model="currency.limitPrice" ng-required="true"  
+											ng-disabled="isDisabled()" type="text" custom-validity custom-pattern="numberOrDecimal" class="form-control" maxlength="8" placeholder="1.00"/>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="row">
