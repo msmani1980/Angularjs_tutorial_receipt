@@ -49,7 +49,7 @@
         <button type="button" class="btn btn-default" ng-click="clearSearchForm()" id="clearPromotionCatalogListId">Clear</button>
         <button type="submit" class="btn btn-primary" id="searchPromotionCatalogListId">Search</button>
       </div>
-    </form>>
+    </form>
     </div>
   </div>
   <form name="promotionCatalogForm">
@@ -91,6 +91,9 @@
             <button type="button" class="btn btn-xs btn-primary" ng-click="redirectRecordToAction('edit', catalog.id, false)" ng-show="isCRUD && canEdit(catalog)">
               <span class="fa fa-pencil"></span>
             </button>
+            <button class="btn btn-warning btn-xs" ng-click="copyPromotionCatalog(catalog)" ng-show="isCRUD">
+          		<i class="fa fa-copy"></i>
+        	</button>
             <button type="button" class="btn btn-xs btn-danger" ng-show="isCRUD && canDelete(catalog)" ng-click="deleteRecordDialog(catalog, ['promotionCatalogName', 'startDate', 'endDate'])">
               <span class="fa fa-trash"></span>
             </button>
