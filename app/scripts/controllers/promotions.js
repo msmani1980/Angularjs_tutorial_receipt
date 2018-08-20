@@ -16,7 +16,10 @@ angular.module('ts5App')
     $scope.viewName = 'Create Promotion';
     $scope.saveButtonText = 'Create';
     $scope.activeBtn = 'promotion-information';
-    $scope.selectOptions = {};
+    $scope.selectOptions = {
+      promotionCategories: [],
+      activePromotionCategories: []
+    };
     $scope.itemCategorySelects = [];
     $scope.repeatableItemListSelectOptions = [];
     $scope.repeatableProductPurchaseItemIds = [];
@@ -467,19 +470,27 @@ angular.module('ts5App')
     }
 
     function getPromotionCategories() {
-        initPromises.push(
-          promotionsFactory.getPromotionCategories().then(setPromotionCategories)
-        );
-      }
+      initPromises.push(
+        promotionsFactory.getPromotionCategories().then(setPromotionCategories)
+      );
+    }
 
     function setActivePromotionCategories(dataFromAPI) {
       $scope.selectOptions.activePromotionCategories = dataFromAPI.companyPromotionCategories;
 
       // Check if promotion category expired for provided start/end dates
       $scope.promotion.promotionCategories = $scope.promotion.promotionCategories.map(function (promotionCategory) {
-        promotionCategory.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.activePromotionCategories, { id: promotionCategory.companyPromotionCategoryId }));
+        if (promotionCategory.promotionCategory) {
+          promotionCategory.promotionCategory.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.activePromotionCategories, { id: promotionCategory.promotionCategory.id }));
+        }
+
         return promotionCategory;
       });
+
+      if ($scope.promotion.spendLimitCategory && $scope.promotion.spendLimitCategory.id != null) {
+        $scope.promotion.spendLimitCategory.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.activePromotionCategories, { id: $scope.promotion.spendLimitCategory.id }));
+      }
+
     }
 
     function getActivePromotionCategories() {
@@ -970,7 +981,7 @@ angular.module('ts5App')
     };
 
     $scope.isAnyPromotionCategoryExpired = function () {
-      return lodash.find($scope.promotion.promotionCategories, { retailItem: { isExpired: true } }) ? true : false;
+      return lodash.find($scope.promotion.promotionCategories, { promotionCategory: { isExpired: true } }) ? true : false;
     };
 
     $scope.disabledItems = function (item) {
