@@ -463,7 +463,11 @@ angular.module('ts5App')
     }
 
     function setPromotionCategories(dataFromAPI) {
-      $scope.selectOptions.promotionCategories = dataFromAPI.companyPromotionCategories;
+      $scope.selectOptions.promotionCategories = dataFromAPI.companyPromotionCategories.map(function (promotionCategory) {
+        promotionCategory.isExpired = dateUtility.isYesterdayOrEarlierDatePicker(dateUtility.formatDateForApp(promotionCategory.endDate));
+
+        return promotionCategory;
+      });
     }
 
     function getPromotionCategories() {
@@ -894,7 +898,7 @@ angular.module('ts5App')
         startDate: startDate,
         endDate: endDate
       };
-
+      console.log(payload)
       initPromises.push(
         promotionsFactory.getActivePromotionCategories(payload).then(setActivePromotionCategories)
       );

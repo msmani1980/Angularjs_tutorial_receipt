@@ -156,6 +156,7 @@
                 <div ng-bind-html="promotionCategory.promotionCategoryName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
+            <div ng-if="!readOnly && promotionCategoryData.promotionCategory.isExpired" style="color:red">This promotion category expired!</div>
           </div>
         </div>
         <div class="col-xs-6 col-sm-2">
