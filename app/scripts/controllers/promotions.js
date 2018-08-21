@@ -569,6 +569,10 @@ angular.module('ts5App')
         }
       });
 
+      if ($scope.promotion.discountItem && $scope.promotion.discountItem.id != null) {
+        $scope.promotion.discountItem.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.masterItems, { id: $scope.promotion.discountItem.id }));
+      }
+
     }
 
     function getMasterItems() {
@@ -994,7 +998,10 @@ angular.module('ts5App')
     };
 
     $scope.isAnyRetailItemExpired = function () {
-      return lodash.find($scope.promotion.items, { retailItem: { isExpired: true } }) ? true : false;
+      var foundExpiredRetailItems = lodash.find($scope.promotion.items, { retailItem: { isExpired: true } }) ? true : false;
+      var foundExpiredBenefitRetailItem = $scope.promotion.discountItem && $scope.promotion.discountItem.isExpired ? true : false;
+
+      return foundExpiredRetailItems || foundExpiredBenefitRetailItem;
     };
 
     $scope.isAnyPromotionCategoryExpired = function () {

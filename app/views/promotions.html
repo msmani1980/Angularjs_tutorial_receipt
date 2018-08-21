@@ -294,6 +294,7 @@
                     <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
                   </ui-select-choices>
                 </ui-select>
+                <div ng-if="!readOnly && !isCreate() && promotion.discountItem.isExpired" style="color:red">This retail item expired!</div>
               </div>
             </div>
             <div class="col-xs-12 col-sm-6">
