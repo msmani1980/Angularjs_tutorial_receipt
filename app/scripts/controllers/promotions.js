@@ -466,7 +466,7 @@ angular.module('ts5App')
     }
 
     function setPromotionCategories(dataFromAPI) {
-      $scope.selectOptions.promotionCategories = dataFromAPI.companyPromotionCategories
+      $scope.selectOptions.promotionCategories = dataFromAPI.companyPromotionCategories;
     }
 
     function getPromotionCategories() {
@@ -487,11 +487,11 @@ angular.module('ts5App')
         return promotionCategory;
       });
 
-      if ($scope.promotion.spendLimitCategory && $scope.promotion.spendLimitCategory.id != null) {
+      if ($scope.promotion.spendLimitCategory && $scope.promotion.spendLimitCategory.id !== null) {
         $scope.promotion.spendLimitCategory.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.activePromotionCategories, { id: $scope.promotion.spendLimitCategory.id }));
       }
 
-      if ($scope.promotion.discountCategory && $scope.promotion.discountCategory.id != null) {
+      if ($scope.promotion.discountCategory && $scope.promotion.discountCategory.id !== null) {
         $scope.promotion.discountCategory.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.activePromotionCategories, { id: $scope.promotion.discountCategory.id }));
       }
 
