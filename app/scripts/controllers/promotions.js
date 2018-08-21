@@ -547,7 +547,6 @@ angular.module('ts5App')
     }
 
     function setMasterItems(dataFromAPI) {
-      console.log('setMasterItems')
       $scope.selectOptions.masterItems = dataFromAPI.masterItems;
 
       // Check if retail items expired for provided start/end dates
@@ -576,7 +575,6 @@ angular.module('ts5App')
     }
 
     function getMasterItems() {
-      console.log('getMasterItems')
       var startDate = dateUtility.formatDateForAPI($scope.promotion.startDate);
       var endDate =  dateUtility.formatDateForAPI($scope.promotion.endDate);
 
@@ -672,7 +670,6 @@ angular.module('ts5App')
         return;
       }
 
-      console.log('refreshRetailItemsByDates')
       getMasterItems();
 
       cachedRetailItemsByCatId = [];
@@ -697,7 +694,6 @@ angular.module('ts5App')
         $scope.promotion.endDate = dateUtility.formatDateForApp(angular.copy(promotionDataFromAPI.endDate));
 
         setCrudFlags($scope.promotion.startDate);
-        console.log('handlePromiseSuccessHandler')
         getMasterItems().then(function() {
           setScopePromotionForViewFromAPIdata(angular.copy(promotionDataFromAPI));
         });
@@ -1094,11 +1090,8 @@ angular.module('ts5App')
       };
 
       displayLoadingModal();
-      console.log('itemCategoryChanged')
       promotionsFactory.getMasterItems(payload).then(function (dataFromAPI) {
         $scope.repeatableItemListSelectOptions[index] = dataFromAPI.masterItems;
-        console.log('setting ' + index)
-        console.log(dataFromAPI)
         var value = $scope.promotion.items[index];
 
         if (value && value.retailItem) {
