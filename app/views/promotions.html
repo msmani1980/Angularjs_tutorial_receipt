@@ -213,7 +213,7 @@
           <div class="form-group">
             <label>Retail Item*</label>
             <ui-select theme="bootstrap" ng-model="retailItemData.retailItem" ng-disabled="readOnly || isDisabled" required
-                       ng-init="itemSelectInit($index, retailItemData)" ng-change="itemSelectChanged($index)" name="RetailItem">
+                       ng-init="itemSelectInit($index)" ng-change="itemSelectChanged($index)" name="RetailItem">
               <ui-select-match placeholder="Select Item">{{ $select.selected.itemName }}</ui-select-match>
               <ui-select-choices repeat="masterItem in repeatableItemListSelectOptions[$index] | filter: {itemName:$select.search}"
                                  ui-disable-choice="disabledItems(masterItem)">

@@ -568,7 +568,7 @@ angular.module('ts5App')
         }
       });
 
-      if ($scope.promotion.discountItem && $scope.promotion.discountItem.id != null) {
+      if ($scope.promotion.discountItem && $scope.promotion.discountItem.id !== null) {
         $scope.promotion.discountItem.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.masterItems, { id: $scope.promotion.discountItem.id }));
       }
 
@@ -979,7 +979,7 @@ angular.module('ts5App')
       $scope.repeatableProductPurchasePromotionCategoryIds.splice($index, 1);
     };
 
-    $scope.itemSelectInit = function ($index, selectedItem) {
+    $scope.itemSelectInit = function ($index) {
       $scope.repeatableItemListSelectOptions[$index] = $scope.selectOptions.masterItems;
     };
 
