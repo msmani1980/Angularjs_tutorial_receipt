@@ -121,6 +121,10 @@ angular.module('ts5App')
           delete retailItem.retailItem;
         }
 
+        if ($scope.isCopy()) {
+          delete retailItem.id;
+        }
+
         return retailItem;
       });
     }
@@ -164,6 +168,10 @@ angular.module('ts5App')
           delete promotionCategory.promotionCategory;
         }
 
+        if ($scope.isCopy()) {
+          delete promotionCategory.id;
+        }
+
         return promotionCategory;
       });
     }
@@ -178,7 +186,7 @@ angular.module('ts5App')
         var spendLimit = {};
         spendLimit.amount = spendLimitData.amount;
         spendLimit.companyCurrencyId = spendLimitData.companyCurrencyId;
-        if (angular.isDefined(spendLimitData.id)) {
+        if (angular.isDefined(spendLimitData.id) && !$scope.isCopy()) {
           spendLimit.id = spendLimitData.id;
         }
 
@@ -204,7 +212,7 @@ angular.module('ts5App')
         var benefitsAmount = {};
         benefitsAmount.amount = benefitsAmountData.amount;
         benefitsAmount.companyCurrencyId = benefitsAmountData.companyCurrencyId;
-        if (angular.isDefined(benefitsAmountData.id)) {
+        if (angular.isDefined(benefitsAmountData.id) && !$scope.isCopy()) {
           benefitsAmount.id = benefitsAmountData.id;
         }
 
