@@ -491,6 +491,10 @@ angular.module('ts5App')
         $scope.promotion.spendLimitCategory.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.activePromotionCategories, { id: $scope.promotion.spendLimitCategory.id }));
       }
 
+      if ($scope.promotion.discountCategory && $scope.promotion.discountCategory.id != null) {
+        $scope.promotion.discountCategory.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.activePromotionCategories, { id: $scope.promotion.discountCategory.id }));
+      }
+
     }
 
     function getActivePromotionCategories() {
@@ -996,8 +1000,9 @@ angular.module('ts5App')
     $scope.isAnyPromotionCategoryExpired = function () {
       var foundExpiredPromotionCategories = lodash.find($scope.promotion.promotionCategories, { promotionCategory: { isExpired: true } });
       var foundExpiredSpendLimitPromotionCategories = $scope.promotion.spendLimitCategory && $scope.promotion.spendLimitCategory.isExpired ? true : false;
+      var foundExpiredBenefitPromotionCategories = $scope.promotion.discountCategory && $scope.promotion.discountCategory.isExpired ? true : false;
 
-      return foundExpiredPromotionCategories || foundExpiredSpendLimitPromotionCategories;
+      return foundExpiredPromotionCategories || foundExpiredSpendLimitPromotionCategories || foundExpiredBenefitPromotionCategories;
     };
 
     $scope.disabledItems = function (item) {
