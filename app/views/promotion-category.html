@@ -38,7 +38,7 @@
     </div>
     <div class="row">
       <div class="form-group col-xs-6">
-        <date-picker-field ng-if="disableEditField"
+        <date-picker-field ng-if="disableEditField || isCopy"
           custom-effective="true"
           name="startDate"
           min-date="startMinDate"
@@ -47,7 +47,7 @@
           label="Effective From"
           required="true">
         </date-picker-field>
-         <date-picker-field ng-if="!disableEditField"
+         <date-picker-field ng-if="!disableEditField && !isCopy"
           name="startDate"
           min-date="startMinDate"
           ng-model="promotionCategory.startDate"
@@ -59,7 +59,7 @@
 
         <div class="form-group col-xs-6">
           <date-picker-field 
-            ng-if="isCurrentEffectiveDate(promotionCategory)"
+            ng-if="isCurrentEffectiveDate(promotionCategory)  || isCopy"
             name="endDate"
             min-date="minDate"
             ng-model="promotionCategory.endDate"
@@ -69,7 +69,7 @@
             end-current-effective="true">
           </date-picker-field>
           <date-picker-field 
-            ng-if="!isCurrentEffectiveDate(promotionCategory)"
+            ng-if="!isCurrentEffectiveDate(promotionCategory) && !isCopy"
             name="endDate"
             min-date="minDate"
             ng-model="promotionCategory.endDate"
@@ -116,14 +116,15 @@
             ng-model="item.selectedItem"
             ng-disabled="shouldDisableItemDropDown(item) || disableEditField"
             theme="bootstrap"
-            placeholder="Select an item...">
+            placeholder="1 Select an item...">
             <ui-select-match
-              placeholder="Select an item...">{{$select.selected.itemName}}
+              placeholder="1 Select an item...">{{$select.selected.itemName}}
             </ui-select-match>
             <ui-select-choices repeat="masterItem in item.masterItemList | filter: $select.search | orderBy:'itemName'">
               <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
+          <div ng-if="item.isExpired" style="color:red">This item expired!</div>
         </td>
         <td>
           <button class="btn btn-danger btn-xs" ng-click="removeItem(item)" ng-hide="disableEditField">
