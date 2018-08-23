@@ -429,6 +429,11 @@ angular.module('ts5App')
 
     function setCompanyDiscountsCoupon(dataFromAPI) {
       $scope.selectOptions.companyDiscountsCoupon = dataFromAPI.companyDiscounts;
+
+      // Check if coupon expired for provided start/end dates
+      if ($scope.promotion.companyCoupon && $scope.promotion.companyCoupon.id !== null) {
+        $scope.promotion.companyCoupon.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.companyDiscountsCoupon, { id: $scope.promotion.companyCoupon.id }));
+      }
     }
 
     function getCompanyDiscountsCoupon(payload) {
@@ -442,6 +447,11 @@ angular.module('ts5App')
 
     function setCompanyDiscountsVoucher(dataFromAPI) {
       $scope.selectOptions.companyDiscountsVoucher = dataFromAPI.companyDiscounts;
+
+      // Check if coupon expired for provided start/end dates
+      if ($scope.promotion.companyVoucher && $scope.promotion.companyVoucher.id !== null) {
+        $scope.promotion.companyVoucher.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.companyDiscountsVoucher, { id: $scope.promotion.companyVoucher.id }));
+      }
     }
 
     function getCompanyDiscountsVoucher(payload) {

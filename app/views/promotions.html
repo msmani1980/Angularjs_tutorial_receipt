@@ -383,6 +383,7 @@
               <div ng-bind-html="discountType.name | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
+          <div ng-if="!readOnly && !isCreate() && promotion.companyCoupon.isExpired" style="color:red">This coupon expired!</div>
         </div>
 
         <div class="form-group" ng-if="promotion.benefitType.name === 'Voucher'">
@@ -395,6 +396,7 @@
               <div ng-bind-html="discountType.name | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
+          <div ng-if="!readOnly && !isCreate() && promotion.companyVoucher.isExpired" style="color:red">This voucher expired!</div>
         </div>
 
       </div>
