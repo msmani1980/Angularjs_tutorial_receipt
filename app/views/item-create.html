@@ -390,9 +390,13 @@
                   </div>
                 </div>
 
-                <div class="form-group col-md-12">
-                  <input-text ng-if="formData.supplierCompanyId" label="Receipt Header" name="receiptHeader" placeholder="Receipt Header" max-length="30"></input-text>
-                  <input-text ng-if="formData.supplierCompanyId" label="Receipt Footer" name="receiptFooter" placeholder="Receipt Footer" max-length="30"></input-text>
+                <div class="form-group col-md-12" ng-if="formData.supplierCompanyId">
+                  <label>Receipt Header</label><br />
+                  {{ formData.virtualItemReceiptHeader }}
+                </div>
+                <div class="form-group col-md-12" ng-if="formData.supplierCompanyId">
+                  <label>Receipt Footer</label><br />
+                  {{ formData.virtualItemReceiptFooter }}
                 </div>
               </div>
 

@@ -738,6 +738,11 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       });
     };
 
+    this.setSupplierCompanyDetails = function (dataFromAPI) {
+      $scope.formData.virtualItemReceiptHeader = dataFromAPI.virtualItemReceiptHeader;
+      $scope.formData.virtualItemReceiptFooter = dataFromAPI.virtualItemReceiptFooter;
+    };
+
     $scope.onSupplierCompanyChange = function () {
       $this.checkIfSupplierCompanyExpired();
 
@@ -749,6 +754,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
       if ($scope.formData.supplierCompanyId) {
         companiesFactory.getCompanyImages(payload).then($this.setCompanyImages);
+        companiesFactory.getCompany($scope.formData.supplierCompanyId).then($this.setSupplierCompanyDetails);
       }
     };
 
