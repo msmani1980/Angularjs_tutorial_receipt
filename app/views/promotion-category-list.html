@@ -84,7 +84,7 @@
           <button class="btn btn-xs btn-primary" ng-click="viewOrEditRecord('edit', category.id)" ng-show="isCRUD && canEdit(category)">
             <span class="fa fa-pencil"></span>
           </button>
-          <button class="btn btn-warning btn-xs" ng-click="copyPromotionCategory(category)">
+          <button class="btn btn-warning btn-xs" ng-click="viewOrEditRecord('copy', category.id)">
             <span class="fa fa-copy"></span>
           </button>          
           <button class="btn btn-xs btn-danger" ng-show="isCRUD && canDelete(category)" ng-click="deleteRecordDialog(category, ['promotionCategoryName', 'startDate', 'endDate'])">

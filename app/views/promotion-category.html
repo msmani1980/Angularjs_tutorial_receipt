@@ -124,7 +124,7 @@
               <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
-          <div ng-if="item.isExpired" style="color:red">This item expired!</div>
+          <div ng-if="item.isExpired && isCopy" style="color:red">This item expired!</div>
         </td>
         <td>
           <button class="btn btn-danger btn-xs" ng-click="removeItem(item)" ng-hide="disableEditField">

@@ -150,11 +150,6 @@ angular.module('ts5App')
       return '';
     };
 
-    $scope.copyPromotionCategory = function(category) {
-      console.log ('copyPromotionCategory', category);
-      //$location.path('/promotion-category/copy/' + category.id);
-    };
-
     function init() {
       $scope.isCRUD = accessService.crudAccessGranted('PROMOTION', 'PROMOTIONCATEGORY', 'CRUDPRCAT');
       $scope.promotionCategories = null;
