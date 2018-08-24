@@ -57,7 +57,7 @@
           required="true">
         </date-picker-field>
       </div>
-      <div class="form-group col-xs-6"> 
+      <div class="form-group col-xs-6">
         <date-picker-field ng-if="isCurrentEffectiveDate(promotionCatalog)"
           end-current-effective="true"
           name="endDate"
@@ -103,6 +103,7 @@
             </ui-select-match>
             <ui-select-choices repeat="promotion in filteredPromotionList | filter: $select.search | orderBy:'promotionName'">
               <div ng-bind-html="promotion.promotionName | highlight: $select.search"></div>
+              <div>{{promotion.startDate}} - {{promotion.endDate}}</div>
             </ui-select-choices>
           </ui-select>
         </td>
