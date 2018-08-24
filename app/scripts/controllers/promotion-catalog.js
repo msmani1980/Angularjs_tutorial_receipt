@@ -168,7 +168,13 @@ angular.module('ts5App')
     }
 
     function setPromotionList(dataFromAPI) {
-      $scope.promotionList = angular.copy(dataFromAPI.promotions);
+      $scope.promotionList = angular.copy(dataFromAPI.promotions).map(function (promotion) {
+        promotion.startDate = dateUtility.formatDateForApp(promotion.startDate);
+        promotion.endDate = dateUtility.formatDateForApp(promotion.endDate);
+
+        return promotion;
+      });
+
       checkCatalogPromotionListWithNewPromotions();
       hideLoadingModal();
     }
