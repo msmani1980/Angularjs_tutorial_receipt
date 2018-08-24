@@ -195,6 +195,10 @@ angular.module('ts5App')
       return angular.isDefined(item.masterItemList) ? item.masterItemList.length <= 0 : true;
     };
 
+    $scope.onChangeItem = function (item) {
+      item.isExpired = false;
+    };
+
     function setFilteredItemList(dataFromAPI, item) {
       item.masterItemList = angular.copy(dataFromAPI.masterItems);
       var oldItemId = !!item.selectedItem ? item.selectedItem.id : null;
@@ -345,7 +349,9 @@ angular.module('ts5App')
 
     $scope.$watchGroup(['promotionCategory.startDate', 'promotionCategory.endDate'], function () {
       if ($scope.promotionCategory && $scope.promotionCategory.startDate && $scope.promotionCategory.endDate) {
-        getMasterItemList();
+        if (dateUtility.isAfterOrEqualDatePicker($scope.promotionCategory.endDate, $scope.promotionCategory.startDate)) {
+          getMasterItemList();
+        }
       }
     });
     
