@@ -670,7 +670,7 @@ angular.module('ts5App')
     }
 
     $scope.$watchGroup(['promotion.startDate', 'promotion.endDate'], function (newData) {
-      if ($scope.promotion.startDate && $scope.promotion.endDate) {
+      if ($scope.promotion.startDate && $scope.promotion.endDate && dateUtility.isAfterOrEqualDatePicker($scope.promotion.endDate, $scope.promotion.startDate)) {
         var payload = {
           startDate: dateUtility.formatDateForAPI(newData[0]),
           endDate: dateUtility.formatDateForAPI(newData[1])
