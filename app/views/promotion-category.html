@@ -116,7 +116,8 @@
             ng-model="item.selectedItem"
             ng-disabled="shouldDisableItemDropDown(item) || disableEditField"
             theme="bootstrap"
-            placeholder="1 Select an item...">
+            placeholder="1 Select an item..."
+            ng-change="onChangeItem(item)">
             <ui-select-match
               placeholder="1 Select an item...">{{$select.selected.itemName}}
             </ui-select-match>
