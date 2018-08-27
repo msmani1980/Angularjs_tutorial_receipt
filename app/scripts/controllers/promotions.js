@@ -12,10 +12,14 @@ angular.module('ts5App')
 
     $scope.readOnly = true;
     $scope.editing = false;
+    $scope.cloning = false;
     $scope.viewName = 'Create Promotion';
     $scope.saveButtonText = 'Create';
     $scope.activeBtn = 'promotion-information';
-    $scope.selectOptions = {};
+    $scope.selectOptions = {
+      promotionCategories: [],
+      activePromotionCategories: []
+    };
     $scope.itemCategorySelects = [];
     $scope.repeatableItemListSelectOptions = [];
     $scope.repeatableProductPurchaseItemIds = [];
@@ -117,6 +121,10 @@ angular.module('ts5App')
           delete retailItem.retailItem;
         }
 
+        if ($scope.isCopy()) {
+          delete retailItem.id;
+        }
+
         return retailItem;
       });
     }
@@ -160,6 +168,10 @@ angular.module('ts5App')
           delete promotionCategory.promotionCategory;
         }
 
+        if ($scope.isCopy()) {
+          delete promotionCategory.id;
+        }
+
         return promotionCategory;
       });
     }
@@ -174,7 +186,7 @@ angular.module('ts5App')
         var spendLimit = {};
         spendLimit.amount = spendLimitData.amount;
         spendLimit.companyCurrencyId = spendLimitData.companyCurrencyId;
-        if (angular.isDefined(spendLimitData.id)) {
+        if (angular.isDefined(spendLimitData.id) && !$scope.isCopy()) {
           spendLimit.id = spendLimitData.id;
         }
 
@@ -200,7 +212,7 @@ angular.module('ts5App')
         var benefitsAmount = {};
         benefitsAmount.amount = benefitsAmountData.amount;
         benefitsAmount.companyCurrencyId = benefitsAmountData.companyCurrencyId;
-        if (angular.isDefined(benefitsAmountData.id)) {
+        if (angular.isDefined(benefitsAmountData.id) && !$scope.isCopy()) {
           benefitsAmount.id = benefitsAmountData.id;
         }
 
@@ -417,6 +429,11 @@ angular.module('ts5App')
 
     function setCompanyDiscountsCoupon(dataFromAPI) {
       $scope.selectOptions.companyDiscountsCoupon = dataFromAPI.companyDiscounts;
+
+      // Check if coupon expired for provided start/end dates
+      if ($scope.promotion.companyCoupon && $scope.promotion.companyCoupon.id !== null) {
+        $scope.promotion.companyCoupon.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.companyDiscountsCoupon, { id: $scope.promotion.companyCoupon.id }));
+      }
     }
 
     function getCompanyDiscountsCoupon(payload) {
@@ -430,6 +447,11 @@ angular.module('ts5App')
 
     function setCompanyDiscountsVoucher(dataFromAPI) {
       $scope.selectOptions.companyDiscountsVoucher = dataFromAPI.companyDiscounts;
+
+      // Check if coupon expired for provided start/end dates
+      if ($scope.promotion.companyVoucher && $scope.promotion.companyVoucher.id !== null) {
+        $scope.promotion.companyVoucher.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.companyDiscountsVoucher, { id: $scope.promotion.companyVoucher.id }));
+      }
     }
 
     function getCompanyDiscountsVoucher(payload) {
@@ -466,13 +488,31 @@ angular.module('ts5App')
     }
 
     function getPromotionCategories() {
-        initPromises.push(
-          promotionsFactory.getPromotionCategories().then(setPromotionCategories)
-        );
-      }
+      initPromises.push(
+        promotionsFactory.getPromotionCategories().then(setPromotionCategories)
+      );
+    }
 
     function setActivePromotionCategories(dataFromAPI) {
       $scope.selectOptions.activePromotionCategories = dataFromAPI.companyPromotionCategories;
+
+      // Check if promotion category expired for provided start/end dates
+      $scope.promotion.promotionCategories = $scope.promotion.promotionCategories.map(function (promotionCategory) {
+        if (promotionCategory.promotionCategory) {
+          promotionCategory.promotionCategory.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.activePromotionCategories, { id: promotionCategory.promotionCategory.id }));
+        }
+
+        return promotionCategory;
+      });
+
+      if ($scope.promotion.spendLimitCategory && $scope.promotion.spendLimitCategory.id !== null) {
+        $scope.promotion.spendLimitCategory.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.activePromotionCategories, { id: $scope.promotion.spendLimitCategory.id }));
+      }
+
+      if ($scope.promotion.discountCategory && $scope.promotion.discountCategory.id !== null) {
+        $scope.promotion.discountCategory.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.activePromotionCategories, { id: $scope.promotion.discountCategory.id }));
+      }
+
     }
 
     function getActivePromotionCategories() {
@@ -526,6 +566,30 @@ angular.module('ts5App')
 
     function setMasterItems(dataFromAPI) {
       $scope.selectOptions.masterItems = dataFromAPI.masterItems;
+
+      // Check if retail items expired for provided start/end dates
+      $scope.promotion.items.forEach(function (value, index) {
+        if ($scope.itemCategorySelects[index]) {
+          return;
+        }
+
+        $scope.repeatableItemListSelectOptions[index] = dataFromAPI.masterItems;
+
+        if (!value.retailItem) {
+          return;
+        }
+
+        if (!lodash.find($scope.repeatableItemListSelectOptions[index], { id: value.retailItem.id })) {
+          value.retailItem.isExpired = true;
+        } else {
+          value.retailItem.isExpired = false;
+        }
+      });
+
+      if ($scope.promotion.discountItem && $scope.promotion.discountItem.id !== null) {
+        $scope.promotion.discountItem.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.masterItems, { id: $scope.promotion.discountItem.id }));
+      }
+
     }
 
     function getMasterItems() {
@@ -606,7 +670,7 @@ angular.module('ts5App')
     }
 
     $scope.$watchGroup(['promotion.startDate', 'promotion.endDate'], function (newData) {
-      if ($scope.promotion.startDate && $scope.promotion.endDate) {
+      if ($scope.promotion.startDate && $scope.promotion.endDate && dateUtility.isAfterOrEqualDatePicker($scope.promotion.endDate, $scope.promotion.startDate)) {
         var payload = {
           startDate: dateUtility.formatDateForAPI(newData[0]),
           endDate: dateUtility.formatDateForAPI(newData[1])
@@ -812,6 +876,13 @@ angular.module('ts5App')
       getPromotionMetaData();
     };
 
+    states.copyInit = function () {
+      $scope.cloning = true;
+      $scope.viewName = 'Clone Promotion';
+
+      getPromotion();
+    };
+
     states.editInit = function () {
       $scope.editing = true;
       $scope.viewName = 'Edit Promotion';
@@ -828,8 +899,20 @@ angular.module('ts5App')
       createPromotion();
     };
 
+    states.copySave = function () {
+      createPromotion();
+    };
+
     states.editSave = function () {
       savePromotion();
+    };
+
+    $scope.isCopy = function () {
+      return $routeParams.state === 'copy';
+    };
+
+    $scope.isCreate = function () {
+      return $routeParams.state === 'create';
     };
 
     function init() {
@@ -928,6 +1011,21 @@ angular.module('ts5App')
       }
     };
 
+    $scope.isAnyRetailItemExpired = function () {
+      var foundExpiredRetailItems = lodash.find($scope.promotion.items, { retailItem: { isExpired: true } }) ? true : false;
+      var foundExpiredBenefitRetailItem = $scope.promotion.discountItem && $scope.promotion.discountItem.isExpired ? true : false;
+
+      return foundExpiredRetailItems || foundExpiredBenefitRetailItem;
+    };
+
+    $scope.isAnyPromotionCategoryExpired = function () {
+      var foundExpiredPromotionCategories = lodash.find($scope.promotion.promotionCategories, { promotionCategory: { isExpired: true } });
+      var foundExpiredSpendLimitPromotionCategories = $scope.promotion.spendLimitCategory && $scope.promotion.spendLimitCategory.isExpired ? true : false;
+      var foundExpiredBenefitPromotionCategories = $scope.promotion.discountCategory && $scope.promotion.discountCategory.isExpired ? true : false;
+
+      return foundExpiredPromotionCategories || foundExpiredSpendLimitPromotionCategories || foundExpiredBenefitPromotionCategories;
+    };
+
     $scope.disabledItems = function (item) {
       return $scope.repeatableProductPurchaseItemIds.indexOf(item.id) !== -1;
     };
@@ -1012,6 +1110,16 @@ angular.module('ts5App')
       displayLoadingModal();
       promotionsFactory.getMasterItems(payload).then(function (dataFromAPI) {
         $scope.repeatableItemListSelectOptions[index] = dataFromAPI.masterItems;
+        var value = $scope.promotion.items[index];
+
+        if (value && value.retailItem) {
+          // Check if retail items expired for provided start/end dates
+          if (!lodash.find($scope.repeatableItemListSelectOptions[index], { id: value.retailItem.id })) {
+            value.retailItem.isExpired = true;
+          } else {
+            value.retailItem.isExpired = false;
+          }
+        }
 
         cachedRetailItemsByCatId[categoryId] = dataFromAPI.masterItems;
         hideLoadingModal();
