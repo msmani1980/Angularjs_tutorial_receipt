@@ -63,6 +63,10 @@ angular.module('ts5App')
       $window.location.reload();
     };
 
+    $scope.copyPromotionCatalog = function(catalog) {
+      $location.path('/promotion-catalog/copy/' + catalog.id);
+    };
+
     $scope.canEdit = function (catalog) {
       return dateUtility.isTomorrowOrLaterDatePicker(catalog.endDate) || dateUtility.isTodayDatePicker(catalog.endDate);
     };
