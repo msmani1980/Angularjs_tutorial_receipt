@@ -154,6 +154,7 @@
               <ui-select-choices repeat="promotionCategory in selectOptions.activePromotionCategories | filter: {promotionCategoryName:$select.search}"
                                  ui-disable-choice="disabledPromotionCategory(promotionCategory)">
                 <div ng-bind-html="promotionCategory.promotionCategoryName | highlight: $select.search"></div>
+                <div>{{promotionCategory.startDate}} - {{promotionCategory.endDate}}</div>                
               </ui-select-choices>
             </ui-select>
           </div>
