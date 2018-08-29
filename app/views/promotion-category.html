@@ -59,7 +59,7 @@
 
         <div class="form-group col-xs-6">
           <date-picker-field 
-            ng-if="isCurrentEffectiveDate(promotionCategory)  || isCopy"
+            ng-if="isCurrentEffectiveDate(promotionCategory)  || isCopy || isViewOnly"
             name="endDate"
             min-date="minDate"
             ng-model="promotionCategory.endDate"
@@ -69,7 +69,7 @@
             end-current-effective="true">
           </date-picker-field>
           <date-picker-field 
-            ng-if="!isCurrentEffectiveDate(promotionCategory) && !isCopy"
+            ng-if="!isCurrentEffectiveDate(promotionCategory) && !isCopy && !isViewOnly"
             name="endDate"
             min-date="minDate"
             ng-model="promotionCategory.endDate"
