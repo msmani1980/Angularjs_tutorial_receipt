@@ -98,7 +98,7 @@ angular.module('ts5App')
       var isStartDateValid = dateUtility.isAfterToday($scope.promotionCategory.startDate);
       var isEndDateValid = dateUtility.isAfterOrEqualDatePicker($scope.promotionCategory.endDate, $scope.promotionCategory.startDate);
       $scope.errorCustom = [];
-      if (!isStartDateValid) {
+      if (!isStartDateValid && $routeParams.action === 'copy') {
         isValid = false;
         $scope.errorCustom.push({
           field: 'Start date',
