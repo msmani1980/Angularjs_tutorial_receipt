@@ -119,7 +119,7 @@ angular.module('ts5App')
 
       angular.forEach($scope.itemList, function (item) {
         isListValid = !!item.selectedItem || isListValid;
-        if (item.isExpired) {
+        if (item.isExpired && $routeParams.action === 'copy') {
           hasExpiredItem = true;
         }
       });
