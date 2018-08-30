@@ -1,5 +1,5 @@
 'use strict';
-
+/*jshint maxcomplexity:7 */
 /**
  * @ngdoc function
  * @name ts5App.controller:PromotionCategoryCtrl
@@ -14,6 +14,7 @@ angular.module('ts5App')
     $scope.promotionCategory = {};
     $scope.minDate = dateUtility.dateNumDaysAfterTodayFormattedDatePicker(1);
     $scope.startMinDate = $routeParams.action === 'create' ? $scope.minDate : '';
+    $scope.isCopy = false;    
     var $this = this;
 
     function showLoadingModal(message) {
@@ -67,7 +68,7 @@ angular.module('ts5App')
       payload.promotionCategoryName = $scope.promotionCategory.promotionCategoryName;
       payload.companyId = promotionCategoryFactory.getCompanyId();
 
-      if ($routeParams.id) {
+      if ($routeParams.id && $routeParams.action !== 'copy') {
         payload.id = parseInt($routeParams.id);
       }
 
@@ -75,6 +76,16 @@ angular.module('ts5App')
       angular.forEach($scope.itemList, function (item) {
         var newItem = formatItemPayload(item);
         if (newItem !== null) {
+          if ($routeParams.action === 'copy') {
+            if (angular.isDefined(newItem.id)) {
+              delete newItem.id;
+            }
+
+            if (angular.isDefined(newItem.companyPromotionCategoryId)) {
+              delete newItem.companyPromotionCategoryId;
+            }
+          }
+
           payload.companyPromotionCategoryItems.push(newItem);
         }
       });
@@ -83,17 +94,53 @@ angular.module('ts5App')
     }
 
     function checkIfItemListIsValid() {
+      var isValid = true;
+      var isStartDateValid = dateUtility.isAfterToday($scope.promotionCategory.startDate);
+      var isEndDateValid = dateUtility.isAfterOrEqualDatePicker($scope.promotionCategory.endDate, $scope.promotionCategory.startDate);
+      $scope.errorCustom = [];
+      if (!isStartDateValid && $routeParams.action === 'copy') {
+        isValid = false;
+        $scope.errorCustom.push({
+          field: 'Start date',
+          value: 'Start date must be greater than today'
+        });
+      }
+
+      if (!isEndDateValid) {
+        isValid = false;
+        $scope.errorCustom.push({
+          field: 'End date',
+          value: 'End date must be greater than Start date'
+        });
+      }
+
       var isListValid = false;
+      var hasExpiredItem = false;
+
       angular.forEach($scope.itemList, function (item) {
         isListValid = !!item.selectedItem || isListValid;
+        if (item.isExpired && $routeParams.action === 'copy') {
+          hasExpiredItem = true;
+        }
       });
 
+      if (hasExpiredItem) {
+        isValid = false;
+        $scope.errorCustom.push({
+          field: 'Retail Items',
+          value: 'At least one item is expired'
+        });
+      }
+
       if ($scope.itemList.length <= 0 || !isListValid) {
-        $scope.errorCustom = [{
+        isValid = false;
+        $scope.errorCustom.push({
           field: 'Retail Items',
           value: 'At least one item must be selected'
-        }];
+        });
+      }
 
+      if (!isValid) {
         showErrors();
         return false;
       }
@@ -113,8 +160,7 @@ angular.module('ts5App')
 
       showLoadingModal('Saving Record');
       var payload = formatPayload();
-
-      if ($routeParams.id) {
+      if ($routeParams.id && $routeParams.action !== 'copy') {
         promotionCategoryFactory.updatePromotionCategory($routeParams.id, payload).then(completeSave, showErrors);
       } else {
         promotionCategoryFactory.createPromotionCategory(payload).then(completeSave, showErrors);
@@ -142,7 +188,15 @@ angular.module('ts5App')
     };
 
     $scope.shouldDisableItemDropDown = function (item) {
+      if ($routeParams.action === 'copy') {
+        return false; 
+      }
+
       return angular.isDefined(item.masterItemList) ? item.masterItemList.length <= 0 : true;
+    };
+
+    $scope.onChangeItem = function (item) {
+      item.isExpired = false;
     };
 
     function setFilteredItemList(dataFromAPI, item) {
@@ -152,11 +206,43 @@ angular.module('ts5App')
       if (!oldItemMatch) {
         item.selectedItem = null;
       }
+
+      if (angular.isDefined(item.selectedItem) && item.selectedItem !== null) {
+        item.isExpired = isExpiredItem(item);
+      }
     }
+
+    function isExpiredItem (item) {
+      var itemMaster = lodash.find(item.masterItemList, { id: item.selectedItem.id });
+      var isExpired = false;
+      
+      if ($scope.promotionCategory && $scope.promotionCategory.startDate && $scope.promotionCategory.endDate) {
+        var isCategoryDatesValid = dateUtility.isAfterOrEqualDatePicker($scope.promotionCategory.endDate, $scope.promotionCategory.startDate);
+        isExpired = isCategoryDatesValid ? true : false;
+
+        if (isCategoryDatesValid && angular.isDefined(itemMaster) && angular.isDefined(itemMaster.versions)) {
+          angular.forEach(itemMaster.versions, function (version) {
+            if (angular.isDefined(version.startDate) && angular.isDefined(version.endDate)) {
+              var itemStartDate = dateUtility.formatDateForApp(version.startDate);	
+              var itemEndDate = dateUtility.formatDateForApp(version.endDate);	
+              var isStartValid = dateUtility.isAfterOrEqualDatePicker($scope.promotionCategory.endDate, itemStartDate);
+              var isEndValid = dateUtility.isAfterOrEqualDatePicker(itemEndDate, $scope.promotionCategory.startDate);
+              if (isStartValid && isEndValid) {    
+                isExpired = false;
+              }
+            }
+          });
+        }
+      }  
+
+      return isExpired;
+    } 
 
     $scope.filterItemListFromCategory = function (item) {
       if (!item.selectedCategory) {
         item.masterItemList = angular.copy($scope.masterItemList);
+
+        item.isExpired = isExpiredItem(item);
         return;
       }
 
@@ -223,6 +309,9 @@ angular.module('ts5App')
         var isInPast = dateUtility.isYesterdayOrEarlierDatePicker($scope.promotionCategory.endDate);
         canEdit = isInFuture;
         $scope.isViewOnly = isInPast;
+      } else if ($routeParams.action === 'copy') {
+        canEdit = true;
+        $scope.isCopy = true;
       } else {
         $scope.isViewOnly = $routeParams.action === 'view';
         canEdit = $routeParams.action === 'create';
@@ -260,7 +349,9 @@ angular.module('ts5App')
 
     $scope.$watchGroup(['promotionCategory.startDate', 'promotionCategory.endDate'], function () {
       if ($scope.promotionCategory && $scope.promotionCategory.startDate && $scope.promotionCategory.endDate) {
-        getMasterItemList();
+        if (dateUtility.isAfterOrEqualDatePicker($scope.promotionCategory.endDate, $scope.promotionCategory.startDate)) {
+          getMasterItemList();
+        }
       }
     });
     
