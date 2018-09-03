@@ -265,7 +265,7 @@ angular.module('ts5App')
       });
 
       $scope.reconciliationList = $scope.reconciliationList.map(function (item) {
-        console.log(item)
+        console.log(item);
         $this.normalizePrecheckDevices(item);
         $this.normalizePrecheckSchedules(item);
         $this.normalizePrecheckCashbags(item);
