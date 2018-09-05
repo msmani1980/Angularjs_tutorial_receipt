@@ -222,17 +222,13 @@ angular.module('ts5App')
       return storeInstance.requiresAmendVerification;
     };
 
-    this.getReconciliationPrecheckDevices = function(item) {
-      reconciliationFactory.getReconciliationPrecheckDevices({
-        storeInstanceId: item.id
-      }).then(function(response) {
-        item.eposDataFullDetails = angular.copy(response);
-        item.iseposDataDetailsValid = item.eposDataFullDetails.devicesSynced || item.eposDataFullDetails.totalDevices;
+    this.normalizePrecheckDevices = function (item) {
+      item.eposDataFullDetails = angular.copy(item.precheckDevices);
 
-        item.eposData = (item.iseposDataDetailsValid) ? item.eposDataFullDetails.devicesSynced + '/' + item.eposDataFullDetails.totalDevices : 'No';
+      item.iseposDataDetailsValid = item.eposDataFullDetails && (item.eposDataFullDetails.devicesSynced || item.eposDataFullDetails.totalDevices);
+      item.eposData = (item.iseposDataDetailsValid) ? item.eposDataFullDetails.devicesSynced + '/' + item.eposDataFullDetails.totalDevices : 'No';
 
-        $this.recalculateActionsColumn(item);
-      });
+      $this.recalculateActionsColumn(item);
     };
 
     $scope.showEposDataDetailsModal = function (item) {
@@ -245,46 +241,37 @@ angular.module('ts5App')
       angular.element('#eposDataDetailsModal').modal('show');
     };
 
-    this.getReconciliationPrecheckSchedules = function(item) {
-      reconciliationFactory.getReconciliationPrecheckSchedules({
-        storeInstanceId: item.id
-      }).then(function(response) {
-        var dataFromAPI = angular.copy(response);
-        item.postTripData = (dataFromAPI.postTripScheduleCount || dataFromAPI.eposScheduleCount) ? dataFromAPI.postTripScheduleCount +
+    this.normalizePrecheckSchedules = function (item) {
+      var dataFromAPI = angular.copy(item.precheckSchedules);
+      item.postTripData = (item.precheckSchedules && (dataFromAPI.postTripScheduleCount || dataFromAPI.eposScheduleCount)) ? dataFromAPI.postTripScheduleCount +
         '/' + dataFromAPI.eposScheduleCount : 'No';
-        $this.recalculateActionsColumn(item);
-      });
+
+      $this.recalculateActionsColumn(item);
     };
 
-    this.getReconciliationPrecheckCashbags = function(item) {
-      reconciliationFactory.getReconciliationPrecheckCashbags({
-        storeInstanceId: item.id
-      }).then(function(response) {
-        var dataFromAPI = angular.copy(response);
-        item.cashHandlerData = (dataFromAPI.cashHandlerCashbagCount || dataFromAPI.totalCashbagCount) ?
+    this.normalizePrecheckCashbags = function (item) {
+      var dataFromAPI = angular.copy(item.precheckCashbags);
+      item.cashHandlerData = (item.precheckCashbags && (dataFromAPI.cashHandlerCashbagCount || dataFromAPI.totalCashbagCount)) ?
         dataFromAPI.cashHandlerCashbagCount + '/' + dataFromAPI.totalCashbagCount : 'No';
-        $this.recalculateActionsColumn(item);
-      });
-    };
-
-    this.populateLazyColumns = function() {
-      angular.forEach($scope.reconciliationList, function(item) {
-        $this.getReconciliationPrecheckDevices(item);
-        $this.getReconciliationPrecheckSchedules(item);
-        $this.getReconciliationPrecheckCashbags(item);
-      });
+      $this.recalculateActionsColumn(item);
     };
 
     this.attachReconciliationDataListToScope = function(dataFromAPI) {
       $this.meta.count = $this.meta.count || dataFromAPI.meta.count;
       $scope.reconciliationList = $scope.reconciliationList || [];
-      $scope.reconciliationList = $scope.reconciliationList.concat($this.normalizeReconciliationDataList(
-        dataFromAPI.response));
+      $scope.reconciliationList = $scope.reconciliationList.concat($this.normalizeReconciliationDataList(dataFromAPI.response));
       $scope.reconciliationList = lodash.filter($scope.reconciliationList, function(item) {
         return $scope.filterReconciliationList(item);
       });
 
-      $this.populateLazyColumns();
+      $scope.reconciliationList = $scope.reconciliationList.map(function (item) {
+        $this.normalizePrecheckDevices(item);
+        $this.normalizePrecheckSchedules(item);
+        $this.normalizePrecheckCashbags(item);
+
+        return item;
+      });
+
       hideLoadingBar();
       $this.hideLoadingModal();
     };
@@ -319,7 +306,8 @@ angular.module('ts5App')
 
       var payload = lodash.assign(payloadUtility.serializeDates($scope.search), {
         limit: $this.meta.limit,
-        offset: $this.meta.offset
+        offset: $this.meta.offset,
+        includePrechecks: true
       });
       if (startDate) {
         payload.startDate = startDate;
@@ -517,7 +505,7 @@ angular.module('ts5App')
     };
 
     function handleForceReconcileActionExecutionSuccess(instance) {
-      if (!instance.amendToConfirm) {	
+      if (!instance.amendToConfirm) {
         $scope.instancesForActionExecution = [instance];
         $scope.actionToExecute = 'Confirmed';
         var status = 10;
@@ -527,7 +515,7 @@ angular.module('ts5App')
         $q.all(pr).then($this.handleActionExecutionSuccess, $this.handleActionExecutionSuccess);
       } else {
         $this.handleActionExecutionSuccess();
-      } 
+      }
     }
 
     $scope.forceReconcile = function(instance, action) {
