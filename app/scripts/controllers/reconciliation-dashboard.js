@@ -317,6 +317,11 @@ angular.module('ts5App')
       lastStartDate = payload.startDate;
       lastEndDate = payload.endDate;
 
+      // Filter by allowed stations only
+      if (!payload.statusId) {
+        payload.statusIds = Object.keys($scope.allowedStoreStatusMap).join(',');
+      }
+
       reconciliationFactory.getReconciliationDataList(payload).then(function(dataFromAPI) {
         $this.attachReconciliationDataListToScope(dataFromAPI);
         loadingProgress = false;
