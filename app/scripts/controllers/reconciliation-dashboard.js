@@ -319,7 +319,7 @@ angular.module('ts5App')
 
       // Filter by allowed stations only
       if (!payload.statusId) {
-        payload.statusIds = '4,5,6,8';
+        payload.statusIds = Object.keys($scope.allowedStoreStatusMap).join(',');
       }
 
       reconciliationFactory.getReconciliationDataList(payload).then(function(dataFromAPI) {
