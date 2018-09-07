@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('companyExchangeRateService', function ($q, $resource, globalMenuService, ENV) {
+  .service('companyExchangeRateService', function ($q, $resource, globalMenuService, ENV, Upload) {
 
     var companyExchangeRatesURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/exchange-rates/:id';
 
@@ -53,7 +53,16 @@ angular.module('ts5App')
       return companyExchangeRatesResource.deleteCompanyExchangeRate(payload).$promise;
     };
 
+    var importFromExcel = function (companyId, file) {
+      var uploadRequestURL = ENV.apiUrl + '/rsvr-upload/companies/' + companyId + '/file/eposexchangerate';
+      return Upload.upload({
+        url: uploadRequestURL,
+        file: file
+      });
+    };
+
     return {
+      importFromExcel: importFromExcel,
       getCompanyExchangeRates: getCompanyExchangeRates,
       deleteCompanyExchangeRate: deleteCompanyExchangeRate,
       createCompanyExchangeRate: createCompanyExchangeRate,

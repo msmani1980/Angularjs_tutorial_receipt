@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('currenciesService', function ($q, $resource, globalMenuService, ENV) {
+  .service('currenciesService', function ($q, $resource, globalMenuService, ENV, Upload) {
 
     var getCompanyId = function () {
       var companyData = globalMenuService.getCompanyData();
@@ -102,7 +102,16 @@ angular.module('ts5App')
       return detailedCompanyCurrenciesResource.updateDetailedCompanyCurrency(payload).$promise;
     };
 
+    var importFromExcel = function (companyId, file) {
+      var uploadRequestURL = ENV.apiUrl + '/rsvr-upload/companies/' + companyId + '/file/reportexchangerate';
+      return Upload.upload({
+        url: uploadRequestURL,
+        file: file
+      });
+    };
+
     return {
+      importFromExcel: importFromExcel,
       getCompanyGlobalCurrencies: getCompanyGlobalCurrencies,
       getCompanyCurrencies: getCompanyCurrencies,
       getDetailedCompanyCurrencies: getDetailedCompanyCurrencies,
