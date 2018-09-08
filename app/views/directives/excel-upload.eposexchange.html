@@ -1,0 +1,32 @@
+<div class="modal fade info-import-model" id="download-template-epos-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="row">
+          <div class="col-xs-12">
+            <h4 class="modal-title">Understanding the Excel Template</h4>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p>
+          The file is an Excel (.xls, .xlsx) file and has only one sheet.<br> The first line should be the header with the column names.
+        </p>
+        <p>
+          <b>The column order and name should match the following:</b>
+        </p>
+        <ul>
+          <li><b>Operating Currency Code</b> - Required. This is the Operating Currency Code of retail company and supports up to 3 characters.</li>
+          <li><b>Accepted Currency Code</b> - Required. This is the  Accepted Currency Code of retail company and supports up to 3 characters.</li>
+		  <li><b>Start Date</b> - Required. Start Date of the EPOS Exchange Rate, Format = yyyymmdd. Current and future dates allowed.</li>
+          <li><b>End Date</b> - Required. End Date of the EPOS Exchange Rate, Format = yyyymmdd. Current and future dates allowed.</li>
+          <li><b>Exchange Rate</b> - Required. This is the exchange rate of between operating and accepted currency codes and supports up to 4 decimal values.</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <a href="https://s3.amazonaws.com/ts5-dev-portal-images/templates/exchangeRateUpload.xlsx" class="btn btn-info"> <i class="fa fa-download"></i> Download Template</a>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="hideModalImportInfo()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
