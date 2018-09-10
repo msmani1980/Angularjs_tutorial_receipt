@@ -5,8 +5,9 @@
                 <h2 class="view-name">{{viewName}}</h2>
             </div>
             <div class="col-xs-6 text-right">
+              <excel-upload type="eposexchange" ng-show="isCRUD" class="excel-upload"></excel-upload>
               <button ng-if="isFormValidForAddNewExchangeRate()" class="btn btn-primary" ng-show="isCRUD" tabindex="-1" ng-click="addNewExchangeRate()" style="margin-right: 5px"><span class="fa fa-plus"></span><span class="hidden-xs"> Add Exchange Rate</span></button>
-              <button class="btn btn-default pull-right" data-toggle="collapse" data-target="#search-collapse"
+              <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
                       aria-expanded="false"
                       aria-controls="search-collapse">
                 <span class="fa fa-search" aria-hidden="true"></span>
