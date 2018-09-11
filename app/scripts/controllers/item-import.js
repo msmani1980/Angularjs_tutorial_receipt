@@ -19,7 +19,7 @@ angular.module('ts5App')
 
       // private controller functions
       function canBeAddedToCompanyRetailList(retailItem) {
-        if (dateUtility.isYesterdayOrEarlier(retailItem.endDate)) {
+        if (dateUtility.isTodayOrEarlier(retailItem.endDate)) {
           return false;
         }
 
