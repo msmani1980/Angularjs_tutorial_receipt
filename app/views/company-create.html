@@ -120,21 +120,25 @@
 
               <div class="col-xs-12 well well-sm" ng-repeat="tax in formData.taxes track by $index">
                 <div class="col-xs-10 col-sm-10">
-                  <input custom-pattern="alphanumeric"
-                         custom-validity
-                         required
-                         type="text"
-                         maxlength="15"
-                         name="taxId-{{$index}}"
-                         class="form-control"
-                         id="taxId-{{$index}}"
-                         ng-model="tax.taxId"
-                         placeholder="Enter Tax Id"/>
+                  <div class="form-group">
+                    <input custom-pattern="alphanumeric"
+                           custom-validity
+                           required
+                           type="text"
+                           maxlength="15"
+                           name="taxId-{{$index}}"
+                           class="form-control"
+                           id="taxId-{{$index}}"
+                           ng-model="tax.taxId"
+                           placeholder="Enter Tax Id"/>
+                  </div>
                 </div>
                 <div class="col-xs-2 col-sm-2 text-right">
-                  <span class="btn btn-danger btn-xs" ng-click="removeTax(tax)">
-                    <i class="fa fa-close"></i>
-                  </span>
+                  <div class="form-group">
+                    <span class="btn btn-danger btn-xs" ng-click="removeTax(tax)">
+                      <i class="fa fa-close"></i>
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -151,54 +155,60 @@
 
         <div class="row">
           <div class="col-xs-12 col-sm-6">
-            <label>Company Type*</label>
+            <div class="form-group">
+              <label>Company Type*</label>
 
-            <select ng-disabled="!formData.companyCode" ng-model="formData.companyTypeId" class="form-control" ng-change="onChangeCompanyType()">
-              <option ng-selected="formData.companyTypeId === companyType.id" ng-repeat="companyType in companyTypes"
-                      value="{{ companyType.id }}">{{ companyType.companyTypeName }}
-              </option>
-            </select>
+              <select ng-disabled="!formData.companyCode" ng-model="formData.companyTypeId" class="form-control" ng-change="onChangeCompanyType()">
+                <option ng-selected="formData.companyTypeId === companyType.id" ng-repeat="companyType in companyTypes"
+                        value="{{ companyType.id }}">{{ companyType.companyTypeName }}
+                </option>
+              </select>
+            </div>
 
           </div>
           <div class="col-xs-12 col-sm-6">
-            <label>Company TimeZone*</label>
-            <select ng-model="formData.timezone" class="form-control" ng-init="formData.timezone ='0'" >
-              <option value="-11">UTC-11</option>
-              <option value="-10">UTC-10</option>
-              <option value="-9">UTC-9</option>
-              <option value="-8">UTC-8</option>
-              <option value="-7">UTC-7</option>
-              <option value="-6">UTC-6</option>
-              <option value="-5">UTC-5</option>
-              <option value="-4">UTC-4</option>
-              <option value="-3">UTC-3</option>
-              <option value="-2">UTC-2</option>
-              <option value="-1">UTC-1</option>
-              <option value="0">UTC+0</option>
-              <option value="1">UTC+1</option>
-              <option value="2">UTC+2</option>
-              <option value="3">UTC+3</option>
-              <option value="4">UTC+4</option>
-              <option value="5">UTC+5</option>
-              <option value="6">UTC+6</option>
-              <option value="7">UTC+7</option>
-              <option value="8">UTC+8</option>
-              <option value="9">UTC+9</option>
-              <option value="10">UTC+10</option>
-              <option value="11">UTC+11</option>
-            </select>
+            <div class="form-group">
+              <label>Company TimeZone*</label>
+              <select ng-model="formData.timezone" class="form-control" ng-init="formData.timezone ='0'" >
+                <option value="-11">UTC-11</option>
+                <option value="-10">UTC-10</option>
+                <option value="-9">UTC-9</option>
+                <option value="-8">UTC-8</option>
+                <option value="-7">UTC-7</option>
+                <option value="-6">UTC-6</option>
+                <option value="-5">UTC-5</option>
+                <option value="-4">UTC-4</option>
+                <option value="-3">UTC-3</option>
+                <option value="-2">UTC-2</option>
+                <option value="-1">UTC-1</option>
+                <option value="0">UTC+0</option>
+                <option value="1">UTC+1</option>
+                <option value="2">UTC+2</option>
+                <option value="3">UTC+3</option>
+                <option value="4">UTC+4</option>
+                <option value="5">UTC+5</option>
+                <option value="6">UTC+6</option>
+                <option value="7">UTC+7</option>
+                <option value="8">UTC+8</option>
+                <option value="9">UTC+9</option>
+                <option value="10">UTC+10</option>
+                <option value="11">UTC+11</option>
+              </select>
+            </div>
           </div>
 
           <div class="col-xs-12 col-sm-6" ng-if="showBaseCurrency">
-            <label>Base Currency*</label>
+            <div class="form-group">
+              <label>Base Currency*</label>
 
-            <select ng-model="formData.baseCurrencyId" class="form-control">
-              <option ng-selected="isSelected(formData.baseCurrencyId, currency.id)"
-                      ng-repeat="currency in currencies | unique: 'code' | orderBy:'code'"
-                      value="{{currency.id}}">
-                {{ currency.code }} - {{ currency.name }}
-              </option>
-            </select>
+              <select ng-model="formData.baseCurrencyId" class="form-control">
+                <option ng-selected="isSelected(formData.baseCurrencyId, currency.id)"
+                        ng-repeat="currency in currencies | unique: 'code' | orderBy:'code'"
+                        value="{{currency.id}}">
+                  {{ currency.code }} - {{ currency.name }}
+                </option>
+              </select>
+            </div>
           </div>
 
         </div>
@@ -206,20 +216,24 @@
         <div class="row" ng-show="showAdditionalFields" ng-if="uiSelectTemplateReady">
 
           <div class="col-xs-12 col-sm-6">
-            <label>Parent Company</label>
-            <select ng-model="formData.parentCompanyId" class="form-control">
-              <option ng-selected="formData.parentCompanyId === company.id" ng-repeat="company in companies | orderBy:'companyName'"
-                      value="{{ company.id }}">{{ company.companyName }}
-              </option>
-            </select>
+            <div class="form-group">
+              <label>Parent Company</label>
+              <select ng-model="formData.parentCompanyId" class="form-control">
+                <option ng-selected="formData.parentCompanyId === company.id" ng-repeat="company in companies | orderBy:'companyName'"
+                        value="{{ company.id }}">{{ company.companyName }}
+                </option>
+              </select>
+            </div>
           </div>
         </div>
         <div class="row">
           <div class="col-xs-12 col-sm-6">
 
-            <input-text ng-if="formData.companyTypeId == 1" label="ePOS home screen logo file name" name="ePOSHomeScreenLogoFileName"></input-text>
+            <input-text ng-if="formData.companyTypeId == 1" label="ePOS Home Screen Logo File Name" name="ePOSHomeScreenLogoFileName"></input-text>
 
             <image-upload ng-if="formData.companyTypeId == 1 && formData.ePOSHomeScreenLogoFileName" image-type="homeLogo" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
+
+            <input-text ng-if="formData.companyTypeId == 1" label="ePOS Brand Corner Logo File Name" name="ePOSBrandCornerLogoFileName"></input-text>
 
             <image-upload ng-if="formData.companyTypeId == 1" image-type="cornerLogo" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
 
