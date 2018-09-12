@@ -28,14 +28,8 @@ angular.module('ts5App')
           $scope.imageName = $scope.formData.ePOSHomeScreenLogoFileName;
       });
 
-      $scope.$watch('formData.companyCode', function(newValue, oldValue) {
-        if (newValue !== oldValue) {
-          if ($scope.imageType.toString() === 'homeLogo') {
-            //$scope.imageName = 'logo_' + $scope.formData.companyCode;
-          } else if ($scope.imageType.toString() === 'cornerLogo') {
-            $scope.imageName = 'brand_' + $scope.formData.companyCode;
-          }
-        }
+      $scope.$watch('formData.ePOSBrandCornerLogoFileName', function(newValue, oldValue) {
+          $scope.imageName = $scope.formData.ePOSBrandCornerLogoFileName;
       });
 
       $scope.clearAllFiles = function () {
@@ -180,8 +174,8 @@ angular.module('ts5App')
           scope.imageSize  = '92 x 33';
           scope.imageTypeText = 'ePOS brand corner logo.';
           scope.fileFormat = 'png';
-          scope.imageName = 'brand_' + scope.formData.companyCode;
-          scope.imageNameMessage = 'Accepted image name: brand_';
+          scope.imageName = scope.formData.ePOSBrandCornerLogoFileName;
+          scope.imageNameMessage = 'Accepted image name: ';
           scope.itemMaxSize = '';
           scope.headerType = 'companyImage';
           scope.imgHeight = 33;
