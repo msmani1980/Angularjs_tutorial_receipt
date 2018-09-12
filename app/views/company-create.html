@@ -217,8 +217,12 @@
         <div class="row">
           <div class="col-xs-12 col-sm-6">
 
-            <image-upload ng-if="formData.companyTypeId == 1" image-type="homeLogo" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
+            <input-text ng-if="formData.companyTypeId == 1" label="ePOS home screen logo file name" name="ePOSHomeScreenLogoFileName"></input-text>
+
+            <image-upload ng-if="formData.companyTypeId == 1 && formData.ePOSHomeScreenLogoFileName" image-type="homeLogo" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
+
             <image-upload ng-if="formData.companyTypeId == 1" image-type="cornerLogo" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
+
             <div ng-if="formData.companyTypeId == 6">
               <image-upload image-type="receiptImage" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
             </div>
