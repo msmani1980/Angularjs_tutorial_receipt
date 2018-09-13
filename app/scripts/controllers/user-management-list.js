@@ -7,9 +7,10 @@
  * # UserManagementListCtrl
  * Controller of the ts5App
  */
-angular.module('ts5App').controller('UserManagementListCtrl', function($scope, $location, accessService, userManagementFactory, dateUtility) {
+angular.module('ts5App').controller('UserManagementListCtrl', function($scope, $location, accessService, userManagementFactory, dateUtility, globalMenuService, identityAccessService) {
 	
 	  var $this = this;
+	  /*
 	  this.meta = {
 	    limit: 100,
 	    offset: 0
@@ -18,10 +19,11 @@ angular.module('ts5App').controller('UserManagementListCtrl', function($scope, $
         field:null,
         filter: null
 	  };
-
+      */
 	  $scope.viewName = 'User Management';
 	  $scope.userList = [];
-
+	  $scope.companyIds = [];
+	  
 	  function showLoadingModal() {
 	    angular.element('.loading-more').show();
 	  }
@@ -84,10 +86,11 @@ angular.module('ts5App').controller('UserManagementListCtrl', function($scope, $
       };
 	  
 	  $scope.loadUsers = function() {
-        console.log ('$scope.loadUsers !!!');  
-	    if ($this.meta.offset >= $this.meta.count) {
-	      return;
-	    }
+		var companyData = globalMenuService.getCompanyData();
+        console.log ('$scope.loadUsers !!! companyData ', companyData);  
+	    //if ($this.meta.offset >= $this.meta.count) {
+	    //  return;
+	    //}
 
 	    //$scope.search.field = 'organizationId';
 	    //$scope.search.filter = '96';
@@ -97,16 +100,16 @@ angular.module('ts5App').controller('UserManagementListCtrl', function($scope, $
 	    //  offset: $this.meta.offset
 	    //}, createSearchPayload());
 	    //var companyIds = [643,653,362];
-	    var payload = [643,653,362];//createSearchPayload();
+	    var payload = $scope.companyIds;//[643,653,362];
 	    showLoadingModal();
 
 	    console.log ('controller getUserList', payload);  
 
 	    userManagementFactory.getUserList(payload).then($this.getUserListSuccess);
 	    
-	    $this.meta.offset += $this.meta.limit;
+	    //$this.meta.offset += $this.meta.limit;
 	  };
-
+/*
 	  $scope.searchUsers = function() {
         console.log ('$scope.searchUsers');  
 		  
@@ -117,26 +120,39 @@ angular.module('ts5App').controller('UserManagementListCtrl', function($scope, $
 	    $scope.userList = [];
 	    $scope.loadUsers();
 	  };
-
+*/
 	  //function setCompanyTypes(dataFromAPI) {
 	  //  $scope.companyTypeList = angular.copy(dataFromAPI);
 	  //}
-	  
+      this.initSuccess = function(dataFromAPI) {
+        console.log('initSuccess', dataFromAPI);
+        
+        if (angular.isDefined(dataFromAPI.companies)) {
+    	  angular.forEach(dataFromAPI.companies, function(company) {
+    	  $scope.companyIds.push(company.id);
+    	  });
+        }
+        console.log('initSuccess->companyIds', $scope.companyIds);
+        $scope.loadUsers ();
+      };
+      
 	  this.init = function() {
 		console.log ('init user management controller');  
 	    $scope.isCRUD = accessService.crudAccessGranted('USERMANAGEMENT', 'USERMANAGEMENT', 'CRUDUSRM');
 	    //companyFactory.getCompanyTypes().then(setCompanyTypes);
 	    console.log ('init $scope.isCRUD', $scope.isCRUD);
+	    identityAccessService.getUserCompanies().then($this.initSuccess);
 	    
 	  };
 
 	  this.init();
-
+/*
 	  $scope.clearForm = function() {
-	    $scope.search = {
+	  
+		  $scope.search = {
 	  	      field: null,
 		      filter: null,
 	    };
 	  };
-
+*/
 });

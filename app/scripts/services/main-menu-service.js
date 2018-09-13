@@ -13,8 +13,7 @@ angular.module('ts5App')
     this.getMenu = function () {
       return [{
         title: 'Company Management',
-        menuItems: [
-        {
+        menuItems: [{
           name: 'Manage Companies',
           route: '/#/company-list',
           icon: 'icon-manage-company',
@@ -25,18 +24,6 @@ angular.module('ts5App')
             apiName: '/api/companies',
             permissionCodes: ['R']
           }]
-        },
-        {
-            name: 'User Management',
-            route: '/#/user-list',
-            icon: 'icon-manage-company',
-            className: 'dashboard-manageCompanies',
-            package: 'COMPANY',
-            role: 'COMPANY',
-            permissions: [{
-              apiName: '/api/users',
-              permissionCodes: ['R']
-            }]
         },
         {
           name: 'Create Company',
@@ -50,6 +37,20 @@ angular.module('ts5App')
             permissionCodes: ['C']
           }]
         }]
+      }, {
+        title: 'User Management',
+        menuItems: [{
+          name: 'User Management',
+          route: '/#/user-list',
+          icon: 'icon-manage-company',
+          className: 'dashboard-manageCompanies',
+          package: 'COMPANY',
+          role: 'COMPANY',
+          permissions: [{
+            apiName: '/api/users',
+            permissionCodes: ['R']
+          }]
+        }]  
       }, {
         title: 'Currency & Exchange Rate Management',
         menuItems: [{
