@@ -9,11 +9,12 @@
 angular.module('ts5App')
   .directive('imageUpload', function () {
 
-    var imageUploadController = function ($scope, Upload, ENV, $http, $q, messageService) {
+    var imageUploadController = function ($scope, Upload, ENV, $http, $q, messageService, lodash) {
       $scope.imageSize  = '';
       $scope.imageTypeText = '';
       $scope.fileFormat = 'jpg,.png,.gif';
       $scope.isRequired = 'false';
+      $scope.isFileUploaded = false;
 
       $scope.$watch('files', function (files) {
         for (var fileKey in files) {
@@ -24,14 +25,6 @@ angular.module('ts5App')
         $scope.files = files;
       });
 
-      $scope.$watch('formData.ePOSHomeScreenLogoFileName', function(newValue, oldValue) {
-          $scope.imageName = $scope.formData.ePOSHomeScreenLogoFileName;
-      });
-
-      $scope.$watch('formData.ePOSBrandCornerLogoFileName', function(newValue, oldValue) {
-          $scope.imageName = $scope.formData.ePOSBrandCornerLogoFileName;
-      });
-
       $scope.clearAllFiles = function () {
         for (var filesIndex in $scope.files) {
           $scope.clearFile(filesIndex);
@@ -40,6 +33,10 @@ angular.module('ts5App')
 
       $scope.clearFile = function (filesIndex) {
         $scope.files.splice(filesIndex, 1);
+
+        if ($scope.files.length === 0) {
+          $scope.isFileUploaded = false;
+        }
       };
 
       $scope.addImage = function (fileIndex, data, imageType) {
@@ -96,10 +93,10 @@ angular.module('ts5App')
         }  else if ($scope.formData.images.length >= 2) {
           messageService.display('warning', 'Maximum allowed image upload limit reached', 'Image upload');
           $scope.clearAllFiles();
-        } else if (imageType === 'homeLogo' && checkImageNameUploaded() === 'logo') {
+        } else if (imageType === 'homeLogo' && containsImage()) {
           messageService.display('warning', 'Delete old home logo first', 'Image upload');
           $scope.clearAllFiles();
-        } else if (imageType === 'cornerLogo' && checkImageNameUploaded() === 'brand') {
+        } else if (imageType === 'cornerLogo' && containsImage()) {
           messageService.display('warning', 'Delete old brand logo first', 'Image upload');
           $scope.clearAllFiles();
         } else {
@@ -118,6 +115,7 @@ angular.module('ts5App')
               for (var key in reversedResults) {
                 var result = reversedResults[key];
                 if (result.status === 201) {
+                  $scope.isFileUploaded = true; // TODO: edit ne radi, ne napuni se isFileUploaded. trebamo li persistat file name-ove. zabranit isti file name za logo i brand
                   $scope.files.pop();
                 }
               }
@@ -127,15 +125,8 @@ angular.module('ts5App')
 
       };
 
-      var checkImageNameUploaded = function () {
-        if ($scope.formData.images[0] !== undefined) {
-          var imageName = $scope.formData.images[0].imageURL.split('/').pop();
-          imageName = imageName.split('_')[0];
-          return imageName;
-        } else {
-          return 'no image';
-        }
-
+      var containsImage = function () {
+        return $scope.isFileUploaded;
       };
 
     };
@@ -161,7 +152,6 @@ angular.module('ts5App')
           scope.imageSize  = '900 x 600';
           scope.imageTypeText = 'ePOS home screen logo.';
           scope.fileFormat = 'png';
-          scope.imageName = scope.formData.ePOSHomeScreenLogoFileName;
           scope.imageNameMessage = 'Accepted image name: ';
           scope.itemMaxSize = '';
           scope.headerType = 'companyImage';
@@ -174,7 +164,6 @@ angular.module('ts5App')
           scope.imageSize  = '92 x 33';
           scope.imageTypeText = 'ePOS brand corner logo.';
           scope.fileFormat = 'png';
-          scope.imageName = scope.formData.ePOSBrandCornerLogoFileName;
           scope.imageNameMessage = 'Accepted image name: ';
           scope.itemMaxSize = '';
           scope.headerType = 'companyImage';
