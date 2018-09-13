@@ -14,7 +14,6 @@ angular.module('ts5App')
       $scope.imageTypeText = '';
       $scope.fileFormat = 'jpg,.png,.gif';
       $scope.isRequired = 'false';
-      $scope.isFileUploaded = false;
 
       $scope.$watch('files', function (files) {
         for (var fileKey in files) {
@@ -25,6 +24,14 @@ angular.module('ts5App')
         $scope.files = files;
       });
 
+      // Fix bug where file was not re-validated after imageName was changed
+      $scope.$watch('imageName', function (newImageName, oldImageName) {
+        // For retail company, clear rejected files if image name is changed
+        if ($scope.formData.companyTypeId === '1' && newImageName !== oldImageName && $scope.rejFiles) {
+          $scope.rejFiles = [];
+        }
+      });
+
       $scope.clearAllFiles = function () {
         for (var filesIndex in $scope.files) {
           $scope.clearFile(filesIndex);
@@ -32,11 +39,8 @@ angular.module('ts5App')
       };
 
       $scope.clearFile = function (filesIndex) {
+        console.log($scope.files)
         $scope.files.splice(filesIndex, 1);
-
-        if ($scope.files.length === 0) {
-          $scope.isFileUploaded = false;
-        }
       };
 
       $scope.addImage = function (fileIndex, data, imageType) {
@@ -54,11 +58,15 @@ angular.module('ts5App')
         };
 
         if (imageType === 'homeLogo') {
-          newImage = {
-            imageURL: tempImageURL,
-            startDate:  '1/1/2016',
-            endDate: '1/1/2016'
-          };
+          newImage.isHomeLogo = true;
+
+          // Mykola's way to avoid effective dates conflict for images (keeping as is for now)
+          newImage.startDate = '1/1/2016';
+          newImage.endDate = '1/1/2016';
+        }
+
+        if (imageType === 'cornerLogo') {
+          newImage.isCornerLogo = true;
         }
 
         $scope.formData.images.push(newImage);
@@ -115,7 +123,7 @@ angular.module('ts5App')
               for (var key in reversedResults) {
                 var result = reversedResults[key];
                 if (result.status === 201) {
-                  $scope.isFileUploaded = true; // TODO: edit ne radi, ne napuni se isFileUploaded. trebamo li persistat file name-ove. zabranit isti file name za logo i brand
+                   // TODO: edit ne radi, ne napuni se isFileUploaded, zabranit special chars
                   $scope.files.pop();
                 }
               }
@@ -126,7 +134,11 @@ angular.module('ts5App')
       };
 
       var containsImage = function () {
-        return $scope.isFileUploaded;
+        var filteredImages = $scope.formData.images.filter(function (image) {
+          return image.imageURL.indexOf($scope.imageName) > -1;
+        });
+
+        return filteredImages.length > 0;
       };
 
     };
