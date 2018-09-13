@@ -498,6 +498,9 @@ angular.module('ts5App', [
     templateUrl: 'views/route-tax-rates.html',
     controller: 'RouteTaxRatesCtrl',
     controllerAs: 'routeTaxRates'
+  }).when('/user-list', {
+	    templateUrl: 'views/user-list.html',
+	    controller: 'UserManagementListCtrl'
   }).otherwise({
     redirectTo: '/'
   });
