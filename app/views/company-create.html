@@ -23,7 +23,7 @@
                 <span class="hidden-xs">Cancel</span>
               </button>
 
-              <button class="btn btn-primary" ng-click="submitForm(formData)">
+              <button class="btn btn-primary" ng-click="submitForm(formData)" ng-disabled="areHomeAndBrandImageNamesEqual()">
                 <span class="fa fa-check-square-o" aria-hidden="true"></span>
                 <span class="hidden-xs">{{ buttonText }}</span>
               </button>
@@ -228,14 +228,43 @@
         </div>
         <div class="row">
           <div class="col-xs-12 col-sm-6">
+            <fieldset ng-disabled="containsHomeScreenLogoImage()">
+              <input-text ng-if="formData.companyTypeId == 1"
+                          label="ePOS Home Screen Logo File Name"
+                          name="ePOSHomeScreenLogoFileName">
+              </input-text>
 
-            <input-text ng-if="formData.companyTypeId == 1" label="ePOS Home Screen Logo File Name" name="ePOSHomeScreenLogoFileName"></input-text>
+              <p class="alert alert-danger" ng-show="areHomeAndBrandImageNamesEqual()">
+                ePOS Home Screen Logo File Name and ePOS Brand Corner Logo File Name can't be equal
+              </p>
+            </fieldset>
 
-            <image-upload ng-if="formData.companyTypeId == 1 && formData.ePOSHomeScreenLogoFileName" image-name="{{formData.ePOSHomeScreenLogoFileName}}" image-type="homeLogo" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
+            <image-upload ng-if="formData.companyTypeId == 1 && formData.ePOSHomeScreenLogoFileName"
+                          image-name="{{formData.ePOSHomeScreenLogoFileName}}"
+                          image-type="homeLogo"
+                          form-data-bind="formData"
+                          editing-company="editingCompany"
+                          ng-hide="isDisabled()">
+            </image-upload>
 
-            <input-text ng-if="formData.companyTypeId == 1" label="ePOS Brand Corner Logo File Name" name="ePOSBrandCornerLogoFileName"></input-text>
+            <fieldset ng-disabled="containsBrandCornerLogoImage()">
+              <input-text ng-if="formData.companyTypeId == 1"
+                          label="ePOS Brand Corner Logo File Name"
+                          name="ePOSBrandCornerLogoFileName">
+              </input-text>
 
-            <image-upload ng-if="formData.companyTypeId == 1 && formData.ePOSBrandCornerLogoFileName" image-name="{{formData.ePOSBrandCornerLogoFileName}}" image-type="cornerLogo" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
+              <p class="alert alert-danger" ng-show="areHomeAndBrandImageNamesEqual()">
+                ePOS Home Screen Logo File Name and ePOS Brand Corner Logo File Name can't be equal
+              </p>
+            </fieldset>
+
+            <image-upload ng-if="formData.companyTypeId == 1 && formData.ePOSBrandCornerLogoFileName"
+                          image-name="{{formData.ePOSBrandCornerLogoFileName}}"
+                          image-type="cornerLogo"
+                          form-data-bind="formData"
+                          editing-company="editingCompany"
+                          ng-hide="isDisabled()">
+            </image-upload>
 
             <div ng-if="formData.companyTypeId == 6">
               <image-upload image-type="receiptImage" form-data-bind="formData" editing-company="editingCompany" ng-hide="isDisabled()"></image-upload>
