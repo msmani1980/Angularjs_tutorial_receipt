@@ -422,6 +422,14 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $scope.eposLanguages = $this.removeDefaultLanguage($scope.formData.defaultEposLanguage, $scope.formData.eposLanguages);
     };
 
+    $scope.areHomeAndBrandImageNamesEqual = function () {
+      if (!$scope.formData.ePOSHomeScreenLogoFileName || !$scope.formData.ePOSBrandCornerLogoFileName) {
+        return false;
+      }
+
+      return $scope.formData.ePOSHomeScreenLogoFileName === $scope.formData.ePOSBrandCornerLogoFileName;
+    };
+
     this.setDependencies = function(response) {
       $scope.companyTypes = response[0];
       $scope.currencies = response[1].response;
@@ -740,6 +748,22 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
 
     $scope.removeImage = function(key) {
       $scope.formData.images.splice(key, 1);
+    };
+
+    $scope.containsHomeScreenLogoImage = function () {
+      var filteredImages = $scope.formData.images.filter(function (image) {
+        return image.isHomeLogo && image.imageURL.indexOf($scope.formData.ePOSHomeScreenLogoFileName) > -1;
+      });
+
+      return filteredImages.length > 0;
+    };
+
+    $scope.containsBrandCornerLogoImage = function () {
+      var filteredImages = $scope.formData.images.filter(function (image) {
+        return image.isCornerLogo && image.imageURL.indexOf($scope.formData.ePOSBrandCornerLogoFileName) > -1;
+      });
+
+      return filteredImages.length > 0;
     };
 
     $scope.formScroll = function(id, activeBtn) {
