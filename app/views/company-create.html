@@ -231,7 +231,8 @@
             <fieldset ng-disabled="containsHomeScreenLogoImage()">
               <input-text ng-if="formData.companyTypeId == 1"
                           label="ePOS Home Screen Logo File Name"
-                          name="ePOSHomeScreenLogoFileName">
+                          name="ePOSHomeScreenLogoFileName"
+                          pattern="regexp.alphanumeric">
               </input-text>
 
               <p class="alert alert-danger" ng-show="areHomeAndBrandImageNamesEqual()">
@@ -250,7 +251,8 @@
             <fieldset ng-disabled="containsBrandCornerLogoImage()">
               <input-text ng-if="formData.companyTypeId == 1"
                           label="ePOS Brand Corner Logo File Name"
-                          name="ePOSBrandCornerLogoFileName">
+                          name="ePOSBrandCornerLogoFileName"
+                          pattern="regexp.alphanumeric">
               </input-text>
 
               <p class="alert alert-danger" ng-show="areHomeAndBrandImageNamesEqual()">
