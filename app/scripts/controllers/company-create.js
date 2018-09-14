@@ -207,6 +207,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         ediName: $this.setString(company.ediName),
         virtualItemReceiptHeader: $this.setString(company.virtualItemReceiptHeader),
         virtualItemReceiptFooter: $this.setString(company.virtualItemReceiptFooter),
+        ePOSHomeScreenLogoFileName: $this.setString(company.ePOSHomeScreenLogoFileName),
+        ePOSBrandCornerLogoFileName: $this.setString(company.ePOSBrandCornerLogoFileName),
         exchangeRateVariance: $this.setString(company.exchangeRateVariance),
         id: company.id,
         isActive: company.isActive,
@@ -517,6 +519,24 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     this.validateForm = function() {
+      if ($scope.formData.ePOSHomeScreenLogoFileName && !$scope.containsHomeScreenLogoImage()) {
+        $scope.errorCustom = [{
+          field: 'Required Fields',
+          value: 'ePOS Home Screen Logo File Name is set, but you haven\'t uploaded the logo'
+        }];
+        $scope.displayError = true;
+        return false;
+      }
+
+      if ($scope.formData.ePOSBrandCornerLogoFileName && !$scope.containsBrandCornerLogoImage()) {
+        $scope.errorCustom = [{
+          field: 'Required Fields',
+          value: 'ePOS Brand Corner Logo File Name is set, but you haven\'t uploaded the logo'
+        }];
+        $scope.displayError = true;
+        return false;
+      }
+
       $scope.displayError = !$scope.form.$valid;
       return $scope.form.$valid;
     };
@@ -752,7 +772,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
 
     $scope.containsHomeScreenLogoImage = function () {
       var filteredImages = $scope.formData.images.filter(function (image) {
-        return image.isHomeLogo && image.imageURL.indexOf($scope.formData.ePOSHomeScreenLogoFileName) > -1;
+        return image.imageName === 'homeLogo' && image.imageURL.indexOf($scope.formData.ePOSHomeScreenLogoFileName) > -1;
       });
 
       return filteredImages.length > 0;
@@ -760,7 +780,7 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
 
     $scope.containsBrandCornerLogoImage = function () {
       var filteredImages = $scope.formData.images.filter(function (image) {
-        return image.isCornerLogo && image.imageURL.indexOf($scope.formData.ePOSBrandCornerLogoFileName) > -1;
+        return image.imageName === 'cornerLogo' && image.imageURL.indexOf($scope.formData.ePOSBrandCornerLogoFileName) > -1;
       });
 
       return filteredImages.length > 0;
