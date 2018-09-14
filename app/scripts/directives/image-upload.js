@@ -39,7 +39,6 @@ angular.module('ts5App')
       };
 
       $scope.clearFile = function (filesIndex) {
-        console.log($scope.files)
         $scope.files.splice(filesIndex, 1);
       };
 
@@ -146,7 +145,6 @@ angular.module('ts5App')
       link: function(scope) {
 
         if (scope.imageType === 'homeLogo') {
-          console.log('home logo')
           scope.imageSize  = '900 x 600';
           scope.imageTypeText = 'ePOS home screen logo.';
           scope.fileFormat = 'png';
@@ -158,7 +156,6 @@ angular.module('ts5App')
         }
 
         if (scope.imageType === 'cornerLogo') {
-          console.log('corner logo')
           scope.imageSize  = '92 x 33';
           scope.imageTypeText = 'ePOS brand corner logo.';
           scope.fileFormat = 'png';
