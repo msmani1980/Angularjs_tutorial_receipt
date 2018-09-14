@@ -9,7 +9,7 @@
 angular.module('ts5App')
   .directive('imageUpload', function () {
 
-    var imageUploadController = function ($scope, Upload, ENV, $http, $q, messageService, lodash) {
+    var imageUploadController = function ($scope, Upload, ENV, $http, $q, messageService) {
       $scope.imageSize  = '';
       $scope.imageTypeText = '';
       $scope.fileFormat = 'jpg,.png,.gif';
