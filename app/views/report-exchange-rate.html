@@ -134,7 +134,7 @@
                                   <i class="fa fa-check-square-o"></i>
                               </button>
                               <button class="btn btn-danger btn-xs"
-                              		ng-click="deleteRecordDialog(companyExchangeRates[$index], ['acceptedCurrencyCode', 'startDate', 'endDate'])"
+                              		ng-click="showDeleteConfirmation($index, exchangeRate)" 
                               		ng-hide="isExchangeRateReadOnly(exchangeRate)">
                                   <i class="fa fa-trash"></i>
                               </button>
@@ -154,7 +154,30 @@
   	</alert>
     <p ng-if="countOfValidExchangeRates() > 0" class="record-count small text-center">Showing {{countOfValidExchangeRates()}} records</p>
 </div>
+<div class="modal fade delete-warning-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-<delete-record-dialog></delete-record-dialog>
+            <div class="modal-header">
+                <h4 class="modal-title">Are you sure?</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to permanently delete <strong>{{repExchangeRateToDelete.acceptedCurrencyCode}}</strong></p>
+            </div>
+
+            <ul>
+                <li><strong>Start Date: </strong>{{ repExchangeRateToDelete.startDate }}</li>
+                <li><strong>End Date: </strong>{{ repExchangeRateToDelete.endDate }}</li>
+            </ul>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" ng-click="deleteReportExchangeRate()">Continue</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <dynamic-left-nav></dynamic-left-nav>
