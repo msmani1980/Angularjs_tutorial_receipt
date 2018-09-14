@@ -377,7 +377,7 @@ angular.module('ts5App')
       $this.showToastMessage('danger', 'Report Exchange Rate', 'Report Exchange rate could not be deleted');
     };
 
-    $scope.removeRecord = function(exchangeRate) {
+    this.deleteRecord = function(exchangeRate) {
       var payload = {
         companyId: $this.companyId,
         id: exchangeRate.id
@@ -393,10 +393,10 @@ angular.module('ts5App')
         }
       };
 
-    $scope.deleteCompanyExchangeRate = function() {
+    $scope.deleteReportExchangeRate = function() {
       angular.element('.delete-warning-modal').modal('hide');
-      $scope.companyExchangeRates.splice($scope.exchangeRateToDelete.rowIndex, 1);
-      $this.deleteCompanyExchangeRate($scope.exchangeRateToDelete.id);
+      $scope.companyExchangeRates.splice($scope.repExchangeRateToDelete.rowIndex, 1);
+      $this.deleteRecord($scope.repExchangeRateToDelete);
     };
 
     $scope.isCurrencyCodePartOfAllowedCurrenciesForCreation = function() {
@@ -460,6 +460,17 @@ angular.module('ts5App')
       newExchangeRates.push(newExchangeRate);
       $scope.companyExchangeRates = $filter('orderBy')(newExchangeRates,
         'acceptedCurrencyCode + exchangeRate + startDate');
+    };
+
+    $scope.showDeleteConfirmation = function(index, repExchangeRate) {
+      if (repExchangeRate.id !== undefined || repExchangeRate.id) {
+        $scope.repExchangeRateToDelete = repExchangeRate;
+        $scope.repExchangeRateToDelete.rowIndex = index;
+        angular.element('.delete-warning-modal').modal('show');
+      }else {
+        $scope.companyExchangeRates.splice(index, 1);
+      }
+
     };
 
     $scope.onAcceptedCompanyCurrencyChange = function(newExchangeRate) {
