@@ -116,7 +116,6 @@ angular.module('ts5App')
               for (var key in reversedResults) {
                 var result = reversedResults[key];
                 if (result.status === 201) {
-                   // TODO: edit ne radi, ne napuni se isFileUploaded, zabranit special chars
                   $scope.files.pop();
                 }
               }
