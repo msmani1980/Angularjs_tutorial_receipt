@@ -58,7 +58,7 @@ angular.module('ts5App')
         };
 
         if (imageType === 'homeLogo') {
-          newImage.isHomeLogo = true;
+          newImage.imageName = 'homeLogo';
 
           // Mykola's way to avoid effective dates conflict for images (keeping as is for now)
           newImage.startDate = '1/1/2016';
@@ -66,7 +66,7 @@ angular.module('ts5App')
         }
 
         if (imageType === 'cornerLogo') {
-          newImage.isCornerLogo = true;
+          newImage.imageName = 'cornerLogo';
         }
 
         $scope.formData.images.push(newImage);
@@ -101,12 +101,6 @@ angular.module('ts5App')
         }  else if ($scope.formData.images.length >= 2) {
           messageService.display('warning', 'Maximum allowed image upload limit reached', 'Image upload');
           $scope.clearAllFiles();
-        } else if (imageType === 'homeLogo' && containsImage()) {
-          messageService.display('warning', 'Delete old home logo first', 'Image upload');
-          $scope.clearAllFiles();
-        } else if (imageType === 'cornerLogo' && containsImage()) {
-          messageService.display('warning', 'Delete old brand logo first', 'Image upload');
-          $scope.clearAllFiles();
         } else {
           $http.defaults.headers.common.companyCode = companyCode;
           var fileUploadPromises = [];
@@ -131,14 +125,6 @@ angular.module('ts5App')
           }
         }
 
-      };
-
-      var containsImage = function () {
-        var filteredImages = $scope.formData.images.filter(function (image) {
-          return image.imageURL.indexOf($scope.imageName) > -1;
-        });
-
-        return filteredImages.length > 0;
       };
 
     };
