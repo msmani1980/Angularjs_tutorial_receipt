@@ -240,7 +240,7 @@
               </p>
             </fieldset>
 
-            <image-upload ng-if="formData.companyTypeId == 1 && formData.ePOSHomeScreenLogoFileName"
+            <image-upload ng-if="formData.companyTypeId == 1 && formData.ePOSHomeScreenLogoFileName && !containsHomeScreenLogoImage()"
                           image-name="{{formData.ePOSHomeScreenLogoFileName}}"
                           image-type="homeLogo"
                           form-data-bind="formData"
@@ -260,7 +260,7 @@
               </p>
             </fieldset>
 
-            <image-upload ng-if="formData.companyTypeId == 1 && formData.ePOSBrandCornerLogoFileName"
+            <image-upload ng-if="formData.companyTypeId == 1 && formData.ePOSBrandCornerLogoFileName && !containsBrandCornerLogoImage()"
                           image-name="{{formData.ePOSBrandCornerLogoFileName}}"
                           image-type="cornerLogo"
                           form-data-bind="formData"
@@ -277,6 +277,7 @@
             <input-text ng-if="formData.companyTypeId == 6" label="Virtual Item Receipt Footer" name="virtualItemReceiptFooter" max-length="30"></input-text>
 
           </div>
+
           <div ng-if="formData.companyTypeId == 1" class="col-xs-12 col-sm-6" id="images-container">
             <br>
             <div ng-repeat="(key,image) in formData.images track by $index">
