@@ -3,12 +3,13 @@
 
   <div ngf-select="" ngf-drop="" class="drop-box retail-drop-box" ng-model="files" ng-model-rejected="rejFiles"
        ngf-change="filesChanged()" ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true"
-       ngf-accept="'{{imageName}}.{{fileFormat}}'" ngf-validate = "{size: {max: '{{itemMaxSize}}', min: '10B'}, height: {max: {{imgHeight}}}, width: {max: {{imgWidth}}}}">
+       ngf-accept="'{{imageName}}.{{fileFormat}}'"
+       ngf-validate = "{size: {max: '{{itemMaxSize}}', min: '10B'}, height: {max: {{imgHeight}}}, width: {max: {{imgWidth}}}}">
     <b>{{imageTypeText}}</b><br>
     <b>Drop Images, or Click.</b>
 
     <p>Accepted file formats: {{fileFormat}}.</p>
-    <p ng-show="formData.companyTypeId==1">{{imageNameMessage}}{{formData.companyCode}}.{{fileFormat}}</p>
+    <p ng-show="formData.companyTypeId==1">{{imageNameMessage}}{{imageName}}.{{fileFormat}}</p>
   </div>
 
   <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>

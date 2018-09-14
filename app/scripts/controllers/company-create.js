@@ -207,6 +207,8 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
         ediName: $this.setString(company.ediName),
         virtualItemReceiptHeader: $this.setString(company.virtualItemReceiptHeader),
         virtualItemReceiptFooter: $this.setString(company.virtualItemReceiptFooter),
+        ePOSHomeScreenLogoFileName: $this.setString(company.ePOSHomeScreenLogoFileName),
+        ePOSBrandCornerLogoFileName: $this.setString(company.ePOSBrandCornerLogoFileName),
         exchangeRateVariance: $this.setString(company.exchangeRateVariance),
         id: company.id,
         isActive: company.isActive,
@@ -422,6 +424,14 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
       $scope.eposLanguages = $this.removeDefaultLanguage($scope.formData.defaultEposLanguage, $scope.formData.eposLanguages);
     };
 
+    $scope.areHomeAndBrandImageNamesEqual = function () {
+      if (!$scope.formData.ePOSHomeScreenLogoFileName || !$scope.formData.ePOSBrandCornerLogoFileName) {
+        return false;
+      }
+
+      return $scope.formData.ePOSHomeScreenLogoFileName === $scope.formData.ePOSBrandCornerLogoFileName;
+    };
+
     this.setDependencies = function(response) {
       $scope.companyTypes = response[0];
       $scope.currencies = response[1].response;
@@ -509,6 +519,24 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
     };
 
     this.validateForm = function() {
+      if ($scope.formData.ePOSHomeScreenLogoFileName && !$scope.containsHomeScreenLogoImage()) {
+        $scope.errorCustom = [{
+          field: 'Required Fields',
+          value: 'ePOS Home Screen Logo File Name is set, but you haven\'t uploaded the logo'
+        }];
+        $scope.displayError = true;
+        return false;
+      }
+
+      if ($scope.formData.ePOSBrandCornerLogoFileName && !$scope.containsBrandCornerLogoImage()) {
+        $scope.errorCustom = [{
+          field: 'Required Fields',
+          value: 'ePOS Brand Corner Logo File Name is set, but you haven\'t uploaded the logo'
+        }];
+        $scope.displayError = true;
+        return false;
+      }
+
       $scope.displayError = !$scope.form.$valid;
       return $scope.form.$valid;
     };
@@ -740,6 +768,22 @@ angular.module('ts5App').controller('CompanyCreateCtrl',
 
     $scope.removeImage = function(key) {
       $scope.formData.images.splice(key, 1);
+    };
+
+    $scope.containsHomeScreenLogoImage = function () {
+      var filteredImages = $scope.formData.images.filter(function (image) {
+        return image.imageName === 'homeLogo' && image.imageURL.indexOf($scope.formData.ePOSHomeScreenLogoFileName) > -1;
+      });
+
+      return filteredImages.length > 0;
+    };
+
+    $scope.containsBrandCornerLogoImage = function () {
+      var filteredImages = $scope.formData.images.filter(function (image) {
+        return image.imageName === 'cornerLogo' && image.imageURL.indexOf($scope.formData.ePOSBrandCornerLogoFileName) > -1;
+      });
+
+      return filteredImages.length > 0;
     };
 
     $scope.formScroll = function(id, activeBtn) {
