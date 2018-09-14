@@ -24,13 +24,11 @@ angular.module('ts5App')
         $scope.files = files;
       });
 
-      $scope.$watch('formData.companyCode', function(newValue, oldValue) {
-        if (newValue !== oldValue) {
-          if ($scope.imageType.toString() === 'homeLogo') {
-            $scope.imageName = 'logo_' + $scope.formData.companyCode;
-          } else if ($scope.imageType.toString() === 'cornerLogo') {
-            $scope.imageName = 'brand_' + $scope.formData.companyCode;
-          }
+      // Fix bug where file was not re-validated after imageName was changed
+      $scope.$watch('imageName', function (newImageName, oldImageName) {
+        // For retail company, clear rejected files if image name is changed
+        if ($scope.formData.companyTypeId === '1' && newImageName !== oldImageName && $scope.rejFiles) {
+          $scope.rejFiles = [];
         }
       });
 
@@ -59,11 +57,15 @@ angular.module('ts5App')
         };
 
         if (imageType === 'homeLogo') {
-          newImage = {
-            imageURL: tempImageURL,
-            startDate:  '1/1/2016',
-            endDate: '1/1/2016'
-          };
+          newImage.imageName = 'homeLogo';
+
+          // Mykola's way to avoid effective dates conflict for images (keeping as is for now)
+          newImage.startDate = '1/1/2016';
+          newImage.endDate = '1/1/2016';
+        }
+
+        if (imageType === 'cornerLogo') {
+          newImage.imageName = 'cornerLogo';
         }
 
         $scope.formData.images.push(newImage);
@@ -98,12 +100,6 @@ angular.module('ts5App')
         }  else if ($scope.formData.images.length >= 2) {
           messageService.display('warning', 'Maximum allowed image upload limit reached', 'Image upload');
           $scope.clearAllFiles();
-        } else if (imageType === 'homeLogo' && checkImageNameUploaded() === 'logo') {
-          messageService.display('warning', 'Delete old home logo first', 'Image upload');
-          $scope.clearAllFiles();
-        } else if (imageType === 'cornerLogo' && checkImageNameUploaded() === 'brand') {
-          messageService.display('warning', 'Delete old brand logo first', 'Image upload');
-          $scope.clearAllFiles();
         } else {
           $http.defaults.headers.common.companyCode = companyCode;
           var fileUploadPromises = [];
@@ -125,17 +121,6 @@ angular.module('ts5App')
               }
             });
           }
-        }
-
-      };
-
-      var checkImageNameUploaded = function () {
-        if ($scope.formData.images[0] !== undefined) {
-          var imageName = $scope.formData.images[0].imageURL.split('/').pop();
-          imageName = imageName.split('_')[0];
-          return imageName;
-        } else {
-          return 'no image';
         }
 
       };
@@ -162,8 +147,7 @@ angular.module('ts5App')
           scope.imageSize  = '900 x 600';
           scope.imageTypeText = 'ePOS home screen logo.';
           scope.fileFormat = 'png';
-          scope.imageName = 'logo_' + scope.formData.companyCode;
-          scope.imageNameMessage = 'Accepted image name: logo_';
+          scope.imageNameMessage = 'Accepted image name: ';
           scope.itemMaxSize = '';
           scope.headerType = 'companyImage';
           scope.imgHeight = 600;
@@ -174,8 +158,7 @@ angular.module('ts5App')
           scope.imageSize  = '92 x 33';
           scope.imageTypeText = 'ePOS brand corner logo.';
           scope.fileFormat = 'png';
-          scope.imageName = 'brand_' + scope.formData.companyCode;
-          scope.imageNameMessage = 'Accepted image name: brand_';
+          scope.imageNameMessage = 'Accepted image name: ';
           scope.itemMaxSize = '';
           scope.headerType = 'companyImage';
           scope.imgHeight = 33;
