@@ -1,4 +1,5 @@
 'use strict';
+/*jshint maxcomplexity:6 */
 /**
  * @ngdoc directive
  * @name ts5App.directive:excelUpload
@@ -82,6 +83,8 @@ angular.module('ts5App')
         $scope.templateName = 'employeeUpload';
       } else if ($scope.type === 'stations') {
         $scope.templateName = 'stationUpload';
+      } else if ($scope.type === 'reportexchange' || $scope.type === 'eposexchange') {
+        $scope.templateName = 'exchangeRateUpload';
       }
 
       // jshint ignore: end
@@ -108,6 +111,10 @@ angular.module('ts5App')
           $this.service = $injector.get('schedulesService');
         } else if ($scope.type === 'employee') {
           $this.service = $injector.get('employeesService');
+        } else if ($scope.type === 'reportexchange') {
+          $this.service = $injector.get('currenciesService');
+        } else if ($scope.type === 'eposexchange') {
+          $this.service = $injector.get('companyExchangeRateService');
         } else {
           $this.service = $injector.get($scope.type + 'Service');
         }
