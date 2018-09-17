@@ -11,6 +11,7 @@ angular.module('ts5App')
   .service('userManagementService', function ($resource, ENV) {
   
   var usersURL = ENV.apiUrl + '/IdentityAccess/users';
+  var userByCodeURL = ENV.apiUrl + '/IdentityAccess/authorizeUser/:user';
 
   var actions = {
     users: {
@@ -19,6 +20,12 @@ angular.module('ts5App')
 	  headers: {
 	    'Content-Type': 'application/json'
 	  }
+    },
+    authorizeUser: {
+  	  method: 'GET',       
+  	  headers: {
+  	    'Content-Type': 'application/json'
+  	  }
     }
   };
   
@@ -32,8 +39,36 @@ angular.module('ts5App')
     return usersResource.users().$promise;
   };
 
+  var userByCode= function(user) {
+    console.log ('userManagementService->userByUserName', user);	
+	var parameters = {
+      user: user
+	};
+
+	var userByCodeResource = $resource(userByCodeURL, parameters, actions);
+	return userByCodeResource.authorizeUser().$promise;
+  };
+
+
+/*  
+    var sendEmail = function(shouldRecoverUser, emailContent, emailAddress, username) {
+      var URLtoSend = (shouldRecoverUser) ? sendUsernameRecoveryEmail : sendPasswordRecoveryEmail;
+      sendEmailParameters = {
+        email: emailAddress
+      };
+
+      if (!shouldRecoverUser) {
+        sendEmailParameters.username = (!!username) ? username : '';
+      }
+
+      var sendEmailResource = $resource(URLtoSend, sendEmailParameters, actions);
+      return sendEmailResource.sendEmail(emailContent).$promise;
+    };
+  
+*/  
     return {
-    	userList:userList
+    	userList:userList,
+    	userByCode:userByCode
     };
   
 });

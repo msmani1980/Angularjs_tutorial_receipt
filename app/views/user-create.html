@@ -1,0 +1,80 @@
+<div class="container module-container">
+
+  <div class="top-header">
+    <div class="container">
+      <div class="edit-controls">
+        <div class="row">
+          <div class="col-xs-6">
+            <h2 class="view-name"> {{ viewName }} </h2>
+          </div>
+          <div class="col-xs-6 text-right">
+            <fieldset>
+              <button class="btn btn-default" ng-click="leaveView('user-list')">
+                <span class="fa fa-remove" aria-hidden="true"></span>
+                <span class="hidden-xs">Cancel</span>
+              </button>
+              <button class="btn btn-primary" ng-click="submitForm(formData)" ng-hide="viewOnly">
+                <span class="fa fa-check-square-o" aria-hidden="true"></span>
+                <span class="hidden-xs">{{ buttonText }}</span>
+              </button>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <p>All required fields are marked with a *.</p>
+    </div>
+
+  </div>
+  <!--/TopHeader -->
+
+  <div class="create-form-container">
+
+    <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+    </error-dialog>
+
+    <form name="form" class="form edit-form create-user-form">
+
+      <h3 id="user-information">User Information</h3>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6">
+          <fieldset ng-disabled="viewOnly">
+            <input-text label="User Name" name="userName" required="true" pattern="regexp.sentence"
+                        placeholder="User Name" min-length="1" max-length="40"></input-text>
+            <input-text label="Email" name="email" required="true" pattern="regexp.sentence"
+                        placeholder="Email" min-length="1" max-length="40"></input-text>
+            <input-text label="Company" name="company" required="true" pattern="regexp.alphanumeric"
+                        placeholder="Company" min-length="1" max-length="10"></input-text>
+            <div class="form-group">
+              <input type="checkbox"
+                     ng-model="formData.enabled"
+                     name="enabled">
+              <label>User Enabled</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="col-xs-12 col-sm-6">
+          <fieldset ng-disabled="viewOnly">
+            <input-text label="User First Name" name="firstName" pattern="regexp.sentence"
+                        placeholder="User First Name" min-length="1" max-length="40"></input-text>
+            <input-text label="User Last Name" name="lastName" pattern="regexp.sentence"
+                        placeholder="User Last Name" min-length="1" max-length="40"></input-text>
+            
+            <div class="form-group">
+              <input type="checkbox"
+                     ng-model="formData.allowAllStations"
+                     name="enabled">
+              <label>Allow All Stations</label>
+            </div>
+          </fieldset>
+        </div>
+       </form>
+  </div>
+</div>
+
+</div>
+<!-- /Container -->
+<leave-view-modal></leave-view-modal>
+<form-success-modal list-path="user-list" create-path="user-create"></form-success-modal>
+<form-update-modal list-path="user-list"></form-update-modal>
+<dynamic-left-nav title="User Management"></dynamic-left-nav>

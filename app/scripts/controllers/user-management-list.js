@@ -47,11 +47,11 @@ angular.module('ts5App').controller('UserManagementListCtrl', function($scope, $
 	  };
 
 	  $scope.viewUser = function(user) {
-	    $location.path('/user-view/' + user.id);
+	    $location.path('/user-view/' + user.userName);
 	  };
 
 	  $scope.editUser = function(user) {
-	    $location.path('/user-edit/' + user.id);
+	    $location.path('/user-edit/' + user.userName);
 	  };
 
 	  function createSearchPayload() {
@@ -138,8 +138,7 @@ angular.module('ts5App').controller('UserManagementListCtrl', function($scope, $
       
 	  this.init = function() {
 		console.log ('init user management controller');  
-	    $scope.isCRUD = accessService.crudAccessGranted('USERMANAGEMENT', 'USERMANAGEMENT', 'CRUDUSRM');
-	    //companyFactory.getCompanyTypes().then(setCompanyTypes);
+	    $scope.isCRUD = accessService.crudAccessGranted('USERMANAGEMENT', 'USERMANAGEMENT', 'USRM');
 	    console.log ('init $scope.isCRUD', $scope.isCRUD);
 	    identityAccessService.getUserCompanies().then($this.initSuccess);
 	    
