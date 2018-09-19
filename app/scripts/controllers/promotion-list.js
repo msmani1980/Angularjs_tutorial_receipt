@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('PromotionListCtrl', function($scope, $q, $location, payloadUtility, dateUtility, promotionsFactory,
-    recordsService, lodash, accessService) {
+    recordsService, messageService, lodash, accessService) {
 
     var $this = this;
     this.meta = {
@@ -79,8 +79,24 @@ angular.module('ts5App')
       return !(dateUtility.isAfterTodayDatePicker(promotion.startDate));
     };
 
+    this.reloadCritria = function() {
+      $this.meta.offset = 0;
+      $scope.promotionList = [];
+      $scope.getPromotionList();
+    };
+
+    this.deleteSuccess = function() {
+      messageService.display('success', 'Promotion successfully deleted!', 'Promotion');
+      $this.reloadCritria();
+    };
+
+    this.deleteFailure = function() {
+      messageService.display('danger', 'Promotion is in-use and could not be deleted', 'Promotion');
+      $this.reloadCritria();
+    };
+
     this.deletePromotion = function(promotionId) {
-      promotionsFactory.deletePromotion(promotionId);
+      promotionsFactory.deletePromotion(promotionId).then($this.deleteSuccess, $this.deleteFailure);
     };
 
     $scope.showDeleteConfirmation = function(index, promotion) {
