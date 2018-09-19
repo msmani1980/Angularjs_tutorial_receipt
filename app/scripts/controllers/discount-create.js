@@ -620,7 +620,7 @@ angular.module('ts5App')
       }
 
       searchPayload.categoryId = categoryId;
-
+      searchPayload.ignoreDryStrore = true;
       itemsFactory.getItemsList(searchPayload, true).then(function(response) {
         $scope.filteredRetailItemsList[categoryId] = response.masterItems;
       });
