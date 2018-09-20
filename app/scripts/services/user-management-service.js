@@ -12,6 +12,17 @@ angular.module('ts5App')
   
   var usersURL = ENV.apiUrl + '/IdentityAccess/users';
   var userByCodeURL = ENV.apiUrl + '/IdentityAccess/authorizeUser/:user';
+  var organizationsURL = ENV.apiUrl + '/IdentityAccess/company/organizations';
+  var userCompaniesURL = ENV.apiUrl + '/IdentityAccess/company/userscomps';
+  var userUpdateURL = ENV.apiUrl + '/IdentityAccess/updateUser';
+  var userCreateURL = ENV.apiUrl + '/IdentityAccess/createUser';
+  var userByIdURL = ENV.apiUrl + '/IdentityAccess/user/:id';
+
+  
+  var organizationsParameters = {};
+  var userCompaniesParameters = {};
+  var userUpdateParameters = {};
+  var userCreateParameters = {};
 
   var actions = {
     users: {
@@ -26,9 +37,44 @@ angular.module('ts5App')
   	  headers: {
   	    'Content-Type': 'application/json'
   	  }
-    }
+    },
+    getOrganizations: {
+      method: 'GET',
+      isArray: true,        
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    },
+    getUserCompanies: {
+      method: 'GET',
+      isArray: true,        
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    },
+    updateUser: {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+          }
+    },
+    createUser: {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+          }
+    },
+    userById: {
+    	  method: 'GET',       
+    	  headers: {
+    	    'Content-Type': 'application/json'
+    	  }
+      }
   };
-  
+
+  var organizationsResource = $resource(organizationsURL, organizationsParameters, actions);
+  var userCompaniesResource = $resource(userCompaniesURL, userCompaniesParameters, actions);
+
   var userList = function(payload) {
     console.log ('userManagementService->payload', payload);	
     var parameters = {
@@ -49,26 +95,48 @@ angular.module('ts5App')
 	return userByCodeResource.authorizeUser().$promise;
   };
 
-
-/*  
-    var sendEmail = function(shouldRecoverUser, emailContent, emailAddress, username) {
-      var URLtoSend = (shouldRecoverUser) ? sendUsernameRecoveryEmail : sendPasswordRecoveryEmail;
-      sendEmailParameters = {
-        email: emailAddress
-      };
-
-      if (!shouldRecoverUser) {
-        sendEmailParameters.username = (!!username) ? username : '';
-      }
-
-      var sendEmailResource = $resource(URLtoSend, sendEmailParameters, actions);
-      return sendEmailResource.sendEmail(emailContent).$promise;
+  var userById = function(id) {
+	console.log ('userManagementService->userById', id);	
+	var parameters = {
+	  id: id
     };
-  
-*/  
-    return {
-    	userList:userList,
-    	userByCode:userByCode
-    };
+
+	var userByIdResource = $resource(userByIdURL, parameters, actions);
+	return userByIdResource.userById().$promise;
+  };
+/*
+  var userById = function(id) {
+    console.log ('userManagementService->userById', id);	
+	//var parameters = {
+	//  id: id
+    //};
+    return userByIdResource.userById({id: id}).$promise;
+  };
+*/
+  var getOrganizations= function() {
+    console.log ('userManagementService->getOrganizations');	
+    return organizationsResource.getOrganizations().$promise;
+  }
+
+  var updateUser = function (person) {
+    console.log ('userManagementService->updateUser->payload', person);	
+    var userUpdateResource = $resource(userUpdateURL, userUpdateParameters, actions);
+    return userUpdateResource.updateUser(person).$promise;
+  };
+	 
+  var createUser = function (person) {
+    console.log ('userManagementService->createUser->payload', person);	
+	var userCreateResource = $resource(userCreateURL, userCreateParameters, actions);
+	return userCreateResource.createUser(person).$promise;
+  };
+		 
+  return {
+    userList:userList,
+    userByCode:userByCode,
+    getOrganizations:getOrganizations,
+    updateUser:updateUser,
+    createUser:createUser,
+    userById:userById
+  };
   
 });
