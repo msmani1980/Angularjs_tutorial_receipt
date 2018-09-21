@@ -37,8 +37,20 @@ angular.module('ts5App')
   $scope.creatingUser = false;
   $scope.displayError = false;
   $scope.organizations = [];
-
+  
+  $scope.allRolesList = [];
+  $scope.adminLevelRolesList=[];
+  $scope.userLevelRolesList=[];
+  $scope.egateLevelRolesList=[];
+  
+  $scope.userRolesList = [];
+  $scope.selectedRoles = [];
+  
   var $this = this;
+
+  $scope.getClassForAccordionArrows = function (accordionFlag) {
+    return (accordionFlag) ? 'fa-chevron-down' : 'fa-chevron-right';
+  };
 
   this.showLoadingModal = function(text) {
     angular.element('#loading').modal('show').find('p').text(text);
@@ -72,6 +84,33 @@ angular.module('ts5App')
   this.submitFormSuccess = function(response) {
     angular.element('#loading').modal('hide');
     angular.element('#update-success').modal('show');
+  };
+
+  $scope.roleSelectionToggled = function () {
+    console.log ('BEFORE ---------------> roleSelectionToggled--->selectedRoles', $scope.selectedRoles);
+    $scope.selectedRoles = [];
+    lodash.forEach($scope.allRolesList, function (role) {
+        if (role.selected) {
+        	$scope.selectedRoles.push(role);
+        }
+    });
+    console.log ('AFTER ---------------> roleSelectionToggled--->selectedRoles', $scope.selectedRoles);
+  };
+
+  $scope.toggleAllCheckboxes = function () {
+	$scope.allCheckboxesSelected = $scope.allCheckboxesSelected?false:true;
+    console.log ('toggleAllCheckboxes->$scope.allCheckboxesSelected', $scope.allCheckboxesSelected);
+    console.log ('BEFORE----->toggleAllCheckboxes--->$scope.allRolesList', $scope.allRolesList);
+	//var roles = [];  
+    angular.forEach($scope.allRolesList, function (role) {
+        role.selected = $scope.allCheckboxesSelected;
+        //roles.push(role);
+    });
+
+    //console.log ('AFTER----->toggleAllCheckboxes--->roles', $scope.allRolesList);
+    //$scope.allRolesList = roles; 
+    console.log ('AFTER----->toggleAllCheckboxes--->$scope.allRolesList', $scope.allRolesList);
+    $scope.roleSelectionToggled();
   };
 
   $scope.submitForm = function(formData) {
@@ -126,7 +165,9 @@ angular.module('ts5App')
   this.getPromises = function() {
     var promises = [
       userManagementService.userById($routeParams.user),
-      userManagementService.getOrganizations()
+      userManagementService.getOrganizations(),
+      userManagementService.getAllRoles(),
+      userManagementService.getUserRoles($routeParams.user)
     ];
 
     return promises;
@@ -134,7 +175,8 @@ angular.module('ts5App')
 
   this.getDependenciesPromises = function() {
     var promises = [
-	  userManagementService.getOrganizations()
+	  userManagementService.getOrganizations(),
+	  userManagementService.getAllRoles()
 	];
 
 	return promises;
@@ -176,22 +218,57 @@ angular.module('ts5App')
   this.initSuccess = function(response) {
 	  
     console.log ('response', response);
+    $this.hideLoadingModal();
+
     var userData = angular.copy(response[0]);
 
-    var organizationList = angular.copy(response[1]);
+    $this.initOrganizations(angular.copy(response[1]));
+    $this.initUserRoles (angular.copy(response[3]));
     
-    angular.forEach(organizationList, function (organztn) {
-        var organization = {id:organztn.id, name:organztn.name};
-        $scope.organizations.push(organization);
-    });
-
-    console.log ('$scope.organizations', $scope.organizations);
-    
-    console.log ('userData', userData);
-    $this.hideLoadingModal();
     $this.initUI(userData);  
   };
 
+  this.initOrganizations = function (organizationList) {
+    angular.forEach(organizationList, function (organztn) {
+	  var organization = {id:organztn.id, name:organztn.name};
+	  $scope.organizations.push(organization);
+	});
+	console.log ('$scope.organizations', $scope.organizations);
+  };
+
+  this.initUserRoles = function (rolesDataList) {
+    var isAdminRole = false;
+    var isUserRole = false
+    var isEgateRole = false
+    angular.forEach(rolesDataList, function (roleData) {
+	  var role = {
+        id:roleData.id,
+		selected:roleData.false,
+		admin:roleData.admin,
+		roleName:roleData.roleName,
+		selected:true
+	  }
+	  if (!roleData.admin) {
+	    if(roleData.roleName.endsWith ('Admin')) {
+		  isAdminRole = true;	
+		  $scope.adminLevelRolesList.push(role);
+		}
+	    if(roleData.roleName.endsWith ('User')) {
+		  isUserRole = true;	
+		  $scope.userLevelRolesList.push(role);
+		}
+	  }else {
+		$scope.egateLevelRolesList.push(role);
+		isEgateRole = true;
+		$scope.rolesListType = 'egate';
+		$scope.allRolesList = $scope.egateLevelRolesList;
+	  }
+
+    });
+    console.log ('$scope.allRolesList', $scope.allRolesList);
+    console.log ('$scope.egateLevelRolesList', $scope.egateLevelRolesList);
+  };
+  
   this.initUI = function(userData) {
     console.log ('initUI--->userData', userData);
     $scope.formData.id = userData.id;
@@ -242,9 +319,12 @@ angular.module('ts5App')
   }
   
   this.init = function() {
+    $scope.allCheckboxesSelected = false;
     $this.getUserData();
     $this.checkFormState();
   };
 
   $this.init(); 
+  
+  
 });

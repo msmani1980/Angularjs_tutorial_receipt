@@ -17,12 +17,14 @@ angular.module('ts5App')
   var userUpdateURL = ENV.apiUrl + '/IdentityAccess/updateUser';
   var userCreateURL = ENV.apiUrl + '/IdentityAccess/createUser';
   var userByIdURL = ENV.apiUrl + '/IdentityAccess/user/:id';
-
+  var allRolesURL = ENV.apiUrl + '/IdentityAccess/allRoles';
+  var userRolesURL = ENV.apiUrl + '/IdentityAccess/portaluserroles/:id';
   
   var organizationsParameters = {};
   var userCompaniesParameters = {};
   var userUpdateParameters = {};
   var userCreateParameters = {};
+  var allRolesParameters = {};
 
   var actions = {
     users: {
@@ -69,11 +71,26 @@ angular.module('ts5App')
     	  headers: {
     	    'Content-Type': 'application/json'
     	  }
-      }
+      },
+      getAllRoles: {
+          method: 'GET',
+          isArray: true,        
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        },
+      getUserRoles: {
+       method: 'GET',   
+       isArray: true,
+       headers: {
+         'Content-Type': 'application/json'
+       }
+    }
   };
 
   var organizationsResource = $resource(organizationsURL, organizationsParameters, actions);
   var userCompaniesResource = $resource(userCompaniesURL, userCompaniesParameters, actions);
+  var allRolesResource = $resource(allRolesURL, allRolesParameters, actions);
 
   var userList = function(payload) {
     console.log ('userManagementService->payload', payload);	
@@ -104,15 +121,17 @@ angular.module('ts5App')
 	var userByIdResource = $resource(userByIdURL, parameters, actions);
 	return userByIdResource.userById().$promise;
   };
-/*
-  var userById = function(id) {
-    console.log ('userManagementService->userById', id);	
-	//var parameters = {
-	//  id: id
-    //};
-    return userByIdResource.userById({id: id}).$promise;
+
+  var getUserRoles = function(id) {
+	console.log ('userManagementService->getUserRoles', id);	
+	var parameters = {
+	  id: id
+	};
+
+    var userRolesResource = $resource(userRolesURL, parameters, actions);
+  return userRolesResource.getUserRoles().$promise;
   };
-*/
+
   var getOrganizations= function() {
     console.log ('userManagementService->getOrganizations');	
     return organizationsResource.getOrganizations().$promise;
@@ -130,13 +149,20 @@ angular.module('ts5App')
 	return userCreateResource.createUser(person).$promise;
   };
 		 
+  var getAllRoles= function() {
+	    console.log ('userManagementService->getAllRoles');	
+	    return allRolesResource.getAllRoles().$promise;
+  }
+
   return {
     userList:userList,
     userByCode:userByCode,
     getOrganizations:getOrganizations,
     updateUser:updateUser,
     createUser:createUser,
-    userById:userById
+    userById:userById,
+    getAllRoles:getAllRoles,
+    getUserRoles:getUserRoles
   };
   
 });

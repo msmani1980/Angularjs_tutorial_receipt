@@ -89,6 +89,39 @@
             </div>
           </fieldset>
         </div>
+        
+       <div class="col-xs-12 col-sm-12">
+       <accordion class="user-roles-accordion">
+          <accordion-group ng-init="userRolesOpen=false" is-open="userRolesOpen">
+            <accordion-heading class="accordion-heading">
+              <i ng-class="getClassForAccordionArrows(userRolesOpen)" class="fa"></i>
+              User Roles
+            </accordion-heading>
+
+            <div clas="form-group">           
+              <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>
+                    <input class="btn btn-default" style="margin-top:0px" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()">
+                    Select All
+                  </th>
+                  <th>Roles</th>
+                </tr>
+              </thead>
+              <tbody ng-repeat="role in allRolesList">
+                <tr class="master-row" id="role-{{ role.id }}">
+                  <td>
+                    <input ng-model="role.selected" type="checkbox" ng-click="roleSelectionToggled()"/>
+                  </td>
+                  <td>{{ role.roleName }}</td>
+                </tr>
+              </tbody>
+              </table>
+            </div>
+          </accordion-group>
+        </accordion>        
+       </div>
        </form>
   </div>
 </div>
