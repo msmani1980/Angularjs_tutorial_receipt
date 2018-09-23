@@ -32,7 +32,23 @@ angular.module('ts5App')
       dragIndexTo = null;
     }
 
+    function updateCategoryOrder() {
+      var index = 1;
+      var payload = [];
+      lodash.filter($scope.categoryList, { parentId: $scope.categoryToMove.parentId }).forEach(function (c) {
+        payload.push({
+          id: c.id,
+          orderBy: index
+        });
+        index = index + 1;
+      });
+
+      return categoryFactory.updateCategoryOrder(payload);
+    }
+
     $scope.dropSuccess = function (event, index) {
+      dragIndexFrom = index;
+
       // Don't allow to drag outside parent group
       if (!dragIndexTo) {
         messageService.display('warning', 'Please drag and drop only inside the same parent', 'Drag to reorder');
@@ -40,22 +56,20 @@ angular.module('ts5App')
         clearDragIndexes();
         return;
       }
-
+      
       // If category index is not changed, skip ordering
       if (dragIndexFrom === dragIndexTo) {
         return;
       }
 
       // Order and persist
-      dragIndexFrom = index;
-
       $scope.categoryToMove = $scope.categoryList[dragIndexFrom];
-      $scope.drppedOnCategory = $scope.categoryList[dragIndexTo];
+      $scope.droppedOnCategory = $scope.categoryList[dragIndexTo];
 
-      $scope.rearrangeCategory($scope.drppedOnCategory, dragIndexTo, dragIndexTo > dragIndexFrom ? 'down' : 'up');
+      $scope.rearrangeCategory($scope.droppedOnCategory, dragIndexTo, dragIndexTo > dragIndexFrom ? 'down' : 'up');
 
       clearDragIndexes();
-      // TODO: save orderBy
+      updateCategoryOrder();
     };
 
     $scope.onDrop = function (event, data, index) {
@@ -320,7 +334,6 @@ angular.module('ts5App')
     };
 
     function nextOrderBy(parentId) {
-      console.log(lodash.filter($scope.categoryList, { parentId: parentId }))
       return lodash.filter($scope.categoryList, { parentId: parentId }).length + 1;
     }
 
