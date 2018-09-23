@@ -56,7 +56,7 @@ angular.module('ts5App')
         clearDragIndexes();
         return;
       }
-      
+
       // If category index is not changed, skip ordering
       if (dragIndexFrom === dragIndexTo) {
         return;
