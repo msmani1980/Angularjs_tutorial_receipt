@@ -20,12 +20,6 @@
       </div>
     </div>
 
-    <div class="alert alert-info" ng-show="inRearrangeMode">
-      <p><span class="fa fa-info-circle"></span> <small>In order
-        to move the highlighted row above or below another row, click
-        <span class="fa fa-angle-double-up"></span> or <span class="fa fa-angle-double-down"> </span> on that row.</small></p>
-    </div>
-
     <div class="panel panel-default collapse no-transition" id="search-collapse">
       <form class="form" ng-submit="search()">
       <div class="panel-body">
@@ -136,9 +130,9 @@
   </div>
   
 
-    <alert ng-show="!categoryList.length" type="info">
-      <span class="fa fa-flag"></span> Your search returned no results.
-    </alert>
+  <alert ng-show="!categoryList.length" type="info">
+    <span class="fa fa-flag"></span> Your search returned no results.
+  </alert>
   
 <div class="table-responsive" ng-show="categoryList.length">
   <table class="table sortable">
@@ -157,13 +151,12 @@
     <tr ng-repeat="category in categoryList"
         ng-class="getClassForRow(category)"
         ng-show="shouldShowCategory(category)"
-        on-drop-success="dropSuccess($event, $index, categoryList)"
-        ui-draggable="true"
+        on-drop-success="dropSuccess($event, $index)"
+        ui-draggable="!isFiltering"
         drag="category"
         drag-channel="A{{category.parentId}}"
         drop-channel="A{{category.parentId}}"
-        ui-on-drop="onDrop($event, $data, $index)"
-        on-drop-failure="dropFailure($event, $data, $index)">
+        ui-on-drop="onDrop($event, $data, $index)">
       <td ng-repeat="n in [] | range: category.levelNum-1" class="category-indent"></td>
       <td class="category-border">
         <button ng-class="getToggleButtonClass(category)"
@@ -212,20 +205,14 @@
       <td>{{ category.itemCount }}</td>
       <td ng-show="isCRUD || isSOCRUD">
         </button>
-        <button class="btn btn-xs btn-default" ng-show="canRearrange(category)" ng-click="rearrangeCategory(category, $index, 'up')">
-          <span class="fa fa-angle-double-up"></span>
-        </button>
-        <button class="btn btn-xs btn-default" ng-show="canRearrange(category)" ng-click="rearrangeCategory(category, $index, 'down')">
-          <span class="fa fa-angle-double-down"></span>
-        </button>
-        <button class="btn btn-xs btn-default" ng-hide="isFiltering || inEditMode || inRearrangeMode" ng-click="enterRearrangeMode(category)">
+        <button class="btn btn-xs btn-default" ng-hide="isFiltering || inEditMode">
         <span class="fa fa-arrows"></span>
         </button>
-        <button class="btn btn-xs btn-primary" ng-hide="inEditMode || inRearrangeMode" ng-click="enterEditMode(category)">
+        <button class="btn btn-xs btn-primary" ng-hide="inEditMode" ng-click="enterEditMode(category)">
           <span class="fa fa-pencil"></span>
         </button>
         <button class="btn btn-xs btn-danger"
-                ng-show="canDeleteCategory(category) && !inEditMode && !inRearrangeMode"
+                ng-show="canDeleteCategory(category) && !inEditMode"
                 ng-click="deleteRecordDialog(category, ['name', 'description'])">
           <span class="fa fa-trash"></span>
         </button>
