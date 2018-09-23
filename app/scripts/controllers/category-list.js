@@ -33,6 +33,7 @@ angular.module('ts5App')
     }
 
     $scope.dropSuccess = function (event, index) {
+      // Don't allow to drag outside parent group
       if (!dragIndexTo) {
         messageService.display('warning', 'Please drag and drop only inside the same parent', 'Drag to reorder');
 
@@ -40,6 +41,12 @@ angular.module('ts5App')
         return;
       }
 
+      // If category index is not changed, skip ordering
+      if (dragIndexFrom === dragIndexTo) {
+        return;
+      }
+
+      // Order and persist
       dragIndexFrom = index;
 
       $scope.categoryToMove = $scope.categoryList[dragIndexFrom];
@@ -48,6 +55,7 @@ angular.module('ts5App')
       $scope.rearrangeCategory($scope.drppedOnCategory, dragIndexTo, dragIndexTo > dragIndexFrom ? 'down' : 'up');
 
       clearDragIndexes();
+      // TODO: save orderBy
     };
 
     $scope.onDrop = function (event, data, index) {
@@ -214,7 +222,8 @@ angular.module('ts5App')
         name: categoryToFormat.name || categoryToFormat.categoryName,
         description: categoryToFormat.description,
         parentCategoryId: categoryToFormat.parentId || null,
-        nextCategoryId: categoryToFormat.nextCategoryId || null
+        nextCategoryId: categoryToFormat.nextCategoryId || null,
+        orderBy: categoryToFormat.orderBy
       };
 
       if (categoryToFormat.id) {
@@ -250,7 +259,8 @@ angular.module('ts5App')
         salesCategoryPath: category.salesCategoryPath,
         countTotalSubcategories: category.countTotalSubcategories,
         levelNum: currentLevel,
-        isOpen: false
+        isOpen: false,
+        orderBy: category.orderBy
       };
       return newCategory;
     }
@@ -311,10 +321,9 @@ angular.module('ts5App')
 
     $scope.createCategory = function() {
       if ($scope.newCategoryForm.$valid) {
-        $scope.newCategory.parentId = ($scope.newCategory.parentCategory) ? $scope.newCategory.parentCategory.id :
-          null;
-        $scope.newCategory.nextCategoryId = ($scope.newCategory.nextCategory) ? $scope.newCategory.nextCategory.id :
-          null;
+        $scope.newCategory.parentId = ($scope.newCategory.parentCategory) ? $scope.newCategory.parentCategory.id : null;
+        $scope.newCategory.nextCategoryId = ($scope.newCategory.nextCategory) ? $scope.newCategory.nextCategory.id : null;
+
         var newCategory = formatCategoryPayloadForAPI($scope.newCategory);
         showLoadingModal('Creating Category');
         categoryFactory.createCategory(newCategory).then(init, showErrors);
@@ -327,8 +336,13 @@ angular.module('ts5App')
 
       var newParentId = (angular.isDefined($scope.categoryToEdit.parentCategory) && $scope.categoryToEdit.parentCategory !==
         null) ? $scope.categoryToEdit.parentCategory.id : null;
+
+      // Parent changed, set orderBy to the last position of that parent group
       if (newParentId !== category.parentId) {
         category.nextCategoryId = null;
+
+        var nextOrderBy = lodash.filter($scope.categoryList, { parentId: newParentId }).length + 1;
+        category.orderBy = nextOrderBy;
       }
 
       category.parentId = newParentId;
