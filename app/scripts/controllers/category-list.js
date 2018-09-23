@@ -319,14 +319,67 @@ angular.module('ts5App')
       categoryFactory.deleteCategory(category.id).then(init, showErrors);
     };
 
+    function nextOrderBy(parentId) {
+      console.log(lodash.filter($scope.categoryList, { parentId: parentId }))
+      return lodash.filter($scope.categoryList, { parentId: parentId }).length + 1;
+    }
+
+    function incrementOrderByForCategoriesAfterNewlyCreated() {
+      var payload = [];
+      $scope.categoriesToIncrementOrderBy.forEach(function (c) {
+        payload.push({
+          id: c.id,
+          orderBy: c.orderBy + 1
+        });
+      });
+
+      return categoryFactory.updateCategoryOrder(payload).then(init, showErrors);
+    }
+
+    function getCategoryById(id) {
+      return lodash.find($scope.categoryList, { id: id });
+    }
+
     $scope.createCategory = function() {
       if ($scope.newCategoryForm.$valid) {
         $scope.newCategory.parentId = ($scope.newCategory.parentCategory) ? $scope.newCategory.parentCategory.id : null;
         $scope.newCategory.nextCategoryId = ($scope.newCategory.nextCategory) ? $scope.newCategory.nextCategory.id : null;
 
         var newCategory = formatCategoryPayloadForAPI($scope.newCategory);
+
+        $scope.categoriesToIncrementOrderBy = [];
+
+        // Place Before is set, put before selected category and register all following to increment orderBy
+        if ($scope.newCategory.nextCategoryId) {
+          var categoryPlaceBefore = getCategoryById($scope.newCategory.nextCategoryId);
+          newCategory.orderBy = categoryPlaceBefore.orderBy;
+
+          // Find following categories for which orderBy needs to be incremented
+          var found = false;
+          $scope.categoryList.forEach(function (c) {
+            if (c.id === categoryPlaceBefore.id) {
+              found = true;
+            }
+
+            if (found && c.parentId === $scope.newCategory.parentId) {
+              $scope.categoriesToIncrementOrderBy.push(c);
+            }
+          });
+        }
+        // Put to parent category end
+        else {
+          newCategory.orderBy = nextOrderBy($scope.newCategory.parentId);
+        }
+
         showLoadingModal('Creating Category');
-        categoryFactory.createCategory(newCategory).then(init, showErrors);
+
+        categoryFactory.createCategory(newCategory).then(function() {
+          if ($scope.categoriesToIncrementOrderBy.length > 0) {
+            return incrementOrderByForCategoriesAfterNewlyCreated();
+          } else {
+            init();
+          }
+        }, showErrors);
       }
     };
 
@@ -340,9 +393,7 @@ angular.module('ts5App')
       // Parent changed, set orderBy to the last position of that parent group
       if (newParentId !== category.parentId) {
         category.nextCategoryId = null;
-
-        var nextOrderBy = lodash.filter($scope.categoryList, { parentId: newParentId }).length + 1;
-        category.orderBy = nextOrderBy;
+        category.orderBy = nextOrderBy(newParentId);
       }
 
       category.parentId = newParentId;
