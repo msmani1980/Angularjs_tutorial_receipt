@@ -24,6 +24,17 @@ angular.module('ts5App')
       angular.element('#loading').modal('hide');
     }
 
+    $scope.dropSuccess = function (a, b, c) {
+      console.log('drop success')
+    }
+    $scope.dropFailure = function (a, b, c) {
+      console.log('drop fail')
+    }
+
+    $scope.onDrop = function (a, b, c) {
+      console.log('on drop')
+    }
+
     function showErrors(dataFromAPI) {
       hideLoadingModal();
       $scope.displayError = true;

@@ -141,7 +141,7 @@
     </alert>
   
 <div class="table-responsive" ng-show="categoryList.length">
-  <table class="table">
+  <table class="table sortable">
     <thead>
     <tr>
       <th colspan="{{ numCategoryLevels }}"></th>
@@ -156,7 +156,14 @@
     <tbody>
     <tr ng-repeat="category in categoryList"
         ng-class="getClassForRow(category)"
-        ng-show="shouldShowCategory(category)">
+        ng-show="shouldShowCategory(category)"
+        on-drop-success="dropSuccess($event, $index, categoryList)"
+        ui-draggable="true"
+        drag="category"
+        drag-channel="A{{category.parentId}}"
+        drop-channel="A{{category.parentId}}"
+        ui-on-drop="onDrop($event, $data, $index)"
+        on-drop-failure="dropFailure($event, $data, $index)">
       <td ng-repeat="n in [] | range: category.levelNum-1" class="category-indent"></td>
       <td class="category-border">
         <button ng-class="getToggleButtonClass(category)"
