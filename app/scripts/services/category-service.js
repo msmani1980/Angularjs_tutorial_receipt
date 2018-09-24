@@ -9,10 +9,15 @@
  */
 angular.module('ts5App')
   .service('categoryService', function ($resource, ENV) {
-
     var requestURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/sales-categories/:id';
+    var orderRequestURL = ENV.apiUrl + '/rsvr/api/companies/:companyId/sales-categories/order';
+
     var requestParameters = {
       id: '@id',
+      companyId: '@companyId'
+    };
+
+    var orderRequestParameters = {
       companyId: '@companyId'
     };
 
@@ -24,6 +29,9 @@ angular.module('ts5App')
         method: 'PUT'
       },
       createCategory: {
+        method: 'POST'
+      },
+      orderCategories: {
         method: 'POST'
       },
       getCategoryList: {
@@ -38,6 +46,7 @@ angular.module('ts5App')
     };
 
     var requestResource = $resource(requestURL, requestParameters, actions);
+    var orderRequestResource = $resource(orderRequestURL, orderRequestParameters, actions);
 
     var getCategory = function (payload) {
       requestParameters.id = payload.id;
@@ -49,6 +58,12 @@ angular.module('ts5App')
       requestParameters.id = id;
       requestParameters.companyId = companyId;
       return requestResource.updateCategory(payload).$promise;
+    };
+
+    var updateCategoryOrder = function (companyId, payload) {
+      orderRequestParameters.companyId = companyId;
+
+      return orderRequestResource.updateCategory(payload).$promise;
     };
 
     var createCategory = function (companyId, payload) {
@@ -72,6 +87,7 @@ angular.module('ts5App')
     return {
       getCategory: getCategory,
       updateCategory: updateCategory,
+      updateCategoryOrder: updateCategoryOrder,
       createCategory: createCategory,
       getCategoryList: getCategoryList,
       deleteCategory: deleteCategory

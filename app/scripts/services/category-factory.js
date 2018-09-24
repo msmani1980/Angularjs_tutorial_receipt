@@ -27,6 +27,10 @@ angular.module('ts5App')
       return categoryService.updateCategory(id, getCompanyId(), payload);
     };
 
+    var updateCategoryOrder = function (payload) {
+      return categoryService.updateCategoryOrder(getCompanyId(), payload);
+    };
+
     var createCategory = function (payload) {
       return categoryService.createCategory(getCompanyId(), payload);
     };
@@ -38,6 +42,7 @@ angular.module('ts5App')
 
     return {
       updateCategory: updateCategory,
+      updateCategoryOrder: updateCategoryOrder,
       createCategory: createCategory,
       getCategory: getCategory,
       getCategoryList: getCategoryList,
