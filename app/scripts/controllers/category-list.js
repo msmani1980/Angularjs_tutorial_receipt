@@ -9,12 +9,15 @@
  */
 angular.module('ts5App')
   .controller('CategoryListCtrl', function($scope, $location, categoryFactory, dateUtility, payloadUtility,
-    identityAccessFactory, lodash, accessService) {
+    identityAccessFactory, lodash, accessService, messageService) {
 
     $scope.viewName = 'Category';
     $scope.search = {};
     $scope.categoryList = [];
     $scope.categoryToDelete = {};
+
+    var dragIndexFrom;
+    var dragIndexTo;
 
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -23,6 +26,55 @@ angular.module('ts5App')
     function hideLoadingModal() {
       angular.element('#loading').modal('hide');
     }
+
+    function clearDragIndexes() {
+      dragIndexFrom = null;
+      dragIndexTo = null;
+    }
+
+    function updateCategoryOrder() {
+      var index = 1;
+      var payload = [];
+      lodash.filter($scope.categoryList, { parentId: $scope.categoryToMove.parentId }).forEach(function (c) {
+        payload.push({
+          id: c.id,
+          orderBy: index
+        });
+        index = index + 1;
+      });
+
+      return categoryFactory.updateCategoryOrder(payload);
+    }
+
+    $scope.dropSuccess = function (event, index) {
+      dragIndexFrom = index;
+
+      // Don't allow to drag outside parent group
+      if (!dragIndexTo) {
+        messageService.display('warning', 'Please drag and drop only inside the same parent', 'Drag to reorder');
+
+        clearDragIndexes();
+        return;
+      }
+
+      // If category index is not changed, skip ordering
+      if (dragIndexFrom === dragIndexTo) {
+        return;
+      }
+
+      // Order and persist
+      $scope.categoryToMove = $scope.categoryList[dragIndexFrom];
+      $scope.droppedOnCategory = $scope.categoryList[dragIndexTo];
+
+      $scope.rearrangeCategory($scope.droppedOnCategory, dragIndexTo, dragIndexTo > dragIndexFrom ? 'down' : 'up');
+
+      clearDragIndexes();
+      updateCategoryOrder();
+    };
+
+    $scope.onDrop = function (event, data, index) {
+      dragIndexTo = index;
+    };
 
     function showErrors(dataFromAPI) {
       hideLoadingModal();
@@ -69,13 +121,8 @@ angular.module('ts5App')
     };
 
     $scope.getClassForRow = function(category) {
-      if ($scope.inRearrangeMode && category.id === $scope.categoryToMove.id) {
-        return 'bg-info';
-      }
-
       var styleLevel = (parseInt(category.levelNum) > 10) ? '10' : category.levelNum;
       return 'categoryLevel' + styleLevel;
-
     };
 
     $scope.getToggleButtonClass = function(category) {
@@ -116,14 +163,7 @@ angular.module('ts5App')
       return containsNoChildren && containsNoItems;
     };
 
-    $scope.enterRearrangeMode = function(category) {
-      $scope.cancelEditMode();
-      $scope.inRearrangeMode = true;
-      $scope.categoryToMove = angular.copy(category);
-    };
-
     $scope.enterEditMode = function(category) {
-      $scope.cancelRearrangeMode();
       $scope.inEditMode = true;
 
       $scope.filteredCategoryList = lodash.filter($scope.flatCategoryList, function(newCategory) {
@@ -139,8 +179,6 @@ angular.module('ts5App')
     $scope.canEditOrRearrangeCategory = function(category) {
       if ($scope.inEditMode) {
         return category.id === $scope.categoryToEdit.id;
-      } else if ($scope.inRearrangeMode) {
-        return category.id === $scope.categoryToMove.id;
       }
 
       return false;
@@ -163,23 +201,6 @@ angular.module('ts5App')
       }
     }
 
-    function getNextCategoryIndex(startIndex) {
-      var currCategory = $scope.categoryList[startIndex];
-      for (var i = startIndex + 1; i < $scope.categoryList.length; i++) {
-        var nextCategory = $scope.categoryList[i];
-        if (nextCategory.levelNum === currCategory.levelNum && nextCategory.parentId === currCategory.parentId) {
-          return i;
-        }
-      }
-
-      return -1;
-    }
-
-    function setNewNextId(newIndex) {
-      var nextIndex = getNextCategoryIndex(newIndex);
-      $scope.categoryList[newIndex].nextCategoryId = (nextIndex >= 0) ? $scope.categoryList[nextIndex].id : null;
-    }
-
     $scope.rearrangeCategory = function(category, index, direction) {
       var destinationIndex = (direction === 'up') ? index : (index + category.totalChildCount + 1);
       var categoryToMoveIndex = lodash.findIndex($scope.categoryList, {
@@ -188,20 +209,6 @@ angular.module('ts5App')
       destinationIndex = (destinationIndex > categoryToMoveIndex) ? (destinationIndex - $scope.categoryToMove.totalChildCount -
         1) : destinationIndex;
       swapCategoryPositions(categoryToMoveIndex, $scope.categoryToMove.totalChildCount, destinationIndex);
-      setNewNextId(destinationIndex);
-    };
-
-    $scope.isCategorySelectedToRearrange = function(category) {
-      return $scope.inRearrangeMode && category.id === $scope.categoryToMove.id;
-    };
-
-    $scope.canRearrange = function(category) {
-      if ($scope.inRearrangeMode) {
-        return category.levelNum === $scope.categoryToMove.levelNum && category.id !== $scope.categoryToMove.id &&
-          category.parentId === $scope.categoryToMove.parentId;
-      }
-
-      return false;
     };
 
     function formatPayloadForSearch() {
@@ -218,6 +225,9 @@ angular.module('ts5App')
         payloadForSearch.parentId = $scope.filter.parentCategory.id;
       }
 
+      payloadForSearch.sortBy = 'ASC';
+      payloadForSearch.sortOn = 'categoryName';
+
       return payloadForSearch;
     }
 
@@ -226,7 +236,8 @@ angular.module('ts5App')
         name: categoryToFormat.name || categoryToFormat.categoryName,
         description: categoryToFormat.description,
         parentCategoryId: categoryToFormat.parentId || null,
-        nextCategoryId: categoryToFormat.nextCategoryId || null
+        nextCategoryId: categoryToFormat.nextCategoryId || null,
+        orderBy: categoryToFormat.orderBy
       };
 
       if (categoryToFormat.id) {
@@ -262,7 +273,8 @@ angular.module('ts5App')
         salesCategoryPath: category.salesCategoryPath,
         countTotalSubcategories: category.countTotalSubcategories,
         levelNum: currentLevel,
-        isOpen: false
+        isOpen: false,
+        orderBy: category.orderBy
       };
       return newCategory;
     }
@@ -283,28 +295,8 @@ angular.module('ts5App')
       return maxLevelsCount;
     }
 
-    function sortCategories(categoryList) {
-      var bottomCategory = lodash.findWhere(categoryList, {
-        nextCategoryId: null
-      });
-      var newCategoryList = (bottomCategory) ? [bottomCategory] : [];
-
-      for (var i = 0; i < newCategoryList.length; i++) {
-        var currCategory = newCategoryList[i];
-        currCategory.children = sortCategories(angular.copy(currCategory.children));
-        var nextCategory = lodash.findWhere(categoryList, {
-          nextCategoryId: currCategory.id
-        });
-        if (nextCategory) {
-          newCategoryList.push(nextCategory);
-        }
-      }
-
-      return newCategoryList.reverse();
-    }
-
     function attachCategoryListToScope(categoryListFromAPI) {
-      var categoryList = sortCategories(angular.copy(categoryListFromAPI.salesCategories));
+      var categoryList = angular.copy(categoryListFromAPI.salesCategories);
       var flattenedCategoryList = [];
       $scope.numCategoryLevels = getMaxLevelsAndFlattenCategoriesModel(categoryList, flattenedCategoryList, 1) + 1;
       $scope.nestedCategoryList = categoryList;
@@ -318,7 +310,6 @@ angular.module('ts5App')
       $scope.filter = {};
       $scope.categoryToEdit = false;
       $scope.inEditMode = false;
-      $scope.inRearrangeMode = false;
       $scope.categoryToMove = {};
       $scope.displayError = false;
       $scope.isFiltering = false;
@@ -331,6 +322,8 @@ angular.module('ts5App')
       showLoadingModal('Loading Data');
       categoryFactory.getCategoryList({
         expand: true,
+        sortBy: 'ASC',
+        sortOn: 'orderBy',
         parentId: 0
       }).then(attachCategoryListToScope);
     }
@@ -340,15 +333,67 @@ angular.module('ts5App')
       categoryFactory.deleteCategory(category.id).then(init, showErrors);
     };
 
+    function nextOrderBy(parentId) {
+      return lodash.filter($scope.categoryList, { parentId: parentId }).length + 1;
+    }
+
+    function incrementOrderByForCategoriesAfterNewlyCreated() {
+      var payload = [];
+      $scope.categoriesToIncrementOrderBy.forEach(function (c) {
+        payload.push({
+          id: c.id,
+          orderBy: c.orderBy + 1
+        });
+      });
+
+      return categoryFactory.updateCategoryOrder(payload).then(init, showErrors);
+    }
+
+    function getCategoryById(id) {
+      return lodash.find($scope.categoryList, { id: id });
+    }
+
     $scope.createCategory = function() {
       if ($scope.newCategoryForm.$valid) {
-        $scope.newCategory.parentId = ($scope.newCategory.parentCategory) ? $scope.newCategory.parentCategory.id :
-          null;
-        $scope.newCategory.nextCategoryId = ($scope.newCategory.nextCategory) ? $scope.newCategory.nextCategory.id :
-          null;
+        $scope.newCategory.parentId = ($scope.newCategory.parentCategory) ? $scope.newCategory.parentCategory.id : null;
+        $scope.newCategory.nextCategoryId = ($scope.newCategory.nextCategory) ? $scope.newCategory.nextCategory.id : null;
+
         var newCategory = formatCategoryPayloadForAPI($scope.newCategory);
+
+        $scope.categoriesToIncrementOrderBy = [];
+
+        // Place Before is set, put before selected category and register all following to increment orderBy
+        if ($scope.newCategory.nextCategoryId) {
+          var categoryPlaceBefore = getCategoryById($scope.newCategory.nextCategoryId);
+          newCategory.orderBy = categoryPlaceBefore.orderBy;
+
+          // Find following categories for which orderBy needs to be incremented
+          var found = false;
+          $scope.categoryList.forEach(function (c) {
+            if (c.id === categoryPlaceBefore.id) {
+              found = true;
+            }
+
+            if (found && c.parentId === $scope.newCategory.parentId) {
+              $scope.categoriesToIncrementOrderBy.push(c);
+            }
+          });
+        }
+
+        // Put to parent category end
+        else {
+          newCategory.orderBy = nextOrderBy($scope.newCategory.parentId);
+        }
+
         showLoadingModal('Creating Category');
-        categoryFactory.createCategory(newCategory).then(init, showErrors);
+
+        categoryFactory.createCategory(newCategory).then(function() {
+          if ($scope.categoriesToIncrementOrderBy.length > 0) {
+            return incrementOrderByForCategoriesAfterNewlyCreated();
+          } else {
+            init();
+          }
+        }, showErrors);
       }
     };
 
@@ -358,8 +403,11 @@ angular.module('ts5App')
 
       var newParentId = (angular.isDefined($scope.categoryToEdit.parentCategory) && $scope.categoryToEdit.parentCategory !==
         null) ? $scope.categoryToEdit.parentCategory.id : null;
+
+      // Parent changed, set orderBy to the last position of that parent group
       if (newParentId !== category.parentId) {
         category.nextCategoryId = null;
+        category.orderBy = nextOrderBy(newParentId);
       }
 
       category.parentId = newParentId;
@@ -386,14 +434,6 @@ angular.module('ts5App')
       $scope.categoryToEdit = null;
       $scope.inEditMode = false;
       $scope.filteredCategoryList = null;
-    };
-
-    $scope.cancelRearrangeMode = function() {
-      if ($scope.inRearrangeMode) {
-        $scope.categoryToMove = {};
-        $scope.inRearrangeMode = false;
-        init();
-      }
     };
 
     $scope.cancelChange = function() {
@@ -456,9 +496,20 @@ angular.module('ts5App')
     $scope.search = function() {
       showLoadingModal('Searching');
 
-      $scope.isFiltering = true;
       var payload = formatPayloadForSearch();
-      categoryFactory.getCategoryList(payload).then(attachFilteredCategoryListToScope, showErrors);
+
+      if (payload.name || payload.description || payload.parentId) {
+        $scope.isFiltering = true;
+        categoryFactory.getCategoryList(payload).then(attachFilteredCategoryListToScope, showErrors);
+      } else {
+        $scope.isFiltering = false;
+        categoryFactory.getCategoryList({
+          expand: true,
+          sortBy: 'ASC',
+          sortOn: 'orderBy',
+          parentId: 0
+        }).then(attachCategoryListToScope);
+      }
     };
 
     $scope.clearSearch = function() {
