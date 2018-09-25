@@ -379,7 +379,7 @@ angular.module('ts5App')
             }
           });
         }
-        
+
         // Put to parent category end
         else {
           newCategory.orderBy = nextOrderBy($scope.newCategory.parentId);
