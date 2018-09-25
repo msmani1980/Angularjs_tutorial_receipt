@@ -45,6 +45,8 @@ angular.module('ts5App')
     $scope.selectedRoles = [];
     $scope.userPrivilegeList = [{ id:1, name:'All' }, { id:2, name:'User Level' }, { id:3, name:'Admin Level' }, { id:4, name:'eGate Level' }];
     $scope.userPrivilege = { id:1, name:'All' };
+    $scope.selectedCompanies = [];
+    $scope.allActiveCompaniesList = [];
     var $this = this;
 
     $scope.getClassForAccordionArrows = function (accordionFlag) {
@@ -52,7 +54,7 @@ angular.module('ts5App')
     };
 
     $scope.changeUserPrivilege = function (id) {
-      $scope.allCheckboxesSelected = false;
+      $scope.allRoleCheckboxesSelected = false;
       $scope.userPrivilege.id =  id;
 
       if (id === 1) {
@@ -126,7 +128,12 @@ angular.module('ts5App')
     };
 
     this.createSubmitFormSuccess = function(response) {
-      userManagementService.updateUserRoles($scope.selectedRoles, response.id).then($this.submitFormSuccess, $this.errorHandler);
+      var promises = [
+        userManagementService.updateUserRoles($scope.selectedRoles, response.id),
+        userManagementService.updateUserCompanies($scope.selectedCompanies, response.id)
+      ];
+
+      $q.all(promises).then($this.submitFormSuccess, $this.errorHandler);
     };
 
     $scope.roleSelectionToggled = function () {
@@ -138,13 +145,31 @@ angular.module('ts5App')
       });
     };
 
-    $scope.toggleAllCheckboxes = function () {
-      $scope.allCheckboxesSelected = $scope.allCheckboxesSelected ? false : true;
+    $scope.companySelectionToggled = function () {
+      $scope.selectedCompanies = [];
+      lodash.forEach($scope.allActiveCompaniesList, function (company) {
+        if (company.selected) {
+          $scope.selectedCompanies.push(company.id);
+        }
+      });
+    };
+
+    $scope.toggleAllRoleCheckboxes = function () {
+      $scope.allRoleCheckboxesSelected = $scope.allRoleCheckboxesSelected ? false : true;
       angular.forEach($scope.allRolesList, function (role) {
-        role.selected = $scope.allCheckboxesSelected;
+        role.selected = $scope.allRoleCheckboxesSelected;
       });
 
       $scope.roleSelectionToggled();
+    };
+
+    $scope.toggleAllCompanyCheckboxes = function () {
+      $scope.allCompanyCheckboxesSelected = $scope.allCompanyCheckboxesSelected ? false : true;
+      angular.forEach($scope.allActiveCompaniesList, function (company) {
+        company.selected = $scope.allCompanyCheckboxesSelected;
+      });
+
+      $scope.companySelectionToggled();
     };
 
     $scope.submitForm = function(formData) {
@@ -167,7 +192,8 @@ angular.module('ts5App')
         if ($scope.editingUser) {
           var promises = [
             userManagementService.updateUser(person),
-            userManagementService.updateUserRoles($scope.selectedRoles, person.id)
+            userManagementService.updateUserRoles($scope.selectedRoles, person.id),
+            userManagementService.updateUserCompanies($scope.selectedCompanies, person.id)
           ];
           $q.all(promises).then($this.submitFormSuccess, $this.errorHandler);
         }
@@ -197,7 +223,9 @@ angular.module('ts5App')
         userManagementService.userById($routeParams.user),
         userManagementService.getOrganizations(),
         userManagementService.getAllRoles(),
-        userManagementService.getUserRoles($routeParams.user)
+        userManagementService.getUserRoles($routeParams.user),
+        userManagementService.getUserCompanies($routeParams.user),
+        userManagementService.getAllActiveCompanies()
       ];
 
       return promises;
@@ -206,7 +234,8 @@ angular.module('ts5App')
     this.getDependenciesPromises = function() {
       var promises = [
         userManagementService.getOrganizations(),
-        userManagementService.getAllRoles()
+        userManagementService.getAllRoles(),
+        userManagementService.getAllActiveCompanies()
       ];
 
       return promises;
@@ -239,15 +268,20 @@ angular.module('ts5App')
       $scope.allRolesList = $scope.adminAndUserLevelRolesList;
       $scope.setUserPrivilege(1);
 
+      $this.initActiveCompanies(angular.copy(response[2]));
+      
       $this.hideLoadingModal();
     };
 
     this.initSuccess = function(response) {
+      console.log('response', response);
       $this.hideLoadingModal();
       var userData = angular.copy(response[0]);
       $this.initOrganizations(angular.copy(response[1]));
       $this.initRoles(angular.copy(response[2]));
       $this.initUserRoles(angular.copy(response[3]));
+      $this.initActiveCompanies(angular.copy(response[5]));
+      setSelectedCompanies(angular.copy(response[4]));
       $this.initUI(userData);  
     };
 
@@ -335,6 +369,29 @@ angular.module('ts5App')
       });
     }
 
+    this.initActiveCompanies = function (cmpList) {
+      angular.forEach(cmpList, function (company) {
+        var cpm = {
+          id: company.id,
+          companyCode: company.companyCode,
+          companyName: company.companyName,
+          selected: false
+        };
+
+        $scope.allActiveCompaniesList.push(cpm);
+      });
+    };
+
+    function setSelectedCompanies (userCompanies) {
+      angular.forEach(userCompanies, function (userCmp) {
+        angular.forEach($scope.allActiveCompaniesList, function (cmp) {
+          if (cmp.id === userCmp.company.id) {
+            cmp.selected = true;
+          }
+        });
+      });
+    }
+
     this.initUI = function(userData) {
       $scope.formData.id = userData.id;
       $scope.formData.userName = userData.userName;
@@ -374,7 +431,8 @@ angular.module('ts5App')
     }
   
     this.init = function() {
-      $scope.allCheckboxesSelected = false;
+      $scope.allRoleCheckboxesSelected = false;
+      $scope.allCompanyCheckboxesSelected = false;
       $this.getUserData();
       $this.checkFormState();
     };
