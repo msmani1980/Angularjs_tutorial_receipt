@@ -165,7 +165,7 @@
           <span ng-class="getToggleIconClass(category)"></span>
         </button>
       </td>
-      <td colspan="{{ numCategoryLevels - category.levelNum }}" ng-show="{{ numCategoryLevels !== category.levelNum }}">
+      <td colspan="{{ numCategoryLevels - category.levelNum }}" ng-show="numCategoryLevels !== category.levelNum">
         <span class="badge" ng-show="category.childCategoryCount > 0">{{ category.childCategoryCount }}</span>
       </td>
       <td>
