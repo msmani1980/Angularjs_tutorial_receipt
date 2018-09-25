@@ -1,0 +1,145 @@
+<div class="container module-container">
+
+  <div class="top-header">
+    <div class="container">
+      <div class="edit-controls">
+        <div class="row">
+          <div class="col-xs-6">
+            <h2 class="view-name"> {{ viewName }} </h2>
+          </div>
+          <div class="col-xs-6 text-right">
+            <fieldset>
+              <button class="btn btn-default" ng-click="leaveView('user-list')"  ng-hide="viewOnly">
+                <span class="fa fa-remove" aria-hidden="true"></span>
+                <span class="hidden-xs">Cancel</span>
+              </button>
+              <button class="btn btn-primary" ng-click="submitForm(formData)" ng-hide="viewOnly">
+                <span class="fa fa-check-square-o" aria-hidden="true"></span>
+                <span class="hidden-xs">{{ buttonText }}</span>
+              </button>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <p>All required fields are marked with a *.</p>
+    </div>
+
+  </div>
+  <!--/TopHeader -->
+
+  <div class="create-form-container">
+
+    <error-dialog form-object="form" error-response="errorResponse" display="displayError">
+    </error-dialog>
+
+    <form name="form" class="form edit-form create-user-form">
+
+      <h3 id="user-information">User Information</h3>
+      <div class="row">
+        <div class="col-xs-12 col-sm-6">
+          <fieldset ng-disabled="viewOnly">
+
+            <input-text label="User Name" name="userName" required="true" pattern="regexp.sentence"
+                        placeholder="User Name" min-length="1" max-length="40"></input-text>
+
+            <input-text label="Email" name="email" required="true" pattern="regexp.sentence"
+                        placeholder="Email" min-length="1" max-length="40"></input-text>
+            
+            <div class="form-group">
+            <label>Organization *</label>
+            <ui-select name="organization" ng-model="formData.organization" theme="bootstrap" required ng-disabled="viewOnly">
+              <ui-select-match placeholder="Start typing to find an organization">{{ $select.selected.name }}</ui-select-match>
+              <ui-select-choices repeat="organization in organizations | filter: $select.search | orderBy:'name'">
+                <div ng-bind-html="organization.name | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+            </div>
+            
+            <div class="form-group">
+              <input type="checkbox"
+                     ng-model="formData.enabled"
+                     name="enabled">
+              <label>User Enabled</label>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="col-xs-12 col-sm-6">
+          <fieldset ng-disabled="viewOnly">
+            <input-text label="User First Name" name="firstName" required="true" pattern="regexp.sentence"
+                        placeholder="User First Name" min-length="1" max-length="40"></input-text>
+            <input-text label="User Last Name" name="lastName" required="true" pattern="regexp.sentence"
+                        placeholder="User Last Name" min-length="1" max-length="40"></input-text>
+            
+            <div class="form-group">
+              <date-picker-field
+                name="userLoginExpired"
+                class="form-group"
+                form="formData"
+                ng-model="formData.expiredDate"
+                label="User Login Expired">
+              </date-picker-field>
+            </div>            
+                        
+            <div class="form-group">
+              <input type="checkbox"
+                     ng-model="formData.allowAllStations"
+                     name="enabled">
+              <label>Allow All Stations</label>
+            </div>
+          </fieldset>
+        </div>
+        
+       <div class="col-xs-12 col-sm-12">
+       <accordion class="user-roles-accordion">
+          <accordion-group ng-init="userRolesOpen=false" is-open="userRolesOpen">
+            <accordion-heading class="accordion-heading">
+              <i ng-class="getClassForAccordionArrows(userRolesOpen)" class="fa"></i>
+              User Roles
+            </accordion-heading>
+
+           <div class="form-group">
+              <label>Privilege</label>
+              <ui-select name="userPrivilegeName" ng-model="userPrivilege" theme="bootstrap" on-select="changeUserPrivilege(userPrivilege.id)">
+                <ui-select-match placeholder="Start typing to find User Privilege">{{ $select.selected.name }}</ui-select-match>
+                <ui-select-choices repeat="privilege in userPrivilegeList | filter: $select.search | orderBy:'id'">
+                  <div ng-bind-html="privilege.name | highlight: $select.search"></div>
+                </ui-select-choices>
+            </ui-select>
+              
+            </div>            
+
+            <div clas="form-group">           
+              <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>
+                    <input class="btn btn-default" style="margin-top:0px" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()">
+                    Select All
+                  </th>
+                  <th>Roles</th>
+                </tr>
+              </thead>
+              <tbody ng-repeat="role in allRolesList">
+                <tr class="master-row" id="role-{{ role.id }}">
+                  <td>
+                    <input ng-model="role.selected" type="checkbox" ng-click="roleSelectionToggled()"/>
+                  </td>
+                  <td>{{ role.roleName }}</td>
+                </tr>
+              </tbody>
+              </table>
+            </div>
+          </accordion-group>
+        </accordion>        
+       </div>
+       </form>
+  </div>
+</div>
+
+</div>
+<!-- /Container -->
+<leave-view-modal></leave-view-modal>
+<form-success-modal list-path="user-list" create-path="user-create"></form-success-modal>
+<form-update-modal list-path="user-list"></form-update-modal>
+<dynamic-left-nav title="User Management"></dynamic-left-nav>

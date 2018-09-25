@@ -1,0 +1,66 @@
+<div class="module-container">
+  <div class="list-controls">
+    <h1>{{viewName}}</h1>
+
+    <div class="row">
+      <div class="col-xs-6">
+        <a href="/#/user-create" ng-show="isCRUD" class="btn btn-primary"><span class="fa fa-plus"></span> Create User</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <!-- table infinite-scroll="loadCompanies()" class="table table-bordered table-hover"-->
+    <table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <th>User Name</th>
+      <th>Email</th>
+      <th>Company</th>
+      <th>Enabled</th>
+      <th>User Login Expired</th>
+      <th>Updated Date/Time</th>
+      <th>Updated By</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- tr ng-repeat="company in companyList"-->
+    <tr ng-repeat="user in userList">
+      <td>{{ user.userName }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.companyName }}</td>
+      <td>{{ user.enabled }}</td>
+      <td>{{ getExpiredDate(user) }}</td>
+      <td>{{ getUpdatedOn(user) }}</td>
+      <td>{{ user.updatedBy }}</td>
+      <!-- td>
+        <button type="button" class="btn btn-info btn-xs" aria-label="View Company"
+                ng-click="viewCompany(company)">
+          <i class="fa fa-file" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-xs" ng-show="isCRUD" aria-label="Edit Company"
+                ng-click="editCompany(company)">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+      </td-->
+      <td>
+        <button type="button" class="btn btn-info btn-xs" aria-label="View User"
+                ng-click="viewUser(user)">
+          <i class="fa fa-file" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="btn btn-primary btn-xs" ng-show="isCRUD" aria-label="Edit User"
+                ng-click="editUser(user)">
+          <i class="fa fa-pencil" aria-hidden="true"></i>
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+    </div>
+  <!-- p ng-if="companyList.length > 0" class="record-count small text-center">Showing {{companyList.length}} records</p-->
+  <p ng-if="userList.length > 0" class="record-count small text-center">Showing {{userList.length}} records</p>
+  <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+</div>
+
+<dynamic-left-nav></dynamic-left-nav>
