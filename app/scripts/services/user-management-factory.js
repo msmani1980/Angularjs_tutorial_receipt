@@ -7,21 +7,20 @@
  * # userManagementFactory
  * Factory in the ts5App.
  */
-angular.module('ts5App')
-  .factory('userManagementFactory', function (userManagementService, companyService) {
+angular.module('ts5App').factory('userManagementFactory', function (userManagementService) {
 
-	function getUser (id) {
-	  return userManagementService.getUser(id);
-	};
+  function getUser (id) {
+    return userManagementService.getUser(id);
+  }
 
-    function getUserList (payload) {
-	  console.log ('factory -> getUserList', payload)  
-	  return userManagementService.userList(payload);
-    };
+  function getUserList (payload) { 
+    return userManagementService.userList(payload);
+  }
 
-	return {
-	  getUser: getUser,
-	  getUserList: getUserList
-	};
+  return {
+    getUser: getUser,
+    getUserList: getUserList
+  };
 
 });
+
