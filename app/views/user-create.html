@@ -100,7 +100,7 @@
 
            <div class="form-group">
               <label>Privilege</label>
-              <ui-select name="userPrivilegeName" ng-model="userPrivilege" theme="bootstrap" on-select="changeUserPrivilege(userPrivilege.id)">
+              <ui-select name="userPrivilegeName" ng-model="userPrivilege" theme="bootstrap" on-select="changeUserPrivilege(userPrivilege.id)" ng-disabled="viewOnly">
                 <ui-select-match placeholder="Start typing to find User Privilege">{{ $select.selected.name }}</ui-select-match>
                 <ui-select-choices repeat="privilege in userPrivilegeList | filter: $select.search | orderBy:'id'">
                   <div ng-bind-html="privilege.name | highlight: $select.search"></div>
@@ -109,12 +109,12 @@
               
             </div>            
 
-            <div clas="form-group">           
+            <div clas="form-group" ng-disabled="viewOnly">           
               <table class="table table-bordered table-hover">
               <thead>
                 <tr>
                   <th>
-                    <input class="btn btn-default" style="margin-top:0px" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()">
+                    <input class="btn btn-default" style="margin-top:0px" type="checkbox" value="1" ng-model="allRoleCheckboxesSelected" ng-click="toggleAllRoleCheckboxes()" ng-disabled="viewOnly">
                     Select All
                   </th>
                   <th>Roles</th>
@@ -123,7 +123,7 @@
               <tbody ng-repeat="role in allRolesList">
                 <tr class="master-row" id="role-{{ role.id }}">
                   <td>
-                    <input ng-model="role.selected" type="checkbox" ng-click="roleSelectionToggled()"/>
+                    <input ng-model="role.selected" type="checkbox" ng-click="roleSelectionToggled()" ng-disabled="viewOnly"/>
                   </td>
                   <td>{{ role.roleName }}</td>
                 </tr>
@@ -133,6 +133,42 @@
           </accordion-group>
         </accordion>        
        </div>
+       <!-- ********************************************* -->
+       <div class="col-xs-12 col-sm-12">
+       <accordion class="user-roles-accordion">
+          <accordion-group ng-init="userCompaniesOpen=false" is-open="userCompaniesOpen">
+            <accordion-heading class="accordion-heading">
+              <i ng-class="getClassForAccordionArrows(userCompaniesOpen)" class="fa"></i>
+              User Companies
+            </accordion-heading>
+
+            <div clas="form-group" ng-disabled="viewOnly">           
+              <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>
+                    <input class="btn btn-default" style="margin-top:0px" type="checkbox" value="1" ng-model="allCompanyCheckboxesSelected" ng-click="toggleAllCompanyCheckboxes()" ng-disabled="viewOnly">
+                    Select All
+                  </th>
+                  <th>Companies</th>
+                </tr>
+              </thead>
+              <tbody ng-repeat="company in allActiveCompaniesList">
+                <tr class="master-row" id="company-{{ company.id }}">
+                  <td>
+                    <input ng-model="company.selected" type="checkbox" ng-click="companySelectionToggled()" ng-disabled="viewOnly"/>
+                    [{{ company.companyCode }}]
+                  </td>
+                  <td>{{ company.companyName }}</td>
+                </tr>
+              </tbody>
+              </table>
+            </div>
+          </accordion-group>
+        </accordion>        
+       </div>
+       
+       <!-- ********************************************* -->
        </form>
   </div>
 </div>
