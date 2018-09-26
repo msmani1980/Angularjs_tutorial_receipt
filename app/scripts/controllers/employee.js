@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeCtrl', function($scope, $q, $location, dateUtility, $routeParams, employeeFactory, messageService) {
+  .controller('EmployeeCtrl', function($scope, $q, $location, dateUtility, $routeParams, $filter, employeeFactory, messageService) {
 
     var $this = this;
     $scope.viewName = 'Employee';
@@ -158,8 +158,19 @@ angular.module('ts5App')
       $scope.globalStationList = angular.copy(response.response);
     };
 
-    this.getCountireSuccess = function(response) {
-      $scope.countriesList = angular.copy(response.countries);
+    this.setCountireList = function(stationList) {
+      var countriesList = [];
+      angular.forEach(stationList, function (station) {
+        var country = {
+          id: station.countryId,
+          countryName: station.countryName,
+          countryCode: station.countryCode,
+        };
+        countriesList.push(country);
+      });
+
+      countriesList = $filter('unique')(countriesList, 'countryName');
+      $scope.countriesList = $filter('orderBy')(countriesList, 'countryName');
     };
 
     this.getEmployeeTitleSuccess = function(response) {
@@ -168,7 +179,6 @@ angular.module('ts5App')
 
     this.makeInitPromises = function() {
       var promises = [
-        employeeFactory.getCountriesList().then($this.getCountireSuccess),
         employeeFactory.getEmployeeTitles().then($this.getEmployeeTitleSuccess),
         employeeFactory.getCompanyGlobalStationList($this.getOnLoadingPayload).then($this.getCompanyGlobalStationSuccess)
       ];
@@ -228,6 +238,7 @@ angular.module('ts5App')
       }
 
       $this.setMinDateValue();
+      $this.setCountireList($scope.globalStationList);
     };
 
     this.init = function() {

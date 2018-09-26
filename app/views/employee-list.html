@@ -50,7 +50,7 @@
 					<label for="country">Country</label>
 					<ui-select multiple ng-model="multiSelectedValues.countryList" on-select="onCounrtyChange()">
 	                  <ui-select-match placeholder="Select Countries..">{{$item.countryName}}</ui-select-match>
-	                  <ui-select-choices repeat="countrie in countriesList | unique: 'id' | filter: $select.search">
+	                  <ui-select-choices repeat="countrie in countriesList | unique: 'id' | filter: $select.search | orderBy:'countryName'">
 	                    {{ countrie.countryName }}
 	                  </ui-select-choices>
 	                </ui-select>
