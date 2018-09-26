@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeListCtrl', function ($scope, $q, $location, dateUtility, lodash, messageService, employeeFactory, accessService) {
+  .controller('EmployeeListCtrl', function ($scope, $q, $location, dateUtility, $filter, lodash, messageService, employeeFactory, accessService) {
     
     var $this = this;
     this.meta = {
@@ -178,15 +178,25 @@ angular.module('ts5App')
         $this.deleteFailure
       );
     };
-    
+
+    this.setCountireList = function(stationList) {
+      var countriesList = [];
+      angular.forEach(stationList, function (station) {
+        var country = {
+          id: station.countryId,
+          countryName: station.countryName,
+          countryCode: station.countryCode,
+        };
+        countriesList.push(country);
+      });
+
+      $scope.countriesList = $filter('unique')(countriesList, 'countryName');
+    };
+
     this.getCompanyGlobalStationSuccess = function(response) {
       $scope.globalStationList = angular.copy(response.response);
     };
 
-    this.getCountireSuccess = function(response) {
-      $scope.countriesList = angular.copy(response.countries);
-    };
-      
     this.getEmployeesSuccess = function(response) {
       $this.meta.count = $this.meta.count || response.meta.count;
       $scope.employees = $scope.employees.concat(response.companyEmployees.map(function (employee) {
@@ -205,7 +215,6 @@ angular.module('ts5App')
        
     this.makeInitPromises = function() {
       var promises = [
-        employeeFactory.getCountriesList().then($this.getCountireSuccess),
         employeeFactory.getEmployeeTitles().then($this.getEmployeeTitleSuccess),
         employeeFactory.getCompanyGlobalStationList($this.getOnLoadingPayload).then($this.getCompanyGlobalStationSuccess)
       ];
@@ -216,8 +225,9 @@ angular.module('ts5App')
       $scope.isCRUD = accessService.crudAccessGranted('EMPLOYEE', 'EMPLOYEE', 'EMPLOYEECRUD');
       var initDependencies = $this.makeInitPromises();
       $q.all(initDependencies).then(function() {
-          angular.element('#search-collapse').addClass('collapse');
-        });
+        angular.element('#search-collapse').addClass('collapse');
+        $this.setCountireList($scope.globalStationList);
+      });
     };
 
     this.init();
