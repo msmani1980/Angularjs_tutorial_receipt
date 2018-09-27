@@ -158,13 +158,11 @@ angular.module('ts5App')
       $this.setUIReady();
     };
 
-    $scope.$watch('formData.startDate', function () {
-      $this.getRetailItemsList();
-    }, true);
-
-    $scope.$watch('formData.endDate', function () {
-      $this.getRetailItemsList();
-    }, true);
+    $scope.$watchGroup(['formData.startDate', 'formData.endDate'], function () {
+      if ($scope.formData && $scope.formData.startDate && $scope.formData.endDate) {
+        $this.getRetailItemsList();            
+      }  
+    });
 
     this.getDiscount = function(id) {
       this.showLoadingModal('We are getting your Discount data!');
@@ -215,6 +213,7 @@ angular.module('ts5App')
         searchPayload.endDate = dateUtility.formatDateForAPI($scope.formData.endDate);
       }
 
+      searchPayload.ignoreDryStrore = true;
       return itemsFactory.getItemsList(searchPayload, true).then($this.setRetailItemsList);
     };
 
@@ -621,7 +620,7 @@ angular.module('ts5App')
       }
 
       searchPayload.categoryId = categoryId;
-
+      searchPayload.ignoreDryStrore = true;
       itemsFactory.getItemsList(searchPayload, true).then(function(response) {
         $scope.filteredRetailItemsList[categoryId] = response.masterItems;
       });
