@@ -54,13 +54,19 @@
               </ui-select-choices>
             </ui-select>
             </div>
-            
             <div class="form-group">
               <input type="checkbox"
                      ng-model="formData.enabled"
-                     name="enabled">
+                     name="userEnabled">
               <label>User Enabled</label>
             </div>
+            <div class="form-group">
+              <input type="checkbox"
+                     ng-model="formData.allowAllStations"
+                     name="allStations">
+              <label>Allow All Stations</label>
+            </div>
+            
           </fieldset>
         </div>
 
@@ -70,7 +76,6 @@
                         placeholder="User First Name" min-length="1" max-length="40"></input-text>
             <input-text label="User Last Name" name="lastName" required="true" pattern="regexp.sentence"
                         placeholder="User Last Name" min-length="1" max-length="40"></input-text>
-            
             <div class="form-group">
               <date-picker-field
                 name="userLoginExpired"
@@ -80,13 +85,6 @@
                 label="User Login Expired">
               </date-picker-field>
             </div>            
-                        
-            <div class="form-group">
-              <input type="checkbox"
-                     ng-model="formData.allowAllStations"
-                     name="enabled">
-              <label>Allow All Stations</label>
-            </div>
           </fieldset>
         </div>
         
@@ -117,7 +115,7 @@
                     <input class="btn btn-default" style="margin-top:0px" type="checkbox" value="1" ng-model="allRoleCheckboxesSelected" ng-click="toggleAllRoleCheckboxes()" ng-disabled="viewOnly">
                     Select All
                   </th>
-                  <th>Roles</th>
+                  <th>Role</th>
                 </tr>
               </thead>
               <tbody ng-repeat="role in allRolesList">
@@ -133,9 +131,11 @@
           </accordion-group>
         </accordion>        
        </div>
+
        <!-- ********************************************* -->
+
        <div class="col-xs-12 col-sm-12">
-       <accordion class="user-roles-accordion">
+       <accordion class="user-companies-accordion">
           <accordion-group ng-init="userCompaniesOpen=false" is-open="userCompaniesOpen">
             <accordion-heading class="accordion-heading">
               <i ng-class="getClassForAccordionArrows(userCompaniesOpen)" class="fa"></i>
@@ -150,7 +150,7 @@
                     <input class="btn btn-default" style="margin-top:0px" type="checkbox" value="1" ng-model="allCompanyCheckboxesSelected" ng-click="toggleAllCompanyCheckboxes()" ng-disabled="viewOnly">
                     Select All
                   </th>
-                  <th>Companies</th>
+                  <th>Company</th>
                 </tr>
               </thead>
               <tbody ng-repeat="company in allActiveCompaniesList">
@@ -169,6 +169,49 @@
        </div>
        
        <!-- ********************************************* -->
+
+       <div class="col-xs-12 col-sm-12">
+       <accordion class="user-stations-accordion">
+          <accordion-group ng-init="userStationsOpen=false" is-open="userStationsOpen">
+            <accordion-heading class="accordion-heading">
+              <i ng-class="getClassForAccordionArrows(userStationsOpen)" class="fa"></i>
+              User Stations
+            </accordion-heading>
+
+            <div clas="form-group" ng-disabled="viewOnly">           
+              <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th>
+                    <input class="btn btn-default" style="margin-top:0px" type="checkbox" value="1" ng-model="allStationCheckboxesSelected" ng-click="toggleAllStationCheckboxes()" ng-disabled="viewOnly">
+                    Select All
+                  </th>
+                  <th>Station</th>
+                  <th>City</th>
+                  <th>Region</th>
+                  <th>Country</th>
+                </tr>
+              </thead>
+              <tbody ng-repeat="station in allStationsList">
+                <tr class="master-row" id="station-{{ station.id }}">
+                  <td>
+                    <input ng-model="station.selected" type="checkbox" ng-click="stationSelectionToggled()" ng-disabled="viewOnly"/>
+                    [{{ station.code }}]
+                  </td>
+                  <td>{{ station.name }}</td>
+                  <td>{{ station.city }}</td>
+                  <td>{{ station.region }}</td>
+                  <td>{{ station.country }}</td>
+                </tr>
+              </tbody>
+              </table>
+            </div>
+          </accordion-group>
+        </accordion>        
+       </div>
+       
+       <!-- ********************************************* -->
+
        </form>
   </div>
 </div>

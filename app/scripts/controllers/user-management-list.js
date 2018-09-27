@@ -13,7 +13,8 @@ angular.module('ts5App').controller('UserManagementListCtrl', function($scope, $
   $scope.viewName = 'User Management';
   $scope.userList = [];
   $scope.companyIds = [];
-
+  $scope.fUserName = '';
+  
   function showLoadingModal() {
     angular.element('.loading-more').show();
   }
@@ -69,6 +70,7 @@ angular.module('ts5App').controller('UserManagementListCtrl', function($scope, $
   };
 
   this.init = function() {
+    $scope.fUserName = '';
     $scope.isCRUD = accessService.crudAccessGranted('USERMANAGEMENT', 'USERMANAGEMENT', 'USRM');
     identityAccessService.getUserCompanies().then($this.initSuccess);
   };
