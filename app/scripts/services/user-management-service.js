@@ -21,7 +21,10 @@ angular.module('ts5App').service('userManagementService', function ($resource, E
   var userCompaniesURL = ENV.apiUrl + '/IdentityAccess/company/userscomps';
   var allActiveCompaniesURL = ENV.apiUrl + '/IdentityAccess/company/activecompanies';
   var updateUserCompaniesURL = ENV.apiUrl + '/IdentityAccess/company/userscomps/:userId';  
-
+  var userStationsURL = ENV.apiUrl + '/IdentityAccess/userssta/:id';
+  var userAllStationsURL = ENV.apiUrl + '/IdentityAccess/usersstaa/:userId';
+  var updateUserStationsURL = ENV.apiUrl + '/IdentityAccess/portaluserssta/:uid';
+  
   var allActiveCompaniesParameters = {};
   var organizationsParameters = {};
   var userUpdateParameters = {};
@@ -107,6 +110,26 @@ angular.module('ts5App').service('userManagementService', function ($resource, E
       headers: {
         'Content-Type': 'application/json'
       }
+    },
+    getUserStations: {
+      method: 'GET',   
+      isArray: true,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    },
+    getUserAllStations: {
+      method: 'GET',   
+      isArray: true,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    },
+    updateUserStations: {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
     }
   };
 
@@ -173,7 +196,6 @@ angular.module('ts5App').service('userManagementService', function ($resource, E
   };
 
   var getUserCompanies = function(id) {
-    console.log('id', id);
     delete actions.getUserCompanies.headers.userId;
     actions.getUserCompanies.headers.userId = id;
     var userCompaniesResource = $resource(userCompaniesURL, userCompaniesParameters, actions);
@@ -199,6 +221,33 @@ angular.module('ts5App').service('userManagementService', function ($resource, E
     return allActiveCompaniesResource.getAllActiveCompanies().$promise;
   };
 
+  var getUserStations = function(id) {  
+    var parameters = {
+      id: id
+    };
+
+    var userStationsResource = $resource(userStationsURL, parameters, actions);
+    return userStationsResource.getUserStations().$promise;
+  };
+
+  var getUserAllStations = function(userId) {  
+    var parameters = {
+      userId: userId
+    };
+
+    var userAllStationsResource = $resource(userAllStationsURL, parameters, actions);
+    return userAllStationsResource.getUserAllStations().$promise;
+  };
+
+  var updateUserStations = function(payload, uid) {
+    var parameters = {
+      uid: uid
+    };
+
+    var updateUserStationResource = $resource(updateUserStationsURL, parameters, actions);
+    return updateUserStationResource.updateUserStations(payload).$promise;
+  };
+
   return {
     userList:userList,
     userByCode:userByCode,
@@ -211,7 +260,10 @@ angular.module('ts5App').service('userManagementService', function ($resource, E
     updateUserRoles:updateUserRoles,
     getUserCompanies:getUserCompanies,
     getAllActiveCompanies:getAllActiveCompanies,
-    updateUserCompanies:updateUserCompanies
+    updateUserCompanies:updateUserCompanies,
+    getUserStations:getUserStations,
+    getUserAllStations:getUserAllStations,
+    updateUserStations:updateUserStations
   };
   
 });

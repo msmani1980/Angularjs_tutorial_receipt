@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('UserCreateCtrl', function ($scope, $compile, ENV, $resource, $location, $anchorScroll, dateUtility, $routeParams, globalMenuService, $q, $filter, lodash, userManagementService) {
+  .controller('UserCreateCtrl', function ($localStorage, $scope, $compile, ENV, $resource, $location, $anchorScroll, dateUtility, $routeParams, globalMenuService, $q, $filter, lodash, userManagementService, identityAccessFactory) {
     $scope.formData = {
       id:null,
       oldUserName: '',
@@ -47,6 +47,8 @@ angular.module('ts5App')
     $scope.userPrivilege = { id:1, name:'All' };
     $scope.selectedCompanies = [];
     $scope.allActiveCompaniesList = [];
+    $scope.allStationsList = [];
+    $scope.selectedStations = [];
     var $this = this;
 
     $scope.getClassForAccordionArrows = function (accordionFlag) {
@@ -130,7 +132,8 @@ angular.module('ts5App')
     this.createSubmitFormSuccess = function(response) {
       var promises = [
         userManagementService.updateUserRoles($scope.selectedRoles, response.id),
-        userManagementService.updateUserCompanies($scope.selectedCompanies, response.id)
+        userManagementService.updateUserCompanies($scope.selectedCompanies, response.id),
+        userManagementService.updateUserStations($scope.selectedStations, response.id)
       ];
 
       $q.all(promises).then($this.submitFormSuccess, $this.errorHandler);
@@ -154,6 +157,15 @@ angular.module('ts5App')
       });
     };
 
+    $scope.stationSelectionToggled = function () {
+      $scope.selectedStations = [];
+      lodash.forEach($scope.allStationsList, function (station) {
+        if (station.selected) {
+          $scope.selectedStations.push(station.id);
+        }
+      });
+    };
+
     $scope.toggleAllRoleCheckboxes = function () {
       $scope.allRoleCheckboxesSelected = $scope.allRoleCheckboxesSelected ? false : true;
       angular.forEach($scope.allRolesList, function (role) {
@@ -170,6 +182,15 @@ angular.module('ts5App')
       });
 
       $scope.companySelectionToggled();
+    };
+
+    $scope.toggleAllStationCheckboxes = function () {
+      $scope.allStationCheckboxesSelected = $scope.allStationCheckboxesSelected ? false : true;
+      angular.forEach($scope.allStationsList, function (station) {
+        station.selected = $scope.allStationCheckboxesSelected;
+      });
+
+      $scope.stationSelectionToggled();
     };
 
     $scope.submitForm = function(formData) {
@@ -193,7 +214,8 @@ angular.module('ts5App')
           var promises = [
             userManagementService.updateUser(person),
             userManagementService.updateUserRoles($scope.selectedRoles, person.id),
-            userManagementService.updateUserCompanies($scope.selectedCompanies, person.id)
+            userManagementService.updateUserCompanies($scope.selectedCompanies, person.id),
+            userManagementService.updateUserStations($scope.selectedStations, person.id)
           ];
           $q.all(promises).then($this.submitFormSuccess, $this.errorHandler);
         }
@@ -219,23 +241,28 @@ angular.module('ts5App')
     };
 
     this.getPromises = function() {
+      var sessionObject = identityAccessFactory.getSessionObject();
       var promises = [
         userManagementService.userById($routeParams.user),
         userManagementService.getOrganizations(),
         userManagementService.getAllRoles(),
         userManagementService.getUserRoles($routeParams.user),
         userManagementService.getUserCompanies($routeParams.user),
-        userManagementService.getAllActiveCompanies()
+        userManagementService.getAllActiveCompanies(),
+        userManagementService.getUserStations($routeParams.user),
+        userManagementService.getUserAllStations(sessionObject.userId)
       ];
 
       return promises;
     };
 
     this.getDependenciesPromises = function() {
+      var sessionObject = identityAccessFactory.getSessionObject();
       var promises = [
         userManagementService.getOrganizations(),
         userManagementService.getAllRoles(),
-        userManagementService.getAllActiveCompanies()
+        userManagementService.getAllActiveCompanies(),
+        userManagementService.getUserAllStations(sessionObject.userId)
       ];
 
       return promises;
@@ -269,12 +296,12 @@ angular.module('ts5App')
       $scope.setUserPrivilege(1);
 
       $this.initActiveCompanies(angular.copy(response[2]));
+      $this.initStations(angular.copy(response[3]));
       
       $this.hideLoadingModal();
     };
 
     this.initSuccess = function(response) {
-      console.log('response', response);
       $this.hideLoadingModal();
       var userData = angular.copy(response[0]);
       $this.initOrganizations(angular.copy(response[1]));
@@ -282,6 +309,8 @@ angular.module('ts5App')
       $this.initUserRoles(angular.copy(response[3]));
       $this.initActiveCompanies(angular.copy(response[5]));
       setSelectedCompanies(angular.copy(response[4]));
+      $this.initStations(angular.copy(response[7]));
+      setSelectedStations(angular.copy(response[6]));
       $this.initUI(userData);  
     };
 
@@ -361,6 +390,7 @@ angular.module('ts5App')
 
     function setSelectedRoles (userRoles) {
       angular.forEach(userRoles, function (userRole) {
+        $scope.selectedRoles.push(userRole.id);
         angular.forEach($scope.allRolesList, function (role) {
           if (role.id === userRole.id) {
             role.selected = true;
@@ -382,11 +412,38 @@ angular.module('ts5App')
       });
     };
 
+    this.initStations = function (stationList) {
+      angular.forEach(stationList, function (station) {
+        var st = {
+          id: station.id,
+          code: station.stationCode,
+          name: station.stationName,
+          city: station.city.cityName,
+          region: station.city.region.regionName,
+          country: '[ ' + station.country.countryCode.trim() + ' ] ' + station.country.countryName,
+          selected: false
+        };
+        $scope.allStationsList.push(st);
+      });
+    };
+
     function setSelectedCompanies (userCompanies) {
       angular.forEach(userCompanies, function (userCmp) {
+        $scope.selectedCompanies.push(userCmp.company.id);
         angular.forEach($scope.allActiveCompaniesList, function (cmp) {
           if (cmp.id === userCmp.company.id) {
             cmp.selected = true;
+          }
+        });
+      });
+    }
+
+    function setSelectedStations (userStations) {
+      angular.forEach(userStations, function (userSt) {
+        $scope.selectedStations.push(userSt.station.id);
+        angular.forEach($scope.allStationsList, function (st) {
+          if (st.id === userSt.station.id) {
+            st.selected = true;
           }
         });
       });
@@ -433,6 +490,7 @@ angular.module('ts5App')
     this.init = function() {
       $scope.allRoleCheckboxesSelected = false;
       $scope.allCompanyCheckboxesSelected = false;
+      $scope.allStationCheckboxesSelected = false;
       $this.getUserData();
       $this.checkFormState();
     };
