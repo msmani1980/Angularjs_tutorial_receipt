@@ -26,9 +26,9 @@ angular.module('ts5App')
       return stationsService.getStationList(companyId, offset, payload);
     };
 
-    var getStationListWithUsageValidation = function() {
+    var getStationListWithUsageValidation = function(offset, payload) {
       var companyId = globalMenuService.company.get();
-      return stationsService.getStationListWithUsageValidation(companyId, 0);
+      return stationsService.getStationListWithUsageValidation(companyId, offset, payload);
     };
 
     var bulkUpdateStation = function(payload) {
