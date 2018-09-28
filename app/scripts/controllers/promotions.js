@@ -599,7 +599,8 @@ angular.module('ts5App')
       var payload = {
         companyId: companyId,
         startDate: startDate,
-        endDate: endDate
+        endDate: endDate,
+        ignoreDryStrore: true
       };
 
       return promotionsFactory.getMasterItems(payload).then(setMasterItems);
@@ -1104,7 +1105,8 @@ angular.module('ts5App')
         companyId: companyId,
         categoryId: categoryId,
         startDate: startDate,
-        endDate: endDate
+        endDate: endDate,
+        ignoreDryStrore: true
       };
 
       displayLoadingModal();

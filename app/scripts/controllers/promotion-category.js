@@ -250,7 +250,8 @@ angular.module('ts5App')
       var itemPayload = {
         categoryId: category.id,
         startDate: dateUtility.formatDateForAPI($scope.promotionCategory.startDate),
-        endDate: dateUtility.formatDateForAPI($scope.promotionCategory.endDate)
+        endDate: dateUtility.formatDateForAPI($scope.promotionCategory.endDate),
+        ignoreDryStrore: true
       };
 
       promotionCategoryFactory.getMasterItemList(itemPayload).then(function (response) {
@@ -273,7 +274,8 @@ angular.module('ts5App')
       showLoadingModal();
       var payload = {
         startDate: dateUtility.formatDateForAPI($scope.promotionCategory.startDate),
-        endDate: dateUtility.formatDateForAPI($scope.promotionCategory.endDate)
+        endDate: dateUtility.formatDateForAPI($scope.promotionCategory.endDate),
+        ignoreDryStrore: true
       };
 
       promotionCategoryFactory.getMasterItemList(payload).then(setMasterItemList, showErrors);

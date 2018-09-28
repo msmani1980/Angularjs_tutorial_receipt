@@ -636,7 +636,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.itemsAreBeingLoaded = true;
       var payload = {
         startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
-        endDate: dateUtility.formatDateForAPI($scope.formData.endDate)
+        endDate: dateUtility.formatDateForAPI($scope.formData.endDate),
+        ignoreDryStrore: true
       };
 
       itemsFactory.getItemsList(payload).then($this.setInitialSubstitutionAndRecomendations);
