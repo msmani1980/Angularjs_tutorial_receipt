@@ -61,7 +61,7 @@ angular.module('ts5App')
     };
 
     var updateCategoryOrder = function (companyId, payload) {
-      orderRequestParameters.companyId = companyId;
+      payload.companyId = companyId;
 
       return orderRequestResource.updateCategory(payload).$promise;
     };
