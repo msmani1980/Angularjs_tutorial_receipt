@@ -13,6 +13,7 @@ angular.module('ts5App')
     $scope.selectedIndex = 0;
     $scope.lookUpDialog = false;
     $scope.isDateChanged = true;
+    $scope.allCheckboxesSelected = false;
     $scope.masterItemTotalList = [];
 
     $scope.cloningItem = false;
@@ -388,6 +389,27 @@ angular.module('ts5App')
       $scope.menuItemList[$scope.selectedIndex].itemName = '';
       $scope.menuItemList[$scope.selectedIndex].itemId = '';
       angular.element('#sales-categories').modal('hide');
+    };
+
+    $scope.toggleAllCheckboxes = function() {
+      angular.forEach($scope.masterItemList, function(masterItem) {
+        if (!masterItem.isDisabled) {
+          masterItem.selectedItem = $scope.allCheckboxesSelected;
+        }
+      });
+    };
+
+    $scope.populateAllSelectedItems = function() {
+      angular.forEach($scope.masterItemList, function(masterItem) {
+        if (masterItem.selectedItem) {
+          $scope.setMasterItem(masterItem);
+          var nextIndex = $scope.menuItemList.length;
+          $scope.menuItemList.push({ menuIndex: nextIndex });
+          $scope.selectedIndex++;
+        }
+      });
+
+      $scope.menuItemList.splice($scope.menuItemList.length - 1, 1);
     };
 
     $scope.setMasterItem = function (masterItem) {

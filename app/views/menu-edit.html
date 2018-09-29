@@ -301,6 +301,7 @@
         	</div>
         	<div class="col-xs-4 text-right">
         		<button class="btn btn-default btn-cancel" data-dismiss="modal">Close</button>
+        		<button class="btn btn-success" ng-click="populateAllSelectedItems()">Select Items</button>
         	</div>
         </div>
       </div>
@@ -322,16 +323,13 @@
             <tr>
               <th>Item Name</th>
               <th>Item Code</th>
-              <th></th>
+              <th><input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()"></th>
             </tr>
             <tr ng-repeat="masterItem in masterItemList | filter: {itemName: masterItemsListSearch} | filter: {isDisabled: false} | orderBy:'itemName'">
               <td>{{ masterItem.itemName }}</td>
               <td>{{ masterItem.itemCode }}</td>
               <td>
-                <a class="btn btn-info btn-xs btn-block" tabindex="0" ng-disabled="masterItem.isDisabled"
-                   ng-click="!masterItem.isDisabled && setMasterItem(masterItem)">
-                  <i class="fa fa-check-circle"></i>
-                </a>
+                <input class="btn btn-default" ng-disabled="masterItem.isDisabled" type="checkbox" ng-model="masterItem.selectedItem"/>
               </td>
             </tr>
           </table>
