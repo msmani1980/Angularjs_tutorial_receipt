@@ -43,10 +43,12 @@ angular.module('ts5App')
         index = index + 1;
       });
 
-      return categoryFactory.updateCategoryOrder(payload);
+      return categoryFactory.updateCategoryOrder(payload).finally(hideLoadingModal);
     }
 
     $scope.dropSuccess = function (event, index) {
+      event.preventDefault();
+
       dragIndexFrom = index;
 
       // Don't allow to drag outside parent group
@@ -62,14 +64,16 @@ angular.module('ts5App')
         return;
       }
 
+      showLoadingModal('Saving category order. Please stand by.');
+
       // Order and persist
       $scope.categoryToMove = $scope.categoryList[dragIndexFrom];
       $scope.droppedOnCategory = $scope.categoryList[dragIndexTo];
 
       $scope.rearrangeCategory($scope.droppedOnCategory, dragIndexTo, dragIndexTo > dragIndexFrom ? 'down' : 'up');
 
-      clearDragIndexes();
       updateCategoryOrder();
+      clearDragIndexes();
     };
 
     $scope.onDrop = function (event, data, index) {
@@ -206,8 +210,7 @@ angular.module('ts5App')
       var categoryToMoveIndex = lodash.findIndex($scope.categoryList, {
         id: $scope.categoryToMove.id
       });
-      destinationIndex = (destinationIndex > categoryToMoveIndex) ? (destinationIndex - $scope.categoryToMove.totalChildCount -
-        1) : destinationIndex;
+      destinationIndex = (destinationIndex > categoryToMoveIndex) ? (destinationIndex - $scope.categoryToMove.totalChildCount - 1) : destinationIndex;
       swapCategoryPositions(categoryToMoveIndex, $scope.categoryToMove.totalChildCount, destinationIndex);
     };
 
