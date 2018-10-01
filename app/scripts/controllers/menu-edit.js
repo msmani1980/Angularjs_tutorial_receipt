@@ -391,6 +391,18 @@ angular.module('ts5App')
       angular.element('#sales-categories').modal('hide');
     };
 
+    $scope.toggleSelectAll = function() {
+      var toggleAll = false;
+      angular.forEach($scope.masterItemList, function(masterItem) {
+        if (!masterItem.selectedItem && !masterItem.isDisabled) {
+          toggleAll = true;
+        }
+
+      });
+
+      $scope.allCheckboxesSelected = !toggleAll;
+    };
+
     $scope.toggleAllCheckboxes = function() {
       angular.forEach($scope.masterItemList, function(masterItem) {
         if (!masterItem.isDisabled) {

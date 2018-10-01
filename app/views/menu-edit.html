@@ -323,13 +323,13 @@
             <tr>
               <th>Item Name</th>
               <th>Item Code</th>
-              <th><input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()"></th>
+              <th style="text-align:center;"><input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()"></th>
             </tr>
             <tr ng-repeat="masterItem in masterItemList | filter: {itemName: masterItemsListSearch} | filter: {isDisabled: false} | orderBy:'itemName'">
               <td>{{ masterItem.itemName }}</td>
               <td>{{ masterItem.itemCode }}</td>
-              <td>
-                <input class="btn btn-default" ng-disabled="masterItem.isDisabled" type="checkbox" ng-model="masterItem.selectedItem"/>
+              <td style="text-align:center;">
+                <input class="btn btn-default" ng-click="toggleSelectAll()" ng-disabled="masterItem.isDisabled" type="checkbox" ng-model="masterItem.selectedItem"/>
               </td>
             </tr>
           </table>
