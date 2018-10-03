@@ -13,6 +13,7 @@ angular.module('ts5App')
     $scope.selectedIndex = 0;
     $scope.lookUpDialog = false;
     $scope.isDateChanged = true;
+    $scope.allCheckboxesSelected = false;
     $scope.masterItemTotalList = [];
 
     $scope.cloningItem = false;
@@ -355,7 +356,8 @@ angular.module('ts5App')
     };
 
     $scope.showMasterItemsModal = function (menuIndex) {
-      $scope.selectedIndex = menuIndex;
+      $scope.selectedIndex = menuIndex;	
+      $scope.allCheckboxesSelected = false;
       if ($scope.masterItemTotalList.length === 0) {
         $scope.lookUpDialog = true;
         getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate);
@@ -388,6 +390,50 @@ angular.module('ts5App')
       $scope.menuItemList[$scope.selectedIndex].itemName = '';
       $scope.menuItemList[$scope.selectedIndex].itemId = '';
       angular.element('#sales-categories').modal('hide');
+    };
+
+    $scope.toggleSelectAll = function() {
+      var toggleAll = false;
+      angular.forEach($scope.masterItemList, function(masterItem) {
+        if (!masterItem.selectedItem && !masterItem.isDisabled) {
+          toggleAll = true;
+        }
+
+      });
+
+      $scope.allCheckboxesSelected = !toggleAll;
+    };
+
+    $scope.toggleAllCheckboxes = function() {
+      angular.forEach($scope.masterItemList, function(masterItem) {
+        if (!masterItem.isDisabled) {
+          masterItem.selectedItem = $scope.allCheckboxesSelected;
+        }
+      });
+    };
+
+    this.filterMenuItemsByItemId = function() {
+      var allValidItems = [];
+      angular.forEach($scope.menuItemList, function (menuItem) {
+        if (menuItem.itemId) {
+          allValidItems.push(menuItem);
+        }
+      });
+
+      return allValidItems;
+    };
+
+    $scope.populateAllSelectedItems = function() {
+      angular.forEach($scope.masterItemList, function(masterItem) {
+        if (masterItem.selectedItem) {
+          $scope.setMasterItem(masterItem);
+          var nextIndex = $scope.menuItemList.length;
+          $scope.menuItemList.push({ menuIndex: nextIndex });
+          $scope.selectedIndex = nextIndex;
+        }
+      });
+
+      $scope.menuItemList = $this.filterMenuItemsByItemId();
     };
 
     $scope.setMasterItem = function (masterItem) {

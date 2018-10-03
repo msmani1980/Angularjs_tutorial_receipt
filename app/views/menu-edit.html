@@ -162,20 +162,6 @@
               		</button>
             	</div>
             </div>
-            <!--<ui-select
-              name="selectedCategories[item.menuIndex]"
-              ng-model="selectedCategories[item.menuIndex]"
-              on-select="filterItemListByCategory(item.menuIndex)"
-              theme="bootstrap"
-              placeholder="Select a category to filter the items list...">
-              <ui-select-match
-                allow-clear="true"
-                placeholder="Select a category to filter the items list...">{{$select.selected.name}}
-              </ui-select-match>
-              <ui-select-choices repeat="category in categories | filter: $select.search | orderBy:'name'">
-                <div ng-bind-html="category.name | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>-->
           </td>
           <td ng-if="isMenuEditable()">
           	<div class="input-group">
@@ -193,23 +179,6 @@
             	</div>
             </div>
             <div ng-if="menuItemList[item.menuIndex].isExpired && !isMenuViewOnly()" style="color:red">This Item Expired</div>
-            <!--<ui-select
-              name="menuItem"
-              required="true"
-              ng-model="item.selectedItem"
-              theme="bootstrap"
-              placeholder="Select or search an item from the list..."
-              on-select="filterAllItemLists()">
-              <ui-select-match
-                placeholder="Select or search an item from the list...">{{$select.selected.itemName}}
-              </ui-select-match>
-              <ui-select-choices ui-disable-choice="menuItem.selected === true"
-              					 refresh="loadMasterItems($select)"
-                    			 refresh-delay="0"
-                                 repeat="menuItem in testList">
-                <div ng-bind-html="menuItem.itemName | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select> -->
           </td>
           <td ng-if="!isMenuEditable()">
             <input type="text"
@@ -301,6 +270,7 @@
         	</div>
         	<div class="col-xs-4 text-right">
         		<button class="btn btn-default btn-cancel" data-dismiss="modal">Close</button>
+        		<button class="btn btn-success" ng-click="populateAllSelectedItems()">Select Items</button>
         	</div>
         </div>
       </div>
@@ -322,16 +292,13 @@
             <tr>
               <th>Item Name</th>
               <th>Item Code</th>
-              <th></th>
+              <th style="text-align:center;"><input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()"></th>
             </tr>
             <tr ng-repeat="masterItem in masterItemList | filter: {itemName: masterItemsListSearch} | filter: {isDisabled: false} | orderBy:'itemName'">
               <td>{{ masterItem.itemName }}</td>
               <td>{{ masterItem.itemCode }}</td>
-              <td>
-                <a class="btn btn-info btn-xs btn-block" tabindex="0" ng-disabled="masterItem.isDisabled"
-                   ng-click="!masterItem.isDisabled && setMasterItem(masterItem)">
-                  <i class="fa fa-check-circle"></i>
-                </a>
+              <td style="text-align:center;">
+                <input class="btn btn-default" ng-click="toggleSelectAll()" ng-disabled="masterItem.isDisabled" type="checkbox" ng-model="masterItem.selectedItem"/>
               </td>
             </tr>
           </table>
