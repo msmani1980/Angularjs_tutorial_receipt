@@ -160,20 +160,6 @@
               		</button>
             	</div>
             </div>
-            <!--<ui-select
-              name="selectedCategories[item.menuIndex]"
-              ng-model="selectedCategories[item.menuIndex]"
-              on-select="filterItemListByCategory(item.menuIndex)"
-              theme="bootstrap"
-              placeholder="Select a category to filter the items list...">
-              <ui-select-match
-                allow-clear="true"
-                placeholder="Select a category to filter the items list...">{{$select.selected.name}}
-              </ui-select-match>
-              <ui-select-choices repeat="category in categories | filter: $select.search | orderBy:'name'">
-                <div ng-bind-html="category.name | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select>-->
           </td>
           <td ng-if="isMenuEditable()">
           	<div class="input-group">
@@ -191,23 +177,6 @@
             	</div>
             </div>
             <div ng-if="menuItemList[item.menuIndex].isExpired && !isMenuViewOnly()" style="color:red">This Item Expired</div>
-            <!--<ui-select
-              name="menuItem"
-              required="true"
-              ng-model="item.selectedItem"
-              theme="bootstrap"
-              placeholder="Select or search an item from the list..."
-              on-select="filterAllItemLists()">
-              <ui-select-match
-                placeholder="Select or search an item from the list...">{{$select.selected.itemName}}
-              </ui-select-match>
-              <ui-select-choices ui-disable-choice="menuItem.selected === true"
-              					 refresh="loadMasterItems($select)"
-                    			 refresh-delay="0"
-                                 repeat="menuItem in testList">
-                <div ng-bind-html="menuItem.itemName | highlight: $select.search"></div>
-              </ui-select-choices>
-            </ui-select> -->
           </td>
           <td ng-if="!isMenuEditable()">
             <input type="text"
