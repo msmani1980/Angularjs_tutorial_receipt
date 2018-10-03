@@ -356,7 +356,8 @@ angular.module('ts5App')
     };
 
     $scope.showMasterItemsModal = function (menuIndex) {
-      $scope.selectedIndex = menuIndex;
+      $scope.selectedIndex = menuIndex;	
+      $scope.allCheckboxesSelected = false;
       if ($scope.masterItemTotalList.length === 0) {
         $scope.lookUpDialog = true;
         getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate);
@@ -411,17 +412,28 @@ angular.module('ts5App')
       });
     };
 
+    this.filterMenuItemsByItemId = function() {
+      var allValidItems = [];
+      angular.forEach($scope.menuItemList, function (menuItem) {
+        if (menuItem.itemId) {
+          allValidItems.push(menuItem);
+        }
+      });
+
+      return allValidItems;
+    };
+
     $scope.populateAllSelectedItems = function() {
       angular.forEach($scope.masterItemList, function(masterItem) {
         if (masterItem.selectedItem) {
           $scope.setMasterItem(masterItem);
           var nextIndex = $scope.menuItemList.length;
           $scope.menuItemList.push({ menuIndex: nextIndex });
-          $scope.selectedIndex++;
+          $scope.selectedIndex = nextIndex;
         }
       });
 
-      $scope.menuItemList.splice($scope.menuItemList.length - 1, 1);
+      $scope.menuItemList = $this.filterMenuItemsByItemId();
     };
 
     $scope.setMasterItem = function (masterItem) {
