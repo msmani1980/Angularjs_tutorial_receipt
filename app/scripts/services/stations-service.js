@@ -92,8 +92,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
     var payload = {
       companyId: companyId,
-      startDate: nowDate,
-      endDate: nowDate
+      startDate: nowDate
     };
 
     if (offset) {
@@ -114,8 +113,7 @@ angular.module('ts5App').service('stationsService', function ($resource, ENV, da
     var nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormatted());
     var payload = {
       companyId: companyId,
-      startDate: nowDate,
-      endDate: nowDate
+      startDate: nowDate
     };
 
     if (offset) {
