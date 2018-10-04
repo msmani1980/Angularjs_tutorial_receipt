@@ -458,7 +458,7 @@ angular.module('ts5App')
 
     this.deserializeMenuItems = function () {
       $scope.menuItemList = [];
-      angular.forEach($scope.menu.menuItems, function (item, index) {
+      angular.forEach($scope.menu.menuItems, function (item) {
         var newItem = {
           itemQty: item.itemQty,
           id: item.id,
