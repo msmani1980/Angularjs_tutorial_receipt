@@ -462,7 +462,7 @@ angular.module('ts5App')
         var newItem = {
           itemQty: item.itemQty,
           id: item.id,
-          menuIndex: index,
+          menuIndex: item.sortOrder,
           selectedItem: item,
           itemId: item.itemId,
           itemName: item.itemName,
