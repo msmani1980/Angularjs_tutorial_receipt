@@ -95,40 +95,32 @@ angular.module('ts5App')
         if (angular.isDefined(response) && response.length > 0) {
           var responseSorted  = $filter('orderBy')(response, 'menuSortOrder');
           for (var i = 0; i < responseSorted.length; i++) {
+            var module = angular.copy(responseSorted[i]);
             var menuModule = { 
-              title: responseSorted[i].menuName,
+              title: module.menuName,
               menuItems:[]
             };
-            var menuItemsSorted = $filter('orderBy')(responseSorted[i].menuItems, 'menuItemSortOrder');
+            var menuItemsSorted = $filter('orderBy')(module.menuItems, 'menuItemSortOrder');
             for (var j = 0; j < menuItemsSorted.length; j++) {
+              var item = angular.copy(menuItemsSorted[j]);
               var menuItem = {
-                name: menuItemsSorted[j].menuItemName,
-                route:menuItemsSorted[j].menuItemRoute,
-                icon:menuItemsSorted[j].menuIcon,
-                className:menuItemsSorted[j].menuItemClassName,
-                package:menuItemsSorted[j].menuItemPackage,
-                role:menuItemsSorted[j].menuItemRole
+                name: item.menuItemName,
+                route:item.menuItemRoute,
+                icon:item.menuIcon,
+                className:item.menuItemClassName,
+                package:item.menuItemPackage,
+                role:item.menuItemRole,
+                apiName: (angular.isDefined(item.menuItemPermissionApiName) ? item.menuItemPermissionApiName : null),
+                permissionCodes:[item.menuItemPermissionCode]
               };
-              if (menuItemsSorted[j].menuItemPermissionApiName !== null && menuItemsSorted[j].menuItemPermissionCode !== null) {
-                var permissionApiCode = {
-                  apiName: menuItemsSorted[j].menuItemPermissionApiName,
-                  permissionCodes:[menuItemsSorted[j].menuItemPermissionCode]
-                };
-                menuItem.permissions = [permissionApiCode];
-              }
 
-              if (menuItemsSorted[j].menuItemPermissionApiName === null && menuItemsSorted[j].menuItemPermissionCode !== null) {
-                var permissionCode = {
-                  permissionCodes:[menuItemsSorted[j].menuItemPermissionCode]
-                };
-                menuItem.permissions = [permissionCode];
-              }
-
-              menuModule.menuItems.push(menuItem);
+              var filledItem = angular.copy(menuItem);
+              menuModule.menuItems.push(filledItem);
             }
 
             menu.push(menuModule);    
           }
+
         }
 
         filterMenuWithIAM(menu);
