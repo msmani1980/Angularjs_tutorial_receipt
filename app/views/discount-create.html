@@ -386,7 +386,7 @@
             <select name="restrictedItem-{{$index + 1}}" class="form-control"
                     ng-options="retailItem.id as retailItem.itemName for retailItem in filteredRetailItemsList[restrictedItem.itemCategory]"
                     ng-model="restrictedItem.id"
-                    ng-disabled="isDisabled()">
+                    ng-disabled="isDisabled()" required>
               <option value="">Please select</option>
             </select>
           </div>
