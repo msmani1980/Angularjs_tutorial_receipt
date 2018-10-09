@@ -59,8 +59,7 @@ module.exports = function(config) {
       'bower_components/angular-aria/angular-aria.js',
       'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'bower_components/angular-cookies/angular-cookies.js',
-      'bower_components/angular-dragdrop/draganddrop.js',
-      'bower_components/angular-filter/dist/angular-filter.min.js',
+      'bower_components/angular-filter/dist/angular-filter.js',
       'bower_components/angular-messages/angular-messages.js',
       'bower_components/qrcode/lib/qrcode.js',
       'bower_components/angular-qr/src/angular-qr.js',
@@ -97,6 +96,7 @@ module.exports = function(config) {
       'bower_components/SHA-1/sha1.js',
       'bower_components/angulartics/src/angulartics.js',
       'bower_components/angulartics-google-analytics/lib/angulartics-ga.js',
+      'bower_components/angular-native-dragdrop/draganddrop.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'bower_components/sprintf/src/angular-sprintf.js',
