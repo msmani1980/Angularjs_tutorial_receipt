@@ -19,7 +19,7 @@ angular.module('ts5App')
     $scope.companyCurrencies = [];
     $scope.companyStations = [];
     $scope.paymentMethods = ['Cash', 'Credit Card', 'Discount'];
-    $scope.creditCardTypes = [{ ccTypeName:'AmEx' }, { ccTypeName:'MasterCard' }, { ccTypeName:'Visa' }];    
+    $scope.creditCardTypes = [{ ccTypeName:'AmEx' }, { ccTypeName:'ELO' }, { ccTypeName:'MasterCard' }, { ccTypeName:'Visa' }];
     $scope.creditCardTransactionStatuses = ['New', 'Processed'];
     $scope.creditCardAuthStatuses = ['Approved', 'Not Approved'];
     $scope.overrideTransactionTypeNames = {
