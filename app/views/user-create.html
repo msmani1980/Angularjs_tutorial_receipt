@@ -17,6 +17,10 @@
                 <span class="fa fa-check-square-o" aria-hidden="true"></span>
                 <span class="hidden-xs">{{ buttonText }}</span>
               </button>
+              <button class="btn btn-default" ng-click="backToList()"  ng-show="viewOnly">
+                <span class="fa fa-remove" aria-hidden="true"></span>
+                <span class="hidden-xs">Back</span>
+              </button>
             </fieldset>
           </div>
         </div>
@@ -88,7 +92,10 @@
           </fieldset>
         </div>
         
-       <div class="col-xs-12 col-sm-12">
+        
+        <tabset justified="true" class ="col-xs-12 col-sm-12">
+          <tab heading="User Roles">
+       <div class="tab-pane">
        <accordion class="user-roles-accordion">
           <accordion-group ng-init="userRolesOpen=false" is-open="userRolesOpen">
             <accordion-heading class="accordion-heading">
@@ -131,10 +138,10 @@
           </accordion-group>
         </accordion>        
        </div>
+          </tab>
 
-       <!-- ********************************************* -->
-
-       <div class="col-xs-12 col-sm-12">
+          <tab heading="User Companies">
+       <div class="tab-pane">
        <accordion class="user-companies-accordion">
           <accordion-group ng-init="userCompaniesOpen=false" is-open="userCompaniesOpen">
             <accordion-heading class="accordion-heading">
@@ -167,10 +174,10 @@
           </accordion-group>
         </accordion>        
        </div>
-       
-       <!-- ********************************************* -->
+          </tab>
 
-       <div class="col-xs-12 col-sm-12">
+          <tab heading="User Stations">
+       <div class="tab-pane">
        <accordion class="user-stations-accordion">
           <accordion-group ng-init="userStationsOpen=false" is-open="userStationsOpen">
             <accordion-heading class="accordion-heading">
@@ -209,6 +216,18 @@
           </accordion-group>
         </accordion>        
        </div>
+         </tab>
+       </tabset>
+        
+        
+
+
+       <!-- ********************************************* -->
+
+
+       
+       <!-- ********************************************* -->
+
        
        <!-- ********************************************* -->
 
