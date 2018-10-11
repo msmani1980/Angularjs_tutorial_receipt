@@ -126,7 +126,14 @@ angular.module('ts5App')
 
     this.submitFormSuccess = function() {
       angular.element('#loading').modal('hide');
-      angular.element('#update-success').modal('show');
+
+      if ($scope.editingUser) {
+        angular.element('#update-success').modal('show');
+      }
+
+      if ($scope.creatingUser) {
+        angular.element('#create-success').modal('show');
+      }
     };
 
     this.createSubmitFormSuccess = function(response) {
