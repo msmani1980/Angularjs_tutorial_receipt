@@ -449,6 +449,10 @@ angular.module('ts5App')
       });
     }
 
+    $scope.backToList = function() {
+      $location.path('/user-list/');
+    };
+
     this.initUI = function(userData) {
       $scope.formData.id = userData.id;
       $scope.formData.userName = userData.userName;
