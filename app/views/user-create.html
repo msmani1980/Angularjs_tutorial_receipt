@@ -96,12 +96,12 @@
         <tabset justified="true" class ="col-xs-12 col-sm-12">
           <tab heading="User Roles">
        <div class="tab-pane">
-       <accordion class="user-roles-accordion">
+<!--        <accordion class="user-roles-accordion">
           <accordion-group ng-init="userRolesOpen=false" is-open="userRolesOpen">
             <accordion-heading class="accordion-heading">
               <i ng-class="getClassForAccordionArrows(userRolesOpen)" class="fa"></i>
               User Roles
-            </accordion-heading>
+            </accordion-heading> -->
 
            <div class="form-group">
               <label>Privilege</label>
@@ -119,7 +119,7 @@
               <thead>
                 <tr>
                   <th>
-                    <input class="btn btn-default" style="margin-top:0px" type="checkbox" value="1" ng-model="allRoleCheckboxesSelected" ng-click="toggleAllRoleCheckboxes()" ng-disabled="viewOnly">
+                    <input class="btn btn-default" style="margin-top:0px" type="checkbox" value="1" ng-checked="allRoleCheckboxesSelected" ng-click="toggleAllRoleCheckboxes()" ng-disabled="viewOnly">
                     Select All
                   </th>
                   <th>Role</th>
@@ -128,27 +128,27 @@
               <tbody ng-repeat="role in allRolesList">
                 <tr class="master-row" id="role-{{ role.id }}">
                   <td>
-                    <input ng-model="role.selected" type="checkbox" ng-click="roleSelectionToggled()" ng-disabled="viewOnly"/>
+                    <input ng-checked="role.selected" type="checkbox" ng-click="roleSelectionToggledNew(role)" ng-disabled="viewOnly"/>
                   </td>
                   <td>{{ role.roleName }}</td>
                 </tr>
               </tbody>
               </table>
             </div>
-          </accordion-group>
-        </accordion>        
+<!--           </accordion-group>
+        </accordion> -->        
        </div>
           </tab>
 
           <tab heading="User Companies">
        <div class="tab-pane">
-       <accordion class="user-companies-accordion">
+<!--        <accordion class="user-companies-accordion">
           <accordion-group ng-init="userCompaniesOpen=false" is-open="userCompaniesOpen">
             <accordion-heading class="accordion-heading">
               <i ng-class="getClassForAccordionArrows(userCompaniesOpen)" class="fa"></i>
               User Companies
             </accordion-heading>
-
+ -->
             <div clas="form-group" ng-disabled="viewOnly">           
               <table class="table table-bordered table-hover">
               <thead>
@@ -171,19 +171,19 @@
               </tbody>
               </table>
             </div>
-          </accordion-group>
-        </accordion>        
+<!--           </accordion-group>
+        </accordion> -->        
        </div>
           </tab>
 
           <tab heading="User Stations">
        <div class="tab-pane">
-       <accordion class="user-stations-accordion">
+<!--        <accordion class="user-stations-accordion">
           <accordion-group ng-init="userStationsOpen=false" is-open="userStationsOpen">
             <accordion-heading class="accordion-heading">
               <i ng-class="getClassForAccordionArrows(userStationsOpen)" class="fa"></i>
               User Stations
-            </accordion-heading>
+            </accordion-heading> -->
 
             <div clas="form-group" ng-disabled="viewOnly">           
               <table class="table table-bordered table-hover">
@@ -213,8 +213,8 @@
               </tbody>
               </table>
             </div>
-          </accordion-group>
-        </accordion>        
+<!--           </accordion-group>
+        </accordion> -->        
        </div>
          </tab>
        </tabset>
