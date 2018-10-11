@@ -13,6 +13,7 @@ angular.module('ts5App')
     $scope.selectedIndex = 0;
     $scope.lookUpDialog = false;
     $scope.isDateChanged = true;
+    $scope.allCheckboxesSelected = false;
     $scope.masterItemTotalList = [];
 
     $scope.cloningItem = false;
@@ -21,7 +22,7 @@ angular.module('ts5App')
       angular.element('#loading').modal('show').find('p').text(message);
     }
 
-    function showMasterItemsModal() {
+    function showMasterItemsDialog() {
       angular.element('#master-items').modal('show');
     }
 
@@ -330,7 +331,7 @@ angular.module('ts5App')
           $this.filterMasterItemsListByCategory($scope.menuItemList[$scope.selectedIndex].catId);
         }
 
-        showMasterItemsModal();
+        showMasterItemsDialog();
         $scope.lookUpDialog = false;
       }
 
@@ -355,7 +356,8 @@ angular.module('ts5App')
     };
 
     $scope.showMasterItemsModal = function (menuIndex) {
-      $scope.selectedIndex = menuIndex;
+      $scope.selectedIndex = menuIndex;	
+      $scope.allCheckboxesSelected = false;
       if ($scope.masterItemTotalList.length === 0) {
         $scope.lookUpDialog = true;
         getFilteredMasterItems($scope.menu.startDate, $scope.menu.endDate);
@@ -366,7 +368,7 @@ angular.module('ts5App')
           $this.filterMasterItemsListByCategory($scope.menuItemList[$scope.selectedIndex].catId);
         }
 
-        showMasterItemsModal();
+        showMasterItemsDialog();
       }
     };
 
@@ -385,9 +387,55 @@ angular.module('ts5App')
     $scope.setCategoryName = function (categoryName, id) {
       $scope.menuItemList[$scope.selectedIndex].name = categoryName;
       $scope.menuItemList[$scope.selectedIndex].catId = id;
+      $this.setDisableMasterItem($scope.menuItemList[$scope.selectedIndex].itemId, false);
       $scope.menuItemList[$scope.selectedIndex].itemName = '';
       $scope.menuItemList[$scope.selectedIndex].itemId = '';
       angular.element('#sales-categories').modal('hide');
+    };
+
+    $scope.toggleSelectAll = function() {
+      var toggleAll = false;
+      angular.forEach($scope.masterItemList, function(masterItem) {
+        if (!masterItem.selectedItem && !masterItem.isDisabled) {
+          toggleAll = true;
+        }
+
+      });
+
+      $scope.allCheckboxesSelected = !toggleAll;
+    };
+
+    $scope.toggleAllCheckboxes = function() {
+      var filteredMasterItemList = $filter('filter')($scope.masterItemList, { itemName: $scope.masterItemsListFilterText });
+      angular.forEach(filteredMasterItemList, function(masterItem) {
+        if (!masterItem.isDisabled) {
+          masterItem.selectedItem = $scope.allCheckboxesSelected;
+        }
+      });
+    };
+
+    this.filterMenuItemsByItemId = function() {
+      var allValidItems = [];
+      angular.forEach($scope.menuItemList, function (menuItem) {
+        if (menuItem.itemId) {
+          allValidItems.push(menuItem);
+        }
+      });
+
+      return allValidItems;
+    };
+
+    $scope.populateAllSelectedItems = function() {
+      angular.forEach($scope.masterItemList, function(masterItem) {
+        if (masterItem.selectedItem) {
+          $scope.setMasterItem(masterItem);
+          var nextIndex = $scope.menuItemList.length;
+          $scope.menuItemList.push({ menuIndex: nextIndex });
+          $scope.selectedIndex = nextIndex;
+        }
+      });
+
+      $scope.menuItemList = $this.filterMenuItemsByItemId();
     };
 
     $scope.setMasterItem = function (masterItem) {
@@ -412,11 +460,11 @@ angular.module('ts5App')
 
     this.deserializeMenuItems = function () {
       $scope.menuItemList = [];
-      angular.forEach($scope.menu.menuItems, function (item, index) {
+      angular.forEach($scope.menu.menuItems, function (item) {
         var newItem = {
           itemQty: item.itemQty,
           id: item.id,
-          menuIndex: index,
+          menuIndex: item.sortOrder,
           selectedItem: item,
           itemId: item.itemId,
           itemName: item.itemName,
