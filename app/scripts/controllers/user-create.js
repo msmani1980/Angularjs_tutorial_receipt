@@ -154,32 +154,26 @@ angular.module('ts5App')
       $scope.selectedRoles = [];
       lodash.forEach($scope.allRolesList, function (role) {
         if (role.selected) {
-        	console.log ('role.selected', role);
           $scope.selectedRoles.push(role.id);
         }
       });
-      
-  	console.log ('$scope.selectedRoles', $scope.selectedRoles);
 
     };
     
     $scope.roleSelectionToggledNew = function (role) {
-      console.log ('$scope.roleSelectionToggledNew->role', role);
       if (role.selected) {
         role.selected = false;
         lodash.forEach($scope.selectedRoles, function (sRoleId) {
           if (role.id === sRoleId) {
             var index = $scope.selectedRoles.indexOf(sRoleId);
-        	$scope.selectedRoles.splice(index, 1);     
+            $scope.selectedRoles.splice(index, 1);
           }
         });
       } else {
-    	  role.selected = true;
-    	  $scope.selectedRoles.push(role.id);
+        role.selected = true;
+        $scope.selectedRoles.push(role.id);
       }    
-      
-      console.log ('$scope.roleSelectionToggledNew->$scope.selectedRoles', $scope.selectedRoles);
-      
+
     };
     
     $scope.companySelectionToggled = function () {
@@ -201,7 +195,6 @@ angular.module('ts5App')
     };
 
     $scope.toggleAllRoleCheckboxes = function () {
-      console.log ('$scope.toggleAllRoleCheckboxes', $scope.toggleAllRoleCheckboxes);
       $scope.allRoleCheckboxesSelected = $scope.allRoleCheckboxesSelected ? false : true;
       angular.forEach($scope.allRolesList, function (role) {
         role.selected = $scope.allRoleCheckboxesSelected;
