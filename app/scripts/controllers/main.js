@@ -65,6 +65,8 @@ angular.module('ts5App')
     }
 
     function menuWithFeaturePermissions(menu, response) {
+    	console.log ('menu', menu);
+    	console.log ('response', response);
       return lodash.filter(menu, function (item) {
         item.menuItems = menuItemsWithFeaturePermissions(item.menuItems, response);
         return item.menuItems.length !== 0;
@@ -110,8 +112,10 @@ angular.module('ts5App')
                 className:item.menuItemClassName,
                 package:item.menuItemPackage,
                 role:item.menuItemRole,
-                apiName: (angular.isDefined(item.menuItemPermissionApiName) ? item.menuItemPermissionApiName : null),
-                permissionCodes:[item.menuItemPermissionCode]
+                permissions: [{
+                  apiName: (angular.isDefined(item.menuItemPermissionApiName) ? item.menuItemPermissionApiName : null),
+                  permissionCodes:[item.menuItemPermissionCode]
+                }]
               };
 
               var filledItem = angular.copy(menuItem);
