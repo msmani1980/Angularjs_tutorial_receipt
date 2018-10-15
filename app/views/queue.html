@@ -9,6 +9,7 @@
          <th>Status</th>
          <th>ID</th>
          <th>Created</th>
+         <th>Created By</th>
          <th>Runtime</th>
          <th>Report Size</th>
          <th>Actions</th>
@@ -20,6 +21,7 @@
          <th>{{job.status}}</th>
          <th>{{job.id}}</th>
          <th>{{job.created | date : 'medium'}}</th>
+          <th>{{job.createdByPerson.userName}}</th>
          <th>{{job.jobRunTimeMillis | timeinterval}}</th>
          <th><span ng-if="job.file">{{job.file.size | filesize}}</span></th>
          <th>
