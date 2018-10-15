@@ -56,7 +56,6 @@ angular.module('ts5App')
     };
 
     $scope.changeUserPrivilege = function (id) {
-      $scope.allRoleCheckboxesSelected = false;
       $scope.userPrivilege.id =  id;
 
       if (id === 1) {
@@ -74,8 +73,13 @@ angular.module('ts5App')
       if (id === 4) {
         $scope.allRolesList = $scope.egateLevelRolesList; 
       }
+     
+      $scope.allRoleCheckboxesSelected = false;
+      $scope.selectedRoles = [];
+      lodash.forEach($scope.allRolesList, function (role) {
+        role.selected = false;
+      });
 
-      $scope.roleSelectionToggled();
     };
 
     $scope.setUserPrivilege = function (userPrivilegeId) {
@@ -126,7 +130,14 @@ angular.module('ts5App')
 
     this.submitFormSuccess = function() {
       angular.element('#loading').modal('hide');
-      angular.element('#update-success').modal('show');
+
+      if ($scope.editingUser) {
+        angular.element('#update-success').modal('show');
+      }
+
+      if ($scope.creatingUser) {
+        angular.element('#create-success').modal('show');
+      }
     };
 
     this.createSubmitFormSuccess = function(response) {
@@ -146,8 +157,25 @@ angular.module('ts5App')
           $scope.selectedRoles.push(role.id);
         }
       });
-    };
 
+    };
+    
+    $scope.roleSelectionToggledNew = function (role) {
+      if (role.selected) {
+        role.selected = false;
+        lodash.forEach($scope.selectedRoles, function (sRoleId) {
+          if (role.id === sRoleId) {
+            var index = $scope.selectedRoles.indexOf(sRoleId);
+            $scope.selectedRoles.splice(index, 1);
+          }
+        });
+      } else {
+        role.selected = true;
+        $scope.selectedRoles.push(role.id);
+      }    
+
+    };
+    
     $scope.companySelectionToggled = function () {
       $scope.selectedCompanies = [];
       lodash.forEach($scope.allActiveCompaniesList, function (company) {
@@ -448,6 +476,10 @@ angular.module('ts5App')
         });
       });
     }
+
+    $scope.backToList = function() {
+      $location.path('/user-list/');
+    };
 
     this.initUI = function(userData) {
       $scope.formData.id = userData.id;
