@@ -13,7 +13,7 @@ angular.module('ts5App').service('userManagementService', function ($resource, E
   var userByCodeURL = ENV.apiUrl + '/IdentityAccess/authorizeUser/:user';
   var organizationsURL = ENV.apiUrl + '/IdentityAccess/company/organizations';
   var userUpdateURL = ENV.apiUrl + '/IdentityAccess/updateUser';
-  var userCreateURL = ENV.apiUrl + '/IdentityAccess/createUser';
+  var userCreateURL = ENV.apiUrl + '/IdentityAccess/createPortalUser';
   var userByIdURL = ENV.apiUrl + '/IdentityAccess/user/:id';
   var allRolesURL = ENV.apiUrl + '/IdentityAccess/allRoles';
   var userRolesURL = ENV.apiUrl + '/IdentityAccess/portaluserroles/:id';
