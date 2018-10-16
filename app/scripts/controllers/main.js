@@ -100,6 +100,7 @@ angular.module('ts5App')
               title: module.menuName,
               menuItems:[]
             };
+
             var menuItemsSorted = $filter('orderBy')(module.menuItems, 'menuItemSortOrder');
             for (var j = 0; j < menuItemsSorted.length; j++) {
               var item = angular.copy(menuItemsSorted[j]);
@@ -110,17 +111,17 @@ angular.module('ts5App')
                 className:item.menuItemClassName,
                 package:item.menuItemPackage,
                 role:item.menuItemRole,
-                apiName: (angular.isDefined(item.menuItemPermissionApiName) ? item.menuItemPermissionApiName : null),
-                permissionCodes:[item.menuItemPermissionCode]
+                permissions: [{
+                  apiName: (angular.isDefined(item.menuItemPermissionApiName) ? item.menuItemPermissionApiName : null),
+                  permissionCodes:[item.menuItemPermissionCode]
+                }]
               };
 
-              var filledItem = angular.copy(menuItem);
-              menuModule.menuItems.push(filledItem);
+              menuModule.menuItems.push(angular.copy(menuItem));
             }
 
-            menu.push(menuModule);    
+            menu.push(angular.copy(menuModule));    
           }
-
         }
 
         filterMenuWithIAM(menu);
