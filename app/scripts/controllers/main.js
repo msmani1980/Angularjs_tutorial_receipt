@@ -65,8 +65,6 @@ angular.module('ts5App')
     }
 
     function menuWithFeaturePermissions(menu, response) {
-    	console.log ('menu', menu);
-    	console.log ('response', response);
       return lodash.filter(menu, function (item) {
         item.menuItems = menuItemsWithFeaturePermissions(item.menuItems, response);
         return item.menuItems.length !== 0;
@@ -102,6 +100,7 @@ angular.module('ts5App')
               title: module.menuName,
               menuItems:[]
             };
+
             var menuItemsSorted = $filter('orderBy')(module.menuItems, 'menuItemSortOrder');
             for (var j = 0; j < menuItemsSorted.length; j++) {
               var item = angular.copy(menuItemsSorted[j]);
@@ -118,13 +117,11 @@ angular.module('ts5App')
                 }]
               };
 
-              var filledItem = angular.copy(menuItem);
-              menuModule.menuItems.push(filledItem);
+              menuModule.menuItems.push(angular.copy(menuItem));
             }
 
-            menu.push(menuModule);    
+            menu.push(angular.copy(menuModule));    
           }
-
         }
 
         filterMenuWithIAM(menu);

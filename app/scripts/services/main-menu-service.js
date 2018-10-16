@@ -44,11 +44,22 @@ angular.module('ts5App')
           route: '/#/user-list',
           icon: 'icon-manage-company',
           className: 'dashboard-manageCompanies',
-          package: 'COMPANY',
-          role: 'COMPANY',
+          package: 'USERMANAGEMENT',
+          role: 'USERMANAGEMENT',
           permissions: [{
-            apiName: '/api/users',
+            apiName: '/users',
             permissionCodes: ['R']
+          }]
+        }, {
+          name: 'Create User',
+          route: '/#/user-create',
+          icon: 'icon-create-company',
+          className: 'dashboard-createCompany',
+          package: 'USERMANAGEMENT',
+          role: 'USERMANAGEMENT',
+          permissions: [{
+            apiName: '/createUser',
+            permissionCodes: ['C']
           }]
         }]  
       }, {
