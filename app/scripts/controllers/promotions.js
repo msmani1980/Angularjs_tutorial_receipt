@@ -230,6 +230,8 @@ angular.module('ts5App')
     }
 
     function payloadGenerateBenefitTypeDiscount() {
+      /*jshint maxcomplexity:8 */
+      
       // Discount Rate Types
       // Discount Rate Type - Percentage
       payload.discountTypeId = $scope.promotion.discountType.id;
@@ -238,7 +240,7 @@ angular.module('ts5App')
       }
 
       // Discount Rate Type - Amount
-      if (payload.discountTypeId === 2) {
+      if (payload.discountTypeId === 2 || payload.discountTypeId === 3) {
         payloadGenerateDiscountRateTypeAmount();
       }
 
