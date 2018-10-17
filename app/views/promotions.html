@@ -350,7 +350,7 @@
               </div>
             </div>
           </div>
-          <fieldset ng-if="promotion.discountType.name === 'Amount'">
+          <fieldset ng-if="promotion.discountType.name === 'Amount' || promotion.discountType.name === 'Fixed price' ">
             <div class="form-group">
               <label>Fixed Discount Value</label>
               <div class="row" ng-repeat="benefitAmountData in benefitAmountsUi track by $index">
@@ -370,6 +370,7 @@
               </div>
               <label>Miles/Points</label>
               <input class="form-control" ng-model="promotion.milesPoints" name="milesPoints" ng-pattern="regexp.number" ng-required="false" maxlength="10" ng-disabled="readOnly || isDisabled"/>
+            </div>
           </fieldset>
         </fieldset>
 
