@@ -260,24 +260,24 @@ angular.module('ts5App')
     }
 
     function getArrivalStationId(stationData) {
-      if (angular.isDefined(stationData.arrivalStationId)) {
-        return stationData.arrivalStationId;
-      }
-
       if (angular.isDefined(stationData.arrivalStation) && angular.isDefined(stationData.arrivalStation.id)) {
         return stationData.arrivalStation.id;
+      }
+
+      if (angular.isDefined(stationData.arrivalStationId)) {
+        return stationData.arrivalStationId;
       }
 
       return null;
     }
 
     function getDepartureStationId(stationData) {
-      if (angular.isDefined(stationData.departureStationId)) {
-        return stationData.departureStationId;
-      }
-
       if (angular.isDefined(stationData.departureStation) && angular.isDefined(stationData.departureStation.id)) {
         return stationData.departureStation.id;
+      }
+
+      if (angular.isDefined(stationData.departureStationId)) {
+        return stationData.departureStationId;
       }
 
       return null;
