@@ -510,8 +510,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.deserializeCharacteristics(itemData);
       this.formatImageDates(itemData.images);
 
-      var sortedPricesById = _.orderBy(itemData.prices, ['id'], ['asc']);
-      itemData.prices = angular.copy(sortedPricesById);
+      itemData.prices = _.orderBy(itemData.prices, ['code'], ['asc']);
+
       this.formatPriceDates(itemData);
       $scope.formData = angular.copy(itemData);
 
@@ -1165,6 +1165,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.setPriceCurrenciesList = function(priceIndex, priceCurrencies) {
+      priceCurrencies = _.orderBy(priceCurrencies, ['code'], ['asc']);
+
       $scope.formData.prices[priceIndex].priceCurrencies = priceCurrencies;
     };
 
