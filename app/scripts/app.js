@@ -482,6 +482,10 @@ angular.module('ts5App', [
     templateUrl: 'views/packingplan-list.html',
     controller: 'PackingplanListCtrl',
     controllerAs: 'packingplanList'
+  }).when('/packingplan/:action/:id?', {
+    templateUrl: 'views/packingplan-create.html',
+    controller: 'PackingplanCreateCtrl',
+    controllerAs: 'packingplanCreate'
   }).when('/company-receipts/:action/:id?', {
     templateUrl: 'views/company-receipt-create.html',
     controller: 'CompanyReceiptCreateCtrl',
