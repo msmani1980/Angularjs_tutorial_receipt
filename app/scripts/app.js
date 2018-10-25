@@ -498,6 +498,18 @@ angular.module('ts5App', [
     templateUrl: 'views/route-tax-rates.html',
     controller: 'RouteTaxRatesCtrl',
     controllerAs: 'routeTaxRates'
+  }).when('/user-list', {
+    templateUrl: 'views/user-list.html',
+    controller: 'UserManagementListCtrl'
+  }).when('/user-create', {
+    templateUrl: 'views/user-create.html',
+    controller: 'UserCreateCtrl'
+  }).when('/user-edit/:user', {
+    templateUrl: 'views/user-create.html',
+    controller: 'UserCreateCtrl'
+  }).when('/user-view/:user', {
+    templateUrl: 'views/user-create.html',
+    controller: 'UserCreateCtrl'
   }).otherwise({
     redirectTo: '/'
   });

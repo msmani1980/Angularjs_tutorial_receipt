@@ -24,7 +24,8 @@ angular.module('ts5App')
             apiName: '/api/companies',
             permissionCodes: ['R']
           }]
-        }, {
+        },
+        {
           name: 'Create Company',
           route: '/#/company-create',
           icon: 'icon-create-company',
@@ -36,6 +37,31 @@ angular.module('ts5App')
             permissionCodes: ['C']
           }]
         }]
+      }, {
+        title: 'User Management',
+        menuItems: [{
+          name: 'User Management',
+          route: '/#/user-list',
+          icon: 'icon-manage-company',
+          className: 'dashboard-manageCompanies',
+          package: 'USERMANAGEMENT',
+          role: 'USERMANAGEMENT',
+          permissions: [{
+            apiName: '/users',
+            permissionCodes: ['R']
+          }]
+        }, {
+          name: 'Create User',
+          route: '/#/user-create',
+          icon: 'icon-create-company',
+          className: 'dashboard-createCompany',
+          package: 'USERMANAGEMENT',
+          role: 'USERMANAGEMENT',
+          permissions: [{
+            apiName: '/createUser',
+            permissionCodes: ['C']
+          }]
+        }]  
       }, {
         title: 'Currency & Exchange Rate Management',
         menuItems: [{
