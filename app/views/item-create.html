@@ -88,25 +88,25 @@
 
             <fieldset ng-disabled="isDisabled()">
 
-              <input-text label="Retail Item Code" name="itemCode" required="form.$submitted" pattern="regexp.alphaWithSpecialCharMenuItem"
+              <input-text label="Retail Item Code" name="Retail Item Code" required="form.$submitted" pattern="regexp.alphaWithSpecialCharMenuItem"
                           placeholder="Item123" min-length="1" max-length="10"></input-text>
 
-              <input-text label="Retail Item Name" name="itemName" required="form.$submitted" pattern="regexp.alphaWithSpecialCharMenuItem"
+              <input-text label="Retail Item Name" name="Retail Item Name" required="form.$submitted" pattern="regexp.alphaWithSpecialCharMenuItem"
                           placeholder="New Item" min-length="1" max-length="40"></input-text>
 
-              <input-text label="POS Display Name" name="onBoardName" required="form.$submitted" pattern="regexp.alphaWithSpecialCharMenuItem"
+              <input-text label="POS Display Name" name="POS Display Name" required="form.$submitted" pattern="regexp.alphaWithSpecialCharMenuItem"
                           placeholder="New Item" min-length="1" max-length="30"></input-text>
 
-              <input-text label="ePOS Quick Search Code" name="quickSearchCode" pattern="regexp.alphanumeric"
+              <input-text label="ePOS Quick Search Code" name="ePOS Quick Search Code" pattern="regexp.alphanumeric"
                           placeholder="ePOS Quick Search Code" max-length="15"></input-text>
 
-              <input-textarea label="Item Description" name="desc" required="form.$submitted" pattern="regexp.alphaWithSpecialCharMenuItem"
+              <input-textarea label="Item Description" name="Item Description" required="form.$submitted" pattern="regexp.alphaWithSpecialCharMenuItem"
                           placeholder="A simple description..." max-length="255" class="vertical-resize-only"></input-textarea>
 
               <input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="new item"
                           max-length="500"></input-text>
 
-              <input-text label="Unique Selling Point" name="sellingPoint" pattern="regexp.word"
+              <input-text label="Unique Selling Point" name="Unique Selling Point" pattern="regexp.word"
                           placeholder="A unique description" max-length="100"></input-text>
 
               <div class="form-group">
@@ -121,30 +121,30 @@
             <div class="row">
               <div class="col-xs-12 col-sm-6">
                 <date-picker-field ng-if="minDate"
-                  disable="isDisabled()" form="form" name="EffectiveFrom" label="Effective From"
+                  disable="isDisabled()" form="form" name="Effective From" label="Effective From"
                   min-date="minDate" required="true" ng-model="formData.startDate">
                 </date-picker-field>
               </div>
               <div class="col-xs-12 col-sm-6">
                 <date-picker-field ng-if="minDate" disable="isDisabledEndDateForm()" form="form" end-current-effective="isDisabled()"
-                  name="EffectiveTo" min-date="minDate" label="Effective To" required="true"
+                  name="Effective To" min-date="minDate" label="Effective To" required="true"
                   ng-model="formData.endDate">
                 </date-picker-field>
               </div>
             </div>
 
             <fieldset ng-disabled="isDisabled()">
-              <div class="form-group" >
+              <div class="form-group" ng-class="{ 'has-error' : !category.id && displayError , 'has-success' : category.id }">
                 <label>Sales Category *</label>
-                <select name="categoryId" required ng-model="formData.categoryId" class="form-control">
+                <select name="Sales Category" required ng-model="formData.categoryId" class="form-control">
                   <option ng-selected="setSelected(formData.categoryId, category.id)" ng-repeat="category in salesCategories"
                           value="{{ category.id }}">{{ category.name }}
                   </option>
                 </select>
               </div>
-              <div class="form-group">
+              <div class="form-group"  ng-class="{ 'has-error' : !type.id && displayError , 'has-success' : type.id }">
                 <label>Item Type *</label>
-                <select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control" ng-change="filterCharacteristics()">
+                <select name="Item Type" required ng-model="formData.itemTypeId" class="form-control" ng-change="filterCharacteristics()">
                   <option ng-selected="setSelected(formData.itemTypeId, type.id)" ng-repeat="type in itemTypes"
                           value="{{ type.id }}">{{ type.name }}
                   </option>
