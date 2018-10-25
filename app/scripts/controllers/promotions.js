@@ -230,6 +230,8 @@ angular.module('ts5App')
     }
 
     function payloadGenerateBenefitTypeDiscount() {
+      /*jshint maxcomplexity:8 */
+      
       // Discount Rate Types
       // Discount Rate Type - Percentage
       payload.discountTypeId = $scope.promotion.discountType.id;
@@ -238,7 +240,7 @@ angular.module('ts5App')
       }
 
       // Discount Rate Type - Amount
-      if (payload.discountTypeId === 2) {
+      if (payload.discountTypeId === 2 || payload.discountTypeId === 3) {
         payloadGenerateDiscountRateTypeAmount();
       }
 
@@ -258,24 +260,24 @@ angular.module('ts5App')
     }
 
     function getArrivalStationId(stationData) {
-      if (angular.isDefined(stationData.arrivalStationId)) {
-        return stationData.arrivalStationId;
-      }
-
       if (angular.isDefined(stationData.arrivalStation) && angular.isDefined(stationData.arrivalStation.id)) {
         return stationData.arrivalStation.id;
+      }
+
+      if (angular.isDefined(stationData.arrivalStationId)) {
+        return stationData.arrivalStationId;
       }
 
       return null;
     }
 
     function getDepartureStationId(stationData) {
-      if (angular.isDefined(stationData.departureStationId)) {
-        return stationData.departureStationId;
-      }
-
       if (angular.isDefined(stationData.departureStation) && angular.isDefined(stationData.departureStation.id)) {
         return stationData.departureStation.id;
+      }
+
+      if (angular.isDefined(stationData.departureStationId)) {
+        return stationData.departureStationId;
       }
 
       return null;
