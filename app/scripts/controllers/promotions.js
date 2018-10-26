@@ -997,19 +997,6 @@ angular.module('ts5App')
       $scope.promotion.filters.splice($index, 1);
     };
 
-    function stationVarsSet(station, stations, stationTypeProp) {
-      if (angular.isUndefined(stations[stationTypeProp])) {
-        return false;
-      }
-
-      if (angular.isUndefined(stations[stationTypeProp].id)) {
-        return false;
-      }
-
-      return !angular.isUndefined(station.id);
-
-    }
-
     $scope.disabledDepartureStationsV2 = function (station, stations) {
       if (!stations.arrivalStation) {
         return false;
