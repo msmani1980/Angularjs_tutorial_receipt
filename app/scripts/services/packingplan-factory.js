@@ -8,12 +8,8 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('packingplanFactory', function (globalMenuService, packingplanService, menuMasterService) {
-    // Service logic
-  var getCompanyId = function () {
-    return globalMenuService.company.get();
-  };
-
+  .factory('packingplanFactory', function (packingplanService, menuMasterService) {
+  // Service logic
   var getPackingPlansList = function (payload) {
     return packingplanService.getPackingPlansList(payload);
   };
@@ -36,7 +32,7 @@ angular.module('ts5App')
 
   var getMenuMasterList = function (payload) {
     return menuMasterService.getMenuMasterList(payload);
-  }
+  };
 
   return {
     getPackingPlansList: getPackingPlansList,
@@ -44,7 +40,6 @@ angular.module('ts5App')
     createPackingPlan: createPackingPlan,
     updatePackingPlan: updatePackingPlan,
     deletePackingPlan: deletePackingPlan,
-    getCompanyId: getCompanyId,
     getMenuMasterList: getMenuMasterList
   };
 

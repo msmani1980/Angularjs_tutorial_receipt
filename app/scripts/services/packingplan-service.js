@@ -33,7 +33,7 @@ angular.module('ts5App')
       headers: {}
     }
   };
-	  
+  
   var packingPlanRequestResource = $resource(packingPlanRequestURL, null, packingPlanActions);
 
   var getPackingPlansList = function (payload, additionalPayload) {
