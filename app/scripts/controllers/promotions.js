@@ -812,19 +812,6 @@ angular.module('ts5App')
 
     }
 
-    function hasCompleteStationObject(index) {
-      if (angular.isUndefined($scope.promotion.filters[index])) {
-        return false;
-      }
-
-      if (!hasDepartureStationObject(index)) {
-        return false;
-      }
-
-      return hasCompleteArrivalStation(index);
-
-    }
-
     function removeDepartureFromHasArrival(arrivalId, departureId) {
       var departureIndex = -1;
       if ($scope.repeatableStations.arrivalHas[arrivalId]) {
@@ -1062,6 +1049,18 @@ angular.module('ts5App')
     $scope.disabledArrivalStations = function (station, stations) {
       return disabledStations(station, stations, 'departureStation', 'departureHas');
     };
+
+    function hasCompleteStationObject(index) {
+      if (angular.isUndefined($scope.promotion.filters[index])) {
+        return false;
+      }
+
+      if (!hasDepartureStationObject(index)) {
+        return false;
+      }
+
+      return hasCompleteArrivalStation(index);
+    }
 
     $scope.stationListChanged = function ($index) {
       if (!hasCompleteStationObject($index)) {
