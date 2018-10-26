@@ -816,33 +816,6 @@ angular.module('ts5App')
       }
     }
 
-    function stationVarsSet(station, stations, stationTypeProp) {
-      if (angular.isUndefined(stations[stationTypeProp])) {
-        return false;
-      }
-
-      if (angular.isUndefined(stations[stationTypeProp].id)) {
-        return false;
-      }
-
-      return !angular.isUndefined(station.id);
-
-    }
-
-    function disabledStations(station, stations, stationTypeProp, stationHasProp) {
-      if (!stationVarsSet(station, stations, stationTypeProp)) {
-        return false;
-      }
-
-      var stationId = stations[stationTypeProp].id;
-      if (!$scope.repeatableStations[stationHasProp][stationId]) {
-        return false;
-      }
-
-      var hasStationsAssigned = $scope.repeatableStations[stationHasProp][stationId];
-      return hasStationsAssigned.indexOf(station.id) !== -1;
-    }
-
     var states = {};
     states.createInit = function () {
       getPromotionMetaData();
@@ -1024,6 +997,33 @@ angular.module('ts5App')
       $scope.promotion.filters.splice($index, 1);
     };
 
+    function stationVarsSet(station, stations, stationTypeProp) {
+      if (angular.isUndefined(stations[stationTypeProp])) {
+        return false;
+      }
+
+      if (angular.isUndefined(stations[stationTypeProp].id)) {
+        return false;
+      }
+
+      return !angular.isUndefined(station.id);
+
+    }
+
+    function disabledStations(station, stations, stationTypeProp, stationHasProp) {
+      if (!stationVarsSet(station, stations, stationTypeProp)) {
+        return false;
+      }
+
+      var stationId = stations[stationTypeProp].id;
+      if (!$scope.repeatableStations[stationHasProp][stationId]) {
+        return false;
+      }
+
+      var hasStationsAssigned = $scope.repeatableStations[stationHasProp][stationId];
+      return hasStationsAssigned.indexOf(station.id) !== -1;
+    }
+
     $scope.disabledDepartureStations = function (station, stations) {
       return disabledStations(station, stations, 'arrivalStation', 'arrivalHas');
     };
@@ -1038,7 +1038,6 @@ angular.module('ts5App')
       }
 
       return !angular.isUndefined($scope.promotion.filters[index].departureStation.id);
-
     }
 
     function hasCompleteArrivalStation(index) {
