@@ -1024,14 +1024,6 @@ angular.module('ts5App')
       return hasStationsAssigned.indexOf(station.id) !== -1;
     }
 
-    $scope.disabledDepartureStations = function (station, stations) {
-      return disabledStations(station, stations, 'arrivalStation', 'arrivalHas');
-    };
-
-    $scope.disabledArrivalStations = function (station, stations) {
-      return disabledStations(station, stations, 'departureStation', 'departureHas');
-    };
-
     $scope.disabledDepartureStationsV2 = function (station, stations) {
       if (!stations.arrivalStation) {
         return false;
