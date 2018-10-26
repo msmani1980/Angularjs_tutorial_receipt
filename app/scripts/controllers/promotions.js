@@ -1010,20 +1010,6 @@ angular.module('ts5App')
 
     }
 
-    function disabledStations(station, stations, stationTypeProp, stationHasProp) {
-      if (!stationVarsSet(station, stations, stationTypeProp)) {
-        return false;
-      }
-
-      var stationId = stations[stationTypeProp].id;
-      if (!$scope.repeatableStations[stationHasProp][stationId]) {
-        return false;
-      }
-
-      var hasStationsAssigned = $scope.repeatableStations[stationHasProp][stationId];
-      return hasStationsAssigned.indexOf(station.id) !== -1;
-    }
-
     $scope.disabledDepartureStationsV2 = function (station, stations) {
       if (!stations.arrivalStation) {
         return false;
