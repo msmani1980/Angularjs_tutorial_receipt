@@ -794,24 +794,6 @@ angular.module('ts5App')
       promotionsFactory.getPromotion($routeParams.id).then(getPromotionMetaData, showResponseErrors);
     }
 
-    function hasDepartureStationObject(index) {
-      if (angular.isUndefined($scope.promotion.filters[index].departureStation)) {
-        return false;
-      }
-
-      return !angular.isUndefined($scope.promotion.filters[index].departureStation.id);
-
-    }
-
-    function hasCompleteArrivalStation(index) {
-      if (angular.isUndefined($scope.promotion.filters[index].arrivalStation)) {
-        return false;
-      }
-
-      return !angular.isUndefined($scope.promotion.filters[index].arrivalStation.id);
-
-    }
-
     function removeDepartureFromHasArrival(arrivalId, departureId) {
       var departureIndex = -1;
       if ($scope.repeatableStations.arrivalHas[arrivalId]) {
@@ -1049,6 +1031,23 @@ angular.module('ts5App')
     $scope.disabledArrivalStations = function (station, stations) {
       return disabledStations(station, stations, 'departureStation', 'departureHas');
     };
+
+    function hasDepartureStationObject(index) {
+      if (angular.isUndefined($scope.promotion.filters[index].departureStation)) {
+        return false;
+      }
+
+      return !angular.isUndefined($scope.promotion.filters[index].departureStation.id);
+
+    }
+
+    function hasCompleteArrivalStation(index) {
+      if (angular.isUndefined($scope.promotion.filters[index].arrivalStation)) {
+        return false;
+      }
+
+      return !angular.isUndefined($scope.promotion.filters[index].arrivalStation.id);
+    }
 
     function hasCompleteStationObject(index) {
       if (angular.isUndefined($scope.promotion.filters[index])) {
