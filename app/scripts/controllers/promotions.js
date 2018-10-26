@@ -1054,11 +1054,7 @@ angular.module('ts5App')
         return false;
       }
 
-      if (!hasDepartureStationObject(index)) {
-        return false;
-      }
-
-      return hasCompleteArrivalStation(index);
+      return hasDepartureStationObject(index) && hasCompleteArrivalStation(index);
     }
 
     $scope.stationListChanged = function ($index) {
