@@ -416,7 +416,7 @@
                      ng-change="stationListChanged($index)">
             <ui-select-match placeholder="Select Departure Station">{{ $select.selected.code }}</ui-select-match>
             <ui-select-choices repeat="companyStation in selectOptions.companyStationGlobals | filter: $select.search"
-                               ui-disable-choice="disabledDepartureStations(companyStation, inclusionFilterData)">
+                               ui-disable-choice="disabledDepartureStationsV2(companyStation, inclusionFilterData)">
               {{ companyStation.code }} - {{ companyStation.name }}
             </ui-select-choices>
           </ui-select>

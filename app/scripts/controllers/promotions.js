@@ -1032,6 +1032,14 @@ angular.module('ts5App')
       return disabledStations(station, stations, 'departureStation', 'departureHas');
     };
 
+    $scope.disabledDepartureStationsV2 = function (station, stations) {
+      if (!stations.arrivalStation) {
+        return false;
+      }
+
+      return lodash.find($scope.promotion.filters, { 'arrivalStation': stations.arrivalStation, 'departureStation': station });
+    };
+
     function hasDepartureStationObject(index) {
       if (angular.isUndefined($scope.promotion.filters[index].departureStation)) {
         return false;
