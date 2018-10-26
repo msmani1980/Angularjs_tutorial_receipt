@@ -794,37 +794,6 @@ angular.module('ts5App')
       promotionsFactory.getPromotion($routeParams.id).then(getPromotionMetaData, showResponseErrors);
     }
 
-    function hasDepartureStationObject(index) {
-      if (angular.isUndefined($scope.promotion.filters[index].departureStation)) {
-        return false;
-      }
-
-      return !angular.isUndefined($scope.promotion.filters[index].departureStation.id);
-
-    }
-
-    function hasCompleteArrivalStation(index) {
-      if (angular.isUndefined($scope.promotion.filters[index].arrivalStation)) {
-        return false;
-      }
-
-      return !angular.isUndefined($scope.promotion.filters[index].arrivalStation.id);
-
-    }
-
-    function hasCompleteStationObject(index) {
-      if (angular.isUndefined($scope.promotion.filters[index])) {
-        return false;
-      }
-
-      if (!hasDepartureStationObject(index)) {
-        return false;
-      }
-
-      return hasCompleteArrivalStation(index);
-
-    }
-
     function removeDepartureFromHasArrival(arrivalId, departureId) {
       var departureIndex = -1;
       if ($scope.repeatableStations.arrivalHas[arrivalId]) {
@@ -845,33 +814,6 @@ angular.module('ts5App')
       if (arrivalIndex !== -1) {
         $scope.repeatableStations.departureHas[departureId].splice(arrivalIndex, 1);
       }
-    }
-
-    function stationVarsSet(station, stations, stationTypeProp) {
-      if (angular.isUndefined(stations[stationTypeProp])) {
-        return false;
-      }
-
-      if (angular.isUndefined(stations[stationTypeProp].id)) {
-        return false;
-      }
-
-      return !angular.isUndefined(station.id);
-
-    }
-
-    function disabledStations(station, stations, stationTypeProp, stationHasProp) {
-      if (!stationVarsSet(station, stations, stationTypeProp)) {
-        return false;
-      }
-
-      var stationId = stations[stationTypeProp].id;
-      if (!$scope.repeatableStations[stationHasProp][stationId]) {
-        return false;
-      }
-
-      var hasStationsAssigned = $scope.repeatableStations[stationHasProp][stationId];
-      return hasStationsAssigned.indexOf(station.id) !== -1;
     }
 
     var states = {};
@@ -982,10 +924,6 @@ angular.module('ts5App')
       resolveCreatePromotion();
     };
 
-    $scope.disabledArrivalStations = function (station, stations) {
-      return disabledStations(station, stations, 'departureStation', 'departureHas');
-    };
-
     $scope.promotionCategorySelectChanged = function ($index) {
       $scope.repeatableProductPurchasePromotionCategoryIds[$index] = $scope.promotion.promotionCategories[$index].promotionCategory
         .id;
@@ -1060,8 +998,44 @@ angular.module('ts5App')
     };
 
     $scope.disabledDepartureStations = function (station, stations) {
-      return disabledStations(station, stations, 'arrivalStation', 'arrivalHas');
+      if (!stations.arrivalStation) {
+        return false;
+      }
+
+      return lodash.find($scope.promotion.filters, { arrivalStation: stations.arrivalStation, departureStation: station });
     };
+
+    $scope.disabledArrivalStations = function (station, stations) {
+      if (!stations.departureStation) {
+        return false;
+      }
+
+      return lodash.find($scope.promotion.filters, { departureStation: stations.departureStation, arrivalStation: station });
+    };
+
+    function hasDepartureStationObject(index) {
+      if (angular.isUndefined($scope.promotion.filters[index].departureStation)) {
+        return false;
+      }
+
+      return !angular.isUndefined($scope.promotion.filters[index].departureStation.id);
+    }
+
+    function hasCompleteArrivalStation(index) {
+      if (angular.isUndefined($scope.promotion.filters[index].arrivalStation)) {
+        return false;
+      }
+
+      return !angular.isUndefined($scope.promotion.filters[index].arrivalStation.id);
+    }
+
+    function hasCompleteStationObject(index) {
+      if (angular.isUndefined($scope.promotion.filters[index])) {
+        return false;
+      }
+
+      return hasDepartureStationObject(index) && hasCompleteArrivalStation(index);
+    }
 
     $scope.stationListChanged = function ($index) {
       if (!hasCompleteStationObject($index)) {
