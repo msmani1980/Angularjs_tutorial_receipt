@@ -997,7 +997,7 @@ angular.module('ts5App')
       $scope.promotion.filters.splice($index, 1);
     };
 
-    $scope.disabledDepartureStationsV2 = function (station, stations) {
+    $scope.disabledDepartureStations = function (station, stations) {
       if (!stations.arrivalStation) {
         return false;
       }
@@ -1005,7 +1005,7 @@ angular.module('ts5App')
       return lodash.find($scope.promotion.filters, { 'arrivalStation': stations.arrivalStation, 'departureStation': station });
     };
 
-    $scope.disabledArrivalStationsV2 = function (station, stations) {
+    $scope.disabledArrivalStations = function (station, stations) {
       if (!stations.departureStation) {
         return false;
       }
