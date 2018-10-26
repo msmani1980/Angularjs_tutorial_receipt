@@ -1002,7 +1002,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return lodash.find($scope.promotion.filters, { 'arrivalStation': stations.arrivalStation, 'departureStation': station });
+      return lodash.find($scope.promotion.filters, { arrivalStation: stations.arrivalStation, departureStation: station });
     };
 
     $scope.disabledArrivalStations = function (station, stations) {
