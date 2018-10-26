@@ -982,10 +982,6 @@ angular.module('ts5App')
       resolveCreatePromotion();
     };
 
-    $scope.disabledArrivalStations = function (station, stations) {
-      return disabledStations(station, stations, 'departureStation', 'departureHas');
-    };
-
     $scope.promotionCategorySelectChanged = function ($index) {
       $scope.repeatableProductPurchasePromotionCategoryIds[$index] = $scope.promotion.promotionCategories[$index].promotionCategory
         .id;
@@ -1061,6 +1057,10 @@ angular.module('ts5App')
 
     $scope.disabledDepartureStations = function (station, stations) {
       return disabledStations(station, stations, 'arrivalStation', 'arrivalHas');
+    };
+
+    $scope.disabledArrivalStations = function (station, stations) {
+      return disabledStations(station, stations, 'departureStation', 'departureHas');
     };
 
     $scope.stationListChanged = function ($index) {
