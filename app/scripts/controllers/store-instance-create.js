@@ -654,7 +654,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           storeId: $this.setStoreId(data),
           carrierId: $this.setCarrierId(data),
           menus: $this.setMenus(data),
-          cateringStationId: $this.setCateringStationId(data),
+          cateringStationId: $this.isEditingRedispatch() ? null : $this.setCateringStationId(data),
           storeNumber: $this.setStoreNumber(data)
         };
         $this.setStoreInstanceConditionals(data);
