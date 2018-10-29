@@ -88,32 +88,57 @@
 
             <fieldset ng-disabled="isDisabled()">
 
-              <input-text label="Retail Item Code" name="Retail Item Code" required="form.$submitted" pattern="regexp.alphaWithSpecialCharMenuItem"
-                          placeholder="Item123" min-length="1" max-length="10"></input-text>
+              <div class="form-group" ng-class="{ 'has-error' : !formData.itemCode && displayError , 'has-success' : formData.itemCode }">
+                  <label>Retail Item Code *</label>&nbsp;
+                  <input type="text" class="form-control"  ng-model="formData.itemCode" name="Retail Item Code" required="form.$submitted" ng-pattern="regexp.alphaWithSpecialCharMenuItem"
+                          placeholder="Item123" min-length="1" max-length="10">
+                  </input>
+              </div>
 
-              <input-text label="Retail Item Name" name="Retail Item Name" required="form.$submitted" pattern="regexp.alphaWithSpecialCharMenuItem"
-                          placeholder="New Item" min-length="1" max-length="40"></input-text>
+              <div class="form-group" ng-class="{ 'has-error' : !formData.itemName && displayError , 'has-success' : formData.itemName }">
+                  <label>Retail Item Name *</label>&nbsp;
+                  <input type="text"  class="form-control"  ng-model="formData.itemName" name="Retail Item Name" required="form.$submitted" ng-pattern="regexp.alphaWithSpecialCharMenuItem"
+                          placeholder="New Item" min-length="1" max-length="40">
+                  </input>
+              </div>
 
-              <input-text label="POS Display Name" name="POS Display Name" required="form.$submitted" pattern="regexp.alphaWithSpecialCharMenuItem"
-                          placeholder="New Item" min-length="1" max-length="30"></input-text>
+              <div class="form-group" ng-class="{ 'has-error' : !formData.onBoardName && displayError , 'has-success' : formData.onBoardName }">
+                  <label>POS Display Name *</label>&nbsp;
+                  <input type="text"  class="form-control"  ng-model="formData.onBoardName" name="POS Display Name" required="form.$submitted" ng-pattern="regexp.alphaWithSpecialCharMenuItem"
+                          placeholder="New Item" min-length="1" max-length="30">
+                  </input>
+              </div>
 
-              <input-text label="ePOS Quick Search Code" name="ePOS Quick Search Code" pattern="regexp.alphanumeric"
-                          placeholder="ePOS Quick Search Code" max-length="15"></input-text>
+              <div class="form-group" ng-class="{ 'has-error' : !formData.quickSearchCode && displayError , 'has-success' : formData.quickSearchCode }">
+                  <label>ePOS Quick Search Code</label>&nbsp;
+                  <input  type="text"  class="form-control"  ng-model="formData.quickSearchCode"  name="ePOS Quick Search Code" ng-pattern="regexp.alphanumeric"
+                          placeholder="ePOS Quick Search Code" max-length="15">
+                  </input>
+              </div>    
 
-              <input-textarea label="Item Description" name="Item Description" required="form.$submitted" pattern="regexp.alphaWithSpecialCharMenuItem"
-                          placeholder="A simple description..." max-length="255" class="vertical-resize-only"></input-textarea>
+              <div class="form-group" ng-class="{ 'has-error' : !formData.desc && displayError , 'has-success' : formData.desc }">
+                  <label>Item Description *</label>&nbsp;
+                  <input  type="text"  class="form-control"  ng-model="formData.desc"  name="Item Description" ng-pattern="regexp.alphaWithSpecialCharMenuItem"
+                          placeholder="A simple description..." max-length="255">
+                  </input>
+              </div>    
 
-              <input-text label="Keywords" name="keywords" pattern="regexp.word" placeholder="new item"
-                          max-length="500"></input-text>
+              <div class="form-group" ng-class="{ 'has-error' : !formData.keywords && displayError , 'has-success' : formData.keywords }">
+                  <label>Keywords</label>&nbsp;
+                  <input type="text"  class="form-control"  ng-model="formData.keywords" name="Keywords" pattern="regexp.word"
+                         placeholder="keywords..." max-length="500">
+                  </input>
+              </div>    
 
-              <input-text label="Unique Selling Point" name="Unique Selling Point" pattern="regexp.word"
-                          placeholder="A unique description" max-length="100"></input-text>
+              <div class="form-group" ng-class="{ 'has-error' : !formData.sellingPoint && displayError , 'has-success' : formData.sellingPoint }">
+                  <label>Unique Selling Point</label>&nbsp;
+                  <input type="text"  class="form-control"  ng-model="formData.sellingPoint" name="Unique Selling Point" pattern="regexp.word"
+                          placeholder="A unique selling point" max-length="100"></input>
+              </div>            
 
               <div class="form-group">
-
                 <input ng-model="formData.isPrintReceipt" type="checkbox"/>
                 <label>Print Receipt</label>
-
               </div>
 
             </fieldset>
@@ -121,20 +146,20 @@
             <div class="row">
               <div class="col-xs-12 col-sm-6">
                 <date-picker-field ng-if="minDate"
-                  disable="isDisabled()" form="form" name="Effective From" label="Effective From"
+                  disable="isDisabled()" form="form" name="EffectiveFrom" label="Effective From"
                   min-date="minDate" required="true" ng-model="formData.startDate">
                 </date-picker-field>
               </div>
               <div class="col-xs-12 col-sm-6">
                 <date-picker-field ng-if="minDate" disable="isDisabledEndDateForm()" form="form" end-current-effective="isDisabled()"
-                  name="Effective To" min-date="minDate" label="Effective To" required="true"
+                  name="EffectiveTo" min-date="minDate" label="Effective To" required="true"
                   ng-model="formData.endDate">
                 </date-picker-field>
               </div>
             </div>
 
             <fieldset ng-disabled="isDisabled()">
-              <div class="form-group" ng-class="{ 'has-error' : !category.id && displayError , 'has-success' : category.id }">
+              <div class="form-group" ng-class="{ 'has-error' : !formData.categoryId && displayError , 'has-success' : formData.categoryId }">
                 <label>Sales Category *</label>
                 <select name="Sales Category" required ng-model="formData.categoryId" class="form-control">
                   <option ng-selected="setSelected(formData.categoryId, category.id)" ng-repeat="category in salesCategories"
@@ -142,9 +167,9 @@
                   </option>
                 </select>
               </div>
-              <div class="form-group"  ng-class="{ 'has-error' : !type.id && displayError , 'has-success' : type.id }">
+              <div class="form-group"  ng-class="{ 'has-error' : !formData.itemTypeId && displayError , 'has-success' : formData.itemTypeId }">
                 <label>Item Type *</label>
-                <select name="Item Type" required ng-model="formData.itemTypeId" class="form-control" ng-change="filterCharacteristics()">
+                <select name="itemTypeId" required ng-model="formData.itemTypeId" class="form-control" ng-change="filterCharacteristics()">
                   <option ng-selected="setSelected(formData.itemTypeId, type.id)" ng-repeat="type in itemTypes"
                           value="{{ type.id }}">{{ type.name }}
                   </option>
