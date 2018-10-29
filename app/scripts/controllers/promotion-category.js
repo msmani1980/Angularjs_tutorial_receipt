@@ -8,13 +8,15 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionCategoryCtrl', function ($scope, $routeParams, promotionCategoryFactory, globalMenuService, $q, lodash, messageService, dateUtility, $location) {
+  .controller('PromotionCategoryCtrl', function ($scope, $routeParams, promotionCategoryFactory, globalMenuService, $q, lodash, messageService, dateUtility, $location, $filter) {
 
     $scope.itemList = [];
     $scope.promotionCategory = {};
     $scope.minDate = dateUtility.dateNumDaysAfterTodayFormattedDatePicker(1);
     $scope.startMinDate = $routeParams.action === 'create' ? $scope.minDate : '';
-    $scope.isCopy = false;    
+    $scope.isCopy = false;
+    $scope.masterItemsListFilterText = '';
+    $scope.allCheckboxesSelected = false;
     var $this = this;
 
     function showLoadingModal(message) {
@@ -360,6 +362,60 @@ angular.module('ts5App')
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
     };
+
+
+    // TODO: fix this, filter already added in modal, checkbox na edit
+    $scope.populateAllSelectedItems = function() {
+
+
+
+      angular.forEach($scope.modalMasterItemList, function(masterItem) {
+        if (masterItem.isItemSelected) {
+          var newIndex = $scope.itemList.length;
+
+          $scope.itemList.push({
+            itemIndex: newIndex,
+            masterItemList: angular.copy($scope.masterItemList),
+            selectedItem: masterItem
+          });
+        }
+      });
+
+      //$scope.itemList = $this.filterMenuItemsByItemId();
+    };
+
+
+    $scope.filterMasterItemsList = function () {
+      $scope.masterItemsListSearch = angular.copy($scope.masterItemsListFilterText);
+    };
+
+    $scope.toggleAllCheckboxes = function() {
+      var filteredMasterItemList = $filter('filter')($scope.modalMasterItemList, { itemName: $scope.masterItemsListFilterText });
+
+      angular.forEach(filteredMasterItemList, function(masterItem) {
+          masterItem.isItemSelected = $scope.allCheckboxesSelected;
+      });
+    };
+
+    $scope.toggleSelectAll = function() {
+      var toggleAll = false;
+      angular.forEach($scope.modalMasterItemList, function(masterItem) {
+        if (!masterItem.isItemSelected) {
+          toggleAll = true;
+        }
+      });
+
+      $scope.allCheckboxesSelected = !toggleAll;
+    };
+
+    $scope.showMasterItemsModal = function (item) {
+      $scope.modalMasterItemList = angular.copy(item.masterItemList);
+      showMasterItemsDialog();
+    };
+
+    function showMasterItemsDialog() {
+      angular.element('#master-items').modal('show');
+    }
 
   }
 )
