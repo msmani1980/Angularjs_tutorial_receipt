@@ -118,21 +118,21 @@
 
               <div class="form-group" ng-class="{ 'has-error' : !formData.desc && displayError , 'has-success' : formData.desc }">
                   <label>Item Description *</label>&nbsp;
-                  <input  type="text"  class="form-control"  ng-model="formData.desc"  name="Item Description" ng-pattern="regexp.alphaWithSpecialCharMenuItem"
+                  <input  type="text"  class="form-control"  ng-model="formData.desc"  name="Item Description" required="form.$submitted" ng-pattern="regexp.alphaWithSpecialCharMenuItem"
                           placeholder="A simple description..." max-length="255">
                   </input>
               </div>    
 
               <div class="form-group" ng-class="{ 'has-error' : !formData.keywords && displayError , 'has-success' : formData.keywords }">
                   <label>Keywords</label>&nbsp;
-                  <input type="text"  class="form-control"  ng-model="formData.keywords" name="Keywords" pattern="regexp.word"
+                  <input type="text"  class="form-control"  ng-model="formData.keywords" name="Keywords" ng-pattern="regexp.word"
                          placeholder="keywords..." max-length="500">
                   </input>
               </div>    
 
               <div class="form-group" ng-class="{ 'has-error' : !formData.sellingPoint && displayError , 'has-success' : formData.sellingPoint }">
                   <label>Unique Selling Point</label>&nbsp;
-                  <input type="text"  class="form-control"  ng-model="formData.sellingPoint" name="Unique Selling Point" pattern="regexp.word"
+                  <input type="text"  class="form-control"  ng-model="formData.sellingPoint" name="Unique Selling Point" ng-pattern="regexp.word"
                           placeholder="A unique selling point" max-length="100"></input>
               </div>            
 
