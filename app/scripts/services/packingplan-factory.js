@@ -8,8 +8,12 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('packingplanFactory', function (packingplanService, menuMasterService) {
+  .factory('packingplanFactory', function (globalMenuService, packingplanService, menuMasterService, unitsService, menuService) {
   // Service logic
+  var getCompanyId = function () {
+    return globalMenuService.company.get();
+  };
+
   var getPackingPlansList = function (payload) {
     return packingplanService.getPackingPlansList(payload);
   };
@@ -27,20 +31,31 @@ angular.module('ts5App')
   };
     
   var deletePackingPlan = function (planId) {
-    return packingplanService.deletePriceUpdaterRule(planId);
+    return packingplanService.deletePackingPlan(planId);
   };
 
   var getMenuMasterList = function (payload) {
     return menuMasterService.getMenuMasterList(payload);
   };
 
+  var getDimensionList = function (payload) {
+    return unitsService.getDimensionList(payload);
+  };
+
+  var getMenuById = function (menuId) {
+    return menuService.getMenu(menuId);
+  };
+
   return {
+    getCompanyId: getCompanyId,
     getPackingPlansList: getPackingPlansList,
     getPackingPlanById: getPackingPlanById,
     createPackingPlan: createPackingPlan,
     updatePackingPlan: updatePackingPlan,
     deletePackingPlan: deletePackingPlan,
-    getMenuMasterList: getMenuMasterList
+    getMenuMasterList: getMenuMasterList,
+    getDimensionList: getDimensionList,
+    getMenuById: getMenuById
   };
 
 });
