@@ -363,27 +363,30 @@ angular.module('ts5App')
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
     };
 
-
-    // TODO: fix this, filter already added in modal, checkbox na edit
     $scope.populateAllSelectedItems = function() {
-
-
+      var isFirst = true;
+      var newIndex = $scope.indexToPutNewPromotionCategories;
 
       angular.forEach($scope.modalMasterItemList, function(masterItem) {
         if (masterItem.isItemSelected) {
-          var newIndex = $scope.itemList.length;
+          newIndex = isFirst ? newIndex : ++newIndex;
 
-          $scope.itemList.push({
+          $scope.itemList.splice(newIndex, isFirst ? 1 : 0, {
             itemIndex: newIndex,
-            masterItemList: angular.copy($scope.masterItemList),
-            selectedItem: masterItem
+            selectedItem: masterItem,
+            masterItemList: angular.copy($scope.masterItemList)
           });
+
+          isFirst = false;
         }
       });
 
-      //$scope.itemList = $this.filterMenuItemsByItemId();
+      hideMasterItemsDialog();
     };
 
+    $scope.modalItemAlreadySelected = function (item) {
+      return !lodash.find($scope.itemList, { id: item.id });
+    };
 
     $scope.filterMasterItemsList = function () {
       $scope.masterItemsListSearch = angular.copy($scope.masterItemsListFilterText);
@@ -408,13 +411,31 @@ angular.module('ts5App')
       $scope.allCheckboxesSelected = !toggleAll;
     };
 
-    $scope.showMasterItemsModal = function (item) {
-      $scope.modalMasterItemList = angular.copy(item.masterItemList);
+    $scope.showMasterItemsModal = function (item, index) {
+      $scope.indexToPutNewPromotionCategories = index;
+
+      var selectedItemIds = $scope.itemList.filter(function (item) {
+          return item.selectedItem;
+        }).map(function (item) {
+          return item.selectedItem.id;
+        });
+
+      $scope.modalMasterItemList = lodash.filter(item.masterItemList, function (masterItem) {
+        var itemNotAddedYet = selectedItemIds.indexOf(masterItem.id) === -1;
+        console.log(masterItem)
+
+        return itemNotAddedYet;
+      });
+
       showMasterItemsDialog();
     };
 
     function showMasterItemsDialog() {
       angular.element('#master-items').modal('show');
+    }
+
+    function hideMasterItemsDialog() {
+      angular.element('#master-items').modal('hide');
     }
 
   }
