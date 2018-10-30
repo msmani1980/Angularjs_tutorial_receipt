@@ -94,7 +94,7 @@
         <th class="col-xs-7">Item</th>
         <th class="col-xs-1"></th>
       </tr>
-      <tr ng-repeat="item in itemList">
+      <tr ng-repeat="item in itemList track by $index">
         <td>
           <ui-select
             ng-model="item.selectedCategory"
@@ -112,34 +112,20 @@
           </ui-select>
         </td>
         <td>
-          <ui-select
-            ng-model="item.selectedItem"
-            ng-disabled="shouldDisableItemDropDown(item) || disableEditField"
-            theme="bootstrap"
-            placeholder="1 Select an item..."
-            ng-change="onChangeItem(item)">
-            <ui-select-match
-              placeholder="1 Select an item...">{{$select.selected.itemName}}
-            </ui-select-match>
-            <ui-select-choices repeat="masterItem in item.masterItemList | filter: $select.search | orderBy:'itemName'">
-              <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
-            </ui-select-choices>
-          </ui-select>
-
           <div class="input-group">
             <input type="text"
                    class="form-control"
                    placeholder="Lookup an Item"
                    name="menuItem-{{$index}}"
-                   ng-model="item.selectedItem.itemName"/>
+                   value="{{ item.selectedItem.itemName }}" />
             <div class="input-group-btn">
               <button type="button"
                       class="btn btn-default"
-                      ng-click="showMasterItemsModal(item)">
+                      ng-click="showMasterItemsModal(item, $index)">
                 <i class="fa fa-info-circle"></i>
               </button>
             </div>
-          </div> {{item}}
+          </div>
 
           <div ng-if="item.isExpired && isCopy" style="color:red">This item expired!</div>
         </td>
