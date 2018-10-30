@@ -422,7 +422,6 @@ angular.module('ts5App')
 
       $scope.modalMasterItemList = lodash.filter(item.masterItemList, function (masterItem) {
         var itemNotAddedYet = selectedItemIds.indexOf(masterItem.id) === -1;
-        console.log(masterItem)
 
         return itemNotAddedYet;
       });
