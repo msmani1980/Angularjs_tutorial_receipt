@@ -101,7 +101,7 @@ angular.module('ts5App')
     var packingPlanObjectItems = [];
     angular.forEach(planObjectItems, function (item) {
       var planObjItem = {
-        itemMasterId: item.itemMasterId.id,
+        itemMasterId: item.itemMasterId,
         minQty: item.minQty,
         maxQty: item.maxQty
       };
@@ -328,11 +328,6 @@ angular.module('ts5App')
       packingPlanMenu: response.packingPlanMenu[0] ? $this.formatViewMenus(response.packingPlanMenu) : [],  
       packingPlanObject: response.packingPlanObject[0] ? $this.formatViewPackingPlanObjects(response.packingPlanObject) : []
     };
-
-    console.log('Stage 1');
-    angular.forEach($scope.itemMasterList, function (item) {
-      console.log('Item>>>' + item.id + '<<<>>' + item.itemName);
-    });
 
   };
 
