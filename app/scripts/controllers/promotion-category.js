@@ -429,6 +429,10 @@ angular.module('ts5App')
       showMasterItemsDialog();
     };
 
+    $scope.isAnyItemExpired = function () {
+      return lodash.find($scope.itemList, { isExpired: true });
+    };
+
     function showMasterItemsDialog() {
       angular.element('#master-items').modal('show');
     }
