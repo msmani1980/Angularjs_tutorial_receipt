@@ -118,11 +118,13 @@
                    placeholder="Lookup an Item"
                    name="menuItem-{{$index}}"
                    value="{{ item.selectedItem.itemName }}"
-                   autocomplete="off"/>
+                   autocomplete="off"
+                   ng-disabled="disableEditField" />
             <div class="input-group-btn">
               <button type="button"
                       class="btn btn-default"
-                      ng-click="showMasterItemsModal(item, $index)">
+                      ng-click="showMasterItemsModal(item, $index)"
+                      ng-disabled="disableEditField">
                 <i class="fa fa-info-circle"></i>
               </button>
             </div>
