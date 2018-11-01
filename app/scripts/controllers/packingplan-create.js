@@ -91,6 +91,12 @@ angular.module('ts5App')
       var planMenu = {
         menuMasterId: menu.id	
       };
+      if ($routeParams.id) {
+        planMenu.id = menu.menuId;
+        planMenu.packingPlanId = menu.packingPlanId;
+        planMenu.menuMasterId = menu.menuMasterId;
+      }
+
       packingPlanMenus.push(planMenu);
     });
 
@@ -105,6 +111,11 @@ angular.module('ts5App')
         minQty: item.minQty,
         maxQty: item.maxQty
       };
+      if ($routeParams.id) {
+        planObjItem.id = item.id; 
+        planObjItem.packingPlanObjectId = item.packingPlanObjectId;
+      }
+
       packingPlanObjectItems.push(planObjItem);
     });
 
@@ -128,6 +139,11 @@ angular.module('ts5App')
         endDate: dateUtility.formatDateForAPI(planObject.endDate),
         packingPlanObjectItem: planObject.packingPlanObjectItem ? $this.formatPackingPlanObjectItems(planObject.packingPlanObjectItem) : []
       };
+      if ($routeParams.id) {
+        planObj.id = planObject.id; 
+        planObj.packingPlanId = planObject.packingPlanId;
+      }
+
       packingPlanObjects.push(planObj);
     });
 
@@ -159,7 +175,7 @@ angular.module('ts5App')
       companyId: packingplanFactory.getCompanyId(),
       version: $scope.plan.version,
       startDate: dateUtility.formatDateForAPI($scope.plan.startDate),
-      endDate: dateUtility.formatDateForAPI($scope.plan.startDate),
+      endDate: dateUtility.formatDateForAPI($scope.plan.endDate),
       packingPlanMenu: $scope.plan.packingPlanMenu[0] ? $this.formatMenus($scope.plan.packingPlanMenu) : [],  
       packingPlanObject: $scope.plan.packingPlanObject ? $this.formatPackingPlanObjects($scope.plan.packingPlanObject) : []
     };
@@ -259,7 +275,9 @@ angular.module('ts5App')
     var packingPlanMenus = [];
     angular.forEach(menus, function (menu) {
       var planMenu = {
-        menuMasterId: menu.id,
+        menuId: menu.id,
+        packingPlanId: menu.packingPlanId, 
+        menuMasterId: menu.menuMasterId,
         menuName: menu.menuMaster.menuName
       };
       packingPlanMenus.push(planMenu);
@@ -276,6 +294,7 @@ angular.module('ts5App')
         itemMasterId: item.itemMasterId,
         itemName: item.itemMaster.itemName,
         minQty: item.minQty,
+        packingPlanObjectId: item.packingPlanObjectId, 
         maxQty: item.maxQty
       };
       packingPlanObjectItems.push(planObjItem);
@@ -290,6 +309,7 @@ angular.module('ts5App')
       var planObj = {
         id: planObject.id,
         name: planObject.name,
+        packingPlanId: planObject.packingPlanId,
         description: planObject.description,
         length: planObject.length,
         breadth: planObject.breadth,
