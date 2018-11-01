@@ -11,7 +11,7 @@
         </div>
         <div class="col-xs-6 text-right">
           <a class="btn btn-default" ng-href="#/promotion-category-list" class="btn">Back</a>
-          <button class="btn btn-success" ng-click="save()" ng-hide="isViewOnly">
+          <button class="btn btn-success" ng-click="save()" ng-hide="isViewOnly" ng-disabled="isAnyItemExpired()">
             <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
             <span>Save</span>
           </button>
@@ -117,7 +117,8 @@
                    class="form-control"
                    placeholder="Lookup an Item"
                    name="menuItem-{{$index}}"
-                   value="{{ item.selectedItem.itemName }}" />
+                   value="{{ item.selectedItem.itemName }}"
+                   autocomplete="off"/>
             <div class="input-group-btn">
               <button type="button"
                       class="btn btn-default"
@@ -127,7 +128,7 @@
             </div>
           </div>
 
-          <div ng-if="item.isExpired && isCopy" style="color:red">This item expired!</div>
+          <div ng-if="item.isExpired" style="color:red">This item expired!</div>
         </td>
         <td>
           <button class="btn btn-danger btn-xs" ng-click="removeItem(item)" ng-hide="disableEditField">
