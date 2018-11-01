@@ -396,7 +396,7 @@ angular.module('ts5App')
       var filteredMasterItemList = $filter('filter')($scope.modalMasterItemList, { itemName: $scope.masterItemsListFilterText });
 
       angular.forEach(filteredMasterItemList, function(masterItem) {
-          masterItem.isItemSelected = $scope.allCheckboxesSelected;
+        masterItem.isItemSelected = $scope.allCheckboxesSelected;
       });
     };
 
