@@ -215,11 +215,18 @@ angular.module('ts5App')
     });
   };
 
-  this.getItemMasterFromMenu = function(menus) {
+  this.getItemMasterFromMenu = function(menus, viewedit) {
     var totalItems = [];
-    angular.forEach(menus, function (menu) {   
-      packingplanFactory.getMenuById(menu.id).then(function(data) {
-        angular.forEach(data.menuItems, function (item) {
+    angular.forEach(menus, function (menu) {
+      var payload = {
+        menuId: menu.id
+      };
+      if (viewedit) {
+        payload.menuId = menu.menuMasterId;
+      }
+
+      packingplanFactory.getMenuById(payload).then(function(data) {
+        angular.forEach(data.menus[0].menuItems, function (item) {
           var itemPayload = {};
           itemPayload.id = item.itemId;
           itemPayload.itemName = item.itemName;
@@ -242,16 +249,74 @@ angular.module('ts5App')
   });
 
   $scope.$watchGroup(['plan.packingPlanMenu'], function () {
-    if ($scope.plan && $scope.plan.packingPlanMenu) {
-      $this.getItemMasterFromMenu($scope.plan.packingPlanMenu);
+    if ($scope.plan && $scope.plan.packingPlanMenu && $scope.isCreate) {
+      $this.getItemMasterFromMenu($scope.plan.packingPlanMenu, false);
     }
 
   });
+
+  this.formatViewMenus = function(menus) {
+    var packingPlanMenus = [];
+    angular.forEach(menus, function (menu) {
+      var planMenu = {
+        menuMasterId: menu.id,
+        menuName: menu.menuMaster.menuName
+      };
+      packingPlanMenus.push(planMenu);
+    });
+
+    return packingPlanMenus;
+  };
+
+  this.formatViewPackingPlanObjectItems = function(planObjectItems) {
+    var packingPlanObjectItems = [];
+    angular.forEach(planObjectItems, function (item) {
+      var planObjItem = {
+        id: item.id,
+        itemMasterId: item.itemMasterId,
+        itemName: item.itemMaster.itemName,
+        minQty: item.minQty,
+        maxQty: item.maxQty
+      };
+      packingPlanObjectItems.push(planObjItem);
+    });
+
+    return packingPlanObjectItems;
+  };
+
+  this.formatViewPackingPlanObjects = function(planObjects) {
+    var packingPlanObjects = [];
+    angular.forEach(planObjects, function (planObject) {
+      var planObj = {
+        id: planObject.id,
+        name: planObject.name,
+        description: planObject.description,
+        length: planObject.length,
+        breadth: planObject.breadth,
+        height: planObject.height,
+        dimensionType: planObject.dimensionType,
+        position: planObject.object,
+        galley: planObject.galley,
+        notes: planObject.notes,
+        startDate: dateUtility.formatDateForApp(planObject.startDate),
+        endDate: dateUtility.formatDateForApp(planObject.endDate),
+        packingPlanObjectItem: planObject.packingPlanObjectItem ? $this.formatViewPackingPlanObjectItems(planObject.packingPlanObjectItem) : []
+      };
+      packingPlanObjects.push(planObj);
+    });
+
+    return packingPlanObjects;
+  };
 
   this.packingPlanSuccess = function(response) {
     $scope.viewStartDate = dateUtility.formatDateForApp(response.startDate);
     $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
     $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker($scope.viewStartDate);
+    if (!$scope.isDisabled()) {
+      $this.getItemMasterFromMenu(response.packingPlanMenu, true);
+      $this.getMenuMasterList($scope.viewStartDate, $scope.viewEndDate);
+    }
+
     $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker($scope.viewEndDate);
     $scope.plan = {
       id: response.id,
@@ -260,9 +325,15 @@ angular.module('ts5App')
       companyId: response.companyId,
       startDate: $scope.viewStartDate,
       endDate: $scope.viewEndDate,
-      packingPlanMenu: response.packingPlanMenu[0] ? $this.formatMenus(response.packingPlanMenu) : [],  
-      packingPlanObjectItem: response.packingPlanObjectItem[0] ? $this.formatPackingPlanObject(response.packingPlanObjectItem) : []
+      packingPlanMenu: response.packingPlanMenu[0] ? $this.formatViewMenus(response.packingPlanMenu) : [],  
+      packingPlanObject: response.packingPlanObject[0] ? $this.formatViewPackingPlanObjects(response.packingPlanObject) : []
     };
+
+    console.log('Stage 1');
+    angular.forEach($scope.itemMasterList, function (item) {
+      console.log('Item>>>' + item.id + '<<<>>' + item.itemName);
+    });
+
   };
 
   this.initDependenciesSuccess = function(responseCollection) {

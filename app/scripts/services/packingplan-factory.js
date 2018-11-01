@@ -42,8 +42,8 @@ angular.module('ts5App')
     return unitsService.getDimensionList(payload);
   };
 
-  var getMenuById = function (menuId) {
-    return menuService.getMenu(menuId);
+  var getMenuById = function (payload) {
+    return menuService.getMenuList(payload, true);
   };
 
   return {

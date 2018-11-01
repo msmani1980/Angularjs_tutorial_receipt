@@ -150,15 +150,6 @@ angular.module('ts5App')
     $scope.menuMasterList = angular.copy(responseCollection[0].companyMenuMasters);
   };
 
-  $scope.loadPackingPlanMenus = function (packingPlan) {
-    var menus = [];
-    angular.forEach(packingPlan.packingPlanMenu, function (menu) {
-      menus.push(menu.menuMasterId);
-    });
-
-    return menus;
-  };
-  
   $scope.loadUpdatedOn = function (packingPlan) {
     return packingPlan.updatedOn ? dateUtility.formatTimestampForApp(packingPlan.updatedOn) : dateUtility.formatTimestampForApp(packingPlan.createdOn);
   };
