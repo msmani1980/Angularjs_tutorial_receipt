@@ -357,6 +357,14 @@ angular.module('ts5App')
     }
 
     $scope.createCategory = function() {
+      $scope.newCategoryForm.$setSubmitted(true);
+      if ($scope.newCategoryForm.$submitted && !$scope.newCategoryForm.$valid) {
+        $scope.displayError = true;
+      }
+      else {
+        $scope.displayError = false;
+      }
+      
       if ($scope.newCategoryForm.$valid) {
         $scope.newCategory.parentId = ($scope.newCategory.parentCategory) ? $scope.newCategory.parentCategory.id : null;
         $scope.newCategory.nextCategoryId = ($scope.newCategory.nextCategory) ? $scope.newCategory.nextCategory.id : null;

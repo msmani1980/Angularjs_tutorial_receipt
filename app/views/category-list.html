@@ -63,25 +63,27 @@
       </form>
     </div>
     
-	<error-dialog form-object="form" error-response="errorResponse" display="displayError">
+	<error-dialog form-object="newCategoryForm" error-response="errorResponse" display="displayError">
     </error-dialog>
     <div class="panel panel-default collapse no-transition" id="create-collapse">
-      <form name="newCategoryForm" ng-submit="createCategory()">
+      <form name="newCategoryForm" class="form edit-form create-item-form">
         <div class="panel-body">
           <h4>New Category</h4>
           <hr>
           <div class="row">
             <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
+              <div class="form-group"  ng-class="{ 'has-error' : !newCategory.name && displayError , 'has-success' : newCategory.name }">
                 <label for="new-name">Name *</label>
                 <input
-                  ng-model="newCategory.name"
                   type="text"
+                  ng-model="newCategory.name"
                   class="form-control"
+                  name="Category Name"
                   id="new-name"
                   placeholder="Enter Category Name"
                   maxlength="25"
-                  required="true">
+                  required="newCategoryForm.$submitted"
+                  />
               </div>
             </div>
             <div class="col-sm-6 col-xs-12">
@@ -123,7 +125,7 @@
         </div>
         <div class="panel-footer text-right">
           <button type="button" class="btn btn-default" ng-click="clearCreateForm()"  id="clearCreateCategoryId">Clear</button>
-          <button type="submit" class="btn btn-success" id="submitCreateCategoryId"><span class="fa fa-check"></span> Save</button>
+          <button type="submit" class="btn btn-success" ng-click="createCategory()" id="submitCreateCategoryId"><span class="fa fa-check"></span> Save</button>
         </div>
       </form>
     </div>
