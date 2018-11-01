@@ -1,0 +1,126 @@
+<div class="module-container">
+  <div class="row item-list-row">
+    <div class="col-xs-6">
+    	<h2 class="view-name">{{ viewName }}</h2>
+    </div>
+    <div class="col-xs-6 text-right">
+       <a href="#/packingplan/create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create Packing Plan</span></a>
+       <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
+               aria-expanded="false"
+               aria-controls="search-collapse" id="filterPriceUpdaterListId">
+        <span class="fa fa-search" aria-hidden="true"></span>
+        <span class="hidden-xs">Filter</span>
+       </button>
+    </div>
+  </div>
+
+  <div class="packingplan-data-list">
+    
+    <div class="panel panel-default no-transition" id="search-collapse">
+      <form name="packingplanSearchForm" ng-submit="searchPackingPlansData()">
+        <div class="panel-body">
+          <div class="row">
+			<div class="col-xs-12 col-sm-6 col-md-4">
+			  <div class="form-group">
+                <label for="packingPlanName">Packing Plan Name</label>
+                <input ng-model="search.name" type="text" class="form-control" id="packingPlanName" placeholder="Packing Plan Name">
+              </div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-8">
+				<date-picker
+	                class="form-group"
+	                element-class="col-xs-6"
+	                start-date-model="search.startDate"
+	                end-date-model="search.endDate"
+	                label-from="Effective Start Date"
+	                label-to="Effective End Date"
+	                is-search-field="true">
+              </date-picker>
+			</div>
+		  </div>
+          <div class="row">
+			<div class="col-xs-12 col-sm-6 col-md-4">
+				<div class="form-group">
+					<label for="version">Packing Plan Version</label>
+					<input ng-model="search.version" type="text" class="form-control" id="packingPlanVersion" placeholder="Packing Plan Version">
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-4">
+				<div class="form-group">
+					<label for="taxIs">Menu</label>
+					<ui-select multiple ng-model="search.menuMasterIds">
+	                  <ui-select-match placeholder="Select Menus..">{{$item.menuName}}</ui-select-match>
+	                  <ui-select-choices repeat="menu.id as menu in menuMasterList | unique: 'id' | filter: $select.search | orderBy:'menuName'">
+	                    {{ menu.menuName }}
+	                  </ui-select-choices>
+	                </ui-select>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-4">
+          	</div>  
+		  </div>
+		</div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()" id="clearPriceUpdaterListId">Clear</button>
+          <button type="submit" class="btn btn-primary" id="searchPackingPlanListId">Search</button>
+        </div>
+      </form>
+    </div>
+    <br>
+    <div class="table-responsive">
+      <table infinite-scroll="loadPackingPlanList()" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>Packing Plan Name</th>
+          <th>Packing Plan Version</th>
+          <th>Menu</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Updated Date/Time</th>
+          <th>Updated User</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="ng-scope" ng-repeat="packingplan in packingPlanList">
+          <td>{{ packingplan.name }}</td>
+          <td>{{ packingplan.version }}</td>
+          <td>
+          	<span class="label label-info" ng-repeat="menu in packingplan.packingPlanMenu">{{ menu.menuMaster.menuName }}</span> 
+          </td>
+          <td>{{ packingplan.startDate}}</td>
+          <td>{{ packingplan.endDate}}</td>
+          <td>{{ loadUpdatedOn(packingplan) }}</td>
+          <td>{{ loadUpdatedBy(packingplan) }}</td>
+          <td>
+            <button class="btn btn-info btn-xs" ng-click="redirectToPackingPlan(packingplan.id, 'view')" tabindex="0">
+              <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="redirectToPackingPlan(packingplan.id, 'edit')" ng-show="isCRUD && isPackingPlanEditable(packingplan)" tabindex="0">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs"
+                    ng-click="deleteRecordDialog(packingPlanList[$index], ['name', 'version', 'startDate', 'endDate'])"
+                    tabindex="0"
+                    ng-show="isCRUD && showDeleteButton(packingplan)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <alert ng-show="!loadingBarVisible && packingPlanList.length == 0" type="info">
+      <span class="fa fa-flag"></span> Your search returned no results.
+    </alert>
+    <p ng-if="packingPlanList.length > 0" class="record-count small text-center">Showing {{packingPlanList.length}} records</p>
+    <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+  </div>
+</div>
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<delete-record-dialog></delete-record-dialog>
+
+<dynamic-left-nav></dynamic-left-nav>

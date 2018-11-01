@@ -478,6 +478,14 @@ angular.module('ts5App', [
     templateUrl: 'views/priceupdater-create.html',
     controller: 'PriceupdaterCreateCtrl',
     controllerAs: 'priceupdaterCreate'
+  }).when('/packingplan-list', {
+    templateUrl: 'views/packingplan-list.html',
+    controller: 'PackingplanListCtrl',
+    controllerAs: 'packingplanList'
+  }).when('/packingplan/:action/:id?', {
+    templateUrl: 'views/packingplan-create.html',
+    controller: 'PackingplanCreateCtrl',
+    controllerAs: 'packingplanCreate'
   }).when('/company-receipts/:action/:id?', {
     templateUrl: 'views/company-receipt-create.html',
     controller: 'CompanyReceiptCreateCtrl',
