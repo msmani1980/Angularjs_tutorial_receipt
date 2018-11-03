@@ -135,7 +135,7 @@ angular.module('ts5App')
   };
 
   $scope.showDeleteButton = function(packingPlan) {
-    return !dateUtility.isYesterdayOrEarlierDatePicker(packingPlan.endDate);
+    return dateUtility.isAfterTodayDatePicker(packingPlan.startDate);
   };
 
   $scope.removeRecord = function (packingPlan) {
