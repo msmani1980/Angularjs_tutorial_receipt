@@ -231,7 +231,7 @@ angular.module('ts5App')
     });
   };
 
-  this.getItemMasterFromMenu = function(menus, viewedit) {
+  this.getItemMasterFromMenu = function(menus, viewedit, startDate, endDate) {
     var totalItems = [];
     angular.forEach(menus, function (menu) {
       var payload = {
@@ -239,6 +239,8 @@ angular.module('ts5App')
       };
       if (viewedit) {
         payload.menuId = menu.menuMasterId;
+        payload.startDate = dateUtility.formatDateForAPI(startDate);
+        payload.endDate = dateUtility.formatDateForAPI(endDate);
       }
 
       packingplanFactory.getMenuById(payload).then(function(data) {
@@ -266,7 +268,7 @@ angular.module('ts5App')
 
   $scope.$watchGroup(['plan.packingPlanMenu'], function () {
     if ($scope.plan && $scope.plan.packingPlanMenu && $scope.isCreate) {
-      $this.getItemMasterFromMenu($scope.plan.packingPlanMenu, false);
+      $this.getItemMasterFromMenu($scope.plan.packingPlanMenu, false, $scope.plan.startDate, $scope.plan.endDate);
     }
 
   });
@@ -333,7 +335,7 @@ angular.module('ts5App')
     $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
     $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker($scope.viewStartDate);
     if (!$scope.isDisabled()) {
-      $this.getItemMasterFromMenu(response.packingPlanMenu, true);
+      $this.getItemMasterFromMenu(response.packingPlanMenu, true, $scope.viewStartDate, $scope.viewEndDate);
       $this.getMenuMasterList($scope.viewStartDate, $scope.viewEndDate);
     }
 
