@@ -412,6 +412,9 @@ angular.module('ts5App')
     };
 
     $scope.showMasterItemsModal = function (item, index) {
+      $scope.masterItemsListFilterText = '';
+      $scope.masterItemsListSearch = undefined;
+
       $scope.indexToPutNewPromotionCategories = index;
 
       var selectedItemIds = $scope.itemList.filter(function (item) {
