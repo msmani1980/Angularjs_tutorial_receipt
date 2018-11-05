@@ -411,7 +411,20 @@ angular.module('ts5App')
       $scope.allCheckboxesSelected = !toggleAll;
     };
 
+    $scope.resetModalState = function () {
+      $scope.masterItemsListFilterText = '';
+      $scope.masterItemsListSearch = undefined;
+
+      $scope.allCheckboxesSelected = false;
+
+      angular.forEach($scope.modalMasterItemList, function(masterItem) {
+        masterItem.isItemSelected = false;
+      });
+    };
+
     $scope.showMasterItemsModal = function (item, index) {
+      $scope.resetModalState();
+
       $scope.indexToPutNewPromotionCategories = index;
 
       var selectedItemIds = $scope.itemList.filter(function (item) {
