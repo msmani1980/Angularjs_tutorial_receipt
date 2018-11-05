@@ -1,5 +1,5 @@
 'use strict';
-
+/*jshint maxcomplexity:6 */
 /**
  * @ngdoc function
  * @name ts5App.controller:CategoryListCtrl
@@ -15,6 +15,8 @@ angular.module('ts5App')
     $scope.search = {};
     $scope.categoryList = [];
     $scope.categoryToDelete = {};
+    $scope.isCategoryToEditNameNotValid = false;
+    $scope.rowIndexCategory = -1;
 
     var dragIndexFrom;
     var dragIndexTo;
@@ -189,6 +191,8 @@ angular.module('ts5App')
     };
 
     $scope.clearCreateForm = function() {
+      $scope.newCategoryForm.$setSubmitted(false);
+      $scope.displayError = false;
       $scope.newCategory = {};
     };
 
@@ -360,11 +364,10 @@ angular.module('ts5App')
       $scope.newCategoryForm.$setSubmitted(true);
       if ($scope.newCategoryForm.$submitted && !$scope.newCategoryForm.$valid) {
         $scope.displayError = true;
-      }
-      else {
+      } else {
         $scope.displayError = false;
       }
-      
+
       if ($scope.newCategoryForm.$valid) {
         $scope.newCategory.parentId = ($scope.newCategory.parentCategory) ? $scope.newCategory.parentCategory.id : null;
         $scope.newCategory.nextCategoryId = ($scope.newCategory.nextCategory) ? $scope.newCategory.nextCategory.id : null;
@@ -409,6 +412,13 @@ angular.module('ts5App')
     };
 
     $scope.saveEditChange = function(category) {
+      if (angular.isDefined($scope.categoryToEdit.name) &&  $scope.categoryToEdit.name !== '') {
+        $scope.isCategoryToEditNameNotValid = false;
+      } else {
+        $scope.isCategoryToEditNameNotValid = true;
+        return;
+      }
+
       category.name = $scope.categoryToEdit.name || category.name;
       category.description = $scope.categoryToEdit.description || category.description;
 
@@ -433,7 +443,8 @@ angular.module('ts5App')
       categoryFactory.updateCategory(category.id, newCategory).then(init, showErrors);
     };
 
-    $scope.saveChange = function(category) {
+    $scope.saveChange = function(category, index) {
+      $scope.rowIndexCategory = index;
       if ($scope.inEditMode) {
         $scope.saveEditChange(category);
       } else {
@@ -449,6 +460,7 @@ angular.module('ts5App')
 
     $scope.cancelChange = function() {
       if ($scope.inEditMode) {
+        $scope.rowIndexCategory = -1;
         $scope.cancelEditMode();
       } else {
         $scope.cancelRearrangeMode();
