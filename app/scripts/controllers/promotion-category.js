@@ -414,6 +414,7 @@ angular.module('ts5App')
     $scope.showMasterItemsModal = function (item, index) {
       $scope.masterItemsListFilterText = '';
       $scope.masterItemsListSearch = undefined;
+      $scope.allCheckboxesSelected = false;
 
       $scope.indexToPutNewPromotionCategories = index;
 
