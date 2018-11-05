@@ -176,10 +176,13 @@
           ng-model="categoryToEdit.name"
           type="text"
           class="form-control"
-          id="edit-category-name"
+          id="edit-category-name-{{$index}}"
           placeholder="Enter Category Name"
           maxlength="25"
-          ng-show="canEditOrRearrangeCategory(category) && inEditMode">
+          required="true"
+          ng-show="canEditOrRearrangeCategory(category) && inEditMode"
+          name="Category name-{{$index}}"          
+          >
       </td>
       <td>
         <span ng-hide="canEditOrRearrangeCategory(category) && inEditMode">{{ category.description }}</span>
