@@ -215,6 +215,10 @@ angular.module('ts5App')
     }
 
     function isExpiredItem (item) {
+      if (!item.selectedItem) {
+        return false;
+      }
+
       var itemMaster = lodash.find(item.masterItemList, { id: item.selectedItem.id });
       var isExpired = false;
       
