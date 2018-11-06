@@ -144,13 +144,13 @@
             </fieldset>
 
             <div class="row">
-              <div class="col-xs-12 col-sm-6">
+              <div class="col-xs-12 col-sm-6" ng-class="{ 'has-error' : !formData.startDate && displayError , 'has-success' : formData.startDate }">
                 <date-picker-field ng-if="minDate"
                   disable="isDisabled()" form="form" name="EffectiveFrom" label="Effective From"
                   min-date="minDate" required="true" ng-model="formData.startDate">
                 </date-picker-field>
               </div>
-              <div class="col-xs-12 col-sm-6">
+              <div class="col-xs-12 col-sm-6"  ng-class="{ 'has-error' : !formData.endDate && displayError , 'has-success' : formData.endDate }">
                 <date-picker-field ng-if="minDate" disable="isDisabledEndDateForm()" form="form" end-current-effective="isDisabled()"
                   name="EffectiveTo" min-date="minDate" label="Effective To" required="true"
                   ng-model="formData.endDate">

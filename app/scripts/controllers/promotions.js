@@ -1,5 +1,5 @@
 'use strict';
-
+/*jshint maxcomplexity:6 */
 /**
  * @ngdoc function
  * @name ts5App.controller:PromotionsCtrl
@@ -16,6 +16,7 @@ angular.module('ts5App')
     $scope.viewName = 'Create Promotion';
     $scope.saveButtonText = 'Create';
     $scope.activeBtn = 'promotion-information';
+    
     $scope.selectOptions = {
       promotionCategories: [],
       activePromotionCategories: []
@@ -765,12 +766,54 @@ angular.module('ts5App')
     }
 
     function uiSelectRequiredFieldsValid() {
+      /*jshint maxcomplexity:16 */
+      /*jshint maxdepth:5 */
       if (!$scope.promotionsForm.QualifierType.$modelValue.id) {
         $scope.promotionsForm.QualifierType.$setValidity('required', false);
+      } else {
+        if ($scope.promotion.promotionType.name === 'Spend Limit') { 
+          if (!$scope.promotionsForm.QualifiersPromotionCategory.$modelValue.id) {
+            $scope.promotionsForm.QualifiersPromotionCategory.$setValidity('required', false);
+          }
+        }
       }
 
       if (!$scope.promotionsForm.BenefitType.$modelValue.id) {
         $scope.promotionsForm.BenefitType.$setValidity('required', false);
+      } else {
+        if ($scope.promotion.benefitType.name === 'Discount') { 
+          if (!$scope.promotionsForm.ApplyTo.$modelValue.id) {
+            $scope.promotionsForm.ApplyTo.$setValidity('required', false);
+          } else {
+            if ($scope.promotion.benefitDiscountApply.name === 'Promotion Category') {
+              if (!$scope.promotionsForm.BenefitsPromotionCategory.$modelValue.id) {
+                $scope.promotionsForm.BenefitsPromotionCategory.$setValidity('required', false);
+              }
+            }
+
+            if ($scope.promotion.benefitDiscountApply.name === 'Retail Item') {
+              if (!$scope.promotionsForm.BenefitsRetailItem.$modelValue.id) {
+                $scope.promotionsForm.BenefitsRetailItem.$setValidity('required', false);
+              }
+            }
+          }
+
+          if (!$scope.promotionsForm.DiscountRateType.$modelValue.id) {
+            $scope.promotionsForm.DiscountRateType.$setValidity('required', false);
+          }
+        }
+
+        if ($scope.promotion.benefitType.name === 'Coupon') { 
+          if (!$scope.promotionsForm.Coupon.$modelValue.id) {
+            $scope.promotionsForm.Coupon.$setValidity('required', false);
+          }
+        }
+
+        if ($scope.promotion.benefitType.name === 'Voucher') { 
+          if (!$scope.promotionsForm.Voucher.$modelValue.id) {
+            $scope.promotionsForm.Voucher.$setValidity('required', false);
+          }
+        }
       }
     }
 
@@ -1131,6 +1174,8 @@ angular.module('ts5App')
     };
 
     $scope.save = function () {
+      $scope.promotionsForm.$setSubmitted(true);
+
       if ($scope.readOnly) {
         return false;
       }
