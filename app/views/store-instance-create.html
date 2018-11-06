@@ -58,13 +58,7 @@
         <label>Schedule Date <span ng-show="!isActionState('end-instance')">*</span></label>
       </div>
       <div class="col-xs-12 col-sm-8">
-          <date-picker-field
-            form="createStoreInstance"
-            name="scheduleDate"
-            required="true"
-            ng-model="formData.scheduleDate"
-            disable="isActionState('end-instance')">
-          </date-picker-field>
+          <date-picker-field form="createStoreInstance" name="scheduleDate" gray-past="true"  custom-effective="true" custom-date="formData.scheduleDate" required="true" ng-model="formData.scheduleDate" disable="isActionState('end-instance')"></date-picker-field>
       </div>
     </div>
 
