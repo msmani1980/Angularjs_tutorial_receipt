@@ -423,7 +423,7 @@ angular.module('ts5App')
       angular.forEach($scope.modalMasterItemList, function(masterItem) {
         masterItem.isItemSelected = false;
       });
-    }
+    };
 
     $scope.resetModalState = function () {
       $scope.masterItemsListFilterText = '';
