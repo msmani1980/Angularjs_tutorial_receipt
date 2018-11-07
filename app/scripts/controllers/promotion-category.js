@@ -393,11 +393,13 @@ angular.module('ts5App')
     };
 
     $scope.filterMasterItemsList = function () {
+      $scope.clearModalCheckboxes();
+
       $scope.masterItemsListSearch = angular.copy($scope.masterItemsListFilterText);
     };
 
     $scope.toggleAllCheckboxes = function() {
-      var filteredMasterItemList = $filter('filter')($scope.modalMasterItemList, { itemName: $scope.masterItemsListFilterText });
+      var filteredMasterItemList = $filter('filter')($scope.modalMasterItemList, { itemName: $scope.masterItemsListSearch });
 
       angular.forEach(filteredMasterItemList, function(masterItem) {
         masterItem.isItemSelected = $scope.allCheckboxesSelected;
@@ -415,15 +417,19 @@ angular.module('ts5App')
       $scope.allCheckboxesSelected = !toggleAll;
     };
 
-    $scope.resetModalState = function () {
-      $scope.masterItemsListFilterText = '';
-      $scope.masterItemsListSearch = undefined;
-
+    $scope.clearModalCheckboxes = function () {
       $scope.allCheckboxesSelected = false;
 
       angular.forEach($scope.modalMasterItemList, function(masterItem) {
         masterItem.isItemSelected = false;
       });
+    };
+
+    $scope.resetModalState = function () {
+      $scope.masterItemsListFilterText = '';
+      $scope.masterItemsListSearch = undefined;
+
+      $scope.clearModalCheckboxes();
     };
 
     $scope.showMasterItemsModal = function (item, index) {
