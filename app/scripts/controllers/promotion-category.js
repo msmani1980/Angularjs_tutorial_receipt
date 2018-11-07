@@ -370,8 +370,9 @@ angular.module('ts5App')
     $scope.populateAllSelectedItems = function() {
       var isFirst = true;
       var newIndex = $scope.indexToPutNewPromotionCategories;
+      var filteredMasterItemList = $filter('filter')($scope.modalMasterItemList, { itemName: $scope.masterItemsListSearch });
 
-      angular.forEach($scope.modalMasterItemList, function(masterItem) {
+      angular.forEach(filteredMasterItemList, function(masterItem) {
         if (masterItem.isItemSelected) {
           newIndex = isFirst ? newIndex : ++newIndex;
 
@@ -393,8 +394,6 @@ angular.module('ts5App')
     };
 
     $scope.filterMasterItemsList = function () {
-      $scope.clearModalCheckboxes();
-
       $scope.masterItemsListSearch = angular.copy($scope.masterItemsListFilterText);
     };
 
