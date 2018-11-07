@@ -51,7 +51,7 @@ angular.module('ts5App')
         newPromotion.promotionId = promotion.selectedPromotion.id;
         newPromotion.sortOrder = sortOrderIndex;
 
-        if ($routeParams.id && promotion.recordId) {
+        if ($routeParams.id && promotion.recordId && $routeParams.action !== 'copy') {
           newPromotion.id = promotion.recordId;
         }
 
@@ -69,7 +69,7 @@ angular.module('ts5App')
       payload.promotionCatalogName = $scope.promotionCatalog.promotionCatalogName;
       payload.companyPromotionCatalogOrderCatalogs = formatPromotionListPayload();
 
-      if ($routeParams.id) {
+      if ($routeParams.id && $routeParams.action !== 'copy') {
         payload.id = parseInt($routeParams.id);
       }
 
