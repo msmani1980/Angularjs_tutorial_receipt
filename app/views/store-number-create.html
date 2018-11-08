@@ -24,14 +24,14 @@
   </error-dialog>
 
   <div class="row">
-    <div class="col-xs-12 col-sm-6">
-      <label class="control-label">Store Number *</label>
-      <input custom-validity
-         custom-pattern="alphanumericUpToTenChars"
-         min="1"
-         max="10"
-         required="true"
+    <div class="col-xs-12 col-sm-6" ng-class="{ 'has-error' : !formData.storeNumber && displayError, 'has-success' : formData.storeNumber }">
+      <label>Store Number *</label>
+      <input 
          type="text"
+         ng-pattern="regexp.alphanumeric"
+         minlength="1"
+         maxlength="10"
+         required="true"
          class="form-control"
          name="storeNumber"
          ng-model="formData.storeNumber"
@@ -40,7 +40,7 @@
          ng-required="isSubmitting"/>
     </div>
     <div class="col-xs-6 col-sm-6">
-      <date-picker-field class="col-xs-6 col-sm-6"
+      <date-picker-field class="col-xs-6 col-sm-6" ng-class="{ 'has-error' : !formData.startDate && displayError, 'has-success' : formData.startDate }"
           ng-if="isEditing && fieldDisabled(formData)"
           name="startDate"
           ng-model="formData.startDate"
@@ -49,7 +49,7 @@
           label="Effective From"
           required="true">
       </date-picker-field>
-      <date-picker-field class="col-xs-6 col-sm-6"
+      <date-picker-field class="col-xs-6 col-sm-6" ng-class="{ 'has-error' : !formData.startDate && displayError, 'has-success' : formData.startDate }"
           ng-if="!isEditing || !fieldDisabled(formData)"
           name="startDate"
           min-date="minDate"
@@ -57,7 +57,7 @@
           label="Effective From"
           required="true">
         </date-picker-field>
-        <date-picker-field class="col-xs-6 col-sm-6"
+        <date-picker-field class="col-xs-6 col-sm-6" ng-class="{ 'has-error' : !formData.endDate && displayError, 'has-success' : formData.endDate }"
             ng-if="!isEditing || !isCurrentEffectiveDate(formData)"
             name="endDate"
             end-current-effective="false"
@@ -66,7 +66,7 @@
             label="Effective To"
             required="true">
         </date-picker-field>
-      <date-picker-field class="col-xs-6 col-sm-6"
+      <date-picker-field class="col-xs-6 col-sm-6"  ng-class="{ 'has-error' : !formData.endDate && displayError, 'has-success' : formData.endDate }"
             ng-if="isEditing && isCurrentEffectiveDate(formData)"
             name="endDate"
             end-current-effective="true"
