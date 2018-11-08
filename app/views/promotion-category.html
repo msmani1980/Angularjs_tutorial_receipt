@@ -22,60 +22,61 @@
     <hr>
 
     <div class="row">
-      <div class="form-group col-xs-12 col-sm-12">
+      <div class="form-group col-xs-12 col-sm-12" ng-class="{ 'has-error' : !promotionCategory.promotionCategoryName && displayError, 'has-success' : promotionCategory.promotionCategoryName }">
         <label>Category Name *</label>
-        <input type="text"
-               custom-validity
-               custom-pattern="alphanumericSpaces"
-               maxlength="40"
-               class="form-control"
-               name="menuDescription"
-               required="true"
-               ng-disabled="disableEditField"
+        <input
+               type="text"
                ng-model="promotionCategory.promotionCategoryName"
-               ng-readonly="isMenuReadOnly()"/>
+               class="form-control"
+               name="CategoryName"
+               id="newCategoryName"
+               placeholder="Enter Category Name"
+               maxlength="40"
+               ng-pattern="regexp.alphanumericSpaces"
+               required="promotionCategoryForm.$submitted"
+        />
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-xs-6">
+      <div class="form-group col-xs-6" ng-class="{ 'has-error' : !promotionCategory.startDate && displayError, 'has-success' : promotionCategory.startDate }">
         <date-picker-field ng-if="disableEditField || isCopy"
           custom-effective="true"
-          name="startDate"
+          name="EffectiveFrom"
           min-date="startMinDate"
           ng-model="promotionCategory.startDate"
           disable="disableEditField"
           label="Effective From"
-          required="true">
+          required="promotionCategoryForm.$submitted">
         </date-picker-field>
          <date-picker-field ng-if="!disableEditField && !isCopy"
-          name="startDate"
+          name="EffectiveFrom"
           min-date="startMinDate"
           ng-model="promotionCategory.startDate"
           disable="disableEditField"
           label="Effective From"
-          required="true">
+          required="promotionCategoryForm.$submitted">
         </date-picker-field>
         </div>
 
-        <div class="form-group col-xs-6">
+        <div class="form-group col-xs-6" ng-class="{ 'has-error' : !promotionCategory.endDate && displayError , 'has-success' : promotionCategory.endDate }">
           <date-picker-field 
             ng-if="isCurrentEffectiveDate(promotionCategory)  || isCopy || isViewOnly"
-            name="endDate"
+            name="EffectiveTo"
             min-date="minDate"
             ng-model="promotionCategory.endDate"
             disable="isViewOnly"
             label="Effective To"
-            required="true"
+            required="promotionCategoryForm.$submitted"
             end-current-effective="true">
           </date-picker-field>
           <date-picker-field 
             ng-if="!isCurrentEffectiveDate(promotionCategory) && !isCopy && !isViewOnly"
-            name="endDate"
+            name="EffectiveTo"
             min-date="minDate"
             ng-model="promotionCategory.endDate"
             disable="isViewOnly"
             label="Effective To"
-            required="true">
+            required="promotionCategoryForm.$submitted">
           </date-picker-field>
       </div>
     </div>

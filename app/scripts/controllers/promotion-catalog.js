@@ -82,7 +82,7 @@ angular.module('ts5App')
         isListValid = !!promotion.selectedPromotion || isListValid;
       });
 
-      if ($scope.catalogPromotionList.length <= 0 || !isListValid) {
+      if (!isListValid || $scope.catalogPromotionList.length <= 0) {
         $scope.errorCustom = [{
           field: 'Promotion List',
           value: 'At least one promotion must be selected'
@@ -96,6 +96,12 @@ angular.module('ts5App')
     }
 
     $scope.save = function () {
+      $scope.errorResponse = null; 
+      $scope.errorCustom = null;
+      $scope.showCustomErrors = false;
+      $scope.displayError = false;
+      $scope.promotionCatalogForm.$setSubmitted(true);
+
       if (!$scope.promotionCatalogForm.$valid) {
         showErrors();
         return false;
@@ -252,6 +258,7 @@ angular.module('ts5App')
     function init() {
       $scope.isViewOnly = false;
       $scope.disableEditField = false;
+      $scope.displayError = false;
 
       if ($routeParams.id) {
         showLoadingModal('Loading Data');
