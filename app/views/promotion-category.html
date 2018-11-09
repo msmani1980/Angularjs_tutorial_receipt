@@ -176,7 +176,7 @@
               <th>Item Code</th>
               <th style="text-align:center;"><input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()"></th>
             </tr>
-            <tr ng-repeat="masterItem in modalMasterItemList | filter: {itemName: masterItemsListSearch} | orderBy:'itemName'">
+            <tr ng-repeat="masterItem in filteredMasterItemList | filter: {itemName: masterItemsListSearch} | orderBy:'itemName'">
               <td>{{ masterItem.itemName }}</td>
               <td>{{ masterItem.itemCode }}</td>
               <td style="text-align:center;">
