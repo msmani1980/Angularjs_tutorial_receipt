@@ -370,9 +370,8 @@ angular.module('ts5App')
     $scope.populateAllSelectedItems = function() {
       var isFirst = true;
       var newIndex = $scope.indexToPutNewPromotionCategories;
-      var filteredMasterItemList = $filter('filter')($scope.modalMasterItemList, { itemName: $scope.masterItemsListSearch });
 
-      angular.forEach(filteredMasterItemList, function(masterItem) {
+      angular.forEach($scope.filteredMasterItemList, function(masterItem) {
         if (masterItem.isItemSelected) {
           newIndex = isFirst ? newIndex : ++newIndex;
 
@@ -395,19 +394,32 @@ angular.module('ts5App')
 
     $scope.filterMasterItemsList = function () {
       $scope.masterItemsListSearch = angular.copy($scope.masterItemsListFilterText);
+      $scope.filteredMasterItemList = $filter('filter')($scope.modalMasterItemList, { itemName: $scope.masterItemsListSearch });
+
+      if ($scope.filteredMasterItemList.length === 0 || !$scope.allCheckboxesSelected) {
+        $scope.clearModalCheckboxes();
+      } else {
+        if ($scope.allCheckboxesSelected) {
+          $scope.selectAllItems();
+        }
+      }
+    };
+
+    $scope.selectAllItems = function () {
+      angular.forEach($scope.filteredMasterItemList, function(masterItem) {
+        masterItem.isItemSelected = true;
+      });
     };
 
     $scope.toggleAllCheckboxes = function() {
-      var filteredMasterItemList = $filter('filter')($scope.modalMasterItemList, { itemName: $scope.masterItemsListSearch });
-
-      angular.forEach(filteredMasterItemList, function(masterItem) {
+      angular.forEach($scope.filteredMasterItemList, function(masterItem) {
         masterItem.isItemSelected = $scope.allCheckboxesSelected;
       });
     };
 
     $scope.toggleSelectAll = function() {
       var toggleAll = false;
-      angular.forEach($scope.modalMasterItemList, function(masterItem) {
+      angular.forEach($scope.filteredMasterItemList, function(masterItem) {
         if (!masterItem.isItemSelected) {
           toggleAll = true;
         }
@@ -419,7 +431,7 @@ angular.module('ts5App')
     $scope.clearModalCheckboxes = function () {
       $scope.allCheckboxesSelected = false;
 
-      angular.forEach($scope.modalMasterItemList, function(masterItem) {
+      angular.forEach($scope.filteredMasterItemList, function(masterItem) {
         masterItem.isItemSelected = false;
       });
     };
@@ -447,6 +459,7 @@ angular.module('ts5App')
 
         return itemNotAddedYet;
       });
+      $scope.filteredMasterItemList = $scope.modalMasterItemList;
 
       showMasterItemsDialog();
     };
