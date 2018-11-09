@@ -1076,6 +1076,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         var price = $scope.formData.prices[priceIndex];
         for (var stationExceptionIndex in price.stationExceptions) {
           var stationException = price.stationExceptions[stationExceptionIndex];
+          stationException.tempStationId = stationException.stationId;
           stationPromises.push(this.getGlobalStationList(stationException));
         }
 
@@ -1089,6 +1090,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $q.all(stationPromises).then(function(data) {
         for (var key in data) {
           var stationException = price.stationExceptions[key];
+          stationException.stationId = stationException.tempStationId;
           if (stationException) {
             $this.setStationsList(stationException, data[key]);
           }
