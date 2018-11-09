@@ -459,6 +459,7 @@ angular.module('ts5App')
 
         return itemNotAddedYet;
       });
+      
       $scope.filteredMasterItemList = $scope.modalMasterItemList;
 
       showMasterItemsDialog();
