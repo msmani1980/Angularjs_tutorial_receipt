@@ -149,6 +149,18 @@ angular.module('ts5App')
     // scope functions
     $scope.submitForm = function() {
       $scope.isSubmitting = true;
+      $scope.storeNumberCreatForm.$setSubmitted(true);
+      
+      if ($scope.storeNumberCreatForm.$submitted && !$scope.storeNumberCreatForm.$valid) {
+        $scope.displayError = true;
+      } else {
+        $scope.displayError = false;
+      }
+
+      if (!$scope.storeNumberCreatForm.$valid) {
+        return;
+      }
+      
       displayLoadingModal('Saving');
       var payload = angular.copy($scope.formData);
       payload.startDate = dateUtility.formatDateForAPI(payload.startDate);

@@ -22,9 +22,9 @@
     <hr>
 
     <div class="row">
-      <div class="form-group col-xs-12 col-sm-12">
+      <div class="form-group col-xs-12 col-sm-12" ng-class="{ 'has-error' : !promotionCatalog.promotionCatalogName && displayError, 'has-success' : promotionCatalog.promotionCatalogName }">
         <label>Catalog Name *</label>
-        <input type="text"
+        <!-- input type="text"
                custom-validity
                custom-pattern="alphanumericSpaces"
                maxlength="40"
@@ -33,50 +33,65 @@
                required="true"
                ng-model="promotionCatalog.promotionCatalogName"
                ng-readonly="isMenuReadOnly()"
-               ng-disabled="isViewOnly || disableEditField" />
+               ng-disabled="isViewOnly || disableEditField" /-->
+               
+        <input
+               type="text"
+               ng-model="promotionCatalog.promotionCatalogName"
+               class="form-control"
+               name="CatalogName"
+               id="newCatalogName"
+               placeholder="Enter Catalog Name"
+               maxlength="40"
+               ng-pattern="regexp.alphanumericSpaces"
+               required="promotionCatalogForm.$submitted"
+               ng-readonly="isMenuReadOnly()"
+               ng-disabled="isViewOnly || disableEditField"               
+        />
+               
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-xs-6">
+      <div class="form-group col-xs-6" ng-class="{ 'has-error' : !promotionCatalog.startDate && displayError, 'has-success' : promotionCatalog.startDate }">
         <date-picker-field ng-if="disableEditField"
           custom-effective="true"
-          name="startDate"
+          name="EffectiveFrom"
           min-date="startMinDate"
           ng-model="promotionCatalog.startDate"
           label="Effective From"
           disable="isViewOnly || disableEditField"
-          required="true">
+          required="promotionCatalogForm.$submitted">
         </date-picker-field>
         <date-picker-field ng-if="!disableEditField"
           custom-effective="true"
-          name="startDate"
+          name="EffectiveFrom"
           min-date="startMinDate"
           ng-model="promotionCatalog.startDate"
           label="Effective From"
           disable="isViewOnly || disableEditField"
-          required="true">
+          required="promotionCatalogForm.$submitted">
         </date-picker-field>
       </div>
-      <div class="form-group col-xs-6">
+      <div class="form-group col-xs-6" ng-class="{ 'has-error' : !promotionCatalog.endDate && displayError, 'has-success' : promotionCatalog.endDate }">
         <date-picker-field ng-if="isCurrentEffectiveDate(promotionCatalog)"
           end-current-effective="true"
-          name="endDate"
+          name="EffectiveTo"
           min-date="minDate"
           ng-model="promotionCatalog.endDate"
           disable="isViewOnly"
           label="Effective To"
           disable="isViewOnly"
-          required="true">
+          required="promotionCatalogForm.$submitted">
         </date-picker-field>
         <date-picker-field ng-if="!isCurrentEffectiveDate(promotionCatalog)"
           custom-effective="!isViewOnly"
-          name="endDate"
+          name="EffectiveTo"
           min-date="minDate"
           ng-model="promotionCatalog.endDate"
           disable="isViewOnly"
           label="Effective To"
           disable="isViewOnly"
-          required="true">
+          required="promotionCatalogForm.$submitted">
         </date-picker-field>
       </div>
     </div>
