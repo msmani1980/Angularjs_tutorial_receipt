@@ -63,25 +63,27 @@
       </form>
     </div>
     
-	<error-dialog form-object="form" error-response="errorResponse" display="displayError">
+	<error-dialog form-object="newCategoryForm" error-response="errorResponse" display="displayError">
     </error-dialog>
     <div class="panel panel-default collapse no-transition" id="create-collapse">
-      <form name="newCategoryForm" ng-submit="createCategory()">
+      <form name="newCategoryForm" class="form edit-form create-item-form">
         <div class="panel-body">
           <h4>New Category</h4>
           <hr>
           <div class="row">
             <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
+              <div class="form-group"  ng-class="{ 'has-error' : !newCategory.name && displayError , 'has-success' : newCategory.name }">
                 <label for="new-name">Name *</label>
                 <input
-                  ng-model="newCategory.name"
                   type="text"
+                  ng-model="newCategory.name"
                   class="form-control"
+                  name="Category Name"
                   id="new-name"
                   placeholder="Enter Category Name"
                   maxlength="25"
-                  required="true">
+                  required="newCategoryForm.$submitted"
+                  />
               </div>
             </div>
             <div class="col-sm-6 col-xs-12">
@@ -123,7 +125,7 @@
         </div>
         <div class="panel-footer text-right">
           <button type="button" class="btn btn-default" ng-click="clearCreateForm()"  id="clearCreateCategoryId">Clear</button>
-          <button type="submit" class="btn btn-success" id="submitCreateCategoryId"><span class="fa fa-check"></span> Save</button>
+          <button type="submit" class="btn btn-success" ng-click="createCategory()" id="submitCreateCategoryId"><span class="fa fa-check"></span> Save</button>
         </div>
       </form>
     </div>
@@ -170,14 +172,33 @@
       </td>
       <td>
         <span ng-hide="canEditOrRearrangeCategory(category) && inEditMode">{{ category.name }}</span>
+        <div ng-if="isCategoryToEditNameNotValid && rowIndexCategory == $index">
         <input
           ng-model="categoryToEdit.name"
           type="text"
           class="form-control"
-          id="edit-category-name"
+          id="{{$index}}"
           placeholder="Enter Category Name"
           maxlength="25"
-          ng-show="canEditOrRearrangeCategory(category) && inEditMode">
+          required="true"
+          ng-show="canEditOrRearrangeCategory(category) && inEditMode"
+          name="Category name-{{$index}}"
+          style="border:1px solid #ff0000">
+          <div ng-if="isCategoryToEditNameNotValid" style="color:red">The Category Name is a required field !</div>
+          
+          </div>
+        <div ng-if="!isCategoryToEditNameNotValid || rowIndexCategory != $index">
+        <input
+          ng-model="categoryToEdit.name"
+          type="text"
+          class="form-control"
+          id="{{$index}}"
+          placeholder="Enter Category Name"
+          maxlength="25"
+          required="true"
+          ng-show="canEditOrRearrangeCategory(category) && inEditMode"
+          name="Category name-{{$index}}">
+          </div>
       </td>
       <td>
         <span ng-hide="canEditOrRearrangeCategory(category) && inEditMode">{{ category.description }}</span>
@@ -216,7 +237,7 @@
                 ng-click="deleteRecordDialog(category, ['name', 'description'])">
           <span class="fa fa-trash"></span>
         </button>
-        <button class="btn btn-xs btn-success" ng-show="canEditOrRearrangeCategory(category)" ng-click="saveChange(category)">
+        <button class="btn btn-xs btn-success" ng-show="canEditOrRearrangeCategory(category)" ng-click="saveChange(category, $index)">
           <span class="fa fa-check"></span>
         </button>
         <button class="btn btn-xs btn-default" ng-show="canEditOrRearrangeCategory(category)" ng-click="cancelChange()">

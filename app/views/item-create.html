@@ -109,7 +109,7 @@
                   </input>
               </div>
 
-              <div class="form-group" ng-class="{ 'has-error' : !formData.quickSearchCode && displayError , 'has-success' : formData.quickSearchCode }">
+              <div class="form-group">
                   <label>ePOS Quick Search Code</label>&nbsp;
                   <input  type="text"  class="form-control"  ng-model="formData.quickSearchCode"  name="ePOS Quick Search Code" ng-pattern="regexp.alphanumeric"
                           placeholder="ePOS Quick Search Code" max-length="15">
@@ -123,14 +123,14 @@
                   </input>
               </div>    
 
-              <div class="form-group" ng-class="{ 'has-error' : !formData.keywords && displayError , 'has-success' : formData.keywords }">
+              <div class="form-group">
                   <label>Keywords</label>&nbsp;
                   <input type="text"  class="form-control"  ng-model="formData.keywords" name="Keywords" ng-pattern="regexp.word"
                          placeholder="keywords..." max-length="500">
                   </input>
               </div>    
 
-              <div class="form-group" ng-class="{ 'has-error' : !formData.sellingPoint && displayError , 'has-success' : formData.sellingPoint }">
+              <div class="form-group">
                   <label>Unique Selling Point</label>&nbsp;
                   <input type="text"  class="form-control"  ng-model="formData.sellingPoint" name="Unique Selling Point" ng-pattern="regexp.word"
                           placeholder="A unique selling point" max-length="100"></input>
@@ -144,13 +144,13 @@
             </fieldset>
 
             <div class="row">
-              <div class="col-xs-12 col-sm-6">
+              <div class="col-xs-12 col-sm-6" ng-class="{ 'has-error' : !formData.startDate && displayError , 'has-success' : formData.startDate }">
                 <date-picker-field ng-if="minDate"
                   disable="isDisabled()" form="form" name="EffectiveFrom" label="Effective From"
                   min-date="minDate" required="true" ng-model="formData.startDate">
                 </date-picker-field>
               </div>
-              <div class="col-xs-12 col-sm-6">
+              <div class="col-xs-12 col-sm-6"  ng-class="{ 'has-error' : !formData.endDate && displayError , 'has-success' : formData.endDate }">
                 <date-picker-field ng-if="minDate" disable="isDisabledEndDateForm()" form="form" end-current-effective="isDisabled()"
                   name="EffectiveTo" min-date="minDate" label="Effective To" required="true"
                   ng-model="formData.endDate">
@@ -388,7 +388,7 @@
               </div>
 
               <div ng-if="isVirtualSelected" class="row">
-                <div class="form-group col-md-12" ng-class="{ 'has-error' : !formData.supplierCompanyId && displayError , 'has-success' : formData.supplierCompanyId }">
+                <div class="form-group col-md-12">
                   <label>Supplier</label>
                   <select name="supplierCompanyId" ng-model="formData.supplierCompanyId" convert-to-number class="form-control col-xs-2" ng-change="onSupplierCompanyChange()" ng-init="onSupplierCompanyChange()" >
                     <option ng-repeat="supplier in supplierCompanies | orderBy:'relativeCompany'" value="{{supplier.relativeCompanyId}}">

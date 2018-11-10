@@ -143,6 +143,16 @@ angular.module('ts5App')
     }
 
     $scope.formSave = function() {
+      /*jshint maxcomplexity:6 */
+
+      $scope.displayError = false;
+      $scope.cashBagCreateForm.$setSubmitted(true);
+
+      if (angular.isDefined(!$scope.cashBagCreateForm) && !$scope.cashBagCreateForm.$valid) {
+        $scope.displayError = true;
+        return;
+      }
+
       var formData = cleanPayload(angular.copy($scope.cashBag));
       if (!isCashBagValid(formData)) {
         return;
