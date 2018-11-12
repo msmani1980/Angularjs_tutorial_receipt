@@ -8,13 +8,15 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionCategoryCtrl', function ($scope, $routeParams, promotionCategoryFactory, globalMenuService, $q, lodash, messageService, dateUtility, $location) {
+  .controller('PromotionCategoryCtrl', function ($scope, $routeParams, promotionCategoryFactory, globalMenuService, $q, lodash, messageService, dateUtility, $location, $filter) {
 
     $scope.itemList = [];
     $scope.promotionCategory = {};
     $scope.minDate = dateUtility.dateNumDaysAfterTodayFormattedDatePicker(1);
     $scope.startMinDate = $routeParams.action === 'create' ? $scope.minDate : '';
-    $scope.isCopy = false;    
+    $scope.isCopy = false;
+    $scope.masterItemsListFilterText = '';
+    $scope.allCheckboxesSelected = false;
     var $this = this;
 
     function showLoadingModal(message) {
@@ -213,6 +215,10 @@ angular.module('ts5App')
     }
 
     function isExpiredItem (item) {
+      if (!item.selectedItem) {
+        return false;
+      }
+
       var itemMaster = lodash.find(item.masterItemList, { id: item.selectedItem.id });
       var isExpired = false;
       
@@ -360,6 +366,142 @@ angular.module('ts5App')
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
     };
+
+    $scope.populateAllSelectedItems = function() {
+      var isFirst = true;
+      var newIndex = $scope.indexToPutNewPromotionCategories;
+
+      angular.forEach($scope.filteredMasterItemList, function(masterItem) {
+        if (masterItem.isItemSelected) {
+          newIndex = isFirst ? newIndex : ++newIndex;
+
+          $scope.itemList.splice(newIndex, isFirst ? 1 : 0, {
+            itemIndex: newIndex,
+            selectedItem: masterItem,
+            masterItemList: angular.copy($scope.masterItemList)
+          });
+
+          isFirst = false;
+        }
+      });
+
+      hideMasterItemsDialog();
+    };
+
+    $scope.modalItemAlreadySelected = function (item) {
+      return !lodash.find($scope.itemList, { id: item.id });
+    };
+
+    $scope.filterMasterItemsList = function () {
+      $scope.masterItemsListSearch = angular.copy($scope.masterItemsListFilterText);
+      $scope.filteredMasterItemList = $filter('filter')($scope.modalMasterItemList, { itemName: $scope.masterItemsListSearch });
+
+      $scope.deselectFilteredOutItems();
+
+      if ($scope.areAllItemsSelected()) {
+        $scope.allCheckboxesSelected = true;
+      } else {
+        $scope.allCheckboxesSelected = false;
+      }
+    };
+
+    $scope.deselectFilteredOutItems = function () {
+      var filteredOutItems = $scope.modalMasterItemList.filter(function (masterItem) {
+        return $scope.filteredMasterItemList.indexOf(masterItem) === -1;
+      });
+
+      filteredOutItems.forEach(function (masterItem) {
+        masterItem.isItemSelected = false;
+      });
+    };
+
+    $scope.areAllItemsSelected = function () {
+      if ($scope.filteredMasterItemList.length === 0) {
+        return false;
+      }
+
+      var selectedCount = 0;
+
+      angular.forEach($scope.filteredMasterItemList, function(masterItem) {
+        if (masterItem.isItemSelected) {
+          selectedCount = selectedCount + 1;
+        }
+      });
+
+      return selectedCount === $scope.filteredMasterItemList.length;
+    };
+
+    $scope.selectAllItems = function () {
+      angular.forEach($scope.filteredMasterItemList, function(masterItem) {
+        masterItem.isItemSelected = true;
+      });
+    };
+
+    $scope.toggleAllCheckboxes = function() {
+      angular.forEach($scope.filteredMasterItemList, function(masterItem) {
+        masterItem.isItemSelected = $scope.allCheckboxesSelected;
+      });
+    };
+
+    $scope.toggleSelectAll = function() {
+      var toggleAll = false;
+      angular.forEach($scope.filteredMasterItemList, function(masterItem) {
+        if (!masterItem.isItemSelected) {
+          toggleAll = true;
+        }
+      });
+
+      $scope.allCheckboxesSelected = !toggleAll;
+    };
+
+    $scope.clearModalCheckboxes = function () {
+      $scope.allCheckboxesSelected = false;
+
+      angular.forEach($scope.filteredMasterItemList, function(masterItem) {
+        masterItem.isItemSelected = false;
+      });
+    };
+
+    $scope.resetModalState = function () {
+      $scope.masterItemsListFilterText = '';
+      $scope.masterItemsListSearch = undefined;
+
+      $scope.clearModalCheckboxes();
+    };
+
+    $scope.showMasterItemsModal = function (item, index) {
+      $scope.resetModalState();
+
+      $scope.indexToPutNewPromotionCategories = index;
+
+      var selectedItemIds = $scope.itemList.filter(function (item) {
+          return item.selectedItem;
+        }).map(function (item) {
+          return item.selectedItem.id;
+        });
+
+      $scope.modalMasterItemList = lodash.filter(item.masterItemList, function (masterItem) {
+        var itemNotAddedYet = selectedItemIds.indexOf(masterItem.id) === -1;
+
+        return itemNotAddedYet;
+      });
+
+      $scope.filteredMasterItemList = $scope.modalMasterItemList;
+
+      showMasterItemsDialog();
+    };
+
+    $scope.isAnyItemExpired = function () {
+      return lodash.find($scope.itemList, { isExpired: true });
+    };
+
+    function showMasterItemsDialog() {
+      angular.element('#master-items').modal('show');
+    }
+
+    function hideMasterItemsDialog() {
+      angular.element('#master-items').modal('hide');
+    }
 
   }
 )

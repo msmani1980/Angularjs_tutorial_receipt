@@ -11,7 +11,7 @@
         </div>
         <div class="col-xs-6 text-right">
           <a class="btn btn-default" ng-href="#/promotion-category-list" class="btn">Back</a>
-          <button class="btn btn-success" ng-click="save()" ng-hide="isViewOnly">
+          <button class="btn btn-success" ng-click="save()" ng-hide="isViewOnly" ng-disabled="isAnyItemExpired()">
             <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
             <span>Save</span>
           </button>
@@ -94,7 +94,7 @@
         <th class="col-xs-7">Item</th>
         <th class="col-xs-1"></th>
       </tr>
-      <tr ng-repeat="item in itemList">
+      <tr ng-repeat="item in itemList track by $index">
         <td>
           <ui-select
             ng-model="item.selectedCategory"
@@ -112,20 +112,24 @@
           </ui-select>
         </td>
         <td>
-          <ui-select
-            ng-model="item.selectedItem"
-            ng-disabled="shouldDisableItemDropDown(item) || disableEditField"
-            theme="bootstrap"
-            placeholder="1 Select an item..."
-            ng-change="onChangeItem(item)">
-            <ui-select-match
-              placeholder="1 Select an item...">{{$select.selected.itemName}}
-            </ui-select-match>
-            <ui-select-choices repeat="masterItem in item.masterItemList | filter: $select.search | orderBy:'itemName'">
-              <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
-            </ui-select-choices>
-          </ui-select>
-          <div ng-if="item.isExpired && isCopy" style="color:red">This item expired!</div>
+          <div class="input-group">
+            <input type="text"
+                   class="form-control"
+                   placeholder="Lookup an Item"
+                   name="menuItem-{{$index}}"
+                   value="{{ item.selectedItem.itemName }}"
+                   autocomplete="off"
+                   ng-disabled="disableEditField" />
+            <div class="input-group-btn">
+              <button type="button"
+                      class="btn btn-default"
+                      ng-click="showMasterItemsModal(item, $index)"
+                      ng-disabled="disableEditField">
+                <i class="fa fa-info-circle"></i>
+              </button>
+            </div>
+          </div>
+          <div ng-if="item.isExpired" style="color:red">This item expired!</div>
         </td>
         <td>
           <button class="btn btn-danger btn-xs" ng-click="removeItem(item)" ng-hide="disableEditField">
@@ -137,4 +141,53 @@
 
   </form>
 </div>
+
+<div class="modal" id="master-items" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="row">
+          <div class="col-xs-8">
+            <h4 class="modal-title">Lookup Valid Items</h4>
+          </div>
+          <div class="col-xs-4 text-right">
+            <button class="btn btn-default btn-cancel" data-dismiss="modal">Close</button>
+            <button class="btn btn-success" ng-click="populateAllSelectedItems()">Select Items</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <div class="input-group">
+            <input ng-model="masterItemsListFilterText" type="text" class="form-control" id="filter-item-details"
+                   placeholder="Filter Items List"/>
+            <div class="input-group-btn">
+              <button type="button"
+                      class="btn btn-default"
+                      ng-click="filterMasterItemsList()">
+                <i class="fa fa-filter"></i> Filter
+              </button>
+            </div>
+          </div>
+
+          <table class="table table-bordered table-condensed">
+            <tr>
+              <th>Item Name</th>
+              <th>Item Code</th>
+              <th style="text-align:center;"><input class="btn btn-default" type="checkbox" value="1" ng-model="allCheckboxesSelected" ng-click="toggleAllCheckboxes()"></th>
+            </tr>
+            <tr ng-repeat="masterItem in filteredMasterItemList | filter: {itemName: masterItemsListSearch} | orderBy:'itemName'">
+              <td>{{ masterItem.itemName }}</td>
+              <td>{{ masterItem.itemCode }}</td>
+              <td style="text-align:center;">
+                <input class="btn btn-default" ng-click="toggleSelectAll()" type="checkbox" ng-model="masterItem.isItemSelected"/>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <dynamic-left-nav title="Promotion Management"></dynamic-left-nav>
