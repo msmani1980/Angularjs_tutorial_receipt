@@ -411,7 +411,7 @@ angular.module('ts5App')
       });
 
       filteredOutItems.forEach(function (masterItem) {
-          masterItem.isItemSelected = false;
+        masterItem.isItemSelected = false;
       })
     };
 
