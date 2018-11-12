@@ -284,6 +284,7 @@ angular.module('ts5App')
     var packingPlanMenus = [];
     angular.forEach(menus, function (menu) {
       var planMenu = {
+        id: menu.menuMasterId,
         menuId: menu.id,
         packingPlanId: menu.packingPlanId, 
         menuMasterId: menu.menuMasterId,
