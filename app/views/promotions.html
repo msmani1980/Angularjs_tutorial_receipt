@@ -28,60 +28,88 @@
     <h3 id="promotion-information">Promotion Information</h3>
     <div class="row">
       <div class="col-xs-12 col-sm-6">
-        <div class="form-group">
+        <div class="form-group" ng-class="{ 'has-error' : !promotion.promotionCode && displayError , 'has-success' : promotion.promotionCode }">
           <label for="promotion-code">Promotion Code*</label>
           <input type="text"
                  class="form-control"
                  id="promotion-code"
-                 name="promotionCode"
+                 name="Promotion Code"
                  ng-model="promotion.promotionCode"
-                 custom-validity
-                 custom-pattern="alphanumeric"
+                 ng-pattern="regexp.alphanumeric"
                  ng-disabled="readOnly || isDisabled"
-                 required>
+                 required="promotionsForm.$submitted">
         </div>
       </div>
       <div class="col-xs-12 col-sm-6">
-        <div class="form-group">
+        <div class="form-group" ng-class="{ 'has-error' : !promotion.description && displayError , 'has-success' : promotion.description }">
           <label for="promotion-description">Promotion Description*</label>
-          <textarea class="form-control"
-                    id="promotion-description"
-                    name="promotionDescription"
-                    ng-model="promotion.description"
-                    ng-disabled="readOnly || isDisabled"
-                    required></textarea>
+          <input type="text"
+                 class="form-control"
+                 id="promotion-description"
+                 name="Promotion Description"
+                 ng-model="promotion.description"
+                 ng-disabled="readOnly || isDisabled"
+                 required="promotionsForm.$submitted">
+          
         </div>
       </div>
       <div class="col-xs-12 col-sm-6">
-        <div class="form-group">
+        <div class="form-group" ng-class="{ 'has-error' : !promotion.promotionName && displayError , 'has-success' : promotion.promotionName }">
           <label for="promotion-name">Promotion Name*</label>
           <input type="text"
                  class="form-control"
                  id="promotion-name"
-                 name="promotionName"
+                 name="Promotion Name"
                  ng-model="promotion.promotionName"
                  ng-disabled="readOnly || isDisabled"
                  maxlength="40"
-                 required>
+                 required="promotionsForm.$submitted">
         </div>
       </div>
       <div class="col-xs-12 col-md-6">
         <div class="row">
-          <div class="col-xs-12 col-sm-6">
-               <date-picker-field ng-if="editing && isDisabled" disable="(shouldDisableStartDate && !isCopy()) || readOnly" name="EffectiveFrom" label="Effective From"  custom-effective="editing"
-                               min-date="'+1d'" required="true" ng-model="promotion.startDate"></date-picker-field>
+          <div class="col-xs-12 col-sm-6" ng-class="{ 'has-error' : !promotion.startDate && displayError , 'has-success' : promotion.startDate }">
+               <date-picker-field 
+                 ng-if="editing && isDisabled" 
+                 disable="(shouldDisableStartDate && !isCopy()) || readOnly" 
+                 name="EffectiveFrom" 
+                 label="Effective From"  
+                 custom-effective="editing"
+                 min-date="'+1d'" 
+                 required="promotionsForm.$submitted" 
+                 ng-model="promotion.startDate">
+               </date-picker-field>
 
-               <date-picker-field ng-if="!editing || !isDisabled" disable="(shouldDisableStartDate && !isCopy()) || readOnly" name="EffectiveFrom" label="Effective From"
-                               min-date="'+1d'" required="true" ng-model="promotion.startDate"></date-picker-field>
-
+               <date-picker-field 
+                 ng-if="!editing || !isDisabled" 
+                 disable="(shouldDisableStartDate && !isCopy()) || readOnly" 
+                 name="Effective From" 
+                 label="Effective From"
+                 min-date="'+1d'" 
+                 required="promotionsForm.$submitted" 
+                 ng-model="promotion.startDate">
+               </date-picker-field>
           </div>
-          <div class="col-xs-12 col-sm-6">
-            <date-picker-field ng-if="!(editing && isDisabled)" disable="readOnly" name="EffectiveTo"
-                               min-date="( editing ? '0d' : '+1d')" label="Effective To" required="true"
-                               ng-model="promotion.endDate"></date-picker-field>
-            <date-picker-field ng-if="(editing && isDisabled)" disable="readOnly" name="EffectiveTo"
-                               min-date="( editing ? '0d' : '+1d')" label="Effective To" required="true" end-current-effective="true"
-                               ng-model="promotion.endDate"></date-picker-field>
+          <div class="col-xs-12 col-sm-6" ng-class="{ 'has-error' : !promotion.endDate && displayError , 'has-success' : promotion.endDate }">
+            <date-picker-field 
+              ng-if="!(editing && isDisabled)" 
+              disable="readOnly" 
+              name="Effective To"
+              min-date="( editing ? '0d' : '+1d')" 
+              label="Effective To" 
+              required="promotionsForm.$submitted"
+              ng-model="promotion.endDate">
+            </date-picker-field>
+            <date-picker-field 
+              ng-if="(editing && isDisabled)" 
+              disable="readOnly" 
+              name="Effective To"
+              min-date="( editing ? '0d' : '+1d')" 
+              label="Effective To" 
+              required="promotionsForm.$submitted" 
+              end-current-effective="true"
+              ng-model="promotion.endDate">
+            </date-picker-field>
           </div>
         </div>
       </div>
@@ -90,7 +118,7 @@
     <h3 id="qualifiers">Qualifiers</h3>
     <div class="row">
       <div class="col-xs-12 col-sm-6">
-        <div class="form-group">
+        <div class="form-group" ng-class="{ 'has-error' : !promotion.promotionType.id && displayError , 'has-success' : promotion.promotionType.id }">
           <label>Qualifier Type*</label>
           <ui-select theme="bootstrap" ng-model="promotion.promotionType" ng-disabled="readOnly || isDisabled" required name="QualifierType">
             <ui-select-match placeholder="Select Qualifier Type">{{ $select.selected.name }}</ui-select-match>
@@ -102,9 +130,9 @@
       </div>
       <div class="col-xs-12 col-sm-6" ng-if="promotion.promotionType.name === 'Spend Limit'">
         <fieldset>
-          <div class="form-group">
-            <label>Promotion Category</label>
-            <ui-select theme="bootstrap" ng-model="promotion.spendLimitCategory" ng-disabled="readOnly || isDisabled" ng-required="spendLimitCategoryRequired(promotion)" name="spendLimitCategory">
+          <div class="form-group"  ng-class="{ 'has-error' : !promotion.spendLimitCategory.id && displayError , 'has-success' : promotion.spendLimitCategory.id }">
+            <label>Promotion Category*</label>
+            <ui-select theme="bootstrap" ng-model="promotion.spendLimitCategory" ng-disabled="readOnly || isDisabled" ng-required="promotion.promotionType.name === 'Spend Limit'" name="QualifiersPromotionCategory">
               <ui-select-match placeholder="Select Category">{{ $select.selected.promotionCategoryName }}</ui-select-match>
               <ui-select-choices repeat="promotionCategory in selectOptions.activePromotionCategories | filter: {promotionCategoryName:$select.search}">
                 <div ng-bind-html="promotionCategory.promotionCategoryName | highlight: $select.search"></div>
@@ -117,7 +145,7 @@
             <div class="row" ng-repeat="spendLimitAmountData in spendLimitAmountsUi track by $index">
               <div class="col-xs-2 col-sm-1 text-right">{{ spendLimitAmountData.code }}</div>
               <div class="col-xs-10 col-sm-8">
-                <div class="input-group">
+                <div class="input-group" ng-class="{ 'has-error' : !spendLimitAmountData.amount && displayError , 'has-success' : spendLimitAmountData.amount }">
                   <span class="input-group-addon"><i class="fa fa-money"></i></span>
                   <input type="text" class="form-control"
                          name="spendLimitAmount{{ spendLimitAmountData.code }}"
@@ -148,7 +176,7 @@
 
       <div class="row" ng-repeat="promotionCategoryData in promotion.promotionCategories track by $index">
         <div class="col-xs-12 col-sm-4 col-sm-offset-1">
-          <div class="form-group">
+          <div class="form-group" ng-class="{ 'has-error' : !promotionCategoryData.promotionCategory.promotionCategoryName && displayError , 'has-success' : promotionCategoryData.promotionCategory.promotionCategoryName }">
             <label>Name*</label>
             <ui-select theme="bootstrap" ng-model="promotionCategoryData.promotionCategory" ng-disabled="readOnly || isDisabled" required name="PromotionCategoryName"
                        ng-change="promotionCategorySelectChanged($index)">
@@ -163,7 +191,7 @@
           </div>
         </div>
         <div class="col-xs-6 col-sm-2">
-          <div class="form-group">
+          <div class="form-group" ng-class="{ 'has-error' : !promotionCategoryData.categoryQty && displayError , 'has-success' : promotionCategoryData.categoryQty }">
             <label>Qty*</label>
             <input type="number" class="form-control" min="1" ng-model="promotionCategoryData.categoryQty"
                    ng-required="promotionCategoryQtyRequired(promotionCategoryData)"
@@ -211,7 +239,7 @@
           </div>
         </div>
         <div class="col-xs-12 col-sm-4 col-md-3">
-          <div class="form-group">
+          <div class="form-group" ng-class="{ 'has-error' : !retailItemData.retailItem.itemName && displayError , 'has-success' : retailItemData.retailItem.itemName }">
             <label>Retail Item*</label>
             <ui-select theme="bootstrap" ng-model="retailItemData.retailItem" ng-disabled="readOnly || isDisabled" required
                        ng-init="itemSelectInit($index)" ng-change="itemSelectChanged($index)" name="RetailItem">
@@ -225,7 +253,7 @@
           </div>
         </div>
         <div class="col-xs-6 col-sm-2">
-          <div class="form-group">
+          <div class="form-group" ng-class="{ 'has-error' : !retailItemData.itemQty && displayError , 'has-success' : retailItemData.itemQty }">
             <label>Qty*</label>
             <input type="number" class="form-control" min="1" ng-model="retailItemData.itemQty"
                    ng-required="retailItemQtyRequired(retailItemData)"
@@ -248,7 +276,7 @@
     <h3 id="benefits">Benefits</h3>
     <div class="row">
       <div class="col-xs-12 col-md-6">
-        <div class="form-group">
+        <div class="form-group" ng-class="{ 'has-error' : !promotion.benefitType.name && displayError , 'has-success' : promotion.benefitType.name }">
           <label>Benefit Type*</label>
           <ui-select theme="bootstrap" ng-model="promotion.benefitType" ng-disabled="readOnly || isDisabled" required name="BenefitType">
             <ui-select-match placeholder="Select Benefit Type">{{ $select.selected.name }}</ui-select-match>
@@ -260,9 +288,9 @@
 
         <fieldset ng-if="promotion.benefitType.name === 'Discount'">
 
-          <div class="form-group">
+          <div class="form-group" ng-class="{ 'has-error' : !promotion.benefitDiscountApply.id && displayError , 'has-success' : promotion.benefitDiscountApply.id}">
             <label>Apply To*</label>
-            <ui-select theme="bootstrap" ng-model="promotion.benefitDiscountApply" ng-disabled="readOnly || isDisabled" required>
+            <ui-select theme="bootstrap" ng-model="promotion.benefitDiscountApply" ng-disabled="readOnly || isDisabled" required name="ApplyTo">
               <ui-select-match placeholder="Select Discount Type">{{ $select.selected.name }}</ui-select-match>
               <ui-select-choices repeat="discountType in selectOptions.discountApplyTypes | filter: {name:$select.search}">
                 <div ng-bind-html="discountType.name | highlight: $select.search"></div>
@@ -270,12 +298,12 @@
             </ui-select>
           </div>
 
-          <div class="form-group" ng-if="promotion.benefitDiscountApply.name === 'Promotion Category'">
+          <div class="form-group" ng-if="promotion.benefitDiscountApply.name === 'Promotion Category'" ng-class="{ 'has-error' : !promotion.discountCategory.id && displayError , 'has-success' : promotion.discountCategory.id }">
             <label>Promotion Category*</label>
             <ui-select theme="bootstrap" ng-model="promotion.discountCategory"
                        ng-required="promotion.benefitDiscountApply.name === 'Promotion Category'"
                        ng-disabled="readOnly || isDisabled"
-                       name="PromotionCategory">
+                       name="BenefitsPromotionCategory">
               <ui-select-match placeholder="Select Category">{{ $select.selected.promotionCategoryName }}</ui-select-match>
               <ui-select-choices repeat="promotionCategory in selectOptions.activePromotionCategories | filter: {promotionCategoryName:$select.search}">
                 <div ng-bind-html="promotionCategory.promotionCategoryName | highlight: $select.search"></div>
@@ -284,12 +312,12 @@
             <div ng-if="!readOnly && !isCreate() && promotion.discountCategory.isExpired" style="color:red">This promotion category expired!</div>
           </div>
 
-          <div class="row" ng-if="promotion.benefitDiscountApply.name === 'Retail Item'">
+          <div class="row" ng-if="promotion.benefitDiscountApply.name === 'Retail Item'" ng-class="{ 'has-error' : !promotion.discountItem.itemName && displayError , 'has-success' : promotion.discountItem.itemName }">
             <div class="col-xs-12 col-sm-6">
               <div class="form-group">
                 <label>Retail Item*</label>
                 <ui-select theme="bootstrap" ng-model="promotion.discountItem"
-                           ng-disabled="readOnly || isDisabled" ng-required="promotion.benefitDiscountApply.name === 'Retail Item'" name="RetailItem">
+                           ng-disabled="readOnly || isDisabled" ng-required="promotion.benefitDiscountApply.name === 'Retail Item'" name="BenefitsRetailItem">
                   <ui-select-match placeholder="Select Item">{{ $select.selected.itemName }}</ui-select-match>
                   <ui-select-choices repeat="masterItem in selectOptions.masterItems | filter: {itemName:$select.search}">
                     <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
@@ -314,10 +342,10 @@
       <div class="col-xs-12 col-md-6">
 
         <fieldset ng-if="promotion.benefitType.name === 'Discount'">
-          <div class="form-group">
+          <div class="form-group" ng-class="{ 'has-error' : !promotion.discountType.id && displayError , 'has-success' : promotion.discountType.id }">
             <label>Discount Rate Type*</label>
             <ui-select theme="bootstrap" ng-model="promotion.discountType"
-                       ng-required="promotion.benefitType.name === 'Discount'"
+                       ng-required="true"
                        ng-disabled="readOnly || isDisabled"
                        name="DiscountRateType">
               <ui-select-match placeholder="Select Discount Type">{{ $select.selected.name }}</ui-select-match>
@@ -326,6 +354,7 @@
               </ui-select-choices>
             </ui-select>
           </div>
+          
           <div class="row" ng-if="promotion.discountType.name === 'Percentage'">
             <div class="col-xs-12 col-sm-6" ng-if="showLowestPricedItem()">
               <label class="invisible">Checkbox</label>
@@ -337,7 +366,7 @@
                 </div>
             </div>
             <div class="col-xs-12 col-sm-6">
-              <div class="form-group">
+              <div class="form-group" ng-class="{ 'has-error' : !promotion.discountPercentage && displayError , 'has-success' : promotion.discountPercentage }">
                 <label for="discount-rate-type-percentage-value">Percentage Value*</label>
                 <input type="text" id="discount-rate-type-percentage-value"
                        class="form-control"
@@ -352,11 +381,11 @@
           </div>
           <fieldset ng-if="promotion.discountType.name === 'Amount' || promotion.discountType.name === 'Fixed price' ">
             <div class="form-group">
-              <label>Fixed Discount Value</label>
+              <label>Fixed Discount Value*</label>
               <div class="row" ng-repeat="benefitAmountData in benefitAmountsUi track by $index">
                 <div class="col-xs-2 col-sm-1 text-right">{{ benefitAmountData.code }}</div>
                 <div class="col-xs-10 col-sm-8">
-                  <div class="input-group">
+                  <div class="input-group" ng-class="{ 'has-error' : !benefitAmountData.amount && displayError , 'has-success' : benefitAmountData.amount }">
                     <span class="input-group-addon"><i class="fa fa-money"></i></span>
                     <input type="text" class="form-control"
                            name="benefitAmount{{ benefitAmountData.code }}"
@@ -368,18 +397,18 @@
                   </div>
                 </div>
               </div>
-              <label>Miles/Points</label>
-              <input class="form-control" ng-model="promotion.milesPoints" name="milesPoints" ng-pattern="regexp.number" ng-required="false" maxlength="10" ng-disabled="readOnly || isDisabled"/>
             </div>
+              <label>Miles/Points</label>
+              <input class="form-control" ng-model="promotion.milesPoints" name="milesPoints" ng-pattern="regexp.number" maxlength="10" ng-disabled="readOnly || isDisabled"/>
           </fieldset>
         </fieldset>
 
-        <div class="form-group" ng-if="promotion.benefitType.name === 'Coupon'">
+        <div class="form-group" ng-if="promotion.benefitType.name === 'Coupon'" ng-class="{ 'has-error' : !promotion.companyCoupon.id && displayError , 'has-success' : promotion.companyCoupon.id }">
           <label>Coupon*</label>
           <ui-select theme="bootstrap" ng-model="promotion.companyCoupon"
-                     required
+                     required="promotion.benefitType.name === 'Coupon'"
                      ng-disabled="readOnly || isDisabled"
-                     name="CompanyCoupon">
+                     name="Coupon">
             <ui-select-match placeholder="Select Coupon Type">{{ $select.selected.name }}</ui-select-match>
             <ui-select-choices repeat="discountType in selectOptions.companyDiscountsCoupon | filter: {name:$select.search}">
               <div ng-bind-html="discountType.name | highlight: $select.search"></div>
@@ -388,11 +417,13 @@
           <div ng-if="!readOnly && !isCreate() && promotion.companyCoupon.isExpired" style="color:red">This coupon expired!</div>
         </div>
 
-        <div class="form-group" ng-if="promotion.benefitType.name === 'Voucher'">
+        <div class="form-group" ng-if="promotion.benefitType.name === 'Voucher'" ng-class="{ 'has-error' : !promotion.companyVoucher.name && displayError , 'has-success' : promotion.companyVoucher.name }">
           <label>Voucher*</label>
           <ui-select theme="bootstrap" ng-model="promotion.companyVoucher"
                      ng-required="promotion.benefitType.name === 'Voucher'"
-                     ng-disabled="readOnly || isDisabled">
+                     ng-disabled="readOnly || isDisabled"
+                     name="Voucher"
+                     >
             <ui-select-match placeholder="Select Voucher Type">{{ $select.selected.name }}</ui-select-match>
             <ui-select-choices repeat="discountType in selectOptions.companyDiscountsVoucher | filter: {name:$select.search}">
               <div ng-bind-html="discountType.name | highlight: $select.search"></div>

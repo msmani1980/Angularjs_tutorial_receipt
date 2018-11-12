@@ -151,13 +151,24 @@ angular.module('ts5App')
     }
 
     $scope.save = function () {
+      $scope.promotionCategoryForm.$setSubmitted(true);
+    
+      if ($scope.promotionCategoryForm.$submitted && !$scope.promotionCategoryForm.$valid) {
+        $scope.displayError = true;
+      } else {
+        $scope.displayError = false;
+      }
+
       if (!$scope.promotionCategoryForm.$valid) {
         return false;
       }
 
       var isListValid = checkIfItemListIsValid();
       if (!isListValid) {
+        $scope.displayError = true;
         return false;
+      } else {
+        $scope.displayError = false;
       }
 
       showLoadingModal('Saving Record');
@@ -325,6 +336,7 @@ angular.module('ts5App')
         canEdit = $routeParams.action === 'create';
       }
 
+      $scope.displayError = false;
       $scope.disableEditField = !canEdit || $scope.isViewOnly;
     };
 
@@ -335,7 +347,7 @@ angular.module('ts5App')
         formatPromotionCategoryForApp(responseCollection[1], responseCollection[2]);
       }
 
-      $this.setViewVariables();
+      $this.setViewVariables();      
       hideLoadingModal();
     }
 
