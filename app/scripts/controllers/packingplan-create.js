@@ -106,17 +106,19 @@ angular.module('ts5App')
   this.formatPackingPlanObjectItems = function(planObjectItems) {
     var packingPlanObjectItems = [];
     angular.forEach(planObjectItems, function (item) {
-      var planObjItem = {
-        itemMasterId: item.itemMasterId,
-        minQty: item.minQty,
-        maxQty: item.maxQty
-      };
-      if ($routeParams.id) {
-        planObjItem.id = item.id; 
-        planObjItem.packingPlanObjectId = item.packingPlanObjectId;
-      }
+      if (item.itemMasterId) {
+        var planObjItem = {
+          itemMasterId: item.itemMasterId,
+          minQty: item.minQty,
+          maxQty: item.maxQty
+        };
+        if ($routeParams.id) {
+          planObjItem.id = item.id; 
+          planObjItem.packingPlanObjectId = item.packingPlanObjectId;
+        }
 
-      packingPlanObjectItems.push(planObjItem);
+        packingPlanObjectItems.push(planObjItem);
+      }  
     });
 
     return packingPlanObjectItems;
@@ -198,9 +200,6 @@ angular.module('ts5App')
 
   $scope.addObjectItemRestrictions = function(_array) {
     _array.push({
-      minQty: '',
-      maxQty: '',
-      itemMasterId: 0
     });
   };
 
@@ -258,6 +257,14 @@ angular.module('ts5App')
     $scope.itemMasterList = totalItems;
   };
 
+  $scope.omitSelectedMenus = function (menu) {
+    var selectedMenu = $scope.plan.packingPlanMenu.filter(function (existingMenu) {
+      return (existingMenu.id === menu.id);
+    });
+
+    return (selectedMenu.length === 0);
+  };
+  
   $scope.$watchGroup(['plan.startDate', 'plan.endDate'], function () {
     if ($scope.plan && $scope.plan.startDate && $scope.plan.endDate) {
       if ($scope.isCreate) {  
