@@ -396,13 +396,39 @@ angular.module('ts5App')
       $scope.masterItemsListSearch = angular.copy($scope.masterItemsListFilterText);
       $scope.filteredMasterItemList = $filter('filter')($scope.modalMasterItemList, { itemName: $scope.masterItemsListSearch });
 
-      if ($scope.filteredMasterItemList.length === 0 || !$scope.allCheckboxesSelected) {
-        $scope.clearModalCheckboxes();
+      $scope.deselectFilteredOutItems();
+
+      if ($scope.areAllItemsSelected()) {
+        $scope.allCheckboxesSelected = true;
       } else {
-        if ($scope.allCheckboxesSelected) {
-          $scope.selectAllItems();
-        }
+        $scope.allCheckboxesSelected = false;
       }
+    };
+
+    $scope.deselectFilteredOutItems = function () {
+      var filteredOutItems = $scope.modalMasterItemList.filter(function (masterItem) {
+        return $scope.filteredMasterItemList.indexOf(masterItem) === -1;
+      });
+
+      filteredOutItems.forEach(function (masterItem) {
+          masterItem.isItemSelected = false;
+      })
+    };
+
+    $scope.areAllItemsSelected = function () {
+      if ($scope.filteredMasterItemList.length === 0) {
+        return false;
+      }
+
+      var selectedCount = 0;
+
+      angular.forEach($scope.filteredMasterItemList, function(masterItem) {
+        if (masterItem.isItemSelected) {
+          selectedCount = selectedCount + 1;
+        }
+      });
+
+      return selectedCount === $scope.filteredMasterItemList.length;
     };
 
     $scope.selectAllItems = function () {
@@ -459,7 +485,7 @@ angular.module('ts5App')
 
         return itemNotAddedYet;
       });
-      
+
       $scope.filteredMasterItemList = $scope.modalMasterItemList;
 
       showMasterItemsDialog();
