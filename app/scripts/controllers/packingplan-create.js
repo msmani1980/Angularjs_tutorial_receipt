@@ -91,8 +91,8 @@ angular.module('ts5App')
       var planMenu = {
         menuMasterId: menu.id	
       };
-      if ($routeParams.id) {
-        planMenu.id = menu.menuId;
+      if ($routeParams.id && menu.pKey) {
+        planMenu.id = menu.pKey;
         planMenu.packingPlanId = menu.packingPlanId;
         planMenu.menuMasterId = menu.menuMasterId;
       }
@@ -264,7 +264,7 @@ angular.module('ts5App')
 
     return (selectedMenu.length === 0);
   };
-  
+
   $scope.$watchGroup(['plan.startDate', 'plan.endDate'], function () {
     if ($scope.plan && $scope.plan.startDate && $scope.plan.endDate) {
       if ($scope.isCreate) {  
@@ -285,7 +285,7 @@ angular.module('ts5App')
     angular.forEach(menus, function (menu) {
       var planMenu = {
         id: menu.menuMasterId,
-        menuId: menu.id,
+        pKey: menu.id,
         packingPlanId: menu.packingPlanId, 
         menuMasterId: menu.menuMasterId,
         menuName: menu.menuMaster.menuName
