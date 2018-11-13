@@ -371,7 +371,7 @@ angular.module('ts5App')
       var isFirst = true;
       var newIndex = $scope.indexToPutNewPromotionCategories;
 
-      angular.forEach($scope.filteredMasterItemList, function(masterItem) {
+      angular.forEach($scope.modalMasterItemList, function(masterItem) {
         if (masterItem.isItemSelected) {
           newIndex = isFirst ? newIndex : ++newIndex;
 
@@ -445,7 +445,7 @@ angular.module('ts5App')
     $scope.clearModalCheckboxes = function () {
       $scope.allCheckboxesSelected = false;
 
-      angular.forEach($scope.filteredMasterItemList, function(masterItem) {
+      angular.forEach($scope.modalMasterItemList, function(masterItem) {
         masterItem.isItemSelected = false;
       });
     };
