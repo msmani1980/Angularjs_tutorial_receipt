@@ -153,21 +153,21 @@
 							            	<div class="form-group">
 									          	<label for="measurements">Measurements</label>
 									       		<input ng-model="planObject.length" ng-required="planObject.breadth || planObject.height || planObject.dimensionType" type="text" placeholder="Length" 
-									            	name="Length" ng-disabled="isDisabled()" class="form-control">
+									            	oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="Length" ng-disabled="isDisabled()" class="form-control">
 								            </div>	
 								        </div>
 								        <div class="col-xs-12 col-sm-3">
 								        	<div class="form-group">
 									        	<label class="invisible">Breadth</label>
 									            <input ng-model="planObject.breadth" ng-required="planObject.length || planObject.height || planObject.dimensionType" type="text" placeholder="Breadth" 
-									            	name="Breadth" ng-disabled="isDisabled()" class="form-control">
+									            	oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="Breadth" ng-disabled="isDisabled()" class="form-control">
 								            </div>	
 								        </div>
 								        <div class="col-xs-12 col-sm-3">
 								        	<div class="form-group">
 									        	<label class="invisible">Height</label>
 									            <input ng-model="planObject.height" ng-required="planObject.breadth || planObject.length || planObject.dimensionType" type="text" placeholder="Height" 
-									            	name="Height" ng-disabled="isDisabled()" class="form-control">
+									            	oninput="this.value=this.value.replace(/[^0-9.]/g,'');" name="Height" ng-disabled="isDisabled()" class="form-control">
 								            </div>	
 								        </div>
 								        <div class="col-xs-12 col-sm-3">
