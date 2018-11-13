@@ -41,7 +41,7 @@
 
       <div class="col-xs-12 col-sm-6">
 
-        <div class="form-group" ng-class="setUISelectValidationClass('Country')">
+        <div class="form-group" ng-class="{'has-error' : !formData.country && displayError , 'has-success' : formData.country}">
           <label>Country *</label>
           <ui-select name="Country" ng-model="formData.country" theme="bootstrap" required ng-disabled="isDisabled()">
             <ui-select-match placeholder="Start typing to find a country" allow-clear="true">
@@ -57,7 +57,7 @@
 
       <div class="col-xs-12 col-sm-6">
 
-          <div class="form-group" ng-class="setUISelectValidationClass('City')">
+          <div class="form-group" ng-class="{'has-error' : !formData.city && displayError , 'has-success' : formData.city}">
           <label>City *</label>
           <ui-select name="City"  ng-model="formData.city" theme="bootstrap" required ng-disabled="isDisabled()">
             <ui-select-match placeholder="Start typing to find a city" allow-clear="true">
@@ -76,7 +76,7 @@
 
       <div class="col-xs-12 col-sm-6">
 
-        <div class="form-group" ng-class="setUISelectValidationClass('Station Code')">
+        <div class="form-group" ng-class="{'has-error' : !formData.station && displayError , 'has-success' : formData.station}">
           <label>Station Code *</label>
           <ui-select name="Station Code" ng-model="formData.station" theme="bootstrap" required ng-disabled="isDisabled()">
             <ui-select-match placeholder="Start typing to find a station" allow-clear="true">
@@ -95,14 +95,14 @@
 
       <div class="col-xs-12 col-sm-6">
 
-        <div class="form-group" ng-class="setInputValidClass('Station Code')">
+        <div class="form-group">
           <label class="control-label">Station Name *</label>
-          <input disabled="true" class="form-control" type="text" value="{{ formData.station.name }}" />
+          <input disabled="true" name="StationName" class="form-control" type="text" value="{{ formData.station.name }}"  ng-class="{'has-error' : !formData.station.name && displayError , 'has-success' : formData.station.name}"/>
         </div>
 
       </div>
 
-      <div class="col-xs-12 col-sm-6">
+      <div class="col-xs-12 col-sm-6" ng-class="{'has-error' : !formData.startDate && displayError , 'has-success' : formData.startDate}">
         <date-picker-field
           ng-if="dataReady && !isInFutureWithMaxStartDateBeforeToday(maxStartDate, formData.startDate)"
           disable="isDisabled() || isInFutureWithMaxStartDateBeforeToday(maxStartDate, formData.startDate)"
@@ -128,7 +128,7 @@
         </date-picker-field>
       </div>
 
-      <div class="col-xs-12 col-sm-6">
+      <div class="col-xs-12 col-sm-6" ng-class="{'has-error' : !formData.endDate && displayError , 'has-success' : formData.endDate}">
         <date-picker-field
           ng-if="dataReady"
           form="stationCreateForm"
@@ -146,7 +146,7 @@
 
     <div class="panel panel-default">
 
-      <div class="panel-heading form-inline">
+      <div class="panel-heading form-inline" ng-class="{'has-error' : !formData.isCaterer && displayError , 'has-success' : formData.isCaterer}">
 
         <fieldset ng-disabled="isDisabled()">
 
@@ -155,8 +155,8 @@
             <span class="hidden-xs btn-label">Add Relationship</span>
           </button>
 
-          <select class="form-control" name="isCaterer" required="true" ng-model="formData.isCaterer" ng-options="item as item.name for item in isCatererDropdownOptions">
-            <option value="">Is Catering Station?</option>
+          <select class="form-control" name="IsCateringStation" required="true" ng-model="formData.isCaterer" ng-options="item as item.name for item in isCatererDropdownOptions">
+            <option value="">Is Catering Station* ?</option>
           </select>
           <span ng-show="formData.isCaterer">This is <span ng-show="!formData.isCaterer.value">not</span> a Catering Station</span>
 
