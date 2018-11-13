@@ -396,23 +396,11 @@ angular.module('ts5App')
       $scope.masterItemsListSearch = angular.copy($scope.masterItemsListFilterText);
       $scope.filteredMasterItemList = $filter('filter')($scope.modalMasterItemList, { itemName: $scope.masterItemsListSearch });
 
-      $scope.deselectFilteredOutItems();
-
       if ($scope.areAllItemsSelected()) {
         $scope.allCheckboxesSelected = true;
       } else {
         $scope.allCheckboxesSelected = false;
       }
-    };
-
-    $scope.deselectFilteredOutItems = function () {
-      var filteredOutItems = $scope.modalMasterItemList.filter(function (masterItem) {
-        return $scope.filteredMasterItemList.indexOf(masterItem) === -1;
-      });
-
-      filteredOutItems.forEach(function (masterItem) {
-        masterItem.isItemSelected = false;
-      });
     };
 
     $scope.areAllItemsSelected = function () {
