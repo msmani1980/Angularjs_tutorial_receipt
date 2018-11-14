@@ -219,10 +219,9 @@ angular.module('ts5App')
     $scope.plan.packingPlanObject.splice(key, 1);
   };
 
-  this.getMenuMasterList = function(startDate, endDate) {
+  this.getMenuMasterList = function(startDate) {
     var payload = {
-      startDate: dateUtility.formatDateForAPI(startDate),
-      endDate: dateUtility.formatDateForAPI(endDate)  
+      startDate: dateUtility.formatDateForAPI(startDate)  
     };
  
     packingplanFactory.getMenuMasterList(payload).then(function(data) {
@@ -354,7 +353,7 @@ angular.module('ts5App')
 
   this.initDependenciesSuccess = function(responseCollection) {
     $scope.dimensionUnits = angular.copy(responseCollection[0].units);
-    $this.getMenuMasterList(dateUtility.nowFormattedDatePicker(), dateUtility.nowFormattedDatePicker());
+    $this.getMenuMasterList(dateUtility.nowFormattedDatePicker());
     if ($routeParams.id) {
       packingplanFactory.getPackingPlanById($routeParams.id).then($this.packingPlanSuccess);
     }
