@@ -94,12 +94,10 @@
       </div>
 
       <div class="col-xs-12 col-sm-6">
-
         <div class="form-group">
-          <label class="control-label">Station Name *</label>
-          <input disabled="true" name="StationName" class="form-control" type="text" value="{{ formData.station.name }}"  ng-class="{'has-error' : !formData.station.name && displayError , 'has-success' : formData.station.name}"/>
+          <label class="control-label">Station Name</label>
+          <input disabled="true" name="StationName" class="form-control" type="text" value="{{ formData.station.name }}"  />
         </div>
-
       </div>
 
       <div class="col-xs-12 col-sm-6" ng-class="{'has-error' : !formData.startDate && displayError , 'has-success' : formData.startDate}">
@@ -144,9 +142,9 @@
       </div>
     </div>
 
-    <div class="panel panel-default">
+    <div class="panel panel-default" ng-class="{'has-error' : !formData.isCaterer && displayError , 'has-success' : formData.isCaterer}">
 
-      <div class="panel-heading form-inline" ng-class="{'has-error' : !formData.isCaterer && displayError , 'has-success' : formData.isCaterer}">
+      <div class="panel-heading form-inline">
 
         <fieldset ng-disabled="isDisabled()">
 

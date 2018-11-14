@@ -12,6 +12,7 @@ angular.module('ts5App')
     var $this = this;
     var payload = null;
     
+    $scope.displayError = false;
     $scope.readOnly = true;
     $scope.editing = false;
     $scope.viewName = 'Create Rules';
@@ -23,10 +24,29 @@ angular.module('ts5App')
     $scope.countriesList = [];
     $scope.globalCompanyCurrecnyList = [];
     $scope.receiptRule = [];
-    $scope.receiptRule.countryId = [];
+    $scope.receiptRule.countryId;
     $scope.receiptFloorLimitAmountsUi = [];
+    $scope.multiSelectedValues.globalStationList = null;
     
+
+    $scope.onSelected = function(item) {
+      $scope.receiptRuleFormData.Station.$setValidity('required', true);
+    }
+
     $scope.formSave = function() {
+
+    	console.log ('$scope.formSave-----$scope.receiptRule', $scope.receiptRule);
+    	console.log ('$scope.formSave-----$scope.multiSelectedValues', $scope.multiSelectedValues);
+    	console.log ('$scope.formSave-----$scope.receiptRuleFormData.Station', $scope.receiptRuleFormData.Station);
+    	console.log ('$scope.formSave-----$scope.receiptFloorLimitAmountsUi', $scope.receiptFloorLimitAmountsUi);
+    	//!multiSelectedValues.globalStationList || multiSelectedValues.globalStationList && multiSelectedValues.globalStationList.length ===0
+    	
+    	if (!$scope.receiptRuleFormData.Station.$modelValue || ($scope.receiptRuleFormData.Station.$modelValue && $scope.receiptRuleFormData.Station.$modelValue.length ===0)) {
+          $scope.receiptRuleFormData.Station.$setValidity('required', false);
+        } else{
+          $scope.receiptRuleFormData.Station.$setValidity('required', true);
+        }
+    	
         if ($this.validateForm()) {
           var saveFunctionName = ($routeParams.action + 'ReceiptRule');
           if ($this[saveFunctionName]) {
@@ -35,10 +55,13 @@ angular.module('ts5App')
         } else {
           $scope.displayError = true;
         }
+
+    	console.log ('$scope.displayError', $scope.displayError);
+
       };
       
     $scope.onCounrtyChange = function() {
-      $scope.multiSelectedValues.globalStationList = {};
+      $scope.multiSelectedValues.globalStationList = null;
       var payload = {
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
         countryId: $scope.receiptRule.countryId
@@ -274,9 +297,10 @@ angular.module('ts5App')
 
         return promises;
       };
-        
+
     this.init = function() {
       $this.showLoadingModal('Loading Data');
+      $scope.displayError = false;
       var initPromises = $this.makeInitPromises();
       $q.all(initPromises).then($this.initDependenciesSuccess);
     };
