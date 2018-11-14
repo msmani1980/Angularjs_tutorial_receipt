@@ -535,3 +535,14 @@ angular.module('ts5App', [
     });
   });
 });
+
+var Utils = Utils || {};
+
+Utils.validation = {
+  fieldCssClass: function(form, fieldName) {
+    return { 'has-error' : form.$submitted && form[fieldName].$invalid, 'has-success' : form[fieldName].$touched && form[fieldName].$valid }
+  },
+  calendarCssClass: function(form, fieldValue) {
+    return { 'has-error' : !fieldValue && form.$submitted, 'has-success' : fieldValue }
+  }
+};

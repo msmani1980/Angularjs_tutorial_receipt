@@ -12,6 +12,7 @@ angular.module('ts5App')
     recordsService, currencyFactory, companiesFactory, itemsFactory) {
 
     var $this = this;
+    $scope.validation = Utils.validation
 
     $scope.originalDiscount = null;
     $scope.viewName = 'Create Discount';
@@ -661,6 +662,12 @@ angular.module('ts5App')
       $scope.errorResponse = angular.copy(dataFromAPI);
     };
 
+
+
+    /*$scope.x = function(form, fieldName) {
+      return { 'has-error' : form.$submitted && form[fieldName].$invalid, 'has-success' : form[fieldName].$touched && form[fieldName].$valid }
+    }*/
+
     this.updateDiscountSuccess = function(response) {
       $this.updateFormData(response.companyDiscount);
       angular.element('#loading').modal('hide');
@@ -704,6 +711,8 @@ angular.module('ts5App')
     this.validateRestrictions = function() {
       if ($scope.formData.isRestriction) {
         if ($scope.formData.restrictedCategories.length <= 0 && $scope.formData.restrictedItems.length <= 0) {
+          $scope.form.restrictedCategories.$setValidity("required", false);
+
           $scope.errorCustom.push(
             {
               field: 'Restrictions',
