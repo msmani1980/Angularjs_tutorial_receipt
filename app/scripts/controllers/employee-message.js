@@ -10,6 +10,7 @@
 angular.module('ts5App').controller('EmployeeMessageCtrl',
   function($scope, employeeMessagesFactory, globalMenuService, lodash, dateUtility, $q, $routeParams, $location) {
     var $this = this;
+    $scope.validation = Utils.validation;
     $scope.dataInitialized = false;
     $scope.viewEditItem = false;
     $scope.disablePastDate = false;
@@ -147,6 +148,7 @@ angular.module('ts5App').controller('EmployeeMessageCtrl',
     };
 
     $scope.save = function() {
+      $scope.employeeMessageForm.$setSubmitted(true);
 
       if (!$this.isEffectiveDateRangeValid()) {
         return;
