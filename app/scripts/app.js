@@ -545,12 +545,20 @@ Utils.validation = {
 
     if (form[fieldName] && form) {
       hasError = form.$submitted && form[fieldName].$invalid;
-      hasSuccess = form[fieldName].$touched && form[fieldName].$valid;
+      hasSuccess = (form[fieldName].$touched || form.$submitted) && form[fieldName].$valid;
     }
 
     return { 'has-error' : hasError, 'has-success' : hasSuccess }
   },
   calendarCssClass: function(form, fieldValue) {
-    return { 'has-error' : !fieldValue && form.$submitted, 'has-success' : fieldValue }
+    var hasError = false;
+    var hasSuccess = false;
+
+    if (form) {
+      hasError = !fieldValue && form.$submitted;
+      hasSuccess = fieldValue;
+    }
+
+    return { 'has-error' : hasError, 'has-success' : hasSuccess }
   }
 };
