@@ -219,9 +219,10 @@ angular.module('ts5App')
     $scope.plan.packingPlanObject.splice(key, 1);
   };
 
-  this.getMenuMasterList = function(startDate) {
+  this.getMenuMasterList = function(startDate, endDate) {
     var payload = {
-      startDate: dateUtility.formatDateForAPI(startDate)  
+      startDate: dateUtility.formatDateForAPI(startDate),
+      endDate: dateUtility.formatDateForAPI(endDate)
     };
  
     packingplanFactory.getMenuMasterList(payload).then(function(data) {
@@ -269,6 +270,14 @@ angular.module('ts5App')
       $this.getItemMasterFromMenu($scope.plan.packingPlanMenu, false, $scope.plan.startDate, $scope.plan.endDate);
     }
 
+  });
+
+  $scope.$watchGroup(['plan.startDate', 'plan.endDate'], function () {
+    if ($scope.plan && $scope.plan.startDate && $scope.plan.endDate) {
+      if ($scope.isCreate) {
+        $this.getMenuMasterList($scope.plan.startDate, $scope.plan.endDate);
+      }        
+    }  
   });
 
   this.formatViewMenus = function(menus) {
@@ -335,6 +344,7 @@ angular.module('ts5App')
     $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker($scope.viewStartDate);
     if (!$scope.isDisabled()) {
       $this.getItemMasterFromMenu(response.packingPlanMenu, true, $scope.viewStartDate, $scope.viewEndDate);
+      $this.getMenuMasterList($scope.viewStartDate, $scope.viewEndDate);
     }
 
     $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker($scope.viewEndDate);
@@ -353,7 +363,6 @@ angular.module('ts5App')
 
   this.initDependenciesSuccess = function(responseCollection) {
     $scope.dimensionUnits = angular.copy(responseCollection[0].units);
-    $this.getMenuMasterList(dateUtility.nowFormattedDatePicker());
     if ($routeParams.id) {
       packingplanFactory.getPackingPlanById($routeParams.id).then($this.packingPlanSuccess);
     }
