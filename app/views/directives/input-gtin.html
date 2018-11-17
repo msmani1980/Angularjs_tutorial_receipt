@@ -5,12 +5,12 @@
 
     <div class="col-xs-6 col-sm-6">
     	<div class="form-group" ng-class="{ 'has-error' : !GTIN.value && displayError , 'has-success' : GTIN.value }">
-      		<label>Value {{key}} *</label>
+      		<label>Value {{key+1}} *</label>
       		<input
       			type="text"
       			class="form-control"
       			ng-model="GTIN.value"
-      			name="Value {{key}}"
+      			name="Value {{key+1}}"
       			required 
         		ng-pattern="regexp.number"
         		placeholder="123456789"
@@ -21,12 +21,12 @@
 
 
     <div class="col-xs-4 col-sm-5" ng-class="{ 'has-error' : !GTIN.type && displayError , 'has-success' : GTIN.type }">
-      <label>Type {{key}} *</label>
+      <label>Type {{key+1}} *</label>
       <select 
         required 
         ng-model="GTIN.type" 
         class="form-control" 
-        name="Type {{key}}">
+        name="Type {{key+1}}">
         	<option value="UPC">UPC</option>
         	<option value="Barcode">Barcode</option>
         	<option value="EAN">EAN</option>
