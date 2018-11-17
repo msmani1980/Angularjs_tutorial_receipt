@@ -20,24 +20,25 @@
 
         <div class="row">
 
-          <div class="col-xs-12 col-sm-6" ng-class="{ 'has-error' : !stationException.startDate && displayError, 'has-success' : stationException.startDate }">
+          <div class="col-xs-12 col-sm-6">
             <date-picker-field ng-if="minDate" min-date="$parent.minDate"
               disable="viewOnly || itemIsActive" form="form" label="Effective From"
-              name="Station Exception  {{ $parent.key+1 }} EffectiveFrom" ng-model="stationException.startDate" required="true">
+              name="StationExceptionEffectiveFrom" ng-model="stationException.startDate" required="true">
             </date-picker-field>
           </div>
 
-          <div class="col-xs-12 col-sm-6" ng-class="{ 'has-error' : !stationException.endDate && displayError , 'has-success' : stationException.endDate }">
+          <div class="col-xs-12 col-sm-6">
             <date-picker-field ng-if="minDate" min-date="$parent.minDate"
               disable="viewOnly || itemIsInactive" form="form" label="Effective To"
-              name="Station Exception {{ $parent.key+1 }} EffectiveTo" ng-model="stationException.endDate"
+              end-current-effective="$parent.isAddPriceDisabled() || $parent.editingItem"
+              name="StationExceptionPriceEffectiveTo" ng-model="stationException.endDate"
               required="true">
             </date-picker-field>
           </div>
 
         </div>
 
-				<div class="row" ng-if="stationException.startDate && stationException.endDate && stationException.stations.length > 0">
+				<div class="row" ng-show="stationException.startDate && stationException.endDate && stationException.stations.length > 0">
 
 					<div class="col-xs-12 col-sm-6">
 
@@ -80,20 +81,14 @@
 
 				<div class="form-group" ng-repeat="(exceptionCurrencyKey,exceptionCurrency) in stationException.stationExceptionCurrencies track by $index">
 
-					<div class="input-group" ng-class="{ 'has-error' : !exceptionCurrency.price && displayError, 'has-success' : exceptionCurrency.price }">
+					<div class="input-group">
 
 						<div class="input-group-addon">
 							{{ masterCurrenciesList[exceptionCurrency.companyCurrencyId] }} *
 						</div>
 
-						<input
-						  ng-model="exceptionCurrency.price"
-						  required
-						  name="Currencies List - {{ masterCurrenciesList[exceptionCurrency.companyCurrencyId] }}" 
-						  ng-disabled="viewOnly || itemIsActive"
-						  type="text" 
-						  class="form-control"
-						  ng-pattern="regexp.numberAndDecimal"/>
+						<input ng-model="exceptionCurrency.price" ng-disabled="viewOnly || itemIsActive" type="text" class="form-control"/>
+
 					</div>
 
 				</div>
