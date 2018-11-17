@@ -440,7 +440,7 @@
 
               <div class="row">
                 <div class="form-group">
-                  <div class="col-xs-7" ng-class="{ 'has-error' : formData.weight && displayError, 'has-success' : !displayError || formData.weight}">
+                  <div class="col-xs-7">
                     <input ng-disabled="isDisabled()" ng-model="formData.weight" type="text" class="form-control" placeholder="10.00" name="Item Weigh" ng-pattern="regexp.numberAndDecimal">
                   </div>
 
@@ -460,7 +460,7 @@
 
               <div class="row">
                 <div class="form-group">
-                  <div class="col-xs-7" ng-class="{ 'has-error' : formData.volume && displayError, 'has-success' : !displayError || formData.volume}">
+                  <div class="col-xs-7">
                     <input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00" ng-disabled="isDisabled()" name="Item Volume" ng-pattern="regexp.numberAndDecimal">
                   </div>
 
