@@ -17,18 +17,42 @@
 		  <div class="panel-body">
 				<div class="row">
 				    <div class="col-xs-12 col-sm-4">
-				      <div class="form-group">
-						<label for="name">Name*</label>
-						<input ng-model="plan.name" type="text" name="Name" required class="form-control" id="packingPlanName" 
-							placeholder="Packing Plan Name" ng-disabled="isDisabled()">
-					  </div>		
+				      <label for="name">Name*</label>
+					  <input ng-model="plan.name" type="text" name="Name" required class="form-control" id="packingPlanName" 
+					    placeholder="Packing Plan Name" ng-disabled="isDisabled()">
 					</div>
+					<div class="col-xs-12 col-sm-4">
+						<date-picker-field
+					    	form="packingPlanDataForm" 
+					        name="EffectiveStartDate"
+							label="Plan Effective Start Date"
+							disable="isDisabled()"
+							required="true"
+							disable-past="true"
+							ng-model="plan.startDate">
+						</date-picker-field> 			
+					</div>
+					<div class="col-xs-12 col-sm-4">
+					   <date-picker-field
+				        	form="packingPlanDataForm"
+				            name="EffectiveEndDate"
+							label="Plan Effective End Date"
+							disable="readOnly || shouldDisableEndDate"
+							ng-model="plan.endDate"
+							end-current-effective="!viewEditItem"
+							custom-effective="true"
+							custom-date="plan.endDate"
+							required="true">
+				        </date-picker-field>   
+					</div>
+				</div>
+				<div class="row">
 					<div class="col-xs-12 col-sm-4">
 					  <div class="form-group">
 						<label for="Version">Version*</label>
 						<input ng-model="plan.version" type="text" name="Version" required class="form-control" id="packingPlanVersion" 
 								placeholder="Packing Plan Version" ng-disabled="isDisabled()">
-					  </div>			
+					  </div>
 					</div>
 					<div class="col-xs-12 col-sm-4">
 					  <div class="form-group">
@@ -40,33 +64,7 @@
 					        	<div ng-bind-html="menu.menuName | highlight: $select.search "></div>
 					        </ui-select-choices>
 				        </ui-select>
-				      </div>    
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12 col-sm-4">
-						<date-picker-field
-					    	form="packingPlanDataForm" 
-					        name="EffectiveStartDate"
-							label="Plan Effective Start Date"
-							disable="isDisabled()"
-							required="true"
-							disable-past="true"
-							ng-model="plan.startDate">
-						</date-picker-field>
-					</div>
-					<div class="col-xs-12 col-sm-4">
-						<date-picker-field
-				        	form="packingPlanDataForm"
-				            name="EffectiveEndDate"
-							label="Plan Effective End Date"
-							disable="readOnly || shouldDisableEndDate"
-							ng-model="plan.endDate"
-							end-current-effective="!viewEditItem"
-							custom-effective="true"
-							custom-date="plan.endDate"
-							required="true">
-				        </date-picker-field>
+				      </div>
 					</div>
 					<div class="col-xs-12 col-sm-4">
 					</div>
