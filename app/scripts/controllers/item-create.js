@@ -1477,14 +1477,6 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return !$scope.viewOnly && !$scope.itemIsActive;
     };
 
-    $scope.GTINClass = function(form, key) {
-      if (form['GTIN' + key].$dirty && form['GTIN' + key].$invalid) {
-        return 'has-error';
-      }
-
-      return 'has-success';
-    };
-
     // TODO: MOVE ME GLOBAL
     $scope.formScroll = function(id, activeBtn) {
       $scope.activeBtn = id;
