@@ -13,6 +13,7 @@ angular.module('ts5App')
   ) {
     var companyId;
     var $this = this;
+    $scope.validation = Utils.validation;
 
     $scope.viewName = 'Schedule Menu Assignment';
     $scope.readOnly = false;
