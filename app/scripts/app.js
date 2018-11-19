@@ -52,6 +52,7 @@ angular.module('ts5App', [
   sentence: /[\w\s\"\'\?\._ %@&#$!,;:()\-]+$/,
   bit: /^(0|1)$/,
   number: /^-?([0-9]*)$/,
+  positiveNumber: /^([0-9]*)$/,
   alpha: /^[a-zA-z]+$/,
   alphanumeric: /^[a-zA-Z0-9]+$/,
   alphaWithSpecial: '[a-zA-Z0-9\"\?\(\)\.\_\ \%\@\&\#\$\!,;:\-]+$',
@@ -62,6 +63,8 @@ angular.module('ts5App', [
   zip: /^(([0-9]{5})|([0-9]{5}[-][0-9]{4}))$/,
   decimal: /^\d+\.\d{0,4}$/,
   numberAndDecimal: /^[0-9]+([.][0-9]+)?$/,
+  sixNumberWithTwoDecimal:/^\d{0,6}(\.\d{0,2})?$/,
+  numberWithTwoDecimal:/^\d{0,10}(\.\d{0,2})?$/,
   percentage: /^[-+]?([0-9]\d?(\.\d{1,3})?|0\.(\d?[1-9]|[1-9]\d))$|^100$|^100.00$/,
   currencyWithFourDecimalPlace: [
     /^\d+\.\d{4}$/,

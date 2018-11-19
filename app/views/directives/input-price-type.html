@@ -93,9 +93,9 @@
 							ng-disabled="($parent.isAddPriceDisabled() || !$parent.isItemPriceNewOrIsExitingAndValidForEdit(itemPrice)) && !$parent.cloningItem" 
 							type="text" 
 							class="form-control" 
-							maxlength="8" 
+							maxlength="9" 
 							placeholder="1.00"
-							ng-pattern="regexp.numberAndDecimal"/>
+							ng-pattern="regexp.sixNumberWithTwoDecimal"/>
 
 					</div>
 
