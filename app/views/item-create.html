@@ -441,7 +441,7 @@
               <div class="row">
                 <div class="form-group">
                   <div class="col-xs-7">
-                    <input ng-disabled="isDisabled()" ng-model="formData.weight" type="text" class="form-control" placeholder="10.00" name="Item Weigh" ng-pattern="regexp.numberAndDecimal">
+                    <input ng-disabled="isDisabled()" ng-model="formData.weight" type="text" class="form-control" placeholder="10.00" name="Item Weigh" ng-pattern="regexp.numberWithTwoDecimal">
                   </div>
 
                   <div class="col-xs-5">
@@ -461,7 +461,7 @@
               <div class="row">
                 <div class="form-group">
                   <div class="col-xs-7">
-                    <input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00" ng-disabled="isDisabled()" name="Item Volume" ng-pattern="regexp.numberAndDecimal">
+                    <input ng-model="formData.volume" type="text" class="form-control" placeholder="10.00" ng-disabled="isDisabled()" name="Item Volume" ng-pattern="regexp.numberWithTwoDecimal">
                   </div>
 
                   <div class="col-xs-5">
@@ -477,24 +477,24 @@
           </div>
 
           <label>Measurements</label>
-          <span class="text-warning" ng-show="isMeasurementRequired() && !isMeasurementValid()"><p>* Length, Width and
+          <span class="text-warning" ng-show="isMeasurementRequired()"><p>* Length, Width and
             Height fields are all required if one contains a value.</p></span>
 
           <div class="row" ng-disabled="isDisabled()">
 
             <div class="form-group">
               <div class="col-md-3 col-xs-3" ng-class="{ 'has-error' : isMeasurementRequired() && !formData.length && displayError, 'has-success' : formData.length}">
-                <input ng-model="formData.length" ng-required="isMeasurementRequired()" type="text" class="form-control" ng-pattern="regexp.numberAndDecimal"
+                <input ng-model="formData.length" ng-required="isMeasurementRequired()" type="text" class="form-control" ng-pattern="regexp.numberWithTwoDecimal"
                        placeholder="Length" name="Length" ng-disabled="isDisabled()">
               </div>
 
               <div class="col-md-3 col-xs-3" ng-class="{ 'has-error' : isMeasurementRequired() && !formData.width && displayError, 'has-success' : formData.width }">
-                <input ng-model="formData.width" ng-required="isMeasurementRequired()" type="text" class="form-control"  ng-pattern="regexp.numberAndDecimal"
+                <input ng-model="formData.width" ng-required="isMeasurementRequired()" type="text" class="form-control"  ng-pattern="regexp.numberWithTwoDecimal"
                        placeholder="Width" name="Width" ng-disabled="isDisabled()">
               </div>
 
               <div class="col-md-3 col-xs-3" ng-class="{ 'has-error' : isMeasurementRequired() && !formData.height && displayError, 'has-success' : formData.height }">
-                <input ng-model="formData.height" ng-required="isMeasurementRequired()" type="text" class="form-control"  ng-pattern="regexp.numberAndDecimal"
+                <input ng-model="formData.height" ng-required="isMeasurementRequired()" type="text" class="form-control"  ng-pattern="regexp.numberWithTwoDecimal"
                        placeholder="Height" name="Height" ng-disabled="isDisabled()">
               </div>
 
