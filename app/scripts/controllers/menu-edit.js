@@ -10,6 +10,7 @@ angular.module('ts5App')
   .controller('MenuEditCtrl', function ($scope, $routeParams, messageService, menuFactory, dateUtility, $location, lodash, $q, $filter, $http) {
 
     var $this = this;
+    $scope.validation = Utils.validation;
     $scope.selectedIndex = 0;
     $scope.lookUpDialog = false;
     $scope.isDateChanged = true;
