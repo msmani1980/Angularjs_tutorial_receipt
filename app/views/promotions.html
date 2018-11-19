@@ -73,7 +73,7 @@
                  ng-if="editing && isDisabled" 
                  disable="(shouldDisableStartDate && !isCopy()) || readOnly" 
                  name="EffectiveFrom" 
-                 label="Effective From"  
+                 label="Effective From*"  
                  custom-effective="editing"
                  min-date="'+1d'" 
                  required="promotionsForm.$submitted" 
@@ -84,7 +84,7 @@
                  ng-if="!editing || !isDisabled" 
                  disable="(shouldDisableStartDate && !isCopy()) || readOnly" 
                  name="Effective From" 
-                 label="Effective From"
+                 label="Effective From*"
                  min-date="'+1d'" 
                  required="promotionsForm.$submitted" 
                  ng-model="promotion.startDate">
@@ -96,7 +96,7 @@
               disable="readOnly" 
               name="Effective To"
               min-date="( editing ? '0d' : '+1d')" 
-              label="Effective To" 
+              label="Effective To*" 
               required="promotionsForm.$submitted"
               ng-model="promotion.endDate">
             </date-picker-field>
@@ -105,7 +105,7 @@
               disable="readOnly" 
               name="Effective To"
               min-date="( editing ? '0d' : '+1d')" 
-              label="Effective To" 
+              label="Effective To*" 
               required="promotionsForm.$submitted" 
               end-current-effective="true"
               ng-model="promotion.endDate">
@@ -149,11 +149,11 @@
                   <span class="input-group-addon"><i class="fa fa-money"></i></span>
                   <input type="text" class="form-control"
                          name="spendLimitAmount{{ spendLimitAmountData.code }}"
-                         custom-validity
-                         custom-pattern="numberOrDecimal"
+                         ng-pattern="regexp.sixNumberWithTwoDecimal"
                          ng-show="promotion.promotionType.name === 'Spend Limit'"
                          ng-model="spendLimitAmountData.amount"
                          ng-disabled="readOnly || isDisabled"
+                         maxlength="9"
                          required>
                 </div>
               </div>
@@ -193,7 +193,12 @@
         <div class="col-xs-6 col-sm-2">
           <div class="form-group" ng-class="{ 'has-error' : !promotionCategoryData.categoryQty && displayError , 'has-success' : promotionCategoryData.categoryQty }">
             <label>Qty*</label>
-            <input type="number" class="form-control" min="1" ng-model="promotionCategoryData.categoryQty"
+            <input type="text" 
+                   class="form-control" 
+                   placeholder="1" 
+                   maxlength="4" 
+                   ng-model="promotionCategoryData.categoryQty"
+                   ng-pattern="regexp.positiveNumber"
                    ng-required="promotionCategoryQtyRequired(promotionCategoryData)"
                    ng-disabled="readOnly || isDisabled"
                    name="promotionCategoryQty">
@@ -255,7 +260,12 @@
         <div class="col-xs-6 col-sm-2">
           <div class="form-group" ng-class="{ 'has-error' : !retailItemData.itemQty && displayError , 'has-success' : retailItemData.itemQty }">
             <label>Qty*</label>
-            <input type="number" class="form-control" min="1" ng-model="retailItemData.itemQty"
+            <input type="text" 
+                   class="form-control" 
+                   placeholder="1" 
+                   maxlength="4" 
+                   ng-model="retailItemData.itemQty"
+                   ng-pattern="regexp.positiveNumber"
                    ng-required="retailItemQtyRequired(retailItemData)"
                    ng-disabled="readOnly || isDisabled"
                    name="RetailItemQty">
@@ -389,8 +399,8 @@
                     <span class="input-group-addon"><i class="fa fa-money"></i></span>
                     <input type="text" class="form-control"
                            name="benefitAmount{{ benefitAmountData.code }}"
-                           custom-validity
-                           custom-pattern="numberOrDecimal"
+                           ng-pattern="regexp.sixNumberWithTwoDecimal"
+                           maxlength="9"
                            ng-model="benefitAmountData.amount"
                            ng-disabled="readOnly || isDisabled"
                            required>
