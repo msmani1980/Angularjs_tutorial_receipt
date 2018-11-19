@@ -1441,11 +1441,20 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     $scope.isMeasurementRequired = function() {
-      return ($scope.formData.width || $scope.formData.length || $scope.formData.height);
+      var isRequired = false;
+      if ($scope.form) {
+        if (($scope.form.Length.$$rawModelValue && $scope.form.Length.$$rawModelValue.length) || 
+            ($scope.form.Width.$$rawModelValue && $scope.form.Width.$$rawModelValue.length) || 
+            ($scope.form.Height.$$rawModelValue && $scope.form.Height.$$rawModelValue.length)) {
+          isRequired = true;
+        }
+      }
+
+      return isRequired;
     };
 
     $scope.isMeasurementValid = function() {
-      return ($scope.formData && $scope.formData.length && $scope.formData.height && $scope.formData.dimensionType);
+      return ($scope.formData && $scope.formData.width && $scope.formData.length && $scope.formData.height && $scope.formData.dimensionType);
     };
 
     $scope.isQrCodeSet = function() {
