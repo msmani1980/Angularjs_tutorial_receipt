@@ -11,6 +11,8 @@ angular.module('ts5App')
     catererStationService, menuCatererStationsService, messageService, $http) {
 
     var $this = this;
+    $scope.validation = Utils.validation;
+
     $scope.formData = {
       startDate: '',
       endDate: '',
