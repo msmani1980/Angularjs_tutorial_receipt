@@ -11,6 +11,7 @@ angular.module('ts5App')
   .controller('MenuRuleCreateCtrl', function ($scope, dateUtility, messageService, menuRulesFactory, menuMasterService, $location, $routeParams, $q, _, lodash) {
     var companyId;
     var $this = this;
+    $scope.validation = Utils.validation;
 
     $scope.viewName = 'Rule Management';
     $scope.readOnly = false;

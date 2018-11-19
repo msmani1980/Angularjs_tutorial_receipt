@@ -31,21 +31,20 @@
   <div class="panel panel-default panel-heading alert-warning"  ng-show="isEdit">{{ formData.menuRuleCode }}</div>
   
   <error-dialog form-object="menuRuleDataForm" error-response="errorResponse" display="displayError"></error-dialog>
-  <form name="menuRuleDataForm" class="form edit-form create-item-form">
+  <form name="menuRuleDataForm" class="form edit-form create-item-form" novalidate>
     <div class="panel panel-default">
       <div class="panel-heading">Rule Setup</div>
       <div class="panel-body">
         <div class="row">
         
          <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(menuRuleDataForm, 'scheduleNumber')">
               <label for="schedule-number">Number *</label>
                <select class="form-control"
                       name="scheduleNumber"
                       ng-model="formData.scheduleNumber"
                       ng-options="schedule.scheduleNumber as schedule.scheduleNumber for schedule in schedules | orderBy: 'scheduleNumber'"
                       ng-disabled="isEffective(formData)"
-                      required="true"
                       required
                       id="schedule-number">
                 <option selected="selected" value>Number</option>
@@ -54,14 +53,13 @@
           </div>
           
           <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(menuRuleDataForm, 'departureStation')">
               <label for="departure-station">Departure Station *</label>
               <select class="form-control"
                       name="departureStation"
                       ng-model="formData.departureStationId"
                       ng-options="station.id as (station.code + ' (' + station.name +')') for station in stationList"
                       ng-disabled="isEffective(formData)"
-                      required="true"
                       required
                       id="departure-station">
                 <option selected="selected" value>Departure Station</option>
@@ -70,7 +68,7 @@
           </div>
 		  
 		  <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(menuRuleDataForm, 'arrivalStation')">
               <label for="arrival-station">Arrival Station *</label>
               <select class="form-control"
                       name="arrivalStation"
@@ -78,7 +76,6 @@
                       ng-options="station.id as (station.code + ' (' + station.name +')') for station in stationList"
                       ng-disabled="isEffective(formData)"
                       required
-                      required="true"
                       id="arrival-station">
                 <option selected="selected" value>Arrival Station</option>
               </select>
@@ -89,9 +86,9 @@
 
         <div class="row">
           <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(menuRuleDataForm, 'daysOfOperation')">
               <label for="days-of-operation">Days of Operation *</label>
-              <ui-select id="days-of-operation" multiple ng-model="formData.days"  ng-disabled="isEffective(formData)" name="daysOfOperation" theme="bootstrap" required required="true">
+              <ui-select id="days-of-operation" multiple ng-model="formData.days"  ng-disabled="isEffective(formData)" name="daysOfOperation" theme="bootstrap" required>
                 <ui-select-match placeholder="Select Days of Operations">{{ $item.name }}</ui-select-match>
                 <ui-select-choices repeat="number in daysOfOperation | filter: $select.search">
                   {{ number.name }}
@@ -101,7 +98,7 @@
           </div>
           
           <div class="col-xs-12 col-sm-3">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(menuRuleDataForm, 'departureTime')">
               <label for="departure-time">Depart. Time (HH:mm) *</label>
               <input ng-model="formData.departureTime"
                      ng-disabled="isEffective(formData)"
@@ -112,13 +109,12 @@
                      id="departure-time"
                      placeholder="10:20"
                      required
-                     required="true"
                      ng-pattern="regexp.t24">
             </div>
           </div>
           
           <div class="col-xs-12 col-sm-3">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(menuRuleDataForm, 'arrivalTime')">
               <label for="arrival-time">Arrival Time (HH:mm) *</label>
               <input ng-model="formData.arrivalTime"
                      type="text"
@@ -130,7 +126,6 @@
                      ng-disabled="isEffective(formData)"
                      id="arrival-time"
                      required
-                     required="true"
                      ng-pattern="regexp.t24">
             </div>
           </div>
@@ -152,7 +147,7 @@
             </div>
           </div>
         
-          <div class="col-xs-12 col-sm-3" ui-on-Drop="">
+          <div class="col-xs-12 col-sm-3" ui-on-Drop="" ng-class="validation.calendarCssClass(menuRuleDataForm, formData.startDate)">
             <date-picker-field
 						       ng-if="!isMenuRuleReadOnly()"
 						       name="startDate"
@@ -160,18 +155,18 @@
 						       label="Effective From"
 						       min-date="minDate"
 						       required="true">
-			</date-picker-field>
-			
-			<date-picker-field
-						       ng-if="isMenuRuleReadOnly()"
-						       name="startDate"
-						       ng-model="formData.startDate"
-						       label="Effective From"
-						       disable="true"
-						       required="true">
-			</date-picker-field>
+            </date-picker-field>
+
+            <date-picker-field
+                         ng-if="isMenuRuleReadOnly()"
+                         name="startDate"
+                         ng-model="formData.startDate"
+                         label="Effective From"
+                         disable="true"
+                         required="true">
+            </date-picker-field>
           </div>
-          <div class="col-xs-12 col-sm-3" ui-on-Drop="">
+          <div class="col-xs-12 col-sm-3" ui-on-Drop="" ng-class="validation.calendarCssClass(menuRuleDataForm, formData.endDate)">
             <date-picker-field
 						        ng-if="isCurrentEffectiveDate(formData)"
 						        name="endDate"
@@ -181,15 +176,15 @@
 						        disable="readOnly || !isEffective(formData)"
 						        end-current-effective="true"
 						        required="true">
-      		</date-picker-field>
-      		<date-picker-field
-						        ng-if="!isCurrentEffectiveDate(formData)"
-						        name="endDate"
-						        ng-model="formData.endDate"
-						        disable="readOnly"
-						        label="Effective To"
-						        required="true">
-      		</date-picker-field>
+            </date-picker-field>
+            <date-picker-field
+                    ng-if="!isCurrentEffectiveDate(formData)"
+                    name="endDate"
+                    ng-model="formData.endDate"
+                    disable="readOnly"
+                    label="Effective To"
+                    required="true">
+            </date-picker-field>
           </div>
         </div>
           
@@ -218,9 +213,9 @@
             </thead>
             <tbody>
               <tr ng-repeat="menu in formData.selectedMenus[cabinClass.id] track by $index">
-                <td>
+                <td ng-class="validation.fieldCssClass(menuRuleDataForm, 'menu' + cabinClass.cabinClass + $index)">
                   <ui-select
-                    name="menu"
+                    name="menu{{cabinClass.cabinClass}}{{$index}}"
                     ng-model="menu.menu"
                     theme="bootstrap"
                     placeholder="Select a menu..."
@@ -233,14 +228,14 @@
                   </ui-select>
                   <div style="color: red" ng-if="menu.expired">Previously selected menu '{{ menu.rawMenu.menuCode }}' is not available for this schedule anymore (expired). Please assign a new menu.</div>
                 </td>
-                <td>
+                <td ng-class="validation.fieldCssClass(menuRuleDataForm, 'menuQuantity' + cabinClass.cabinClass + $index)">
                   <input custom-validity
                          custom-pattern="number"
                          type="text"
                          required
                          maxlength="5"
                          class="form-control"
-                         name="menuItemQuantity"
+                         name="menuQuantity{{cabinClass.cabinClass}}{{$index}}"
                          ng-model="menu.menuQty"
                          placeholder="{{$index}}"
                          ng-disabled="isEffective(formData)" />
@@ -275,7 +270,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in formData.selectedItems[cabinClass.id]">
+            <tr ng-repeat="item in formData.selectedItems[cabinClass.id] track by $index">
               <td ng-hide="readOnly">
                 <ui-select
                   name="selectedCategories[item.menuIndex]"
@@ -294,9 +289,9 @@
                   </ui-select-choices>
                 </ui-select>
               </td>
-              <td>
+              <td ng-class="validation.fieldCssClass(menuRuleDataForm, 'menuItem' + cabinClass.cabinClass + $index)">
                 <ui-select
-                  name="menuItem"
+                  name="menuItem{{cabinClass.cabinClass}}{{$index}}"
                   required="true"
                   ng-model="item.item"
                   theme="bootstrap"
@@ -309,14 +304,14 @@
                 </ui-select>
                 <div style="color: red" ng-if="item.expired">Previously selected item '{{item.itemName}}' is not available for this schedule (expired). Please assign a new item.</div>
               </td>
-              <td>
+              <td ng-class="validation.fieldCssClass(menuRuleDataForm, 'menuItemQuantity' + cabinClass.cabinClass + $index)">
                 <input custom-validity
                        custom-pattern="number"
                        type="text"
                        required
                        maxlength="5"
                        class="form-control"
-                       name="menuItemQuantity"
+                       name="menuItemQuantity{{cabinClass.cabinClass}}{{$index}}"
                        ng-model="item.itemQty"
                        placeholder="{{$index}}"
                        ng-disabled="isEffective(formData)"/>
