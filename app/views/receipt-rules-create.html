@@ -49,7 +49,7 @@
           <div class="col-xs-12 col-sm-6">
             <div class="form-group" ng-class="{'has-error' : (!multiSelectedValues.globalStationList || multiSelectedValues.globalStationList && multiSelectedValues.globalStationList.length ===0)&& displayError , 'has-success' : multiSelectedValues.globalStationList}">
                 <label for="globalStationList">Station *</label>
-          	     <ui-select id="globalStationList" multiple ng-model="multiSelectedValues.globalStationList"  theme="bootstrap" name="Station" ng-disabled="readOnly" on-select="onSelected($item)">
+          	     <ui-select id="globalStationList" multiple ng-model="multiSelectedValues.globalStationList"  theme="bootstrap" name="Station" ng-disabled="readOnly" on-select="onSelected()">
 	               <ui-select-match placeholder="Select Stations..">{{ $item.code }}</ui-select-match>
 	               <ui-select-choices  
 	               					  repeat="station in globalStationList | filter: $select.search | orderBy: 'station.name'">
