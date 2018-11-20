@@ -120,7 +120,7 @@
           <fieldset ng-disabled="viewOnly || isRelationshipActive()">
             <div class="form-group"  ng-class="validation.fieldCssClass(form, 'CateringStations')">
               <label for="CateringStations">Catering Stations *</label>
-              <select name="CateringStations" ng-required="true" ng-disabled="viewOnly || isRelationshipActive() || areCatererStationsBeingLoaded || !isStartDateSelected() || !isEndDateSelected()" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
+              <select name="CateringStations" id="CateringStations" ng-required="true" ng-disabled="viewOnly || isRelationshipActive() || areCatererStationsBeingLoaded || !isStartDateSelected() || !isEndDateSelected()" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
                 <option value="{{station.id}}" ng-repeat="(key,station) in stationList">{{ station.code }}</option>
               </select>
 
