@@ -8,10 +8,10 @@
  */
 angular.module('ts5App')
   .controller('MenuRelationshipCreateCtrl', function($scope, $location, $routeParams, $q, dateUtility, menuService,
-    catererStationService, menuCatererStationsService, messageService, $http) {
+    catererStationService, menuCatererStationsService, messageService, $http, formValidationUtility) {
 
     var $this = this;
-    $scope.validation = Utils.validation;
+    $scope.validation = formValidationUtility;
 
     $scope.formData = {
       startDate: '',

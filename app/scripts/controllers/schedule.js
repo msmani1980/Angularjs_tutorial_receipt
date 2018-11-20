@@ -8,10 +8,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ScheduleCtrl', function ($scope, scheduleFactory, $location, $routeParams, messageService, unitsService, lodash, $q, dateUtility) {
+  .controller('ScheduleCtrl', function ($scope, scheduleFactory, $location, $routeParams, messageService, unitsService, lodash, $q, dateUtility, formValidationUtility) {
     var companyId;
     var $this = this;
-    $scope.validation = Utils.validation;
+    $scope.validation = formValidationUtility;
 
     $scope.viewName = 'Schedule';
     $scope.readOnly = false;

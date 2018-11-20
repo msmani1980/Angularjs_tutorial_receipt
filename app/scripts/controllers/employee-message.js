@@ -8,9 +8,9 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('EmployeeMessageCtrl',
-  function($scope, employeeMessagesFactory, globalMenuService, lodash, dateUtility, $q, $routeParams, $location) {
+  function($scope, employeeMessagesFactory, globalMenuService, lodash, dateUtility, $q, $routeParams, $location, formValidationUtility) {
     var $this = this;
-    $scope.validation = Utils.validation;
+    $scope.validation = formValidationUtility;
     $scope.dataInitialized = false;
     $scope.viewEditItem = false;
     $scope.disablePastDate = false;

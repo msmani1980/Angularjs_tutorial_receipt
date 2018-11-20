@@ -9,11 +9,11 @@
  */
 angular.module('ts5App')
   .controller('MenuAssignmentCtrl', function (
-    $scope, dateUtility, messageService, menuAssignmentFactory, companiesFactory, menuMasterService, itemsFactory, categoryFactory, $location, $routeParams, $q, lodash
+    $scope, dateUtility, messageService, menuAssignmentFactory, companiesFactory, menuMasterService, itemsFactory, categoryFactory, $location, $routeParams, $q, lodash, formValidationUtility
   ) {
     var companyId;
     var $this = this;
-    $scope.validation = Utils.validation;
+    $scope.validation = formValidationUtility;
 
     $scope.viewName = 'Schedule Menu Assignment';
     $scope.readOnly = false;

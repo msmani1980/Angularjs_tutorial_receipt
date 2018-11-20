@@ -8,10 +8,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeCtrl', function($scope, $q, $location, dateUtility, $routeParams, $filter, employeeFactory, messageService) {
+  .controller('EmployeeCtrl', function($scope, $q, $location, dateUtility, $routeParams, $filter, employeeFactory, messageService, formValidationUtility) {
 
     var $this = this;
-    $scope.validation = Utils.validation;
+    $scope.validation = formValidationUtility;
     $scope.viewName = 'Employee';
     $scope.employee = {
       startDate: dateUtility.nowFormattedDatePicker(),
