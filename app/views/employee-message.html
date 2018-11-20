@@ -3,7 +3,7 @@
   <error-dialog form-object="employeeMessageForm" error-response="errorResponse" display="displayError">
   </error-dialog>
 
-  <form name="employeeMessageForm" class="edit-form" ng-submit="save()">
+  <form name="employeeMessageForm" class="edit-form" ng-submit="save()" novalidate>
 
     <div class="edit-controls">
       <div class="row">
@@ -24,14 +24,13 @@
       <div class="panel-heading">
         <div class="row">
           <div class="col-xs-12">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(employeeMessageForm, 'message')">
               <label>Message *</label>
               <input class="form-control"
                      name="message"
                      ng-model="employeeMessage.employeeMessageText"
                      required="true" ng-disabled="shouldDisable(true)"
-                     maxlength="50"
-                     required="true">
+                     maxlength="50">
             </div>
           </div>
         </div>
@@ -40,7 +39,7 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-6 col-sm-3">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.calendarCssClass(employeeMessageForm, employeeMessage.startDate)">
 
               <date-picker-field  ng-if="!shouldDisable(true)"
                 name="startDate"
@@ -64,7 +63,7 @@
             </div>
           </div>
           <div class="col-xs-6 col-sm-3">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.calendarCssClass(employeeMessageForm, employeeMessage.endDate)">
               <date-picker-field  ng-if="dataInitialized"
                                   name="endDate"
                                   class="form-group"

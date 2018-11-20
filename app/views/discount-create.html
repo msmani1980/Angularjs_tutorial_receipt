@@ -45,7 +45,7 @@
       <div class="row">
         <div class="col-xs-12 col-sm-6">
           <fieldset ng-disabled="isDisabled()" >
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(form, 'globalDiscountType')">
               <label>Global Discount Type *</label>
               <select required name="globalDiscountType" class="form-control"
                       ng-options="globalDiscountType.id as globalDiscountType.globalDiscountTypeName for globalDiscountType in globalDiscountTypesList"
@@ -57,7 +57,7 @@
               <label class="control-label">Global Discount Description</label>
               <div>{{ getGlobalDiscountDescriptionById(formData.globalDiscountTypeId) }}</div>
             </div>
-            <div class="form-group" ng-show="formData.globalDiscountTypeId === 1">
+            <div class="form-group" ng-show="formData.globalDiscountTypeId === 1" ng-class="validation.fieldCssClass(form, 'barCode')">
               <label class="control-label">Bar Code</label>
               <input class="form-control" ng-model="formData.barCode" name="barCode" ng-pattern="regexp.word" ng-required="formData.globalDiscountTypeId === '1'" />
             </div>
@@ -65,16 +65,16 @@
         </div>
         <div class="col-xs-12 col-sm-6">
           <fieldset>
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(form, 'discountName')">
               <label class="control-label">Discount Name *</label>
-              <input class="form-control" ng-model="formData.discountName" name="discountName" maxlength="50" ng-disabled="isDisabled()" />
+              <input class="form-control" ng-model="formData.discountName" name="discountName" maxlength="50" ng-disabled="isDisabled()" required />
             </div>
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(form, 'description')">
               <label class="control-label">Description *</label>
               <textarea class="form-control" ng-model="formData.description" name="description" ng-pattern="regexp.sentence" required ng-disabled="isDisabled()" ></textarea>
             </div>
             <div class="row">
-              <div class="col-xs-12 col-sm-6">
+              <div class="col-xs-12 col-sm-6" ng-class="validation.calendarCssClass(form, formData.startDate)">
                 <fieldset>
                   <date-picker-field ng-if="calendarsReady"
                                      disable="isDisabled()"
@@ -87,7 +87,7 @@
                   </date-picker-field>
                 </fieldset>
               </div>
-              <div class="col-xs-12 col-sm-6">
+              <div class="col-xs-12 col-sm-6" ng-class="validation.calendarCssClass(form, formData.endDate)">
                 <fieldset>
                   <date-picker-field ng-if="calendarsReady"
                                      disable="isDisabledForEndDate()"
@@ -114,7 +114,7 @@
 
       <div class="row">
         <div class="col-xs-12 col-sm-6">
-          <div class="form-group">
+          <div class="form-group" ng-class="validation.fieldCssClass(form, 'discountType')">
             <label>Discount Type *</label>
             <select required name="discountType" class="form-control"
                     ng-options="discountType.id as discountType.name for discountType in discountTypesList"
@@ -128,14 +128,14 @@
           <fieldset ng-disabled="isDisabled()" >
             <div class="row">
               <div class="col-xs-12 col-sm-6">
-                <div class="form-group" ng-show="formData.discountTypeId === 1">
+                <div class="form-group" ng-show="formData.discountTypeId === 1" ng-class="validation.fieldCssClass(form, 'percentageDiscountValue')">
                   <label class="control-label">Percentage Discount Value *</label>
                   <input class="form-control" ng-model="formData.percentageDiscountValue" name="percentageDiscountValue" placeholder="10%" ng-pattern="regexp.percentage" ng-required="formData.discountTypeId === 1" />
                 </div>
                 <div class="form-group" ng-show="formData.discountTypeId === 2">
                   <label>Fixed Discount Value</label>
                   <div class="form-group" ng-repeat="currency in companyCurrencyGlobalsList">
-                    <div class="input-group" >
+                    <div class="input-group" ng-class="validation.fieldCssClass(form, currency.code + 'AmountDiscountValue')">
                       <div class="input-group-addon">
                         {{ currency.code }} *
                       </div>
@@ -189,7 +189,7 @@
               <div class="col-xs-12 col-sm-6">
                 <label>Amount Limit Per Shop Value</label>
                 <div class="form-group" ng-repeat="currency in companyCurrencyGlobalsList">
-                  <div class="input-group" >
+                  <div class="input-group" ng-class="validation.fieldCssClass(form, currency.code + 'AmountLimitPerShopValue')">
                     <div class="input-group-addon">
                       {{ currency.code }} *
                     </div>
@@ -218,7 +218,7 @@
               <div class="col-xs-12 col-sm-6">
                 <label>Discount Amount Limit Per Shop Value</label>
                 <div class="form-group" ng-repeat="currency in companyCurrencyGlobalsList">
-                  <div class="input-group" >
+                  <div class="input-group" ng-class="validation.fieldCssClass(form, currency.code + 'DiscountAmountLimitPerShopValue')">
                     <div class="input-group-addon">
                       {{ currency.code }} *
                     </div>
@@ -264,7 +264,7 @@
               <div class="col-xs-12 col-sm-6">
                 <label>Amount Limit Per Transaction</label>
                 <div class="form-group" ng-repeat="currency in companyCurrencyGlobalsList">
-                  <div class="input-group" >
+                  <div class="input-group" ng-class="validation.fieldCssClass(form, currency.code + 'AmountLimitPerTransactionValue')">
                     <div class="input-group-addon">
                       {{ currency.code }} *
                     </div>
@@ -293,7 +293,7 @@
               <div class="col-xs-12 col-sm-6">
                 <label>Discount Amount Limit Per Transaction Value</label>
                 <div class="form-group" ng-repeat="currency in companyCurrencyGlobalsList">
-                  <div class="input-group" >
+                  <div class="input-group"  ng-class="validation.fieldCssClass(form, currency.code + 'DiscountAmountLimitPerTransactionValue')">
                     <div class="input-group-addon">
                       {{ currency.code }} *
                     </div>
@@ -364,9 +364,9 @@
       </div>
       <div class="row" ng-if="showAddRestrictionSection()">
         <div class="col-xs-12 col-sm-12">
-          <div class="form-group">
+          <div class="form-group" ng-class="validation.fieldCssClass(form, 'restrictedCategories')">
             <label>Item Categories *</label>
-            <ui-select multiple ng-model="formData.restrictedCategories" name="restrictedCategories" theme="bootstrap" ng-disabled="isDisabled()">
+            <ui-select multiple ng-model="formData.restrictedCategories" name="restrictedCategories" theme="bootstrap" ng-disabled="isDisabled()" required="showAddRestrictionSection()">
               <ui-select-match placeholder="Select categories...">{{$item.name}}</ui-select-match>
               <ui-select-choices repeat="category in salesCategoriesList | filter: $select.search">
                 <div ng-bind-html="category.name | highlight: $select.search"></div>
@@ -388,7 +388,7 @@
           </div>
         </div>
         <div class="col-xs-12 col-sm-5">
-          <div class="form-group">
+          <div class="form-group" ng-class="validation.fieldCssClass(form, 'restrictedItem-' + ($index + 1))">
             <label>Retail Item *</label>
             <select name="restrictedItem-{{$index + 1}}" class="form-control"
                     ng-options="retailItem.id as retailItem.itemName for retailItem in filteredRetailItemsList[restrictedItem.itemCategory]"

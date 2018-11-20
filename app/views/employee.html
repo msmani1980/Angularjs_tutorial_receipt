@@ -13,31 +13,31 @@
 	<error-dialog form-object="employeeDataForm" error-response="errorResponse" display="displayError">
 	</error-dialog>
 	<!-- Started Modify-->
-	<form name="employeeDataForm">
+	<form name="employeeDataForm" novalidate>
 		<div class="panel panel-default">
 		  <div class="panel-body">
 				<div class="row">
 				   <div class="col-xs-12 col-sm-4">
-						<div class="form-group">
-							<label for="employee-id">Employee ID*</label>
+						<div class="form-group" ng-class="validation.fieldCssClass(employeeDataForm, 'employeeID')">
+							<label for="employeeID">Employee ID*</label>
 							<input ng-model="employee.employeeIdentifier" type="text" ng-disabled="isDisabled()"
 								class="form-control" id="employeeID" name="employeeID"
 								required custom-validity custom-pattern="alphanumeric"  maxlength="15" placeholder="0001">
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-4">
-						<div class="form-group">
-							<label for="employee-firstname">Employee First Name*</label> <input
+						<div class="form-group" ng-class="validation.fieldCssClass(employeeDataForm, 'employeeFirstName')">
+							<label for="employeeFirstName">Employee First Name*</label> <input
 									ng-model="employee.firstName" type="text" class="form-control" ng-disabled="isDisabled()" placeholder="First Name"
-									id="employeeFirstName" name="employeeFirstName" required maxlength="25" required custom-validity custom-pattern="alphaWithSpecial">
+									id="employeeFirstName" name="employeeFirstName" required maxlength="25" custom-validity custom-pattern="alphaWithSpecial">
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-4">
-						<div class="form-group">
+						<div class="form-group" ng-class="validation.calendarCssClass(employeeDataForm, employee.startDate)">
 							<date-picker-field
                 ng-if="isLoadingCompleted"
-                form="employeeDataForm" name="EffectiveStartDate"
-                label="Effective Start Date"
+                form="employeeDataForm" name="EffectiveFrom"
+                label="Effective From"
                 disable="isDisabled()"
                 required="true"
                 end-current-effective="!viewEditItem"
@@ -55,20 +55,20 @@
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-4">
-						<div class="form-group">
-							<label for="employee-lastname">Employee Last Name*</label> <input
+						<div class="form-group" ng-class="validation.fieldCssClass(employeeDataForm, 'employeeLastName')">
+							<label for="employeeLastName">Employee Last Name*</label> <input
 								ng-model="employee.lastName" type="text" class="form-control" placeholder="Last Name"
 								id="employeeLastName" name="employeeLastName" ng-disabled="isDisabled()"
 								required maxlength="25" custom-validity custom-pattern="alphaWithSpecial">
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-4">
-						<div class="form-group">
+						<div class="form-group" ng-class="validation.calendarCssClass(employeeDataForm, employee.endDate)">
 							<date-picker-field
                 ng-if="isLoadingCompleted"
                 form="employeeDataForm"
-                name="EffectiveEndDate"
-                label="Effective End Date"
+                name="EffectiveTo"
+                label="Effective To"
                 disable="readOnly || shouldDisableEndDate"
                 ng-model="employee.endDate"
                 end-current-effective="!viewEditItem"
@@ -87,14 +87,15 @@
 							<select class="form-control" ng-model="employee.countryId"
 									ng-change="onCounrtyChange()"
 									ng-options="country.id as (country.countryName) for country in countriesList"
-									ng-disabled="isDisabled()">
+									ng-disabled="isDisabled()"
+                  id="country">
 							    <option value="">Please Select Country</option>
 							</select>
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-4">
-						<div class="form-group">
-							<label for="base-station">Base Station*</label>
+						<div class="form-group" ng-class="validation.fieldCssClass(employeeDataForm, 'baseStation')">
+							<label for="base-station-id">Base Station*</label>
 							<select class="form-control" id="base-station-id"
 									ng-model="employee.baseStationId"
 									ng-disabled="isDisabled()"
@@ -105,15 +106,15 @@
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-4">
-						<div class="form-group">
+						<div class="form-group" ng-class="validation.fieldCssClass(employeeDataForm, 'employeeTitle')">
 							<label for="employee-title">Employee Title*</label>
-							<ui-select ng-if="!isDisabled()" ng-model="employee.title" theme="bootstrap" required name="employeeTitle">
-                				<ui-select-match placeholder="Please Select Title">{{$select.selected}}</ui-select-match>
-                					<ui-select-choices repeat="title in getEmployeeTitles($select.search) | filter: $select.search">
-                  						<div ng-bind="title"></div>
-                					</ui-select-choices>
-              				</ui-select>
-              				<input ng-if="isDisabled()" ng-model="employee.title" type="text" class="form-control" placeholder="Title"
+							<ui-select ng-if="!isDisabled()" id="employee-title" ng-model="employee.title" theme="bootstrap" required name="employeeTitle">
+                <ui-select-match placeholder="Please Select Title">{{$select.selected}}</ui-select-match>
+                  <ui-select-choices repeat="title in getEmployeeTitles($select.search) | filter: $select.search">
+                      <div ng-bind="title"></div>
+                  </ui-select-choices>
+              </ui-select>
+              <input ng-if="isDisabled()" ng-model="employee.title" type="text" class="form-control" placeholder="Title"
 								name="employeeTitle" ng-disabled="true">
 						</div>
 					</div>
