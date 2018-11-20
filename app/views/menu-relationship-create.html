@@ -45,8 +45,8 @@
 
             <div class="col-xs-12 col-sm-6">
               <fieldset ng-disabled="viewOnly || isRelationshipActive()">
-                <div class="form-group" ng-class="setInputValidClass('MenuCode')">
-                  <label class="control-label" for="MenuCode">Menu Code *</label>
+                <div class="form-group"  ng-class="validation.fieldCssClass(form, 'MenuCode')">
+                  <label for="MenuCode">Menu Code *</label>
                   <select class="form-control"
                           name="MenuCode"
                           id="MenuCode"
@@ -63,8 +63,8 @@
 
             <div class="col-xs-12 col-sm-6">
               <fieldset ng-disabled="viewOnly || isRelationshipActive()">
-                <div class="form-group" ng-class="setInputValidClass('MenuCode')">
-                  <label class="control-label" for="MenuName">Menu Name</label>
+                <div class="form-group">
+                  <label for="MenuName">Menu Name</label>
                   <select class="form-control"
                           name="MenuName"
                           id="MenuName"
@@ -78,14 +78,14 @@
             </div>
 
             <div class="col-xs-12 col-sm-6">
-              <fieldset ng-disabled="viewOnly || isRelationshipActive()">
+              <fieldset ng-disabled="viewOnly || isRelationshipActive()" ng-class="validation.calendarCssClass(form, formData.startDate)">
                 <date-picker-field form="form" label="Effective From" name="EffectiveFrom" ng-model="formData.startDate"
                 min-date="'+1d'" required="true"></date-picker-field>
               </fieldset>
             </div>
 
             <div class="col-xs-12 col-sm-6">
-              <fieldset ng-disabled="viewOnly || isRelationshipInactive()">
+              <fieldset ng-disabled="viewOnly || isRelationshipInactive()" ng-class="validation.calendarCssClass(form, formData.endDate)">
                 <date-picker-field form="form"
                   label="Effective To"
                   name="EffectiveTo"
@@ -118,9 +118,9 @@
         <div class="col-xs-12 col-sm-6">
 
           <fieldset ng-disabled="viewOnly || isRelationshipActive()">
-            <div class="form-group" ng-class="setInputValidClass('CateringStations')">
-              <label class="control-label" for="CateringStations">Catering Stations *</label>
-              <select name="CateringStations" ng-required="true" ng-disabled="viewOnly || isRelationshipActive() || areCatererStationsBeingLoaded || !isStartDateSelected() || !isEndDateSelected()" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
+            <div class="form-group"  ng-class="validation.fieldCssClass(form, 'CateringStations')">
+              <label for="CateringStations">Catering Stations *</label>
+              <select name="CateringStations" id="CateringStations" ng-required="true" ng-disabled="viewOnly || isRelationshipActive() || areCatererStationsBeingLoaded || !isStartDateSelected() || !isEndDateSelected()" multiple="true" ng-model="formData.catererStationIds" class="multi-select">
                 <option value="{{station.id}}" ng-repeat="(key,station) in stationList">{{ station.code }}</option>
               </select>
 

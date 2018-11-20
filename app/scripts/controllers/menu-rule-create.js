@@ -8,9 +8,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('MenuRuleCreateCtrl', function ($scope, dateUtility, messageService, menuRulesFactory, menuMasterService, $location, $routeParams, $q, _, lodash) {
+  .controller('MenuRuleCreateCtrl', function ($scope, dateUtility, messageService, menuRulesFactory, menuMasterService, $location, $routeParams, $q, _, lodash, formValidationUtility) {
     var companyId;
     var $this = this;
+    $scope.validation = formValidationUtility;
 
     $scope.viewName = 'Rule Management';
     $scope.readOnly = false;

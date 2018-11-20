@@ -17,7 +17,7 @@
   <error-dialog form-object="scheduleDataForm" error-response="errorResponse" display="displayError">
   </error-dialog>
 
-  <form name="scheduleDataForm">
+  <form name="scheduleDataForm" novalidate>
     <!--/TopHeader -->
 
     <div class="panel panel-default">
@@ -25,15 +25,15 @@
         <!-- form header-->
         <div class="row">
           <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(scheduleDataForm, 'scheduleNumber')">
               <label for="schedule-number">Schedule Number *</label>
-              <input ng-model="schedule.scheduleNumber" ng-disabled="isDisabled()" type="text" class="form-control" id="schedule-number" name="scheduleNumber" placeholder="0001" required required="true">
+              <input ng-model="schedule.scheduleNumber" ng-disabled="isDisabled()" type="text" class="form-control" id="schedule-number" name="scheduleNumber" placeholder="0001" required>
             </div>
           </div>
 
           <div class="col-xs-12 col-sm-8">
             <div class="row">
-              <div class="col-xs-12 col-sm-6">
+              <div class="col-xs-12 col-sm-6" ng-class="validation.calendarCssClass(scheduleDataForm, schedule.startDate)">
                 <date-picker-field ng-if="calendarsReady"
                                    disable="isDisabled()"
                                    form="scheduleDataForm"
@@ -45,7 +45,7 @@
                                    ng-model="schedule.startDate">
                 </date-picker-field>
               </div>
-              <div class="col-xs-12 col-sm-6">
+              <div class="col-xs-12 col-sm-6" ng-class="validation.calendarCssClass(scheduleDataForm, schedule.endDate)">
                 <date-picker-field ng-if="calendarsReady"
                                    disable="isDisabledForEndDate()"
                                    form="scheduleDataForm"
@@ -65,14 +65,13 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(scheduleDataForm, 'departureStation')">
               <label for="departure-station">Departure Station *</label>
               <select class="form-control"
                       name="departureStation"
                       ng-model="schedule.departureStationId"
                       ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList | orderBy: 'stationCode'"
                       ng-disabled="isDisabled()"
-                      required="true"
                       required
                       id="departure-station">
                 <option selected="selected" value>Departure Station</option>
@@ -81,7 +80,7 @@
           </div>
 
           <div class="col-xs-12 col-sm-2">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(scheduleDataForm, 'departureTime')">
               <label for="departure-time">Depart. Time (HH:mm) *</label>
               <input ng-model="schedule.departureTime"
                      ng-disabled="isDisabled()"
@@ -92,13 +91,12 @@
                      id="departure-time"
                      placeholder="10:20"
                      required
-                     required="true"
                      ng-pattern="regexp.t24">
             </div>
           </div>
 
           <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(scheduleDataForm, 'arrivalStation')">
               <label for="arrival-station">Arrival Station *</label>
               <select class="form-control"
                       name="arrivalStation"
@@ -106,7 +104,6 @@
                       ng-options="station.stationId as (station.stationCode + ' (' + station.stationName +')') for station in stationList | orderBy: 'stationCode'"
                       ng-disabled="isDisabled()"
                       required
-                      required="true"
                       id="arrival-station">
                 <option selected="selected" value>Arrival Station</option>
               </select>
@@ -114,7 +111,7 @@
           </div>
 
           <div class="col-xs-12 col-sm-2">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(scheduleDataForm, 'arrivalTime')">
               <label for="arrival-time">Arrival Time (HH:mm) *</label>
               <input ng-model="schedule.arrivalTime"
                      type="text"
@@ -126,7 +123,6 @@
                      ng-disabled="isDisabled()"
                      id="arrival-time"
                      required
-                     required="true"
                      ng-pattern="regexp.t24">
             </div>
           </div>
@@ -134,9 +130,9 @@
 
         <div class="row">
           <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(scheduleDataForm, 'daysOfOperation')">
               <label for="days-of-operation">Days of Operation *</label>
-              <ui-select id="days-of-operation" multiple ng-model="schedule.days"  ng-disabled="isDisabled()" name="daysOfOperation" theme="bootstrap" required required="true">
+              <ui-select id="days-of-operation" multiple ng-model="schedule.days"  ng-disabled="isDisabled()" name="daysOfOperation" theme="bootstrap" required>
                 <ui-select-match placeholder="Select Days of Operations">{{ $item.name }}</ui-select-match>
                 <ui-select-choices repeat="number in daysOfOperation | filter: $select.search">
                   {{ number.name }}

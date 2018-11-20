@@ -13,7 +13,7 @@
 
   </div>
   <error-dialog form-object="menuAssignmentDataForm" error-response="errorResponse" display="displayError"></error-dialog>
-  <form name="menuAssignmentDataForm" class="form edit-form create-item-form">
+  <form name="menuAssignmentDataForm" class="form edit-form create-item-form" novalidate>
     <div class="panel panel-default">
       <div class="panel-heading">Schedule details</div>
       <div class="panel-body">
@@ -127,9 +127,9 @@
             </thead>
             <tbody>
               <tr ng-repeat="menu in formData.selectedMenus[cabinClass.id] track by $index">
-                <td>
+                <td ng-class="validation.fieldCssClass(menuAssignmentDataForm, 'menu' + cabinClass.cabinClass + $index)">
                   <ui-select
-                    name="menu"
+                    name="menu{{cabinClass.cabinClass}}{{$index}}"
                     ng-model="menu.menu"
                     theme="bootstrap"
                     placeholder="Select a menu..."
@@ -142,14 +142,14 @@
                   </ui-select>
                   <div style="color: red" ng-if="menu.expired">Previously selected menu '{{ menu.rawMenu.menuCode }}' is not available for this schedule anymore (expired). Please assign a new menu.</div>
                 </td>
-                <td>
+                <td ng-class="validation.fieldCssClass(menuAssignmentDataForm, 'menuItemQuantity' + cabinClass.cabinClass + $index)">
                   <input custom-validity
                          custom-pattern="number"
                          type="text"
                          required
                          maxlength="5"
                          class="form-control"
-                         name="menuItemQuantity"
+                         name="menuItemQuantity{{cabinClass.cabinClass}}{{$index}}"
                          ng-model="menu.menuQty"
                          placeholder="{{$index}}"
                          ng-disabled="readOnly" />
@@ -184,7 +184,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in formData.selectedItems[cabinClass.id]">
+            <tr ng-repeat="item in formData.selectedItems[cabinClass.id] track by $index">
               <td ng-hide="readOnly">
                 <ui-select
                   name="selectedCategories[item.menuIndex]"
@@ -202,9 +202,9 @@
                   </ui-select-choices>
                 </ui-select>
               </td>
-              <td>
+              <td ng-class="validation.fieldCssClass(menuAssignmentDataForm, 'menuItem' + cabinClass.cabinClass + $index)">
                 <ui-select
-                  name="menuItem"
+                  name="menuItem{{cabinClass.cabinClass}}{{$index}}"
                   required="true"
                   ng-model="item.item"
                   theme="bootstrap"
@@ -217,14 +217,14 @@
                 </ui-select>
                 <div style="color: red" ng-if="item.expired">Previously selected item '{{item.itemName}}' is not available for this schedule (expired). Please assign a new item.</div>
               </td>
-              <td>
+              <td ng-class="validation.fieldCssClass(menuAssignmentDataForm, 'menuItemQuantity' + cabinClass.cabinClass + $index)">
                 <input custom-validity
                        custom-pattern="number"
                        type="text"
                        required
                        maxlength="5"
                        class="form-control"
-                       name="menuItemQuantity"
+                       name="menuItemQuantity{{cabinClass.cabinClass}}{{$index}}"
                        ng-model="item.itemQty"
                        placeholder="{{$index}}"
                        ng-disabled="readOnly"/>

@@ -9,9 +9,10 @@
  */
 angular.module('ts5App')
   .controller('DiscountCreateCtrl', function($scope, $q, $location, $routeParams, dateUtility, discountFactory,
-    recordsService, currencyFactory, companiesFactory, itemsFactory) {
+    recordsService, currencyFactory, companiesFactory, itemsFactory, formValidationUtility) {
 
     var $this = this;
+    $scope.validation = formValidationUtility;
 
     $scope.originalDiscount = null;
     $scope.viewName = 'Create Discount';
