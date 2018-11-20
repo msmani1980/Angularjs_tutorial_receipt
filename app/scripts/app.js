@@ -536,30 +536,3 @@ angular.module('ts5App', [
   });
 });
 
-var Utils = Utils || {};
-
-Utils.validation = {
-  fieldCssClass: function(form, fieldName) {
-    var hasError = false;
-    var hasSuccess = false;
-
-    if (form[fieldName] && form) {
-      hasError = form.$submitted && form[fieldName].$invalid;
-      hasSuccess = (form[fieldName].$touched || form.$submitted) && form[fieldName].$valid;
-    }
-
-    return { 'has-error': hasError, 'has-success': hasSuccess };
-  },
-  
-  calendarCssClass: function(form, fieldValue) {
-    var hasError = false;
-    var hasSuccess = false;
-
-    if (form) {
-      hasError = !fieldValue && form.$submitted;
-      hasSuccess = fieldValue;
-    }
-
-    return { 'has-error': hasError, 'has-success': hasSuccess };
-  }
-};
