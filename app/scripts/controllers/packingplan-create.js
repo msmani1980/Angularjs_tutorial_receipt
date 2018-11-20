@@ -234,23 +234,24 @@ angular.module('ts5App')
     var totalItems = [];
     angular.forEach(menus, function (menu) {
       var payload = {
-        menuId: menu.id
+        menuId: menu.id,
+        startDate: dateUtility.formatDateForAPI(startDate),
+        endDate: dateUtility.formatDateForAPI(endDate)
       };
       if (viewedit) {
         payload.menuId = menu.menuMasterId;
-        payload.startDate = dateUtility.formatDateForAPI(startDate);
-        payload.endDate = dateUtility.formatDateForAPI(endDate);
       }
 
       packingplanFactory.getMenuById(payload).then(function(data) {
-        angular.forEach(data.menus[0].menuItems, function (item) {
-          var itemPayload = {};
-          itemPayload.id = item.itemId;
-          itemPayload.itemName = item.itemName;
-          itemPayload.itemQty = item.itemQty;
-          totalItems.push(itemPayload);
+        angular.forEach(data.menus, function (menu) {
+          angular.forEach(menu.menuItems, function (item) {
+            var itemPayload = {};
+            itemPayload.id = item.itemId;
+            itemPayload.itemName = item.itemName;
+            itemPayload.itemQty = item.itemQty;
+            totalItems.push(itemPayload);
+          });
         });
-
       });
     });
 
