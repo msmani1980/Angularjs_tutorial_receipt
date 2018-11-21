@@ -266,8 +266,8 @@ angular.module('ts5App')
     return (selectedMenu.length === 0);
   };
 
-  $scope.$watchGroup(['plan.packingPlanMenu'], function () {
-    if ($scope.plan && $scope.plan.packingPlanMenu && $scope.isCreate) {
+  $scope.$watchGroup(['plan.packingPlanMenu', 'plan.startDate', 'plan.endDate'], function () {
+    if ($scope.plan && $scope.plan.packingPlanMenu && ($scope.isCreate || !$scope.isDisabled()) && $scope.plan.startDate && $scope.plan.endDate) {
       $this.getItemMasterFromMenu($scope.plan.packingPlanMenu, false, $scope.plan.startDate, $scope.plan.endDate);
     }
 
