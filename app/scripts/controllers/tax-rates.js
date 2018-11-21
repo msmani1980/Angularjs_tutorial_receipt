@@ -85,7 +85,7 @@ angular.module('ts5App')
     };
 
     this.setCompanyCurrency = function (taxRate) {
-      var payload;
+      var payload = {};
       if (angular.isDefined(taxRate.companyCurrencyId) && angular.isDefined($scope.currenciesList)) {
         angular.forEach($scope.currenciesList, function (currency) {
           if (currency.id === taxRate.companyCurrencyId) {
