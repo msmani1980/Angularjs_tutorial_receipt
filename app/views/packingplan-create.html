@@ -210,7 +210,7 @@
 		        							 	<ui-select ng-if="!isDisabled()" name="retailItem" theme="bootstrap" ng-model="item.itemMasterId" 
 		        							 			ng-required="item.maxQty || item.minQty">
 				                					<ui-select-match placeholder="Select Retail Item">{{$select.selected.itemName}}</ui-select-match>
-				                					<ui-select-choices repeat="itm.id as itm in itemMasterList">
+				                					<ui-select-choices repeat="itm.id as itm in itemMasterList | unique: 'id' ">
 				                  						<div ng-bind-html="itm.itemName"></div>
 				                					</ui-select-choices>
 				              					</ui-select>
