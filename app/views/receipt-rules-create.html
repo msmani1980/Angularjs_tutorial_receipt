@@ -63,7 +63,7 @@
           <div class="col-xs-12 col-sm-6">
             
             <div class="form-group" ng-if="!receiptRule.autoPrint && displayError" ng-class="{'has-error' : !receiptRule.autoPrint && displayError , 'has-success' : receiptRule.autoPrint}" style="border:1px solid #a94442">
-              <label for="auto-print">Print Auto-Receipt For*</label>
+              <label for="auto-print">Print Auto-Receipt For1*</label>
               <div  class="input-group" >
                 <input type="radio" name="PrintAutoReceiptFor" value="All" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'All' " ng-required=true > All Items
               </div>
@@ -72,7 +72,7 @@
               </div>  
             </div>
             <div class="form-group" ng-if="receiptRule.autoPrint || !displayError">
-              <label for="auto-print">Print Auto-Receipt For*</label>
+              <label for="auto-print">Print Auto-Receipt For2*</label>
               <div  class="input-group" >
                 <input type="radio" name="PrintAutoReceiptFor" value="All" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'All' " ng-required=true > All Items
               </div>
@@ -85,7 +85,7 @@
           <div class="col-xs-12 col-sm-6">
             <div class="form-group">
               <label for="receipt-rule-limit">Receipt Floor Limit Value *</label>
-              <div class="row" ng-repeat="receiptFloorLimitAmountData in receiptFloorLimitAmountsUi track by $index | orderBy: 'receiptFloorLimitAmountData.code'">
+              <div class="row" ng-repeat="receiptFloorLimitAmountData in receiptFloorLimitAmountsUi track by $index | orderBy: 'receiptFloorLimitAmountData.code'" ng-class="{'has-error' : !receiptFloorLimitAmountData.amount && displayError , 'has-success' : receiptFloorLimitAmountData.amount}">
               <div class="col-xs-2 col-sm-1 text-right">{{ receiptFloorLimitAmountData.code }}</div>
               <div class="col-xs-10 col-sm-8">
                 <div class="input-group">
@@ -94,11 +94,12 @@
                          type="text" 
                          class="form-control"
                          name="receiptFloorLimitAmountData{{ receiptFloorLimitAmountData.code }}"
-                         custom-pattern="numberOrDecimal"
+                         ng-pattern="regexp.sixNumberWithTwoDecimal"
                          ng-model="receiptFloorLimitAmountData.amount"
                          ng-disabled="readOnly || isDisabled"
+                         maxlength="9"
                          required
-                         ng-class="{'has-error' : !receiptFloorLimitAmountData.amount && displayError , 'has-success' : receiptFloorLimitAmountData.amount}">
+                         >
                 </div>
               </div>
           </div>
