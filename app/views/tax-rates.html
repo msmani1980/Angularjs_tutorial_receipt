@@ -289,12 +289,12 @@
            custom-date="taxRate.endDate"
            ng-model="taxRate.endDate"></date-picker-field>
         </td>
-        <td ng-switch-when="read">{{ getUpdatedOn(taxRate) }}</td>
-        <td ng-switch-when="edit" style="padding-top:15px;">{{ getUpdatedOn(taxRate) }}</td>
-        <td ng-switch-when="create">{{ getUpdatedOn(taxRate) }}</td>
-        <td ng-switch-when="read">{{ getUpdateBy(taxRate) }}</td>
-        <td ng-switch-when="edit" style="padding-top:15px;">{{ getUpdateBy(taxRate) }}</td>
-        <td ng-switch-when="create">{{ getUpdateBy(taxRate) }}</td>
+        <td class="animate-switch col-xs-1" ng-switch-when="read">{{ getUpdatedOn(taxRate) }}</td>
+        <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="edit" style="padding-top:15px;">{{ getUpdatedOn(taxRate) }}</td>
+        <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="create">{{ getUpdatedOn(taxRate) }}</td>
+        <td class="animate-switch col-xs-1" ng-switch-when="read">{{ getUpdateBy(taxRate) }}</td>
+        <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="edit" style="padding-top:15px;">{{ getUpdateBy(taxRate) }}</td>
+        <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="create">{{ getUpdateBy(taxRate) }}</td>
         <!-- Buttons for Read -->
         <td class="animate-switch col-xs-1" ng-switch-when="read" ng-show="isCRUD">
           <a class="btn btn-primary btn-xs" ng-show="isTaxRateEditable(taxRate)" ng-click="editCompanyTaxRate(taxRate)">
@@ -305,7 +305,7 @@
           </a>
         </td>
         <!-- Buttons for Edit -->
-        <td class="animate-switch tax-rates-action col-xs-1" ng-switch-when="edit" ng-show="isCRUD">
+        <td class="animate-switch tax-rates-action tax-rates-action col-xs-1" ng-switch-when="edit" ng-show="isCRUD">
           <a tabindex="0" class="btn btn-primary btn-xs" ng-click="saveTaxRateEdits(taxRate)">
             <span class="fa fa-save"></span>
           </a>
