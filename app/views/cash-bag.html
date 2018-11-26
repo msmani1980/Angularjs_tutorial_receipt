@@ -117,16 +117,20 @@
                          required
                          class="form-control"
                          ng-model="currency.paperAmountManual"
-                         name="paperAmountManual[{{currency.currencyId}}]"
-                         ng-readonly="readOnly"></td>
+                         name="paperAmountManual [{{ currency.currencyCode}} ]"
+                         ng-readonly="readOnly"
+                         ng-class="{ 'has-error' : !currency.paperAmountManual && displayError, 'has-success' : currency.paperAmountManual}">
+              </td>
               <td><input type="text"
                          custom-validity
                          custom-pattern="currencyWithFourDecimalPlaceUnrounded"
                          required
                          class="form-control"
                          ng-model="currency.coinAmountManual"
-                         name="coinAmountManual[{{currency.currencyId}}]"
-                         ng-readonly="readOnly"></td>
+                         name="coinAmountManual [ {{currency.currencyCode}} ]"
+                         ng-readonly="readOnly"
+                         ng-class="{ 'has-error' : !currency.coinAmountManual && displayError, 'has-success' : currency.coinAmountManual }">
+              </td>
               <td ng-if="isBankExchangePreferred()">{{ currency.bankExchangeRate }}</td>
               <td ng-if="!isBankExchangePreferred()">{{ currency.paperExchangeRate }}</td>
               <td ng-if="!isBankExchangePreferred()">{{ currency.coinExchangeRate }}</td>
