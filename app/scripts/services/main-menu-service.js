@@ -783,6 +783,31 @@ angular.module('ts5App')
           role: 'BACKOFFICECONFIG'
         }]
       }, {
+        title: 'Packing Plans',
+        menuItems: [{
+          name: 'Manage Packing Plans',
+          route: '/#/packingplan-list',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-managePackingPlans',
+          package: 'PACKINGPLAN',
+          role: 'PACKINGPLAN',
+          permissions: [{
+            apiName: '/packingplan',
+            permissionCodes: ['R']
+          }]
+        }, {
+          name: 'Create Packing Plan',
+          route: '/#/packingplan/create',
+          icon: 'icon-create-menu',
+          className: 'dashboard-createPackingPlan',
+          package: 'PACKINGPLAN',
+          role: 'PACKINGPLAN',
+          permissions: [{
+            apiName: '/packingplan',
+            permissionCodes: ['C']
+          }]
+        }]
+      }, {
         title: 'Retail Company Receipts',
         menuItems: [{
             name: 'Company Receipts',
