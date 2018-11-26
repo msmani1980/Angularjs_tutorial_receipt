@@ -111,25 +111,29 @@
             <tr ng-repeat="currency in cashBag.cashBagCurrencies | orderBy: 'currencyCode'">
               <td>{{ currency.currencyCode }}</td>
               <td>{{ currency.flightAmount }}</td>
-              <td><input type="text"
+              <td>
+                <div class="form-group" ng-class="{ 'has-error' : !currency.paperAmountManual && displayError, 'has-success' : currency.paperAmountManual}">
+                  <input type="text"
                          custom-validity
                          custom-pattern="currencyWithFourDecimalPlaceUnrounded"
                          required
                          class="form-control"
                          ng-model="currency.paperAmountManual"
                          name="paperAmountManual [{{ currency.currencyCode}} ]"
-                         ng-readonly="readOnly"
-                         ng-class="{ 'has-error' : !currency.paperAmountManual && displayError, 'has-success' : currency.paperAmountManual}">
+                         ng-readonly="readOnly">
+                </div>
               </td>
-              <td><input type="text"
+              <td>
+                <div class="form-group" ng-class="{ 'has-error' : !currency.coinAmountManual && displayError, 'has-success' : currency.coinAmountManual }">
+                  <input type="text"
                          custom-validity
                          custom-pattern="currencyWithFourDecimalPlaceUnrounded"
                          required
                          class="form-control"
                          ng-model="currency.coinAmountManual"
                          name="coinAmountManual [ {{currency.currencyCode}} ]"
-                         ng-readonly="readOnly"
-                         ng-class="{ 'has-error' : !currency.coinAmountManual && displayError, 'has-success' : currency.coinAmountManual }">
+                         ng-readonly="readOnly">
+                </div>
               </td>
               <td ng-if="isBankExchangePreferred()">{{ currency.bankExchangeRate }}</td>
               <td ng-if="!isBankExchangePreferred()">{{ currency.paperExchangeRate }}</td>
