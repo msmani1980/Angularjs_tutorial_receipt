@@ -20,8 +20,8 @@
 
             <div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
-              <label for="tax-rates-type">Tax Type</label>
-                <ui-select ng-model="search.taxType" theme="bootstrap" name="searchTaxType">
+              <label for="searchTaxType">Tax Type</label>
+                <ui-select ng-model="search.taxType" theme="bootstrap" id="searchTaxType" name="searchTaxType">
                   <ui-select-match placeholder="Search by Tax Type">
                     {{ $select.selected.taxTypeCode }}
                   </ui-select-match>
@@ -34,8 +34,8 @@
 
           	<div class="col-xs-12 col-sm-6 col-md-4">
           		<div class="form-group">
-          			<label for="tax-rates-country">Country</label>
-                <ui-select ng-model="search.country" theme="bootstrap" name="searchCountry" ng-change="filterSearchStationsByCountry(search.country.countryName)">
+          			<label for="searchCountry">Country</label>
+                <ui-select ng-model="search.country" theme="bootstrap" id="searchCountry" name="searchCountry" ng-change="filterSearchStationsByCountry(search.country.countryName)">
                   <ui-select-match placeholder="Search by Country">
                     {{ $select.selected.countryName }}
                   </ui-select-match>
@@ -48,8 +48,8 @@
 
             <div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
-                <label for="tax-rates-station">Station</label>
-                <ui-select ng-if="uiSelectReady" multiple ng-model="search.stations" theme="bootstrap" sortable="true" close-on-select="false" ng-disabled="!enableSearchStations" style="min-height:35px">
+                <label for="searchStations">Station</label>
+                <ui-select ng-if="uiSelectReady" multiple id="searchStations" ng-model="search.stations" theme="bootstrap" sortable="true" close-on-select="false" ng-disabled="!enableSearchStations" style="min-height:35px">
                   <ui-select-match placeholder="Search by Station">{{ $item.stationCode }} - {{ $item.stationName }}</ui-select-match>
                   <ui-select-choices group-by="'countryName'" repeat="station in stationsListSearch | filter: $select.search | orderBy:'countryName'">
                     <div ng-bind-html="station.stationCode + ' - ' + station.stationName | highlight: $select.search"></div>
