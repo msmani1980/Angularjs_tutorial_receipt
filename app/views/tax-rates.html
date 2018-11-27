@@ -74,15 +74,15 @@
 
             <div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
-                <label for="tax-rates-rate">Rate</label>
-                <input ng-model="search.taxRate" type="text" name="searchTaxRate" class="form-control" placeholder="Search by Tax Rate">
+                <label for="searchTaxRate">Rate</label>
+                <input ng-model="search.taxRate" type="text" id="searchTaxRate" name="searchTaxRate" class="form-control" placeholder="Search by Tax Rate">
               </div>
             </div>
 
             <div class="col-xs-12 col-sm-6 col-md-4">
               <div class="form-group">
-                <label for="tax-rates-currency">Currency</label>
-                <ui-select ng-model="search.currency" theme="bootstrap" name="searchCurrency">
+                <label for="searchCurrency">Currency</label>
+                <ui-select ng-model="search.currency" theme="bootstrap" id="searchCurrency" name="searchCurrency">
                   <ui-select-match placeholder="Search by Currency">
                     {{ $select.selected.code + ' - ' + $select.selected.name }}
                   </ui-select-match>
