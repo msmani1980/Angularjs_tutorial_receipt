@@ -21,14 +21,14 @@
 
         <div class="row">
 
-          <div class="col-xs-12 col-sm-6">
+          <div class="col-xs-12 col-sm-6" ng-class="{ 'has-error' : !itemPrice.startDate && displayError , 'has-success' : itemPrice.startDate }">
             <date-picker-field ng-if="minDate" min-date="$parent.minDate" disable="$parent.isAddPriceDisabled() || !$parent.isItemPriceNewOrIsExitingAndValidForEdit(itemPrice)"
               form="form" label="Effective From" name="PriceEffectiveFrom" ng-model="itemPrice.startDate"
               required="true">
             </date-picker-field>
           </div>
 
-          <div class="col-xs-12 col-sm-6">
+          <div class="col-xs-12 col-sm-6" ng-class="{ 'has-error' : !itemPrice.endDate && displayError , 'has-success' : itemPrice.endDate }">
             <date-picker-field ng-if="minDate" min-date="$parent.minDate"
               disable="isDisabledEndDateForm()" form="form"
               label="Effective To" name="PriceEffectiveTo" ng-model="itemPrice.endDate" required="true" end-current-effective="$parent.isAddPriceDisabled() || $parent.editingItem">
@@ -78,25 +78,33 @@
 
 				<p>Currencies List</p>
 
-				<div class="form-group" ng-repeat="(currencyKey,currency) in itemPrice.priceCurrencies track by $index">
+				<div class="form-group" ng-repeat="(currencyKey,currency) in itemPrice.priceCurrencies track by $index" >
 
 					<div class="input-group" ng-class="{ 'has-error' : !currency.price && displayError && $parent.shouldValidatePrice() , 'has-success' : currency.price && $parent.shouldValidatePrice() }">
 
 						<div class="input-group-addon">
-              {{ currency.code }} *
+                        	{{ currency.code }} *
 						</div>
 
-						<input name="Currencies List - {{ currency.code }}" ng-model="currency.price" ng-required="$parent.shouldValidatePrice()" ng-disabled="($parent.isAddPriceDisabled() || !$parent.isItemPriceNewOrIsExitingAndValidForEdit(itemPrice)) && !$parent.cloningItem" type="text" class="form-control" maxlength="8" placeholder="1.00"/>
+						<input 
+							name="Currencies List - {{ currency.code }}" 
+							ng-model="currency.price" 
+							ng-required="$parent.shouldValidatePrice()" 
+							ng-disabled="($parent.isAddPriceDisabled() || !$parent.isItemPriceNewOrIsExitingAndValidForEdit(itemPrice)) && !$parent.cloningItem" 
+							type="text" 
+							class="form-control" 
+							maxlength="9" 
+							placeholder="1.00"
+							ng-pattern="regexp.sixNumberWithTwoDecimal"/>
 
 					</div>
 
 				</div>
 
 				<p>Miles/Points</p>
-    			<div class="input-group" ng-class="{ 'has-error' : !itemPrice.priceMilesPoints.miles_points && displayError && $parent.shouldValidatePrice() , 'has-success' : itemPrice.priceMilesPoints.miles_points && $parent.shouldValidatePrice() }">
+    			<div class="input-group">
                 <input name="Miles Points"
                        ng-model="itemPrice.priceMilesPoints.miles_points"
-                       ng-required="false"
                        ng-disabled="((!itemPrice.startDate && !itemPrice.endDate) || $parent.isAddPriceDisabled() || !$parent.isItemPriceNewOrIsExitingAndValidForEdit(itemPrice)) && !$parent.cloningItem"
                        maxlength="10"
                        custom-validity

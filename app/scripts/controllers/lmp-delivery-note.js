@@ -51,16 +51,6 @@ angular.module('ts5App')
       hideLoadingModal();
     }
 
-    function showFormErrors() {
-      if ($scope.form && $scope.form.$valid && !deliveryNoteHasItems()) {
-        $scope.errorCustom = [{
-          field: 'Items Required',
-          value: 'There must be at least one Item attached to this Delivery Note'
-        }];
-        showResponseErrors();
-      }
-    }
-
     function deliveryNoteHasItems() {
       if (angular.isUndefined($scope.deliveryNote)) {
         return false;
@@ -369,6 +359,7 @@ angular.module('ts5App')
     $scope.toggleReview = function() {
       $scope.canReview = canReview();
       $scope.hideReview = false;
+      $scope.form.$setSubmitted(true);
 
       if ($scope.prevState) {
         $scope.state = $scope.prevState;
@@ -379,8 +370,17 @@ angular.module('ts5App')
         return;
       }
 
-      if ($scope.form && !$scope.form.$valid || !$scope.canReview) {
-        showFormErrors();
+      if ($scope.form && !$scope.form.$valid) {
+        $scope.displayError = true;
+        return;
+      }
+
+      if ($scope.form && $scope.form.$valid && !deliveryNoteHasItems()) {
+        $scope.errorCustom = [{
+          field: 'Items Required',
+          value: 'There must be at least one Item attached to this Delivery Note'
+        }];
+        $scope.displayError = true;
         return;
       }
 

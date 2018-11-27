@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  <error-dialog error-response="errorResponse" display="displayError"></error-dialog>
+  <error-dialog form-object="cashBagCreateForm" error-response="errorResponse" display="displayError"></error-dialog>
   <missing-daily-exchange-modal check-on-load="true"></missing-daily-exchange-modal>
 
   <div ng-if="isCashBagDeleted()" class="alert alert-danger" role="alert">
@@ -27,7 +27,8 @@
   </div>
 
   <div class="panel panel-default">
-    <form name="cashBagCreateForm" class="form edit-form" ng-submit="formSave(cashBag)">
+    <!-- form name="cashBagCreateForm" class="form edit-form" ng-submit="formSave(cashBag)"-->
+    <form name="cashBagCreateForm" class="form edit-form">
 
       <div class="panel-heading">
         <div class="row">
@@ -48,45 +49,46 @@
         <div class="alert alert-warning" ng-show="shouldShowBankRefNumberAlert()"><span class="fa fa-exclamation-circle"></span> The <b>Bank Reference #</b> was automatically changed from {{ oldBankRefNumber }} to {{ cashBag.bankReferenceNumber }}  </div>
 
         <div class="row">
-          <div class="col-sm-4">
+          <div class="form-group col-sm-4" ng-class="{ 'has-error' : !cashBag.cashBagNumber && displayError, 'has-success' : cashBag.cashBagNumber }">
             <label for="cashBagNumber">Cash Bag # *</label>
-            <input custom-pattern="alphanumeric"
-                   custom-validity
-                   required
+            <input 
                    type="text"
-                   maxlength="{{ cashBagNumberMaxLength }}"
-                   name="cashBagNumber"
-                   class="form-control"
-                   id="cashBagNumber"
                    ng-model="cashBag.cashBagNumber"
+                   class="form-control"
+                   name="cashBagNumber"
+                   id="cashBagNumberId"
+                   placeholder="Enter Cash Bag Number"
+                   maxlength="{{ cashBagNumberMaxLength }}"
+                   ng-pattern="regexp.alphanumeric"
+                   required
                    ng-readonly="readOnly"/>
           </div>
 
-          <div class="col-sm-4" ng-if="isTotalNumberOfCashBagsActivated()">
+          <div class="form-group col-sm-4" ng-if="isTotalNumberOfCashBagsActivated()"  ng-class="{ 'has-error' : !cashBag.totalCashBags && displayError, 'has-success' : cashBag.totalCashBags }">
             <label for="totalCashBags">Total # of Bags *</label>
-            <input custom-pattern="number"
-                   custom-validity
-                   required
+            <input 
                    type="text"
-                   maxlength="25"
-                   name="totalCashBags"
-                   class="form-control"
-                   id="totalCashBags"
                    ng-model="cashBag.totalCashBags"
+                   class="form-control"
+                   name="totalCashBags"
+                   id="totalCashBagsId"
+                   maxlength="25"
+                   ng-pattern="regexp.number"
+                   required
                    ng-readonly="readOnly"/>
           </div>
 
-          <div class="col-sm-4">
+          <div class="form-group col-sm-4" ng-class="{ 'has-error' : !cashBag.bankReferenceNumber && displayError, 'has-success' : cashBag.bankReferenceNumber }">
             <label for="bankReferenceNumber">Bank Reference # *</label>
-            <input custom-pattern="number"
-                   custom-validity
-                   required
+            <input 
                    type="text"
-                   maxlength="15"
-                   name="bankReferenceNumber"
-                   class="form-control"
-                   id="bankReferenceNumber"
                    ng-model="cashBag.bankReferenceNumber"
+                   class="form-control"
+                   name="bankReferenceNumber"
+                   id="bankReferenceNumberId"
+                   maxlength="15"
+                   ng-pattern="regexp.number"
+                   required
                    ng-readonly="readOnly"
                    custom-focus="isFocusBankReferenceNumber()"/>
           </div>
@@ -109,22 +111,30 @@
             <tr ng-repeat="currency in cashBag.cashBagCurrencies | orderBy: 'currencyCode'">
               <td>{{ currency.currencyCode }}</td>
               <td>{{ currency.flightAmount }}</td>
-              <td><input type="text"
+              <td>
+                <div class="form-group" ng-class="{ 'has-error' : !currency.paperAmountManual && displayError, 'has-success' : currency.paperAmountManual}">
+                  <input type="text"
                          custom-validity
                          custom-pattern="currencyWithFourDecimalPlaceUnrounded"
                          required
                          class="form-control"
                          ng-model="currency.paperAmountManual"
-                         name="paperAmountManual[{{currency.currencyId}}]"
-                         ng-readonly="readOnly"></td>
-              <td><input type="text"
+                         name="paperAmountManual [{{ currency.currencyCode}} ]"
+                         ng-readonly="readOnly">
+                </div>
+              </td>
+              <td>
+                <div class="form-group" ng-class="{ 'has-error' : !currency.coinAmountManual && displayError, 'has-success' : currency.coinAmountManual }">
+                  <input type="text"
                          custom-validity
                          custom-pattern="currencyWithFourDecimalPlaceUnrounded"
                          required
                          class="form-control"
                          ng-model="currency.coinAmountManual"
-                         name="coinAmountManual[{{currency.currencyId}}]"
-                         ng-readonly="readOnly"></td>
+                         name="coinAmountManual [ {{currency.currencyCode}} ]"
+                         ng-readonly="readOnly">
+                </div>
+              </td>
               <td ng-if="isBankExchangePreferred()">{{ currency.bankExchangeRate }}</td>
               <td ng-if="!isBankExchangePreferred()">{{ currency.paperExchangeRate }}</td>
               <td ng-if="!isBankExchangePreferred()">{{ currency.coinExchangeRate }}</td>
@@ -135,8 +145,9 @@
       </div>
 
       <div class="panel-footer text-center">
-        <button type="button" class="btn btn-default" ng-click="leaveView('cash-bag-list')" ng-hide="readOnly" type="button">Cancel</button>
-        <button type="submit" class="btn btn-primary" ng-hide="readOnly">
+        <button type="button" class="btn btn-default" ng-click="leaveView('cash-bag-list')" ng-hide="readOnly">Cancel</button>
+        <!-- >button type="submit" class="btn btn-primary" ng-hide="readOnly"-->
+        <button class="btn btn-primary" ng-click="formSave(cashBag)">
           <span class="fa fa-check-square-o" aria-hidden="true"></span>
           <span class="hidden-xs">{{ saveButtonName }}</span>
         </button>

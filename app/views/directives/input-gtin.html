@@ -4,29 +4,34 @@
   <div class="row">
 
     <div class="col-xs-6 col-sm-6">
-      <label>Value *</label>
-      <input
-        custom-validity
-        custom-pattern="number"
-        ng-required
-        ng-model="GTIN.value"
-        name="GTIN{{key}}"
-        type="text"
-        class="form-control"
-        minlength="1"
-        maxlength="13"
-        ng-min-length="1"
-        ng-max-length="13"/>
+    	<div class="form-group" ng-class="{ 'has-error' : !GTIN.value && displayError , 'has-success' : GTIN.value }">
+      		<label>Value {{key+1}} *</label>
+      		<input
+      			type="text"
+      			class="form-control"
+      			ng-model="GTIN.value"
+      			name="Value {{key+1}}"
+      			required 
+        		ng-pattern="regexp.number"
+        		placeholder="123456789"
+				min-length="1"
+        		max-length="13"/>
+        </div>
     </div>
 
-    <div class="col-xs-4 col-sm-5">
-      <label>Type *</label>
-      <select required ng-model="GTIN.type" class="form-control">
-        <option value="UPC">UPC</option>
-        <option value="Barcode">Barcode</option>
-        <option value="EAN">EAN</option>
-        <option value="JAN">JAN</option>
-        <option value="ISBN">ISBN</option>
+
+    <div class="col-xs-4 col-sm-5" ng-class="{ 'has-error' : !GTIN.type && displayError , 'has-success' : GTIN.type }">
+      <label>Type {{key+1}} *</label>
+      <select 
+        required 
+        ng-model="GTIN.type" 
+        class="form-control" 
+        name="Type {{key+1}}">
+        	<option value="UPC">UPC</option>
+        	<option value="Barcode">Barcode</option>
+        	<option value="EAN">EAN</option>
+        	<option value="JAN">JAN</option>
+        	<option value="ISBN">ISBN</option>
       </select>
     </div>
 
