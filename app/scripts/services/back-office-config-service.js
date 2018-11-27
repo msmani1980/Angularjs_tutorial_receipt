@@ -215,12 +215,25 @@ angular.module('ts5App')
       }
     ];
 
+    $this.userConfigOptions = [
+      {
+        name: 'User Configuration - Number of days to Deactivate User',
+        featureCode: 'IAM',
+        optionCode: 'IAM',
+        choiceCode: 'ACT',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'NUMBER',
+        id: 'preorder'
+      }
+    ];
+
     this.configFeatureOptionsDefinition = function () {
       return {
         cashBagConfigOptions: $this.cashBagConfigOptions,
         preOrderConfigOptions: $this.preOrderConfigOptions,
         stationOpsConfigOptions: $this.stationOpsConfigOptions,
-        reconcileConfigOptions: $this.reconcileConfigOptions
+        reconcileConfigOptions: $this.reconcileConfigOptions,
+        userConfigOptions: $this.userConfigOptions,
       };
     };
   });
