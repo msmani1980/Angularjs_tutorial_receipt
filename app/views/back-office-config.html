@@ -7,11 +7,11 @@
     </div>
     <fieldset ng-if="!isFeatureOptionsLoadingInProgress">
       <div class="form-group col-sm-12 back-office-option-container" ng-repeat="option in configOptions">
-        <span class="control-label col-sm-3">{{ option.name }}
+        <span class="control-label col-sm-5">{{ option.name }}
           <button type="button" title="{{toolTipMessage(option)}}" class="fa fa-info-circle tooltip-focus back-office-tooltip-button" ></button>
           :
         </span>
-        <div class="col-sm-9">
+        <div class="col-sm-7">
           <label ng-if="option.inputType === 'RADIO_BUTTON'" ng-repeat="value in option.values" class="radio-custom radio-inline back-office-radio-button" data-initialize="radio" >
             <input ng-disabled="!isCRUD" class="inline" style="margin-left: -3px;" ng-model="formData[option.ngModelIdentifier].value"  type="radio" id="{{option.id + '-' + $index}}" name="{{option.ngModelIdentifier}}" ng-value="value.value"/>
             <span class="" style="margin-left: 17px;">{{ value.name }}</span>
