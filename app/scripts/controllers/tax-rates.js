@@ -359,6 +359,7 @@ angular.module('ts5App')
       var query = {
         limit: 100
       };
+      
       if ($scope.search.taxType) {
         query.taxTypeCode = $scope.search.taxType.taxTypeCode;
       }
