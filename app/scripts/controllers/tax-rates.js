@@ -85,7 +85,7 @@ angular.module('ts5App')
     };
 
     this.setCompanyCurrency = function (taxRate) {
-      var payload;
+      var payload = {};
       if (angular.isDefined(taxRate.companyCurrencyId) && angular.isDefined($scope.currenciesList)) {
         angular.forEach($scope.currenciesList, function (currency) {
           if (currency.id === taxRate.companyCurrencyId) {
@@ -359,6 +359,7 @@ angular.module('ts5App')
       var query = {
         limit: 100
       };
+
       if ($scope.search.taxType) {
         query.taxTypeCode = $scope.search.taxType.taxTypeCode;
       }
@@ -482,22 +483,6 @@ angular.module('ts5App')
       return (dateUtility.isAfterTodayDatePicker(taxRate.startDate) && dateUtility.isAfterTodayDatePicker(taxRate.endDate));
     };
 
-    $scope.isTaxRateEditable = function(taxRate) {
-      if (angular.isUndefined(taxRate)) {
-        return false;
-      }
-
-      return dateUtility.isAfterTodayDatePicker(taxRate.endDate) || dateUtility.isTodayDatePicker(taxRate.endDate);
-    };
-
-    $scope.isDisabled = function(taxRate) {
-      return !(dateUtility.isAfterTodayDatePicker(taxRate.startDate));
-    };
-
-    $scope.isDisabledEndDateForm = function(taxRate) {
-      return !(dateUtility.isAfterTodayDatePicker(taxRate.endDate) || dateUtility.isTodayDatePicker(taxRate.endDate));
-    };
-
     this.displayConfirmDialog = function (taxRate) {
       angular.element('#confirmation-modal').modal('show');
       $scope.taxRateToRemove = taxRate;
@@ -538,6 +523,8 @@ angular.module('ts5App')
 
     this.editSuccess = function () {
       $this.hideLoadingModal();
+      $scope.taxRateUnderEdit.action = 'read';
+      $scope.taxRateUnderEdit.saved = true;
       var id = angular.copy($scope.taxRateSaved);
       $this.getTaxRateById(id);
       messageService.display('success', 'Successfully Saved <b>Tax Rate ID: </b>' + id);
@@ -560,21 +547,30 @@ angular.module('ts5App')
     };
 
     this.saveTaxRateEdits = function (taxRate) {
+      $scope.errorCustom = [];
+      if ($scope.displayError === true) {
+        $this.clearCustomErrors();
+      }
+
+      $scope.taxRateUnderEdit = taxRate;
+
       delete taxRate.edited;
       delete taxRate.readOnly;
-      taxRate.action = 'read';
-      taxRate.saved = true;
+
       var payload = {
         id: taxRate.id,
-        taxRateValue: taxRate.taxRateValue,
-        taxRateType: taxRate.taxRateType.taxRateType,
-        startDate: dateUtility.formatDateForAPI(taxRate.startDate),
-        endDate: dateUtility.formatDateForAPI(taxRate.endDate),
-        companyTaxTypeId: taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId,
-        companyTaxRateStations: $this.createStationsPayload(taxRate),
-        companyCurrencyId: $scope.isTaxRateTypePercentage(taxRate) ? null : taxRate.currency.id
+        taxRateValue: $this.validateNewData('taxRateValue', taxRate.taxRateValue, taxRate),
+        taxRateType: $this.validateNewData('taxRateType', taxRate.taxRateType.taxRateType, taxRate),
+        startDate: $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate),
+        endDate: $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate),
+        companyTaxTypeId: $this.validateNewData('companyTaxTypeId', taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId, taxRate),
+        companyTaxRateStations: $this.validateNewData('companyTaxTypeId', $this.createStationsPayload(taxRate), taxRate),
+        companyCurrencyId: $this.validateNewData('companyCurrencyId', $scope.isTaxRateTypePercentage(taxRate) ? null : taxRate.currency.id, taxRate)
       };
-      $this.makeEditPromises(payload);
+
+      if ($scope.displayError !== true) {
+        $this.makeEditPromises(payload);
+      }
     };
 
     this.determineMinDate = function (date) {
@@ -756,6 +752,23 @@ angular.module('ts5App')
     };
 
     // Place $scope functions here
+
+    $scope.isTaxRateEditable = function(taxRate) {
+      if (angular.isUndefined(taxRate)) {
+        return false;
+      }
+
+      return dateUtility.isAfterTodayDatePicker(taxRate.endDate) || dateUtility.isTodayDatePicker(taxRate.endDate);
+    };
+
+    $scope.isDisabled = function(taxRate) {
+      return !(dateUtility.isAfterTodayDatePicker(taxRate.startDate));
+    };
+
+    $scope.isDisabledEndDateForm = function(taxRate) {
+      return !(dateUtility.isAfterTodayDatePicker(taxRate.endDate) || dateUtility.isTodayDatePicker(taxRate.endDate));
+    };
+
     $scope.clearSearchFilters = function () {
       if (angular.isDefined($scope.search)) {
         $scope.search = {};
