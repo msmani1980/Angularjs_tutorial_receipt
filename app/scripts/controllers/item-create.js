@@ -63,6 +63,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.selectedSupplierCompanyImages = null;
     $scope.substitutions = [];
     $scope.recommendations = [];
+    $scope.eposDisplayOrderList = [];
 
     this.checkFormState = function() {
       var path = $location.path();
@@ -520,7 +521,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.originalMasterItemData = {
         itemCode: $scope.formData.itemCode,
         itemName: $scope.formData.itemName,
-        onBoardName: $scope.formData.onBoardName
+        onBoardName: $scope.formData.onBoardName,
+        eposDisplaySortOrder: $scope.formData.eposDisplaySortOrder
       };
       delete $scope.formData.voucher;
       this.setVoucherData();
@@ -567,7 +569,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         itemsFactory.getWeightList(),
         itemsFactory.getPriceTypesList(),
         companiesFactory.getCompany(companyId),
-        itemsFactory.getVoucherDurationsList()
+        itemsFactory.getVoucherDurationsList(),
+        itemsFactory.getEposDisplayOrder()
       ];
     };
 
@@ -646,7 +649,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.isMasterItemInfoUnTouched = function() {
       return $scope.originalMasterItemData.itemCode === $scope.formData.itemCode &&
         $scope.originalMasterItemData.itemName === $scope.formData.itemName &&
-        $scope.originalMasterItemData.onBoardName === $scope.formData.onBoardName;
+        $scope.originalMasterItemData.onBoardName === $scope.formData.onBoardName,
+        $scope.originalMasterItemData.eposDisplaySortOrder === $scope.formData.eposDisplaySortOrder;
     };
 
     this.setDiscountList = function(dataFromAPI) {
@@ -791,6 +795,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setItemPriceTypes(response[10]);
       $this.setCompany(response[11]);
       $this.setVoucherDurations(response[12]);
+      $this.setEposDisplayOrderList(response[13]);
       if ($scope.editingItem || $scope.cloningItem || $scope.viewOnly) {
         $this.getItem($routeParams.id);
       } else {
@@ -821,6 +826,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.setVoucherDurations = function (data) {
       $scope.voucherDurations = angular.copy(data);
+    };
+
+    this.setEposDisplayOrderList = function (data) {
+      $scope.eposDisplayOrderList = angular.copy(data);
     };
 
     this.setCharacteristics = function(data) {
@@ -1128,6 +1137,13 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.formData.prices.splice(key, 1);
     };
 
+    $scope.saveWithSortNumberInUse = function() {
+      angular.element('#confirmation-modal').modal('hide');
+      var action = $scope.editingItem ? 'updateItem' : 'createItem';
+      var payload = $scope.mypayload; 
+      $this[action](payload);
+    };
+
     this.generateCurrency = function(currency) {
       return {
         price: '',
@@ -1271,7 +1287,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.updateFormData(response[0].retailItem);
       $scope.deserializeSubstitutionsAfterItemSet();
       $scope.deserializeRecommendationsAfterItemSet();
-      angular.element('#loading').modal('hide');
+      angular.element('#loading').modal('hide').find('p').text('We are loading the Items data!');
       angular.element('#update-success').modal('show');
     };
 
@@ -1308,6 +1324,20 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return true;
     }
 
+    function isEposDisplaySortOrderUnique (masterItemId) {
+      var eposDisplaySortOrderArray = $scope.eposDisplayOrderList.response;
+      if (angular.isDefined(eposDisplaySortOrderArray) && eposDisplaySortOrderArray.length > 0) {
+        for (var key in eposDisplaySortOrderArray) {
+          var foundItemMasterValue = eposDisplaySortOrderArray[key];
+          if (masterItemId !== parseInt(foundItemMasterValue.id) && parseInt($scope.formData.eposDisplaySortOrder) === parseInt(foundItemMasterValue.eposDisplaySortOrder)) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    }
+
     function showCustomError(errorField, errorMessage) {
       $scope.errorCustom = [{ field: errorField, value: errorMessage }];
       $scope.displayError = true;
@@ -1321,8 +1351,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
 
       var $this = this;
-      angular.element('#loading').modal('show').find('p').text('We are updating your item');
-
+      this.showLoadingModal('We are updating your item');
+      
       $this.removeEmptyPrices(itemData);
 
       var payload = {
@@ -1344,7 +1374,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         retailItem: itemData
       };
       itemsFactory.createItem(newItemPayload, $scope.cloningItem).then(function() {
-        angular.element('#loading').modal('hide');
+        angular.element('#loading').modal('hide').find('p').text('We are loading the Items data!');
         angular.element('#create-success').modal('show');
         return true;
       }, $this.errorHandler);
@@ -1356,6 +1386,19 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         var itemData = angular.copy(formData);
         var payload = $this.formatPayload(itemData);
         var action = $scope.editingItem ? 'updateItem' : 'createItem';
+        $scope.mypayload = payload; 
+        var masterItemId = -1;
+        if (angular.isDefined(payload.masterItem)) {
+          masterItemId = parseInt(payload.masterItem.id);
+        }
+
+        var isUnique = isEposDisplaySortOrderUnique(masterItemId);
+        angular.element('#confirmation-modal').modal('hide');
+        if (!isUnique) {
+          angular.element('#confirmation-modal').modal('show');
+          return;
+        }
+        
         $this[action](payload);
       }
     };

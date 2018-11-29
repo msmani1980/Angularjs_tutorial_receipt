@@ -78,6 +78,10 @@ angular.module('ts5App').factory('itemsFactory', function ($resource, ENV, items
     return companyDiscountService.getDiscountList(payload);
   };
 
+  this.getEposDisplayOrder = function (payload) {
+    return itemsService.getEposDisplayOrder(payload);
+  };
+
   return {
 
     // Items
@@ -107,8 +111,8 @@ angular.module('ts5App').factory('itemsFactory', function ($resource, ENV, items
     getVolumeList: this.getVolumeList,
     getWeightList: this.getWeightList,
 
-    getDiscountList: this.getDiscountList
-
+    getDiscountList: this.getDiscountList,
+    getEposDisplayOrder: this.getEposDisplayOrder
   };
 
 });
