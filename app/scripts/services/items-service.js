@@ -11,9 +11,13 @@ angular.module('ts5App')
   .service('itemsService', function ($resource, ENV) {
 
     var requestURL = ENV.apiUrl + '/rsvr/api/retail-items/:fetchFromMaster/:id';
+    var eposDisplayOrderURL = ENV.apiUrl + '/rsvr/api/retail-items/eposdisplayorders';
+    
     var requestParameters = {
       id: '@id'
     };
+
+    var eposDisplayOrderParameters = {};
 
     var actions = {
       getItemsList: {
@@ -36,6 +40,9 @@ angular.module('ts5App')
         method: 'DELETE'
       },
       getItemsByCateringStationId: {
+        method: 'GET'
+      },
+      getEposDisplayOrder: {
         method: 'GET'
       }
     };
@@ -91,13 +98,19 @@ angular.module('ts5App')
       return requestResource.removeItem({ id: id }).$promise;
     };
 
+    var getEposDisplayOrder = function(payload) {
+      var eposDisplayOrderResource = $resource(eposDisplayOrderURL, eposDisplayOrderParameters, actions);
+      return eposDisplayOrderResource.getEposDisplayOrder(payload).$promise;
+    };
+
     return {
       getItemsList: getItemsList,
       getItem: getItem,
       getMasterItem: getMasterItem,
       createItem: createItem,
       updateItem: updateItem,
-      removeItem: removeItem
+      removeItem: removeItem,
+      getEposDisplayOrder: getEposDisplayOrder
     };
 
   });
