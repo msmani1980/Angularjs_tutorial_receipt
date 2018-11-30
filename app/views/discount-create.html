@@ -252,7 +252,7 @@
           </div>
         </div>
         <div class="col-xs-12 col-sm-6">
-          <fieldset ng-disabled="isDisabled()" ng-show="formData.isAmountLimitPerTransaction">
+          <fieldset ng-disabled="isDisabled()" ng-if="formData.isAmountLimitPerTransaction">
             <div class="row">
               <div class="col-xs-12 col-sm-6">
                 <label>Amount Limit Per Transaction</label>
