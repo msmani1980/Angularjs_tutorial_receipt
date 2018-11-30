@@ -53,11 +53,11 @@
                 <option value="">Please select</option>
               </select>
             </div>
-            <div class="form-group" ng-show="formData.globalDiscountTypeId">
+            <div class="form-group" ng-if="formData.globalDiscountTypeId">
               <label class="control-label">Global Discount Description</label>
               <div>{{ getGlobalDiscountDescriptionById(formData.globalDiscountTypeId) }}</div>
             </div>
-            <div class="form-group" ng-show="formData.globalDiscountTypeId === 1" ng-class="validation.fieldCssClass(form, 'barCode')">
+            <div class="form-group" ng-if="formData.globalDiscountTypeId === 1" ng-class="validation.fieldCssClass(form, 'barCode')">
               <label class="control-label">Bar Code</label>
               <input class="form-control" ng-model="formData.barCode" name="barCode" ng-pattern="regexp.word" ng-required="formData.globalDiscountTypeId === '1'" />
             </div>
