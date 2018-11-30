@@ -242,7 +242,7 @@
       </div>
       <div class="row" ng-if="formData.limitByTransactionDiscountType == 1">
         <div class="col-xs-12 col-sm-6">
-          <div class="form-group">
+          <div class="form-group" ng-class="validation.fieldCssClass(form, 'itemQtyLimitPerTransaction')">
             <label class="control-label">Item Qty Limit Per Transaction</label>
             <input class="form-control" ng-model="formData.itemQtyLimitPerTransaction" name="itemQtyLimitPerTransaction" ng-pattern="regexp.number" ng-disabled="isDisabled()" />
           </div>
@@ -334,7 +334,7 @@
           <fieldset ng-disabled="isDisabled()">
             <div class="row">
               <div class="col-xs-12 col-sm-6">
-                <div class="form-group">
+                <div class="form-group" ng-class="validation.fieldCssClass(form, 'discountQtyLimitPerSeat')">
                   <label class="control-label">Discount Qty Limit Per Seat</label>
                   <input class="form-control" ng-model="formData.discountQtyLimitPerSeat" name="discountQtyLimitPerSeat" ng-pattern="regexp.number" />
                 </div>
