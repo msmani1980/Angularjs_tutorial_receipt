@@ -128,11 +128,11 @@
           <fieldset ng-disabled="isDisabled()" >
             <div class="row">
               <div class="col-xs-12 col-sm-6">
-                <div class="form-group" ng-show="formData.discountTypeId === 1" ng-class="validation.fieldCssClass(form, 'percentageDiscountValue')">
+                <div class="form-group" ng-if="formData.discountTypeId === 1" ng-class="validation.fieldCssClass(form, 'percentageDiscountValue')">
                   <label class="control-label">Percentage Discount Value *</label>
                   <input class="form-control" ng-model="formData.percentageDiscountValue" name="percentageDiscountValue" placeholder="10%" ng-pattern="regexp.percentage" ng-required="formData.discountTypeId === 1" />
                 </div>
-                <div class="form-group" ng-show="formData.discountTypeId === 2">
+                <div class="form-group" ng-if="formData.discountTypeId === 2">
                   <label>Fixed Discount Value</label>
                   <div class="form-group" ng-repeat="currency in companyCurrencyGlobalsList">
                     <div class="input-group" ng-class="validation.fieldCssClass(form, currency.code + 'AmountDiscountValue')">
