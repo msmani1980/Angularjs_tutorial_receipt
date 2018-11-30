@@ -320,7 +320,7 @@
           <fieldset ng-disabled="isDisabled()">
             <div class="row">
               <div class="col-xs-12 col-sm-6">
-                <div class="form-group">
+                <div class="form-group" ng-class="validation.fieldCssClass(form, 'itemQtyLimitPerSeat')">
                   <label class="control-label">Item Qty Limit Per Seat</label>
                   <input class="form-control" ng-model="formData.itemQtyLimitPerSeat" name="itemQtyLimitPerSeat" ng-pattern="regexp.number" />
                 </div>
