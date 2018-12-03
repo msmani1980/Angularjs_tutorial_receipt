@@ -123,8 +123,8 @@
         <th>Code</th>
         <th>Name</th>
         <th>POS Display Name</th>
-        <th ng-click="updateOrderBy('eposDisplaySortOrder')">
-          <span ng-class="getArrowIconAndClassForSorting('eposDisplaySortOrder')"></span>
+        <th ng-click="updateOrderBy('versions[0].eposDisplaySortOrder')">
+          <span ng-class="getArrowIconAndClassForSorting('versions[0].eposDisplaySortOrder')"></span>
           POS Display Sort Order
         </th>
         <th>
@@ -141,7 +141,7 @@
       </thead>
 
       <tbody>
-      <tr class="master-row" ng-repeat="item in itemsList" id="item-{{ item.itemMasterId }} ">
+      <tr class="master-row" ng-repeat="item in itemsList | orderBy: tableSortTitle" id="item-{{ item.itemMasterId }} ">
         <td>
             <span class="fa fa-plus-square-o" ng-show="!isOpen(item) && hasSubVersions(item)"
                   ng-click="toggleVersionVisibility(item)"></span>
