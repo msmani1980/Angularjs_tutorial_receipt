@@ -547,7 +547,8 @@ angular.module('ts5App')
     };
 
     this.saveTaxRateEdits = function (taxRate) {
-      $scope.errorCustom = [];
+      $this.clearErrors();
+
       if ($scope.displayError === true) {
         $this.clearCustomErrors();
       }
@@ -617,19 +618,34 @@ angular.module('ts5App')
       });
     };
 
-    this.showValidationError = function (field) {
-      var payload = {
-        field: field,
-        value: 'is a required field. Please update and try again!'
-      };
+    this.showValidationError = function (field, isPattern) {
+      var payload = { };
+
+      if (isPattern) {
+        payload = {
+          field: field,
+          value: 'field contains invalid characters'
+        };
+      } else {
+        payload = {
+          field: field,
+          value: 'is a required field. Please update and try again!'
+        };
+      }
+
       $scope.errorCustom.push(payload);
       $scope.displayError = true;
     };
 
     this.validateNewData = function (field, value, taxRate) {
+      if (field === 'taxRateValue' && value && !value.match(/^-?([0-9]*)$/)) {
+        taxRate.deleted = true;
+        $this.showValidationError(field, true);
+      }
+
       if (value === undefined || value === null || value.length === 0 || value === 'Invalid date') {
         taxRate.deleted = true;
-        $this.showValidationError(field);
+        $this.showValidationError(field, false);
       }
 
       return value;
@@ -678,8 +694,11 @@ angular.module('ts5App')
       return payload;
     };
 
+
+
     this.createNewTaxRatePayload = function (taxRate) {
-      $scope.errorCustom = [];
+      $this.clearErrors();
+
       if ($scope.displayError === true) {
         $this.clearCustomErrors();
       }
