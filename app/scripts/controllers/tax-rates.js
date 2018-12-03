@@ -694,7 +694,12 @@ angular.module('ts5App')
       return payload;
     };
 
-
+    this.clearErrors = function () {
+      $this.clearCustomErrors();
+      $scope.displayError = false;
+      $scope.errorResponse = [];
+      $scope.errorCustom = [];
+    };
 
     this.createNewTaxRatePayload = function (taxRate) {
       $this.clearErrors();
