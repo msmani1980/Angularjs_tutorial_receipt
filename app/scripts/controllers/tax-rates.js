@@ -637,13 +637,17 @@ angular.module('ts5App')
       $scope.displayError = true;
     };
 
+    this.isFieldEmpty = function (value) {
+      return (value === undefined || value === null || value.length === 0 || value === 'Invalid date');
+    };
+
     this.validateNewData = function (field, value, taxRate) {
       if (field === 'taxRateValue' && value && !value.match(/^-?([0-9]*)$/)) {
         taxRate.deleted = true;
         $this.showValidationError(field, true);
       }
 
-      if (value === undefined || value === null || value.length === 0 || value === 'Invalid date') {
+      if ($this.isFieldEmpty(value)) {
         taxRate.deleted = true;
         $this.showValidationError(field, false);
       }
