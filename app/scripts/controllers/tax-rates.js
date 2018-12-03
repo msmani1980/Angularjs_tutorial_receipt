@@ -547,7 +547,8 @@ angular.module('ts5App')
     };
 
     this.saveTaxRateEdits = function (taxRate) {
-      $scope.errorCustom = [];
+      $this.clearErrors();
+
       if ($scope.displayError === true) {
         $this.clearCustomErrors();
       }
@@ -617,19 +618,38 @@ angular.module('ts5App')
       });
     };
 
-    this.showValidationError = function (field) {
-      var payload = {
-        field: field,
-        value: 'is a required field. Please update and try again!'
-      };
+    this.showValidationError = function (field, isPattern) {
+      var payload = { };
+
+      if (isPattern) {
+        payload = {
+          field: field,
+          value: 'field contains invalid characters'
+        };
+      } else {
+        payload = {
+          field: field,
+          value: 'is a required field. Please update and try again!'
+        };
+      }
+
       $scope.errorCustom.push(payload);
       $scope.displayError = true;
     };
 
+    this.isFieldEmpty = function (value) {
+      return (value === undefined || value === null || value.length === 0 || value === 'Invalid date');
+    };
+
     this.validateNewData = function (field, value, taxRate) {
-      if (value === undefined || value === null || value.length === 0 || value === 'Invalid date') {
+      if (field === 'taxRateValue' && value && !value.match(/^-?([0-9]*)$/)) {
         taxRate.deleted = true;
-        $this.showValidationError(field);
+        $this.showValidationError(field, true);
+      }
+
+      if ($this.isFieldEmpty(value)) {
+        taxRate.deleted = true;
+        $this.showValidationError(field, false);
       }
 
       return value;
@@ -678,8 +698,16 @@ angular.module('ts5App')
       return payload;
     };
 
-    this.createNewTaxRatePayload = function (taxRate) {
+    this.clearErrors = function () {
+      $this.clearCustomErrors();
+      $scope.displayError = false;
+      $scope.errorResponse = [];
       $scope.errorCustom = [];
+    };
+
+    this.createNewTaxRatePayload = function (taxRate) {
+      $this.clearErrors();
+
       if ($scope.displayError === true) {
         $this.clearCustomErrors();
       }
