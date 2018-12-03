@@ -22,7 +22,7 @@ angular.module('ts5App')
       endDate: ''
     };
     $scope.openVersionId = -1;
-    $scope.tableSortTitle = '[eposDisplaySortOrder]';
+    $scope.tableSortTitle = 'item.versions[0].itemName';
     
     function showLoadingBar(loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
@@ -302,18 +302,10 @@ angular.module('ts5App')
       return item.updatedOn ? dateUtility.formatTimestampForApp(item.updatedOn) : dateUtility.formatTimestampForApp(item.createdOn);
     };
 
-    $scope.getSortingType = function(orderName) {	
+    $scope.getSortingType = function(orderName) {
       if ($scope.tableSortTitle === orderName) {
-        $scope.itemsList.sort(function(a, b) {
-          return a.versions[0].eposDisplaySortOrder - b.versions[0].eposDisplaySortOrder;
-        });
-
         return 'ascending';
       } else if ($scope.tableSortTitle === '-' + orderName) {
-        $scope.itemsList.sort(function(a, b) {
-          return b.versions[0].eposDisplaySortOrder - a.versions[0].eposDisplaySortOrder;
-        });
-
         return 'descending';
       }
 
@@ -327,6 +319,7 @@ angular.module('ts5App')
         none: 'fa fa-sort text-muted-light'
       };
       var sortType = $scope.getSortingType(orderName);
+
       return sortTypeToArrowTypeMap[sortType];
     };
 
