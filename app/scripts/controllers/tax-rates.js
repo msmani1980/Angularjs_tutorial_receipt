@@ -547,6 +547,7 @@ angular.module('ts5App')
     };
 
     this.saveTaxRateEdits = function (taxRate) {
+      /*jshint maxcomplexity:10 */
       $this.clearErrors();
 
       if ($scope.displayError === true) {
