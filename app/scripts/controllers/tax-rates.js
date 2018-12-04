@@ -565,9 +565,12 @@ angular.module('ts5App')
         startDate: $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate),
         endDate: $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate),
         companyTaxTypeId: $this.validateNewData('companyTaxTypeId', taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId, taxRate),
-        companyTaxRateStations: $this.validateNewData('companyTaxTypeId', $this.createStationsPayload(taxRate), taxRate),
-        companyCurrencyId: $this.validateNewData('companyCurrencyId', $scope.isTaxRateTypePercentage(taxRate) ? null : taxRate.currency.id, taxRate)
+        companyTaxRateStations: $this.validateNewData('companyTaxTypeId', $this.createStationsPayload(taxRate), taxRate)
       };
+
+      if (!$scope.isTaxRateTypePercentage(taxRate)) {
+        payload.companyCurrencyId = $this.validateNewData('companyCurrencyId', !taxRate.currency ? null : taxRate.currency.id, taxRate)
+      }
 
       if ($scope.displayError !== true) {
         $this.makeEditPromises(payload);
@@ -641,10 +644,27 @@ angular.module('ts5App')
       return (value === undefined || value === null || value.length === 0 || value === 'Invalid date');
     };
 
+    this.isPercentageTaxRateFormatInvalid = function (field, value, taxRate) {
+      return $scope.isTaxRateTypePercentage(taxRate) && field === 'taxRateValue' && value && !value.match(/^\$?\s?[0-9\,]+(\.\d{0,4})?$/);
+    };
+
+    this.isAmountTaxRateFormatInvalid = function (field, value, taxRate) {
+      return !$scope.isTaxRateTypePercentage(taxRate) && field === 'taxRateValue' && value && !value.match(/^\$?\s?[0-9\,]+(\.\d{0,4})?$/);
+    };
+
     this.validateNewData = function (field, value, taxRate) {
-      if (field === 'taxRateValue' && value && !value.match(/^-?([0-9]*)$/)) {
+      if ($this.isPercentageTaxRateFormatInvalid(field, value, taxRate)) {
         taxRate.deleted = true;
         $this.showValidationError(field, true);
+
+        return value;
+      }
+
+      if ($this.isAmountTaxRateFormatInvalid(field, value, taxRate)) {
+        taxRate.deleted = true;
+        $this.showValidationError(field, true);
+
+        return value;
       }
 
       if ($this.isFieldEmpty(value)) {
