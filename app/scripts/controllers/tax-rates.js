@@ -927,7 +927,7 @@ angular.module('ts5App')
     $scope.isTaxRateValueInvalid = function (taxRate) {
       return !taxRate.taxRateValue ||
         $this.isPercentageTaxRateFormatInvalid('taxRateValue', taxRate.taxRateValue, taxRate) ||
-        $this.isAmountTaxRateFormatInvalid('taxRateValue', taxRate.taxRateValue, taxRate)
+        $this.isAmountTaxRateFormatInvalid('taxRateValue', taxRate.taxRateValue, taxRate);
     };
 
     $scope.isDateValueInvalid = function (value, taxRate) {
