@@ -235,7 +235,7 @@
         <td class="animate-switch col-xs-1" ng-switch-when="read">
            {{ taxRate.currency.code }}
         </td>
-        <td class="animate-switch tax-rates-ui-select col-xs-1" ng-switch-when="edit" ng-class="{ 'has-error' : !taxRate.currency && displayError, 'has-success' : taxRate.currency }">
+        <td class="animate-switch tax-rates-ui-select col-xs-1" ng-switch-when="edit" ng-class="{ 'has-error' : (!taxRate.currency && displayError && !isTaxRateTypePercentage(taxRate)), 'has-success' : taxRate.currency }">
           <ui-select ng-model="taxRate.currency" theme="bootstrap" name="currencyCode" ng-disabled="isTaxRateCurrencyCodeDisabled(taxRate)">
             <ui-select-match placeholder="Currency">
               {{ $select.selected.code }}
