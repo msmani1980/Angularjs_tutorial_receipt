@@ -930,6 +930,10 @@ angular.module('ts5App')
         $this.isAmountTaxRateFormatInvalid('taxRateValue', taxRate.taxRateValue, taxRate)
     };
 
+    $scope.isDateValueInvalid = function (value, taxRate) {
+      return !value || (taxRate.startDate && taxRate.endDate && dateUtility.isAfterDatePicker(taxRate.startDate, taxRate.endDate));
+    };
+
     $scope.cancelNewTaxRate = function (taxRate) {
       $this.clearCustomErrors();
       $scope.errorResponse = [];
