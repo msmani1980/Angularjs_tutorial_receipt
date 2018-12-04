@@ -257,10 +257,10 @@
         </td>
         <!-- Switch for taxRateValue -->
         <td class="animate-switch col-xs-1" ng-switch-when="read">{{ taxRate.taxRateValue }}<span ng-show="isTaxRateTypePercentage(taxRate)"> %</span></td>
-        <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="edit" ng-class="{ 'has-error' : !taxRate.taxRateValue && displayError, 'has-success' : taxRate.taxRateValue }">
+        <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="edit" ng-class="{ 'has-error' : isTaxRateValueInvalid(taxRate)  && displayError, 'has-success' : taxRate.taxRateValue }">
           <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate" ng-disabled="isDisabled(taxRate)">
         </td>
-        <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="create" ng-class="{ 'has-error' : !taxRate.taxRateValue && displayError, 'has-success' : taxRate.taxRateValue }">
+        <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="create" ng-class="{ 'has-error' : isTaxRateValueInvalid(taxRate)  && displayError, 'has-success' : taxRate.taxRateValue }">
           <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate">
         </td>
         <!-- Switch for startDate -->
