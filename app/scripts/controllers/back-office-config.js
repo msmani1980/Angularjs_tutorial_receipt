@@ -31,6 +31,10 @@ angular.module('ts5App')
       {
         name: 'Reconcile Configuration',
         title: 'Reconcile Configuration'
+      },
+      {
+        name: 'User Configuration',
+        title: 'User Configuration'
       }
     ];
 
@@ -101,6 +105,10 @@ angular.module('ts5App')
       $scope.resetValues();
 
       $scope.selectFeatureHelper(feature);
+
+      if ($scope.selectedFeature && $scope.selectedFeature.name === 'User Configuration') {
+        $scope.configOptions = angular.copy($scope.configOptionDefinition.userConfigOptions);
+      }
 
       var dependencyPromises = $this.makeSelectFeatureDependencyPromises();
       $q.all(dependencyPromises).then($this.setDependencies, $this.errorHandler);
