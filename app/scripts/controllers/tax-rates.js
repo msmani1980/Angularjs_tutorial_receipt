@@ -569,7 +569,7 @@ angular.module('ts5App')
       };
 
       if (!$scope.isTaxRateTypePercentage(taxRate)) {
-        payload.companyCurrencyId = $this.validateNewData('companyCurrencyId', !taxRate.currency ? null : taxRate.currency.id, taxRate)
+        payload.companyCurrencyId = $this.validateNewData('companyCurrencyId', !taxRate.currency ? null : taxRate.currency.id, taxRate);
       }
 
       if ($scope.displayError !== true) {
