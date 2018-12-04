@@ -45,7 +45,7 @@
       <div class="row">
         <div class="col-xs-12 col-sm-6">
           <fieldset ng-disabled="isDisabled()" >
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(form, 'globalDiscountType')">
               <label>Global Discount Type *</label>
               <select required name="globalDiscountType" class="form-control"
                       ng-options="globalDiscountType.id as globalDiscountType.globalDiscountTypeName for globalDiscountType in globalDiscountTypesList"
@@ -53,11 +53,11 @@
                 <option value="">Please select</option>
               </select>
             </div>
-            <div class="form-group" ng-show="formData.globalDiscountTypeId">
+            <div class="form-group" ng-if="formData.globalDiscountTypeId">
               <label class="control-label">Global Discount Description</label>
               <div>{{ getGlobalDiscountDescriptionById(formData.globalDiscountTypeId) }}</div>
             </div>
-            <div class="form-group" ng-show="formData.globalDiscountTypeId === 1">
+            <div class="form-group" ng-if="formData.globalDiscountTypeId === 1" ng-class="validation.fieldCssClass(form, 'barCode')">
               <label class="control-label">Bar Code</label>
               <input class="form-control" ng-model="formData.barCode" name="barCode" ng-pattern="regexp.word" ng-required="formData.globalDiscountTypeId === '1'" />
             </div>
@@ -65,16 +65,16 @@
         </div>
         <div class="col-xs-12 col-sm-6">
           <fieldset>
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(form, 'discountName')">
               <label class="control-label">Discount Name *</label>
-              <input class="form-control" ng-model="formData.discountName" name="discountName" maxlength="50" ng-disabled="isDisabled()" />
+              <input class="form-control" ng-model="formData.discountName" name="discountName" maxlength="50" ng-disabled="isDisabled()" required />
             </div>
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(form, 'description')">
               <label class="control-label">Description *</label>
               <textarea class="form-control" ng-model="formData.description" name="description" ng-pattern="regexp.sentence" required ng-disabled="isDisabled()" ></textarea>
             </div>
             <div class="row">
-              <div class="col-xs-12 col-sm-6">
+              <div class="col-xs-12 col-sm-6" ng-class="validation.calendarCssClass(form, formData.startDate)">
                 <fieldset>
                   <date-picker-field ng-if="calendarsReady"
                                      disable="isDisabled()"
@@ -87,7 +87,7 @@
                   </date-picker-field>
                 </fieldset>
               </div>
-              <div class="col-xs-12 col-sm-6">
+              <div class="col-xs-12 col-sm-6" ng-class="validation.calendarCssClass(form, formData.endDate)">
                 <fieldset>
                   <date-picker-field ng-if="calendarsReady"
                                      disable="isDisabledForEndDate()"
@@ -114,7 +114,7 @@
 
       <div class="row">
         <div class="col-xs-12 col-sm-6">
-          <div class="form-group">
+          <div class="form-group" ng-class="validation.fieldCssClass(form, 'discountType')">
             <label>Discount Type *</label>
             <select required name="discountType" class="form-control"
                     ng-options="discountType.id as discountType.name for discountType in discountTypesList"
@@ -128,14 +128,14 @@
           <fieldset ng-disabled="isDisabled()" >
             <div class="row">
               <div class="col-xs-12 col-sm-6">
-                <div class="form-group" ng-show="formData.discountTypeId === 1">
+                <div class="form-group" ng-if="formData.discountTypeId === 1" ng-class="validation.fieldCssClass(form, 'percentageDiscountValue')">
                   <label class="control-label">Percentage Discount Value *</label>
                   <input class="form-control" ng-model="formData.percentageDiscountValue" name="percentageDiscountValue" placeholder="10%" ng-pattern="regexp.percentage" ng-required="formData.discountTypeId === 1" />
                 </div>
-                <div class="form-group" ng-show="formData.discountTypeId === 2">
+                <div class="form-group" ng-if="formData.discountTypeId === 2">
                   <label>Fixed Discount Value</label>
                   <div class="form-group" ng-repeat="currency in companyCurrencyGlobalsList">
-                    <div class="input-group" >
+                    <div class="input-group" ng-class="validation.fieldCssClass(form, currency.code + 'AmountDiscountValue')">
                       <div class="input-group-addon">
                         {{ currency.code }} *
                       </div>
@@ -174,7 +174,7 @@
       </div>
       <div class="row" ng-if="formData.limitByShopDiscountType == 1">
         <div class="col-xs-12 col-sm-6">
-          <div class="form-group">
+          <div class="form-group" ng-class="validation.fieldCssClass(form, 'itemQtyLimitPerShop')">
             <label class="control-label">Item Qty Limit Per Shop</label>
             <input class="form-control" ng-model="formData.itemQtyLimitPerShop" name="itemQtyLimitPerShop" ng-pattern="regexp.number" ng-disabled="isDisabled()" />
           </div>
@@ -184,12 +184,12 @@
           </div>
         </div>
         <div class="col-xs-12 col-sm-6">
-          <fieldset ng-disabled="isDisabled()" ng-show="formData.isAmountLimitPerShop">
+          <fieldset ng-disabled="isDisabled()" ng-if="formData.isAmountLimitPerShop">
             <div class="row">
               <div class="col-xs-12 col-sm-6">
                 <label>Amount Limit Per Shop Value</label>
                 <div class="form-group" ng-repeat="currency in companyCurrencyGlobalsList">
-                  <div class="input-group" >
+                  <div class="input-group" ng-class="validation.fieldCssClass(form, currency.code + 'AmountLimitPerShopValue')">
                     <div class="input-group-addon">
                       {{ currency.code }} *
                     </div>
@@ -203,7 +203,7 @@
       </div>
       <div class="row" ng-if="formData.limitByShopDiscountType == 2">
         <div class="col-xs-12 col-sm-6">
-          <div class="form-group">
+          <div class="form-group" ng-class="validation.fieldCssClass(form, 'discountQtyLimitPerShop')">
             <label class="control-label">Discount Qty Limit Per Shop</label>
             <input class="form-control" ng-model="formData.discountQtyLimitPerShop" name="discountQtyLimitPerShop" ng-pattern="regexp.number" ng-disabled="isDisabled()" />
           </div>
@@ -213,12 +213,12 @@
           </div>
         </div>
         <div class="col-xs-12 col-sm-6">
-          <fieldset ng-disabled="isDisabled()" ng-show="formData.isDiscountAmountLimitPerShop">
+          <fieldset ng-disabled="isDisabled()" ng-if="formData.isDiscountAmountLimitPerShop">
             <div class="row">
               <div class="col-xs-12 col-sm-6">
                 <label>Discount Amount Limit Per Shop Value</label>
                 <div class="form-group" ng-repeat="currency in companyCurrencyGlobalsList">
-                  <div class="input-group" >
+                  <div class="input-group" ng-class="validation.fieldCssClass(form, currency.code + 'DiscountAmountLimitPerShopValue')">
                     <div class="input-group-addon">
                       {{ currency.code }} *
                     </div>
@@ -249,7 +249,7 @@
       </div>
       <div class="row" ng-if="formData.limitByTransactionDiscountType == 1">
         <div class="col-xs-12 col-sm-6">
-          <div class="form-group">
+          <div class="form-group" ng-class="validation.fieldCssClass(form, 'itemQtyLimitPerTransaction')">
             <label class="control-label">Item Qty Limit Per Transaction</label>
             <input class="form-control" ng-model="formData.itemQtyLimitPerTransaction" name="itemQtyLimitPerTransaction" ng-pattern="regexp.number" ng-disabled="isDisabled()" />
           </div>
@@ -259,12 +259,12 @@
           </div>
         </div>
         <div class="col-xs-12 col-sm-6">
-          <fieldset ng-disabled="isDisabled()" ng-show="formData.isAmountLimitPerTransaction">
+          <fieldset ng-disabled="isDisabled()" ng-if="formData.isAmountLimitPerTransaction">
             <div class="row">
               <div class="col-xs-12 col-sm-6">
                 <label>Amount Limit Per Transaction</label>
                 <div class="form-group" ng-repeat="currency in companyCurrencyGlobalsList">
-                  <div class="input-group" >
+                  <div class="input-group" ng-class="validation.fieldCssClass(form, currency.code + 'AmountLimitPerTransactionValue')">
                     <div class="input-group-addon">
                       {{ currency.code }} *
                     </div>
@@ -288,12 +288,12 @@
           </div>
         </div>
         <div class="col-xs-12 col-sm-6">
-          <fieldset ng-disabled="isDisabled()" ng-show="formData.isDiscountAmountLimitPerTransaction">
+          <fieldset ng-disabled="isDisabled()" ng-if="formData.isDiscountAmountLimitPerTransaction">
             <div class="row">
               <div class="col-xs-12 col-sm-6">
                 <label>Discount Amount Limit Per Transaction Value</label>
                 <div class="form-group" ng-repeat="currency in companyCurrencyGlobalsList">
-                  <div class="input-group" >
+                  <div class="input-group"  ng-class="validation.fieldCssClass(form, currency.code + 'DiscountAmountLimitPerTransactionValue')">
                     <div class="input-group-addon">
                       {{ currency.code }} *
                     </div>
@@ -327,7 +327,7 @@
           <fieldset ng-disabled="isDisabled()">
             <div class="row">
               <div class="col-xs-12 col-sm-6">
-                <div class="form-group">
+                <div class="form-group" ng-class="validation.fieldCssClass(form, 'itemQtyLimitPerSeat')">
                   <label class="control-label">Item Qty Limit Per Seat</label>
                   <input class="form-control" ng-model="formData.itemQtyLimitPerSeat" name="itemQtyLimitPerSeat" ng-pattern="regexp.number" />
                 </div>
@@ -341,7 +341,7 @@
           <fieldset ng-disabled="isDisabled()">
             <div class="row">
               <div class="col-xs-12 col-sm-6">
-                <div class="form-group">
+                <div class="form-group" ng-class="validation.fieldCssClass(form, 'discountQtyLimitPerSeat')">
                   <label class="control-label">Discount Qty Limit Per Seat</label>
                   <input class="form-control" ng-model="formData.discountQtyLimitPerSeat" name="discountQtyLimitPerSeat" ng-pattern="regexp.number" />
                 </div>
@@ -364,9 +364,9 @@
       </div>
       <div class="row" ng-if="showAddRestrictionSection()">
         <div class="col-xs-12 col-sm-12">
-          <div class="form-group">
+          <div class="form-group" ng-class="validation.fieldCssClass(form, 'restrictedCategories')">
             <label>Item Categories *</label>
-            <ui-select multiple ng-model="formData.restrictedCategories" name="restrictedCategories" theme="bootstrap" ng-disabled="isDisabled()">
+            <ui-select multiple ng-model="formData.restrictedCategories" name="restrictedCategories" theme="bootstrap" ng-disabled="isDisabled()" required="showAddRestrictionSection()">
               <ui-select-match placeholder="Select categories...">{{$item.name}}</ui-select-match>
               <ui-select-choices repeat="category in salesCategoriesList | filter: $select.search">
                 <div ng-bind-html="category.name | highlight: $select.search"></div>
@@ -375,7 +375,7 @@
           </div>
         </div>
       </div>
-      <div class="row" ng-show="showAddRestrictionSection()" ng-repeat="restrictedItem in formData.restrictedItems track by $index">
+      <div class="row" ng-if="showAddRestrictionSection()" ng-repeat="restrictedItem in formData.restrictedItems track by $index">
         <div class="col-xs-12 col-sm-6">
           <div class="form-group">
             <label>Item Category</label>
@@ -388,7 +388,7 @@
           </div>
         </div>
         <div class="col-xs-12 col-sm-5">
-          <div class="form-group">
+          <div class="form-group" ng-class="validation.fieldCssClass(form, 'restrictedItem-' + ($index + 1))">
             <label>Retail Item *</label>
             <select name="restrictedItem-{{$index + 1}}" class="form-control"
                     ng-options="retailItem.id as retailItem.itemName for retailItem in filteredRetailItemsList[restrictedItem.itemCategory]"
@@ -407,10 +407,10 @@
           </div>
         </div>
       </div>
-      <div class="row" ng-show="showAddRestrictionSection()" ng-hide="isDisabled()">
+      <div class="row" ng-if="showAddRestrictionSection()" ng-hide="isDisabled()">
         <div class="col-xs-8 col-md-9"></div>
         <div class="col-xs-4 col-md-3 text-right">
-          <div class="input-group" ng-show="showAddRestrictionSection()">
+          <div class="input-group" ng-if="showAddRestrictionSection()">
             <input type="number" min="1" max="100" class="form-control" ng-model="addRestrictedItemsNumber">
             <span class="input-group-btn">
             <button class="btn btn-primary" type="button" ng-click="addRestrictedItems()"><i class="fa fa-plus"></i> Add Items</button>
@@ -437,6 +437,7 @@
     </div>
   </div>
 </div>
+
 <!-- /Container -->
 <form-success-modal list-path="discounts" create-path="discounts/create"></form-success-modal>
 <form-update-modal list-path="discounts"></form-update-modal>

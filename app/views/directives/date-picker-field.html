@@ -1,7 +1,7 @@
 <fieldset ng-disabled="disable">
-  <div class="form-group" ng-class="{ 'has-error' : form[name].$touched && !form[name].$viewValue.length || displayError && !form[name].$valid , 'has-success' : form[name].$touched && form[name].$viewValue.length }">
+  <div class="form-group" >
     <label ng-show="label">{{label}} <span class="required" ng-show="required">*</span></label>
-    <p class="input-group">
+    <p class="input-group" >
       <span class="input-group-btn">
         <span class="btn btn-default disabled"><i class="glyphicon glyphicon-calendar"></i></span>
       </span>

@@ -8,9 +8,10 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ScheduleCtrl', function ($scope, scheduleFactory, $location, $routeParams, messageService, unitsService, lodash, $q, dateUtility) {
+  .controller('ScheduleCtrl', function ($scope, scheduleFactory, $location, $routeParams, messageService, unitsService, lodash, $q, dateUtility, formValidationUtility) {
     var companyId;
     var $this = this;
+    $scope.validation = formValidationUtility;
 
     $scope.viewName = 'Schedule';
     $scope.readOnly = false;
@@ -229,6 +230,8 @@ angular.module('ts5App')
     };
 
     $scope.formSave = function() {
+      $scope.scheduleDataForm.$setSubmitted(true);
+
       if ($this.validateForm()) {
         var saveFunctionName = ($routeParams.action + 'Schedule');
         if ($this[saveFunctionName]) {
