@@ -645,12 +645,6 @@ angular.module('ts5App')
       return (value === undefined || value === null || value.length === 0 || value === 'Invalid date');
     };
 
-    $scope.isTaxRateValueInvalid = function (taxRate) {
-      return !taxRate.taxRateValue ||
-        $this.isPercentageTaxRateFormatInvalid('taxRateValue', taxRate.taxRateValue, taxRate) ||
-        $this.isAmountTaxRateFormatInvalid('taxRateValue', taxRate.taxRateValue, taxRate)
-    };
-
     this.isPercentageTaxRateFormatInvalid = function (field, value, taxRate) {
       return $scope.isTaxRateTypePercentage(taxRate) && field === 'taxRateValue' && value && !value.match(/^\$?\s?[0-9\,]+(\.\d{0,4})?$/);
     };
@@ -928,6 +922,12 @@ angular.module('ts5App')
 
     $scope.isTaxRateTypePercentage = function (taxRate) {
       return angular.isDefined(taxRate.taxRateType) && taxRate.taxRateType.taxRateType === 'Percentage';
+    };
+
+    $scope.isTaxRateValueInvalid = function (taxRate) {
+      return !taxRate.taxRateValue ||
+        $this.isPercentageTaxRateFormatInvalid('taxRateValue', taxRate.taxRateValue, taxRate) ||
+        $this.isAmountTaxRateFormatInvalid('taxRateValue', taxRate.taxRateValue, taxRate)
     };
 
     $scope.cancelNewTaxRate = function (taxRate) {
