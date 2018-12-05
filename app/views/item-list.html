@@ -140,8 +140,8 @@
       </tr>
       </thead>
 
-      <tbody>
-      <tr class="master-row" ng-repeat="item in itemsList | orderBy: tableSortTitle" id="item-{{ item.itemMasterId }} ">
+      <tbody ng-repeat="item in itemsList | orderBy: tableSortTitle" id="item-{{ item.itemMasterId }}">
+      <tr class="master-row">
         <td>
             <span class="fa fa-plus-square-o" ng-show="!isOpen(item) && hasSubVersions(item)"
                   ng-click="toggleVersionVisibility(item)"></span>
@@ -150,8 +150,8 @@
         <td>{{ item.versions[0].itemCode }}</td>
         <td>{{ item.versions[0].itemName }}</td>
         <td>{{ item.versions[0].onBoardName }}</td>
-        <td>{{ item.versions[0].eposDisplaySortOrder }}</td>
-        <td ng-show="isOpen(item)" colspan="8"></td>
+        <td ng-show="isOpen(item)" colspan="9"></td>
+        <td ng-hide="isOpen(item)">{{ item.versions[0].eposDisplaySortOrder }}</td>
         <td ng-hide="isOpen(item)">{{ item.versions[0].stockOwnerCode }}</td>
         <td ng-hide="isOpen(item)">{{ item.versions[0].itemTypeName }}</td>
         <td ng-hide="isOpen(item)">{{ item.versions[0].categoryName }}</td>
@@ -179,6 +179,7 @@
           ng-class="subversion-row"
           ng-show="isOpen(item)">
         <td colspan="4"></td>
+        <td>{{ version.eposDisplaySortOrder }}</td>
         <td>{{ version.stockOwnerCode }}</td>
         <td>{{ version.itemTypeName }}</td>
         <td>{{ version.categoryName }}</td>
