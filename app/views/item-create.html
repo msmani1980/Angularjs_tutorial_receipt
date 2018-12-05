@@ -125,7 +125,7 @@
 
               <div class="form-group"  ng-class="{ 'has-error' : form.eposDisplaySortOrder.$invalid && displayError , 'has-success' : formData.eposDisplaySortOrder }">
                   <label>ePos Display Sort Order</label>&nbsp;
-                  <input type="text"  class="form-control"  ng-model="formData.eposDisplaySortOrder" name="eposDisplaySortOrder" ng-pattern="regexp.positiveNumber" max-length="2" ng-disabled="isDisabledEndDateForm()">
+                  <input type="text"  class="form-control"  ng-model="formData.eposDisplaySortOrder" name="eposDisplaySortOrder" ng-pattern="regexp.greaterThanZero" max-length="2" ng-disabled="isDisabledEndDateForm()">
                   </input>
               </div>    
 
