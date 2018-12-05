@@ -235,7 +235,7 @@
         <td class="animate-switch col-xs-1" ng-switch-when="read">
            {{ taxRate.currency.code }}
         </td>
-        <td class="animate-switch tax-rates-ui-select col-xs-1" ng-switch-when="edit" ng-class="{ 'has-error' : !taxRate.currency && displayError, 'has-success' : taxRate.currency }">
+        <td class="animate-switch tax-rates-ui-select col-xs-1" ng-switch-when="edit" ng-class="{ 'has-error' : (!taxRate.currency && displayError && !isTaxRateTypePercentage(taxRate)), 'has-success' : taxRate.currency }">
           <ui-select ng-model="taxRate.currency" theme="bootstrap" name="currencyCode" ng-disabled="isTaxRateCurrencyCodeDisabled(taxRate)">
             <ui-select-match placeholder="Currency">
               {{ $select.selected.code }}
@@ -257,23 +257,23 @@
         </td>
         <!-- Switch for taxRateValue -->
         <td class="animate-switch col-xs-1" ng-switch-when="read">{{ taxRate.taxRateValue }}<span ng-show="isTaxRateTypePercentage(taxRate)"> %</span></td>
-        <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="edit" ng-class="{ 'has-error' : !taxRate.taxRateValue && displayError, 'has-success' : taxRate.taxRateValue }">
+        <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="edit" ng-class="{ 'has-error' : isTaxRateValueInvalid(taxRate)  && displayError, 'has-success' : !isTaxRateValueInvalid(taxRate) }">
           <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate" ng-disabled="isDisabled(taxRate)">
         </td>
-        <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="create" ng-class="{ 'has-error' : !taxRate.taxRateValue && displayError, 'has-success' : taxRate.taxRateValue }">
+        <td class="animate-switch tax-rates-input col-xs-1" ng-switch-when="create" ng-class="{ 'has-error' : isTaxRateValueInvalid(taxRate)  && displayError, 'has-success' : !isTaxRateValueInvalid(taxRate) }">
           <input ng-model="taxRate.taxRateValue" type="text" name="taxRateValue" class="form-control" placeholder="Tax Rate">
         </td>
         <!-- Switch for startDate -->
         <td class="animate-switch col-xs-1" ng-switch-when="read">{{ taxRate.startDate }}</td>
-        <td class="animate-switch tax-rates-dates col-xs-1" ng-switch-when="edit" ng-class="{ 'has-error' : !taxRate.startDate && displayError, 'has-success' : taxRate.startDate }">
+        <td class="animate-switch tax-rates-dates col-xs-1" ng-switch-when="edit" ng-class="{ 'has-error' : isDateValueInvalid(taxRate.startDate, taxRate) && displayError, 'has-success' : !isDateValueInvalid(taxRate.startDate, taxRate) }">
           <date-picker-field disable-past="true" ng-model="taxRate.startDate" disable="isDisabled(taxRate)" min-date="determineMinDate(taxRate.startDate)" orientation="determineDatePickerOrientation(taxRate)"></date-picker-field>
         </td>
-        <td class="animate-switch tax-rates-dates col-xs-1" ng-switch-when="create" ng-class="{ 'has-error' : !taxRate.startDate && displayError, 'has-success' : taxRate.startDate }">
+        <td class="animate-switch tax-rates-dates col-xs-1" ng-switch-when="create" ng-class="{ 'has-error' : isDateValueInvalid(taxRate.startDate, taxRate) && displayError, 'has-success' : !isDateValueInvalid(taxRate.startDate, taxRate) }">
           <date-picker-field disable-past="true" ng-model="taxRate.startDate" min-date="determineMinDate()"></date-picker-field>
         </td>
         <!-- Switch for endDate -->
         <td class="animate-switch col-xs-1" style="position:relative !important" ng-switch-when="read">{{ taxRate.endDate }}</td>
-        <td class="animate-switch tax-rates-dates col-xs-1" style="position:relative !important" ng-switch-when="edit" ng-class="{ 'has-error' : !taxRate.endDate && displayError, 'has-success' : taxRate.endDate }">
+        <td class="animate-switch tax-rates-dates col-xs-1" style="position:relative !important" ng-switch-when="edit" ng-class="{ 'has-error' : isDateValueInvalid(taxRate.endDate, taxRate) && displayError, 'has-success' : !isDateValueInvalid(taxRate.endDate, taxRate) }">
           <date-picker-field
            min-date="minDate"
            custom-effective="true"
@@ -282,7 +282,7 @@
            ng-model="taxRate.endDate"
            orientation="determineDatePickerOrientation(taxRate)" ></date-picker-field>
         </td>
-        <td class="animate-switch tax-rates-dates col-xs-1" style="position:relative !important" ng-switch-when="create" ng-class="{ 'has-error' : !taxRate.endDate && displayError, 'has-success' : taxRate.endDate }">
+        <td class="animate-switch tax-rates-dates col-xs-1" style="position:relative !important" ng-switch-when="create" ng-class="{ 'has-error' : isDateValueInvalid(taxRate.endDate, taxRate) && displayError, 'has-success' : !isDateValueInvalid(taxRate.endDate, taxRate) }">
           <date-picker-field
            min-date="minDate"
            custom-effective="true"
