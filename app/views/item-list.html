@@ -120,8 +120,15 @@
       <thead>
       <tr>
         <th></th>
-        <th>Code</th>
-        <th>Name</th>
+        <th ng-click="updateOrderBy('versions[0].itemCode')">
+        <span ng-class="getArrowIconAndClassForSorting('versions[0].itemCode')"></span>
+          Code
+        </th>
+        
+        <th ng-click="updateOrderBy('versions[0].itemName')">
+        <span ng-class="getArrowIconAndClassForSorting('versions[0].itemName')"></span>
+          Name
+        </th>
         <th>POS Display Name</th>
         <th ng-click="updateOrderBy('versions[0].eposDisplaySortOrder')">
           <span ng-class="getArrowIconAndClassForSorting('versions[0].eposDisplaySortOrder')"></span>
