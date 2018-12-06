@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('DiscountCreateCtrl', function($scope, $q, $location, $routeParams, dateUtility, discountFactory,
-    recordsService, currencyFactory, companiesFactory, itemsFactory, formValidationUtility) {
+    recordsService, currencyFactory, companiesFactory, itemsFactory, formValidationUtility, lodash) {
 
     var $this = this;
     $scope.validation = formValidationUtility;
@@ -119,7 +119,9 @@ angular.module('ts5App')
     };
 
     this.setDiscountTypesList = function(data) {
-      $scope.discountTypesList = data;
+      $scope.discountTypesList = lodash.filter(data, function (type) {
+        return type.id !== 3;
+      });
     };
 
     this.setCompanyCurrencyGlobals = function(data) {
