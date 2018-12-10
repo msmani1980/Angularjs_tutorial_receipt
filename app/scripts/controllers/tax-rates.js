@@ -504,6 +504,7 @@ angular.module('ts5App')
 
     this.cancelTaxRateEdit = function (taxRate) {
       if (angular.isDefined(taxRate)) {
+        $this.clearErrors();
         taxRate.action = 'read';
         delete taxRate.readOnly;
         $this.resetTaxRateEdit(taxRate);
@@ -935,7 +936,7 @@ angular.module('ts5App')
     };
 
     $scope.cancelNewTaxRate = function (taxRate) {
-      $this.clearCustomErrors();
+      $this.clearErrors();
       $scope.errorResponse = [];
       taxRate.deleted = true;
       taxRate.action = 'deleted';
