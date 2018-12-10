@@ -586,6 +586,8 @@ angular.module('ts5App')
         payload.companyCurrencyId = $this.validateNewData('companyCurrencyId', !taxRate.currency ? null : taxRate.currency.id, taxRate);
       }
 
+      $this.validateStartAndEndDates(taxRate);
+
       if ($scope.displayError !== true) {
         $this.makeEditPromises(payload);
       }
@@ -729,7 +731,20 @@ angular.module('ts5App')
         payload.companyCurrencyId = $this.validateNewData('companyCurrencyId', companyCurrencyId, taxRate);
       }
 
+      $this.validateStartAndEndDates(taxRate);
+
       return payload;
+    };
+
+    this.validateStartAndEndDates = function(taxRate) {
+      if ($scope.isDateValueInvalid(taxRate.startDate, taxRate)) {
+        $scope.errorCustom.push({
+          field: 'EndDate',
+          value: ' To date should be later than or equal to From date.'
+        });
+        
+        $scope.displayError = true;
+      }
     };
 
     this.clearErrors = function () {
