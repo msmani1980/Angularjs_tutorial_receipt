@@ -245,7 +245,7 @@
             </ui-select-choices>
           </ui-select>
         </td>
-        <td class="animate-switch tax-rates-ui-select col-xs-1" ng-switch-when="create" ng-class="{ 'has-error' : !taxRate.currency && displayError, 'has-success' : taxRate.currency }">
+        <td class="animate-switch tax-rates-ui-select col-xs-1" ng-switch-when="create" ng-class="{ 'has-error' : (!taxRate.currency && displayError && !isTaxRateTypePercentage(taxRate)), 'has-success' : taxRate.currency }">
           <ui-select ng-model="taxRate.currency" theme="bootstrap" name="currencyCode" ng-disabled="isTaxRateTypePercentage(taxRate)">
             <ui-select-match placeholder="Currency">
               {{ $select.selected.code }}
