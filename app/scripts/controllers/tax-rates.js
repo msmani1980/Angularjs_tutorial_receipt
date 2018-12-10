@@ -698,6 +698,7 @@ angular.module('ts5App')
 
     this.createNewTaxRate = function () {
       var length = parseInt($scope.companyTaxRatesList.length);
+      
       var payload = {
         action: 'create',
         position: 'up',
@@ -711,6 +712,7 @@ angular.module('ts5App')
         companyCurrencyId: undefined,
         created: true
       };
+
       $scope.companyTaxRatesList.push(payload);
     };
 
