@@ -567,7 +567,7 @@ angular.module('ts5App')
         startDate: $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate),
         endDate: $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate),
         companyTaxTypeId: $this.validateNewData('companyTaxTypeId', taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId, taxRate),
-        companyTaxRateStations: $this.validateNewData('companyTaxTypeId', $this.createStationsPayload(taxRate), taxRate)
+        companyTaxRateStations: $this.validateNewData('companyTaxRateStations', $this.createStationsPayload(taxRate), taxRate)
       };
 
       if (!$scope.isTaxRateTypePercentage(taxRate)) {
