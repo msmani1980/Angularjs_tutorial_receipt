@@ -25,6 +25,7 @@ angular.module('ts5App')
       $scope.masterTaxRates = [];
       $scope.taxRateToRemove = [];
       $scope.taxRateToCreate = [];
+      $scope.errorCustom = [];
       $scope.search = {};
       $scope.dateRange = {
         startDate: '',
@@ -428,6 +429,17 @@ angular.module('ts5App')
         }
       }
 
+      if ($scope.search.taxRate  && !$scope.search.taxRate.match(/^\$?\s?[0-9\,]+(\.\d{0,4})?$/)) {
+        $scope.errorCustom.push({
+          field: 'Rate',
+          value: ' field contains invalid characters'
+        });
+
+        $scope.displayError = true;
+
+        return;
+      }
+
       var message = 'Searching Tax Rates...';
       if (clear) {
         message = 'Clearing Search...';
@@ -504,6 +516,7 @@ angular.module('ts5App')
 
     this.cancelTaxRateEdit = function (taxRate) {
       if (angular.isDefined(taxRate)) {
+        $this.clearErrors();
         taxRate.action = 'read';
         delete taxRate.readOnly;
         $this.resetTaxRateEdit(taxRate);
@@ -566,12 +579,14 @@ angular.module('ts5App')
         startDate: $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate),
         endDate: $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate),
         companyTaxTypeId: $this.validateNewData('companyTaxTypeId', taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId, taxRate),
-        companyTaxRateStations: $this.validateNewData('companyTaxTypeId', $this.createStationsPayload(taxRate), taxRate)
+        companyTaxRateStations: $this.validateNewData('companyTaxRateStations', $this.createStationsPayload(taxRate), taxRate)
       };
 
       if (!$scope.isTaxRateTypePercentage(taxRate)) {
         payload.companyCurrencyId = $this.validateNewData('companyCurrencyId', !taxRate.currency ? null : taxRate.currency.id, taxRate);
       }
+
+      $this.validateStartAndEndDates(taxRate);
 
       if ($scope.displayError !== true) {
         $this.makeEditPromises(payload);
@@ -683,6 +698,7 @@ angular.module('ts5App')
 
     this.createNewTaxRate = function () {
       var length = parseInt($scope.companyTaxRatesList.length);
+      
       var payload = {
         action: 'create',
         position: 'up',
@@ -696,6 +712,7 @@ angular.module('ts5App')
         companyCurrencyId: undefined,
         created: true
       };
+
       $scope.companyTaxRatesList.push(payload);
     };
 
@@ -716,7 +733,20 @@ angular.module('ts5App')
         payload.companyCurrencyId = $this.validateNewData('companyCurrencyId', companyCurrencyId, taxRate);
       }
 
+      $this.validateStartAndEndDates(taxRate);
+
       return payload;
+    };
+
+    this.validateStartAndEndDates = function(taxRate) {
+      if ($scope.isDateValueInvalid(taxRate.startDate, taxRate)) {
+        $scope.errorCustom.push({
+          field: 'EndDate',
+          value: ' To date should be later than or equal to From date.'
+        });
+        
+        $scope.displayError = true;
+      }
     };
 
     this.clearErrors = function () {
@@ -935,7 +965,7 @@ angular.module('ts5App')
     };
 
     $scope.cancelNewTaxRate = function (taxRate) {
-      $this.clearCustomErrors();
+      $this.clearErrors();
       $scope.errorResponse = [];
       taxRate.deleted = true;
       taxRate.action = 'deleted';
