@@ -25,6 +25,7 @@ angular.module('ts5App')
       $scope.masterTaxRates = [];
       $scope.taxRateToRemove = [];
       $scope.taxRateToCreate = [];
+      $scope.errorCustom = [];
       $scope.search = {};
       $scope.dateRange = {
         startDate: '',
@@ -426,6 +427,17 @@ angular.module('ts5App')
 
           return;
         }
+      }
+
+      if ($scope.search.taxRate  && !$scope.search.taxRate.match(/^\$?\s?[0-9\,]+(\.\d{0,4})?$/)) {
+        $scope.errorCustom.push({
+          field: 'Rate',
+          value: ' field contains invalid characters'
+        });
+
+        $scope.displayError = true;
+
+        return;
       }
 
       var message = 'Searching Tax Rates...';
