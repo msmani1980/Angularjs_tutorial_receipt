@@ -409,8 +409,7 @@ angular.module('ts5App')
     };
 
     this.makeSearchPromises = function (clear) {
-      $scope.displayError = false;
-      $scope.errorResponse = [];
+      $this.clearErrors();
 
       if ($scope.dateRange.startDate && $scope.dateRange.endDate) {
         if (dateUtility.diff($scope.dateRange.startDate, $scope.dateRange.endDate) < 0) {
@@ -698,7 +697,7 @@ angular.module('ts5App')
 
     this.createNewTaxRate = function () {
       var length = parseInt($scope.companyTaxRatesList.length);
-      
+
       var payload = {
         action: 'create',
         position: 'up',
@@ -849,6 +848,8 @@ angular.module('ts5App')
     };
 
     $scope.clearSearchFilters = function () {
+      $this.clearErrors();
+
       if (angular.isDefined($scope.search)) {
         $scope.search = {};
         $scope.dateRange = {
@@ -859,10 +860,6 @@ angular.module('ts5App')
       }
 
       $scope.companyTaxRatesList = [];
-    };
-
-    $scope.showClearButton = function () {
-      return ($this.isDateRangeSet() || $this.isSearchActive() || ($scope.companyTaxRatesList.length > 0));
     };
 
     $scope.searchRecords = function () {
