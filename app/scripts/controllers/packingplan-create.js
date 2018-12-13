@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PackingplanCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, packingplanFactory, messageService) {
+  .controller('PackingplanCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, packingplanFactory, messageService, lodash) {
   
   var $this = this;
   $scope.viewName = 'Packing Plan';
@@ -51,6 +51,14 @@ angular.module('ts5App')
 
   $scope.isDisabled = function() {
     return $scope.disablePastDate || $scope.readOnly;
+  };
+
+  $scope.isItemInactive = function(packingItem) {
+    if (packingItem) {
+      return !lodash.find($scope.itemMasterList, { id: packingItem.itemMasterId, hasActiveItemVersions: true});
+    }
+
+    return false;
   };
 
   this.validateForm = function() {
@@ -249,6 +257,7 @@ angular.module('ts5App')
             itemPayload.id = item.itemId;
             itemPayload.itemName = item.itemName;
             itemPayload.itemQty = item.itemQty;
+            itemPayload.hasActiveItemVersions = item.hasActiveItemVersions;
             totalItems.push(itemPayload);
           });
         });
