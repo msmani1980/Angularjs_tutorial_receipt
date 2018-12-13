@@ -1,266 +1,216 @@
 <div class="module-container">
-	<div class="edit-controls">
-	    <div class="row">
-	      <div class="col-xs-6">
-	        <h2 class="view-name">{{viewName}}</h2>
-	      </div>
+  <div class="edit-controls">
+    <div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
 
-	      <div class="col-xs-6 text-right">
-	        <a class="btn btn-default" ng-href="#/packingplan-list" class="btn" ng-show="readOnly">Back</a>
-	      </div>
-	    </div>
-	</div>
-	<error-dialog form-object="packingPlanDataForm" error-response="errorResponse" display="displayError"></error-dialog>
-	<!-- Data Input Section -->
-	<form name="packingPlanDataForm">
-		<div class="panel panel-default">
-		  <div class="panel-body">
-				<div class="row">
-				    <div class="col-xs-12 col-sm-4">
-				      <label for="name">Name*</label>
-					  <input ng-model="plan.name" type="text" name="Name" required class="form-control" id="packingPlanName" 
-					    placeholder="Packing Plan Name" ng-disabled="isDisabled()">
-					</div>
-					<div class="col-xs-12 col-sm-4">
-						<date-picker-field
-					    	form="packingPlanDataForm" 
-					        name="EffectiveStartDate"
-							label="Plan Effective Start Date"
-							disable="isDisabled()"
-							required="true"
-							disable-past="true"
-							ng-model="plan.startDate">
-						</date-picker-field> 			
-					</div>
-					<div class="col-xs-12 col-sm-4">
-					   <date-picker-field
-				        	form="packingPlanDataForm"
-				            name="EffectiveEndDate"
-							label="Plan Effective End Date"
-							disable="readOnly || shouldDisableEndDate"
-							ng-model="plan.endDate"
-							end-current-effective="!viewEditItem"
-							custom-effective="true"
-							custom-date="plan.endDate"
-							required="true">
-				        </date-picker-field>   
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12 col-sm-4">
-					  <div class="form-group">
-						<label for="Version">Version*</label>
-						<input ng-model="plan.version" type="text" name="Version" required class="form-control" id="packingPlanVersion" 
-								placeholder="Packing Plan Version" ng-disabled="isDisabled()">
-					  </div>
-					</div>
-					<div class="col-xs-12 col-sm-4">
-					  <div class="form-group">
-						<label for="Menu">Menu*</label>
-						<ui-select name="menus" required multiple ng-disabled="isDisabled()" ng-model="plan.packingPlanMenu" theme="bootstrap">
-					    	<ui-select-match>{{ $item.menuName }}
-					        </ui-select-match>
-					        <ui-select-choices repeat="menu in menuMasterList | unique: 'id' | filter:omitSelectedMenus | orderBy:'menuName'">
-					        	<div ng-bind-html="menu.menuName | highlight: $select.search "></div>
-					        </ui-select-choices>
-				        </ui-select>
-				      </div>
-					</div>
-					<div class="col-xs-12 col-sm-4">
-					</div>
-				</div>
-				<div class="row">
-				  <div class="col-xs-12 col-sm-4">
-				  <p>
-					<button type="button" ng-disabled="isDisabled()" class="btn btn-primary" ng-click="addPackingPlanObject()">
-           				<i class="fa fa-plus"></i> Add Packing Plan Object
-        			</button>
-        		  </p>	
-        		  </div>	
-        		</div>
-        		<!-- Packing Plan Object Section -->
-        		<div ng-repeat="(key, planObject) in plan.packingPlanObject track by $index">
-					<div class="row">
-						<div class="col-xs-12 col-sm-12">
-							<div class="panel panel-default">
-							   <div class="panel-heading">
-		    						<p class="panel-title">
-									<i class="fa fa-tags"></i> Packing Plan Object {{ key+1 }}
-									<span class="pull-right btn btn-danger btn-xs" ng-hide="isDisabled()" ng-click="removePackingPlanObject(key)">
+      <div class="col-xs-6 text-right">
+        <a class="btn btn-default" ng-href="#/packingplan-list" class="btn" ng-show="readOnly">Back</a>
+      </div>
+    </div>
+  </div>
+  <error-dialog form-object="packingPlanDataForm" error-response="errorResponse" display="displayError"></error-dialog>
+  <!-- Data Input Section -->
+  <form name="packingPlanDataForm">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <label for="packingPlanName">Name*</label>
+            <input ng-model="plan.name" type="text" name="Name" required class="form-control" id="packingPlanName" placeholder="Packing Plan Name" ng-disabled="isDisabled()">
+          </div>
+          <div class="col-xs-12 col-sm-4">
+            <date-picker-field form="packingPlanDataForm" name="EffectiveStartDate" label="Plan Effective Start Date" disable="isDisabled()" required="true" disable-past="true" ng-model="plan.startDate">
+            </date-picker-field>
+          </div>
+          <div class="col-xs-12 col-sm-4">
+            <date-picker-field form="packingPlanDataForm" name="EffectiveEndDate" label="Plan Effective End Date" disable="readOnly || shouldDisableEndDate" ng-model="plan.endDate" end-current-effective="!viewEditItem" custom-effective="true" custom-date="plan.endDate" required="true">
+            </date-picker-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="packingPlanVersion">Version*</label>
+              <input ng-model="plan.version" type="text" name="Version" required class="form-control" id="packingPlanVersion" placeholder="Packing Plan Version" ng-disabled="isDisabled()">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-4">
+            <div class="form-group">
+              <label for="packingPlanMenus">Menu*</label>
+              <ui-select name="menus" id="packingPlanMenus" required multiple ng-disabled="isDisabled()" ng-model="plan.packingPlanMenu" theme="bootstrap">
+                <ui-select-match>{{ $item.menuName }}
+                </ui-select-match>
+                <ui-select-choices repeat="menu in menuMasterList | unique: 'id' | filter:omitSelectedMenus | orderBy:'menuName'">
+                  <div ng-bind-html="menu.menuName | highlight: $select.search "></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-4">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 col-sm-4">
+            <p>
+              <button type="button" ng-disabled="isDisabled()" class="btn btn-primary" ng-click="addPackingPlanObject()">
+                <i class="fa fa-plus"></i> Add Packing Plan Object
+              </button>
+            </p>
+          </div>
+        </div>
+        <!-- Packing Plan Object Section -->
+        <div ng-repeat="(key, planObject) in plan.packingPlanObject track by $index">
+          <div class="row">
+            <div class="col-xs-12 col-sm-12">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <p class="panel-title">
+                    <i class="fa fa-tags"></i> Packing Plan Object {{ key+1 }}
+                    <span class="pull-right btn btn-danger btn-xs" ng-hide="isDisabled()" ng-click="removePackingPlanObject(key)">
         								<i class="fa fa-close"></i>
       								</span>
-									</p>
-		  					   </div>
-							   <div class="panel-body">
-								<div class="row">
-									<div class="col-xs-12 col-sm-12">
-									   <div class="row">
-								        <div class="col-xs-12 col-sm-4">
-								        	<label for="name">Name*</label>
-											<input ng-model="planObject.name" name="ObjectName" type="text" class="form-control" id="planObjectName" 
-												placeholder="Plan Object Name" ng-disabled="isDisabled()">	
-		         						</div>
-							            <div class="col-xs-12 col-sm-4">
-							            	<date-picker-field 
-									            	disable="isDisabled()" 
-									              	form="packingPlanDataForm" 
-									              	label="Object Effective Start Date"
-									              	name="ObjectEffectiveStartDate"
-									              	required="true" 
-									              	disable-past="true"
-									              	ng-model="planObject.startDate">
-									        </date-picker-field>
-		          						</div>
-		          						<div class="col-xs-12 col-sm-4">
-		          							<date-picker-field 
-									            	disable="readOnly || shouldDisableEndDate" 
-									              	form="packingPlanDataForm" 
-									              	label="Object Effective End Date"
-									                name="ObjectEffectiveEndDate" 
-									                custom-effective="true"
-									                end-current-effective="!viewEditItem"
-									                required="true"
-													custom-date="planObject.endDate"
-									                ng-model="planObject.endDate">
-									        </date-picker-field>
-										</div>
-							           </div>	
-									   <div class="row">
-									    <div class="col-xs-12 col-sm-4">
-									    	<div class="form-group">
-										    	<label for="name">Description</label>
-												<input ng-model="planObject.description" type="text" class="form-control" id="description" 
-														placeholder="Description" ng-disabled="isDisabled()">
-											</div>
-			         					</div>
-								        <div class="col-xs-12 col-sm-4">
-								        	<div class="form-group">
-										    	<label for="name">Position</label>
-												<input ng-model="planObject.position" type="text" class="form-control" id="position" 
-														placeholder="Position" ng-disabled="isDisabled()">
-											</div>		
-			          					</div>
-			          					<div class="col-xs-12 col-sm-4">
-			          						<div class="form-group">
-												<label for="name">Galley</label>
-												<input ng-model="planObject.galley" type="text" class="form-control" id="galley" 
-														placeholder="Galley" ng-disabled="isDisabled()">
-											</div>			
-										</div>
-							           </div>
-							           <div class="row">
-							            <div class="col-xs-12 col-sm-3">
-							            	<div class="form-group">
-									          	<label for="measurements">Measurements</label>
-									       		<input ng-model="planObject.length" ng-required="planObject.breadth || planObject.height || planObject.dimensionType" type="text" placeholder="Length" 
-									            	oninput="this.value=this.value.replace(/[^0-9.]/g,'');" ng-pattern="/^\d*\.?\d*$/" maxlength="10" name="Length" ng-disabled="isDisabled()" class="form-control">
-								            </div>	
-								        </div>
-								        <div class="col-xs-12 col-sm-3">
-								        	<div class="form-group">
-									        	<label class="invisible">Breadth</label>
-									            <input ng-model="planObject.breadth" ng-required="planObject.length || planObject.height || planObject.dimensionType" type="text" placeholder="Breadth" 
-									            	oninput="this.value=this.value.replace(/[^0-9.]/g,'');" ng-pattern="/^\d*\.?\d*$/" maxlength="10" name="Breadth" ng-disabled="isDisabled()" class="form-control">
-								            </div>	
-								        </div>
-								        <div class="col-xs-12 col-sm-3">
-								        	<div class="form-group">
-									        	<label class="invisible">Height</label>
-									            <input ng-model="planObject.height" ng-required="planObject.breadth || planObject.length || planObject.dimensionType" type="text" placeholder="Height" 
-									            	oninput="this.value=this.value.replace(/[^0-9.]/g,'');" ng-pattern="/^\d*\.?\d*$/" maxlength="10" name="Height" ng-disabled="isDisabled()" class="form-control">
-								            </div>	
-								        </div>
-								        <div class="col-xs-12 col-sm-3">
-								        	<div class="form-group">
-									        	<label class="invisible">Dimenstion</label>
-									            <select ng-model="planObject.dimensionType" ng-required="planObject.breadth || planObject.length || planObject.height"
-									                        name="Unit of Measurement" ng-disabled="isDisabled()" class="form-control">
-									                <option value="">Select UOM</option>        
-									            	<option ng-selected="planObject.dimensionType === dimension.id" ng-repeat="dimension in dimensionUnits"
-									                          value="{{ dimension.id }}">{{ dimension.unitCode }} - {{ dimension.unitName }}
-									                </option>
-									            </select>
-								            </div>
-								        </div>
-								       </div>
-								       <div class="row">
-								         <div class="col-xs-12 col-sm-6">
-								         	<div class="form-group">
-									            <label for="notes">Notes</label>
-										        <textarea class="form-control" id="notes" name="notes" ng-model="planObject.notes"
-										                    ng-disabled="isDisabled()"></textarea>
-									        </div>            
-		         						 </div>
-							           </div>
-							           <div class="row">
-							           	 <div class="col-xs-12 col-sm-4">
-							           	 	<div class="form-group">
-											  <p>
-												<button type="button" ng-disabled="isDisabled()" class="btn btn-primary" ng-click="addObjectItemRestrictions(planObject.packingPlanObjectItem)">
-							           				<i class="fa fa-plus"></i> Add Packing Plan Object Item Restrictions
-							        			</button>
-							        		  </p>
-						        		  	</div>	
-						        		 </div>
-    								   </div>
-    								   <div class="row" ng-repeat="(key, item) in planObject.packingPlanObjectItem track by $index">
-      									 <div class="col-xs-12 col-sm-5">
-      									 	<div class="form-group">
-		        							 	<label>Retail Item</label>
-		        							 	<ui-select ng-if="!isDisabled()" name="retailItem" theme="bootstrap" ng-model="item.itemMasterId" 
-		        							 			ng-required="item.maxQty || item.minQty">
-				                					<ui-select-match placeholder="Select Retail Item">{{$select.selected.itemName}}</ui-select-match>
-				                					<ui-select-choices repeat="itm.id as itm in itemMasterList | unique: 'id' ">
-				                  						<div ng-bind-html="itm.itemName"></div>
-				                					</ui-select-choices>
-				              					</ui-select>
-				              					<input ng-if="isDisabled()" ng-model="item.itemName" type="text" class="form-control" 
-				              						name="retailItem" ng-disabled="true">
-									        </div>
-        								 </div>
-	      								 <div class="col-xs-12 col-sm-3">
-	      								 	<div class="form-group">
-										     	<label>Min Qty</label>
-	          									<input custom-validity custom-pattern="number" type="text" maxlength="5" class="form-control"
-	                   									name="minQty" ng-model="item.minQty" placeholder="0" ng-disabled="isDisabled()"
-	                   									ng-required="item.itemMasterId || item.maxQty"/>
-                   							</div>		
-        								 </div>
-        								 <div class="col-xs-12 col-sm-3">
-        								 	<div class="form-group">
-										     	<label>Max Qty</label>
-	          									<input custom-validity custom-pattern="number" type="text" maxlength="5" class="form-control"
-	                   									name="maxQty" ng-model="item.maxQty" placeholder="0" ng-disabled="isDisabled()"
-	                   									ng-required="item.itemMasterId || item.minQty"/>
-                   							</div>		
-        								 </div>
-      									 <div class="col-xs-12 col-sm-1">
-      									 	<div class="form-group" ng-hide="isDisabled()">
-	      									 	<label class="invisible">Remove</label>
-											    <button type="button" style="width: 30%;display:inherit;line-height: 2" class="btn-remove-price-group btn btn-danger btn-xs"
-											                ng-click="removeObjectItemRestrictions(planObject.packingPlanObjectItem, key)" ng-disabled="isDisabled()">
-											          <i class="fa fa-close"></i>
-											    </button>
-										    </div>
-      									 </div>
-    								   </div>
-							       </div>
-							   </div>
-							</div>
-	      				</div>
-					</div>	
-				</div>
-			</div>
-			<!-- Packing Plan Object Section -->
-			<div class="panel-footer text-right" ng-hide="readOnly">
-				<a href="#/packingplan-list" class="btn btn-default">Cancel</a>
-				<button class="btn btn-primary" ng-click="formSave()">
-					<span class="fa fa-check-square-o" aria-hidden="true"></span> <span
-						class="hidden-xs">Save</span>
-				</button>
-			</div>
-		</div>
-	</form>
+                  </p>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-12">
+                      <div class="row">
+                        <div class="col-xs-12 col-sm-4">
+                          <label for="planObjectName">Name*</label>
+                          <input ng-model="planObject.name" name="ObjectName" type="text" class="form-control" id="planObjectName" placeholder="Plan Object Name" ng-disabled="isDisabled()">
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                          <date-picker-field disable="isDisabled()" form="packingPlanDataForm" label="Object Effective Start Date" name="ObjectEffectiveStartDate" required="true" disable-past="true" ng-model="planObject.startDate">
+                          </date-picker-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                          <date-picker-field disable="readOnly || shouldDisableEndDate" form="packingPlanDataForm" label="Object Effective End Date" name="ObjectEffectiveEndDate" custom-effective="true" end-current-effective="!viewEditItem" required="true" custom-date="planObject.endDate" ng-model="planObject.endDate">
+                          </date-picker-field>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12 col-sm-4">
+                          <div class="form-group">
+                            <label for="description">Description</label>
+                            <input ng-model="planObject.description" type="text" class="form-control" id="description" placeholder="Description" ng-disabled="isDisabled()">
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                          <div class="form-group">
+                            <label for="position">Position</label>
+                            <input ng-model="planObject.position" type="text" class="form-control" id="position" placeholder="Position" ng-disabled="isDisabled()">
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                          <div class="form-group">
+                            <label for="galley">Galley</label>
+                            <input ng-model="planObject.galley" type="text" class="form-control" id="galley" placeholder="Galley" ng-disabled="isDisabled()">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12 col-sm-3">
+                          <div class="form-group">
+                            <label for="measurements">Measurements</label>
+                            <input ng-model="planObject.length" id="measurements" ng-required="planObject.breadth || planObject.height || planObject.dimensionType" type="text" placeholder="Length" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" ng-pattern="/^\d*\.?\d*$/" maxlength="10" name="Length" ng-disabled="isDisabled()" class="form-control">
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-3">
+                          <div class="form-group">
+                            <label class="invisible">Breadth</label>
+                            <input ng-model="planObject.breadth" ng-required="planObject.length || planObject.height || planObject.dimensionType" type="text" placeholder="Breadth" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" ng-pattern="/^\d*\.?\d*$/" maxlength="10" name="Breadth" ng-disabled="isDisabled()" class="form-control">
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-3">
+                          <div class="form-group">
+                            <label class="invisible">Height</label>
+                            <input ng-model="planObject.height" ng-required="planObject.breadth || planObject.length || planObject.dimensionType" type="text" placeholder="Height" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" ng-pattern="/^\d*\.?\d*$/" maxlength="10" name="Height" ng-disabled="isDisabled()" class="form-control">
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-3">
+                          <div class="form-group">
+                            <label class="invisible">Dimension</label>
+                            <select ng-model="planObject.dimensionType" ng-required="planObject.breadth || planObject.length || planObject.height" name="Unit of Measurement" ng-disabled="isDisabled()" class="form-control">
+                              <option value="">Select UOM</option>
+                              <option ng-selected="planObject.dimensionType === dimension.id" ng-repeat="dimension in dimensionUnits" value="{{ dimension.id }}">{{ dimension.unitCode }} - {{ dimension.unitName }}
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12 col-sm-6">
+                          <div class="form-group">
+                            <label for="notes">Notes</label>
+                            <textarea class="form-control" id="notes" name="notes" ng-model="planObject.notes" ng-disabled="isDisabled()"></textarea>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-xs-12 col-sm-4">
+                          <div class="form-group">
+                            <p>
+                              <button type="button" ng-disabled="isDisabled()" class="btn btn-primary" ng-click="addObjectItemRestrictions(planObject.packingPlanObjectItem)">
+                                <i class="fa fa-plus"></i> Add Packing Plan Object Item Restrictions
+                              </button>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row" ng-repeat="(key, item) in planObject.packingPlanObjectItem track by $index">
+                        <div class="col-xs-12 col-sm-5">
+                          <div class="form-group">
+                            <label>Retail Item</label>
+                            <ui-select ng-if="!isDisabled()" name="retailItem" theme="bootstrap" ng-model="item.itemMasterId" ng-required="item.maxQty || item.minQty">
+                              <ui-select-match placeholder="Select Retail Item">{{$select.selected.itemName}}</ui-select-match>
+                              <ui-select-choices repeat="itm.id as itm in itemMasterList | unique: 'id' ">
+                                <div ng-bind-html="itm.itemName"></div>
+                              </ui-select-choices>
+                            </ui-select>
+                            <input ng-if="isDisabled()" ng-model="item.itemName" type="text" class="form-control" name="retailItem" ng-disabled="true">
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-3">
+                          <div class="form-group">
+                            <label>Min Qty</label>
+                            <input custom-validity custom-pattern="number" type="text" maxlength="5" class="form-control" name="minQty" ng-model="item.minQty" placeholder="0" ng-disabled="isDisabled()" ng-required="item.itemMasterId || item.maxQty" />
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-3">
+                          <div class="form-group">
+                            <label>Max Qty</label>
+                            <input custom-validity custom-pattern="number" type="text" maxlength="5" class="form-control" name="maxQty" ng-model="item.maxQty" placeholder="0" ng-disabled="isDisabled()" ng-required="item.itemMasterId || item.minQty" />
+                          </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-1">
+                          <div class="form-group" ng-hide="isDisabled()">
+                            <label class="invisible">Remove</label>
+                            <button type="button" style="width: 30%;display:inherit;line-height: 2" class="btn-remove-price-group btn btn-danger btn-xs" ng-click="removeObjectItemRestrictions(planObject.packingPlanObjectItem, key)" ng-disabled="isDisabled()">
+                              <i class="fa fa-close"></i>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Packing Plan Object Section -->
+        <div class="panel-footer text-right" ng-hide="readOnly">
+          <a href="#/packingplan-list" class="btn btn-default">Cancel</a>
+          <button class="btn btn-primary" ng-click="formSave()">
+            <span class="fa fa-check-square-o" aria-hidden="true"></span> <span class="hidden-xs">Save</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+
 </div>
 <!-- /Container -->
 
