@@ -268,9 +268,10 @@
       <th>Payment Method</th>
       <th>Card Type</th>
       <th>Card Number</th>
-      <th>CC Processed Date</th>
+      <th>CC Authorisation Date/Time</th>
       <th>CC Transaction Status</th>
-      <th>CC Authorization Status</th>
+      <th>CC Authorization Code</th>
+      <th>Host Reference Number</th>
       <th>CC Transaction ID</th>
       <th ng-show="displayColumns.seatNumber">Seat Number</th>
       <th>Amount</th>
@@ -294,6 +295,7 @@
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccProcessedDate') }}</td>
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccTransactionStatus') }}</td>
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'ccAuthorizationStatus') }}</td>
+      <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'hostRefNumber') }}</td>
       <td>{{ printPropertyIfItIsCreditCardPayment(transaction, 'paymentId') }}</td>
       <td ng-show="displayColumns.seatNumber">{{ getSeatNumber(transaction.seatNumberRow) }}{{ transaction.seatNumberLoc }}</td>
       <td>{{ printTransactionAmount(transaction) }}</td>
