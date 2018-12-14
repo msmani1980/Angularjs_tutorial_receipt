@@ -1,4 +1,3 @@
-
 'use strict';
 
 /**
@@ -344,7 +343,7 @@ angular.module('ts5App')
         formatDateIfDefined(transaction, 'scheduleDate');
         formatDateIfDefined(transaction, 'storeDate');
         formatDateIfDefined(transaction, 'instanceDate');
-        formatDateIfDefined(transaction, 'ccProcessedDate');
+        formatTimestampIfDefined(transaction, 'ccProcessedDate');
       });
 
       return transactions;
