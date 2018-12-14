@@ -266,6 +266,12 @@ angular.module('ts5App')
     packingPlanObject.itemMasterList =  totalItems;
   };
 
+  this.isPlanObjectItemDatesSet = function (packingPlanObject) {
+    return packingPlanObject !== null
+      && packingPlanObject.startDate !== null
+      && packingPlanObject.endDate !== null;
+  };
+
 
 
   $scope.omitSelectedMenus = function (menu) {
