@@ -217,8 +217,8 @@ angular.module('ts5App')
 
   $scope.addPackingPlanObject = function() {
     $scope.plan.packingPlanObject.push({
-      startDate: '',
-      endDate: '',
+      startDate: null,
+      endDate: null,
       packingPlanObjectItem: []
     });
   };
