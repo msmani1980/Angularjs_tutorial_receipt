@@ -53,9 +53,9 @@ angular.module('ts5App')
     return $scope.disablePastDate || $scope.readOnly;
   };
 
-  $scope.isItemInactive = function(packingItem) {
-    if (packingItem) {
-      return !lodash.find($scope.itemMasterList, { id: packingItem.itemMasterId, hasActiveItemVersions: true});
+  $scope.isItemInactive = function(planObject, packingItem) {
+    if ($scope.viewEditItem && planObject && packingItem && packingItem.itemMasterId) {
+      return !lodash.find(planObject.itemMasterList, { id: packingItem.itemMasterId });
     }
 
     return false;
@@ -238,13 +238,13 @@ angular.module('ts5App')
     });
   };
 
-  this.getItemMasterFromMenu = function(menus, viewedit, startDate, endDate) {
+  this.getItemMasterFromMenu = function(packingPlanObject, menus, viewedit) {
     var totalItems = [];
     angular.forEach(menus, function (menu) {
       var payload = {
         menuId: menu.id,
-        startDate: dateUtility.formatDateForAPI(startDate),
-        endDate: dateUtility.formatDateForAPI(endDate)
+        startDate: dateUtility.formatDateForAPI(packingPlanObject.startDate),
+        endDate: dateUtility.formatDateForAPI(packingPlanObject.endDate)
       };
       if (viewedit) {
         payload.menuId = menu.menuMasterId;
@@ -257,15 +257,16 @@ angular.module('ts5App')
             itemPayload.id = item.itemId;
             itemPayload.itemName = item.itemName;
             itemPayload.itemQty = item.itemQty;
-            itemPayload.hasActiveItemVersions = item.hasActiveItemVersions;
             totalItems.push(itemPayload);
           });
         });
       });
     });
 
-    $scope.itemMasterList = totalItems;
+    packingPlanObject.itemMasterList =  totalItems;
   };
+
+
 
   $scope.omitSelectedMenus = function (menu) {
     var selectedMenu = $scope.plan.packingPlanMenu.filter(function (existingMenu) {
@@ -275,16 +276,17 @@ angular.module('ts5App')
     return (selectedMenu.length === 0);
   };
 
-  $scope.$watchGroup(['plan.packingPlanMenu', 'plan.startDate', 'plan.endDate'], function () {
-    if ($scope.plan && $scope.plan.packingPlanMenu && ($scope.isCreate || !$scope.isDisabled()) && $scope.plan.startDate && $scope.plan.endDate) {
-      $this.getItemMasterFromMenu($scope.plan.packingPlanMenu, false, $scope.plan.startDate, $scope.plan.endDate);
+  $scope.$watch('plan.packingPlanMenu', function () {
+    if ($scope.plan && $scope.plan.packingPlanMenu && ($scope.isCreate || !$scope.isDisabled())) {
+      $scope.plan.packingPlanObject.forEach(function (value, key) {
+        $scope.refreshPlanObjectItems(value, true);
+      });
     }
-
   });
 
   $scope.$watchGroup(['plan.startDate', 'plan.endDate'], function () {
     if ($scope.plan && $scope.plan.startDate && $scope.plan.endDate) {
-      if ($scope.isCreate) {
+      if ($scope.isCreate) { // TODO: why only on create
         $this.getMenuMasterList($scope.plan.startDate, $scope.plan.endDate);
       }        
     }  
@@ -353,7 +355,6 @@ angular.module('ts5App')
     $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
     $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker($scope.viewStartDate);
     if (!$scope.isDisabled()) {
-      $this.getItemMasterFromMenu(response.packingPlanMenu, true, $scope.viewStartDate, $scope.viewEndDate);
       $this.getMenuMasterList($scope.viewStartDate, $scope.viewEndDate);
     }
 

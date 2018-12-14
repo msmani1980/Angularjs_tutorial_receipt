@@ -69,8 +69,8 @@
                   <p class="panel-title">
                     <i class="fa fa-tags"></i> Packing Plan Object {{ key+1 }}
                     <span class="pull-right btn btn-danger btn-xs" ng-hide="isDisabled()" ng-click="removePackingPlanObject(key)">
-        								<i class="fa fa-close"></i>
-      								</span>
+                      <i class="fa fa-close"></i>
+                    </span>
                   </p>
                 </div>
                 <div class="panel-body">
@@ -82,11 +82,29 @@
                           <input ng-model="planObject.name" name="ObjectName" type="text" class="form-control" id="planObjectName" placeholder="Plan Object Name" ng-disabled="isDisabled()">
                         </div>
                         <div class="col-xs-12 col-sm-4">
-                          <date-picker-field disable="isDisabled()" form="packingPlanDataForm" label="Object Effective Start Date" name="ObjectEffectiveStartDate" required="true" disable-past="true" ng-model="planObject.startDate">
+                          <date-picker-field
+                            disable="isDisabled()"
+                            form="packingPlanDataForm"
+                            label="Object Effective Start Date"
+                            name="ObjectEffectiveStartDate"
+                            required="true"
+                            disable-past="true"
+                            ng-model="planObject.startDate"
+                            ng-change="refreshPlanObjectItems(planObject)">
                           </date-picker-field>
                         </div>
                         <div class="col-xs-12 col-sm-4">
-                          <date-picker-field disable="readOnly || shouldDisableEndDate" form="packingPlanDataForm" label="Object Effective End Date" name="ObjectEffectiveEndDate" custom-effective="true" end-current-effective="!viewEditItem" required="true" custom-date="planObject.endDate" ng-model="planObject.endDate">
+                          <date-picker-field
+                            disable="readOnly || shouldDisableEndDate"
+                            form="packingPlanDataForm"
+                            label="Object Effective End Date"
+                            name="ObjectEffectiveEndDate"
+                            custom-effective="true"
+                            end-current-effective="!viewEditItem"
+                            required="true"
+                            custom-date="planObject.endDate"
+                            ng-model="planObject.endDate"
+                            ng-change="refreshPlanObjectItems(planObject)">
                           </date-picker-field>
                         </div>
                       </div>
@@ -159,35 +177,35 @@
                           </div>
                         </div>
                       </div>
-                      <div class="row" ng-repeat="(key, item) in planObject.packingPlanObjectItem track by $index">
+                      <div class="row" ng-repeat="(itemKey, item) in planObject.packingPlanObjectItem track by $index">
                         <div class="col-xs-12 col-sm-5">
                           <div class="form-group">
                             <label>Retail Item</label>
-                            <ui-select ng-if="!(isDisabled() || isItemInactive(item))" name="retailItem" theme="bootstrap" ng-model="item.itemMasterId" ng-required="item.maxQty || item.minQty">
+                            <ui-select ng-if="!(isDisabled() || isItemInactive(planObject, item))" name="retailItem" theme="bootstrap" ng-model="item.itemMasterId" ng-required="item.maxQty || item.minQty">
                               <ui-select-match placeholder="Select Retail Item">{{$select.selected.itemName}}</ui-select-match>
-                              <ui-select-choices repeat="itm.id as itm in itemMasterList | unique: 'id' ">
+                              <ui-select-choices repeat="itm.id as itm in planObject.itemMasterList | unique: 'id' ">
                                 <div ng-bind-html="itm.itemName"></div>
                               </ui-select-choices>
                             </ui-select>
-                            <input ng-if="isDisabled() || isItemInactive(item)" ng-model="item.itemName" type="text" class="form-control" name="retailItem" ng-disabled="true">
+                            <input ng-if="isDisabled() || isItemInactive(planObject, item)" ng-model="item.itemName" type="text" class="form-control" name="retailItem" ng-disabled="true">
                           </div>
                         </div>
                         <div class="col-xs-12 col-sm-3">
                           <div class="form-group">
                             <label>Min Qty</label>
-                            <input custom-validity custom-pattern="number" type="text" maxlength="5" class="form-control" name="minQty" ng-model="item.minQty" placeholder="0" ng-disabled="isDisabled() || isItemInactive(item)" ng-required="item.itemMasterId || item.maxQty" />
+                            <input custom-validity custom-pattern="number" type="text" maxlength="5" class="form-control" name="minQty" ng-model="item.minQty" placeholder="0" ng-disabled="isDisabled() || isItemInactive(planObject, item)" ng-required="item.itemMasterId || item.maxQty" />
                           </div>
                         </div>
                         <div class="col-xs-12 col-sm-3">
                           <div class="form-group">
                             <label>Max Qty</label>
-                            <input custom-validity custom-pattern="number" type="text" maxlength="5" class="form-control" name="maxQty" ng-model="item.maxQty" placeholder="0" ng-disabled="isDisabled() || isItemInactive(item)" ng-required="item.itemMasterId || item.minQty" />
+                            <input custom-validity custom-pattern="number" type="text" maxlength="5" class="form-control" name="maxQty" ng-model="item.maxQty" placeholder="0" ng-disabled="isDisabled() || isItemInactive(planObject, item)" ng-required="item.itemMasterId || item.minQty" />
                           </div>
                         </div>
                         <div class="col-xs-12 col-sm-1">
                           <div class="form-group" ng-hide="isDisabled()">
                             <label class="invisible">Remove</label>
-                            <button type="button" style="width: 30%;display:inherit;line-height: 2" class="btn-remove-price-group btn btn-danger btn-xs" ng-click="removeObjectItemRestrictions(planObject.packingPlanObjectItem, key)" ng-disabled="isDisabled() || isItemInactive(item)">
+                            <button type="button" style="width: 30%;display:inherit;line-height: 2" class="btn-remove-price-group btn btn-danger btn-xs" ng-click="removeObjectItemRestrictions(planObject.packingPlanObjectItem, itemKey)" ng-disabled="isDisabled() || isItemInactive(planObject, item)">
                               <i class="fa fa-close"></i>
                             </button>
                           </div>
