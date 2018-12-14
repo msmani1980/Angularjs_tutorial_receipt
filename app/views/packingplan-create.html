@@ -28,7 +28,7 @@
               placeholder="Packing Plan Name"
               ng-disabled="isDisabled()">
           </div>
-          <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(packingPlanDataForm, 'EffectiveStartDate')">
+          <div class="col-xs-12 col-sm-4" ng-class="validation.calendarCssClass(packingPlanDataForm, plan.startDate)">
             <date-picker-field
               form="packingPlanDataForm"
               name="EffectiveStartDate"
@@ -39,7 +39,7 @@
               ng-model="plan.startDate">
             </date-picker-field>
           </div>
-          <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(packingPlanDataForm, 'EffectiveEndDate')">
+          <div class="col-xs-12 col-sm-4" ng-class="validation.calendarCssClass(packingPlanDataForm, plan.endDate)">
             <date-picker-field
               form="packingPlanDataForm"
               name="EffectiveEndDate"
@@ -55,13 +55,13 @@
         </div>
         <div class="row">
           <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(packingPlanDataForm, 'Version')">
               <label for="packingPlanVersion">Version*</label>
               <input ng-model="plan.version" type="text" name="Version" required class="form-control" id="packingPlanVersion" placeholder="Packing Plan Version" ng-disabled="isDisabled()">
             </div>
           </div>
           <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
+            <div class="form-group" ng-class="validation.fieldCssClass(packingPlanDataForm, 'menus')">
               <label for="packingPlanMenus">Menu*</label>
               <ui-select name="menus" id="packingPlanMenus" required multiple ng-disabled="isDisabled()" ng-model="plan.packingPlanMenu" theme="bootstrap">
                 <ui-select-match>{{ $item.menuName }}
@@ -101,35 +101,36 @@
                   <div class="row">
                     <div class="col-xs-12 col-sm-12">
                       <div class="row">
-                        <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(packingPlanDataForm, 'ObjectName')">
+                        <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(packingPlanDataForm, 'Name[' + (key + 1) + ']')">
                           <label for="planObjectName">Name*</label>
                           <input
                             ng-model="planObject.name"
-                            name="ObjectName"
+                            name="Name[{{ key + 1 }}]"
                             type="text"
                             class="form-control"
                             id="planObjectName"
                             placeholder="Plan Object Name"
-                            ng-disabled="isDisabled()">
+                            ng-disabled="isDisabled()"
+                            required="true">
                         </div>
-                        <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(packingPlanDataForm, 'ObjectEffectiveStartDate')">
+                        <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(packingPlanDataForm, 'ObjectEffectiveStartDate[' + (key + 1) + ']')">
                           <date-picker-field
                             disable="isDisabled()"
                             form="packingPlanDataForm"
                             label="Object Effective Start Date"
-                            name="ObjectEffectiveStartDate"
+                            name="ObjectEffectiveStartDate[{{ key + 1 }}]"
                             required="true"
                             disable-past="true"
                             ng-model="planObject.startDate"
                             ng-change="refreshPlanObjectItems(planObject)">
                           </date-picker-field>
                         </div>
-                        <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(packingPlanDataForm, 'ObjectEffectiveEndDate')">
+                        <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(packingPlanDataForm, 'ObjectEffectiveEndDate[' + (key + 1) + ']')">
                           <date-picker-field
                             disable="readOnly || shouldDisableEndDate"
                             form="packingPlanDataForm"
                             label="Object Effective End Date"
-                            name="ObjectEffectiveEndDate"
+                            name="ObjectEffectiveEndDate[{{ key + 1 }}]"
                             custom-effective="true"
                             end-current-effective="!viewEditItem"
                             required="true"
@@ -161,7 +162,7 @@
                       </div>
                       <div class="row">
                         <div class="col-xs-12 col-sm-3">
-                          <div class="form-group" ng-class="validation.fieldCssClass(packingPlanDataForm, 'Length')">
+                          <div class="form-group" ng-class="validation.fieldCssClass(packingPlanDataForm, 'Length[' + (key + 1) + ']')">
                             <label for="measurements">Measurements</label>
                             <input
                               ng-model="planObject.length"
@@ -172,29 +173,52 @@
                               oninput="this.value=this.value.replace(/[^0-9.]/g,'');"
                               ng-pattern="/^\d*\.?\d*$/"
                               maxlength="10"
-                              name="Length"
+                              name="Length[{{ key + 1 }}]"
                               ng-disabled="isDisabled()"
                               class="form-control">
                           </div>
                         </div>
                         <div class="col-xs-12 col-sm-3">
-                          <div class="form-group">
+                          <div class="form-group" ng-class="validation.fieldCssClass(packingPlanDataForm, 'Breadth[' + (key + 1) + ']')">
                             <label class="invisible">Breadth</label>
-                            <input ng-model="planObject.breadth" ng-required="planObject.length || planObject.height || planObject.dimensionType" type="text" placeholder="Breadth" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" ng-pattern="/^\d*\.?\d*$/" maxlength="10" name="Breadth" ng-disabled="isDisabled()" class="form-control">
+                            <input
+                              ng-model="planObject.breadth"
+                              ng-required="planObject.length || planObject.height || planObject.dimensionType"
+                              type="text"
+                              placeholder="Breadth"
+                              oninput="this.value=this.value.replace(/[^0-9.]/g,'');"
+                              ng-pattern="/^\d*\.?\d*$/"
+                              maxlength="10"
+                              name="Breadth[{{ key + 1 }}]"
+                              ng-disabled="isDisabled()"
+                              class="form-control">
                           </div>
                         </div>
                         <div class="col-xs-12 col-sm-3">
-                          <div class="form-group">
+                          <div class="form-group" ng-class="validation.fieldCssClass(packingPlanDataForm, 'Height[' + (key + 1) + ']')">
                             <label class="invisible">Height</label>
-                            <input ng-model="planObject.height" ng-required="planObject.breadth || planObject.length || planObject.dimensionType" type="text" placeholder="Height" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" ng-pattern="/^\d*\.?\d*$/" maxlength="10" name="Height" ng-disabled="isDisabled()" class="form-control">
+                            <input
+                              ng-model="planObject.height"
+                              ng-required="planObject.breadth || planObject.length || planObject.dimensionType"
+                              type="text"
+                              placeholder="Height"
+                              oninput="this.value=this.value.replace(/[^0-9.]/g,'');"
+                              ng-pattern="/^\d*\.?\d*$/"
+                              maxlength="10"
+                              name="Height[{{ key + 1 }}]"
+                              ng-disabled="isDisabled()"
+                              class="form-control">
                           </div>
                         </div>
                         <div class="col-xs-12 col-sm-3">
-                          <div class="form-group">
+                          <div class="form-group"  ng-class="validation.fieldCssClass(packingPlanDataForm, 'UnitOfMeasurement[' + (key + 1) + ']')">
                             <label class="invisible">Dimension</label>
-                            <select ng-model="planObject.dimensionType" ng-required="planObject.breadth || planObject.length || planObject.height" name="Unit of Measurement" ng-disabled="isDisabled()" class="form-control">
+                            <select ng-model="planObject.dimensionType" ng-required="planObject.breadth || planObject.length || planObject.height" name="UnitOfMeasurement" ng-disabled="isDisabled()" class="form-control">
                               <option value="">Select UOM</option>
-                              <option ng-selected="planObject.dimensionType === dimension.id" ng-repeat="dimension in dimensionUnits" value="{{ dimension.id }}">{{ dimension.unitCode }} - {{ dimension.unitName }}
+                              <option
+                                ng-selected="planObject.dimensionType === dimension.id"
+                                ng-repeat="dimension in dimensionUnits"
+                                value="{{ dimension.id }}">{{ dimension.unitCode }} - {{ dimension.unitName }}
                               </option>
                             </select>
                           </div>
