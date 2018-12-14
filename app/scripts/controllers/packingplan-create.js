@@ -272,7 +272,23 @@ angular.module('ts5App')
       && packingPlanObject.endDate !== null;
   };
 
+  this.isPlanObjectItemDatesChanged = function (packingPlanObject) {
+    var cachedStartDate = (packingPlanObject.planObjectItemsCache) ? packingPlanObject.planObjectItemsCache.startDate: null;
+    var cachedEndDate = (packingPlanObject.planObjectItemsCache) ? packingPlanObject.planObjectItemsCache.endDate: null;
 
+    return $this.isPlanObjectItemDatesSet(packingPlanObject) && (packingPlanObject.startDate !== cachedStartDate ||packingPlanObject.endDate !== cachedEndDate);
+  };
+
+  $scope.refreshPlanObjectItems = function (packingPlanObject, forceRefresh) {
+    if (($scope.isCreate || !$scope.isDisabled()) && $this.isPlanObjectItemDatesSet(packingPlanObject) && (forceRefresh || $this.isPlanObjectItemDatesChanged(packingPlanObject))) {
+      packingPlanObject.planObjectItemsCache = {
+        startDate: packingPlanObject.startDate,
+        endDate: packingPlanObject.endDate
+      };
+
+      $this.getItemMasterFromMenu(packingPlanObject, $scope.plan.packingPlanMenu, false);
+    }
+  };
 
   $scope.omitSelectedMenus = function (menu) {
     var selectedMenu = $scope.plan.packingPlanMenu.filter(function (existingMenu) {
