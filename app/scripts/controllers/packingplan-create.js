@@ -61,8 +61,27 @@ angular.module('ts5App')
     return false;
   };
 
+  this.packingPlanObjectsHaveDuplicates = function () {
+    var names = $scope.plan.packingPlanObject.map(function (value) {
+      return value.name;
+    });
+
+    return lodash.uniq(names).length !== names.length;
+  };
+
   this.validateForm = function() {
     $this.resetErrors();
+
+    if (this.packingPlanObjectsHaveDuplicates()) {
+      $scope.errorCustom = [{
+        field: 'Packing Plan Object Name',
+        value: 'Duplicate values are not allowed.'
+      }];
+
+      $scope.displayError = true;
+      return false;
+    }
+
     return $scope.packingPlanDataForm.$valid;
   };
 
@@ -308,10 +327,8 @@ angular.module('ts5App')
 
   $scope.$watchGroup(['plan.startDate', 'plan.endDate'], function () {
     if ($scope.plan && $scope.plan.startDate && $scope.plan.endDate) {
-      if ($scope.isCreate) { // TODO: why only on create
-        $this.getMenuMasterList($scope.plan.startDate, $scope.plan.endDate);
-      }        
-    }  
+      $this.getMenuMasterList($scope.plan.startDate, $scope.plan.endDate);
+    }
   });
 
   this.formatViewMenus = function(menus) {
