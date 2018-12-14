@@ -22,7 +22,8 @@ angular.module('ts5App')
       endDate: ''
     };
     $scope.openVersionId = -1;
-
+    $scope.tableSortTitle = 'item.versions[0].itemName';
+    
     function showLoadingBar(loadingText) {
       angular.element('#loading').modal('show').find('p').text(loadingText);
       angular.element('.loading-more').show();
@@ -293,8 +294,33 @@ angular.module('ts5App')
       return '';
     };
 
+    $scope.updateOrderBy = function(orderName) {
+      $scope.tableSortTitle = ($scope.tableSortTitle === orderName) ? ('-' + $scope.tableSortTitle) : (orderName);
+    };
+
     $scope.getUpdatedOn = function (item) {
       return item.updatedOn ? dateUtility.formatTimestampForApp(item.updatedOn) : dateUtility.formatTimestampForApp(item.createdOn);
+    };
+
+    $scope.getSortingType = function(orderName) {
+      if ($scope.tableSortTitle === orderName) {
+        return 'ascending';
+      } else if ($scope.tableSortTitle === '-' + orderName) {
+        return 'descending';
+      }
+
+      return 'none';
+    };
+
+    $scope.getArrowIconAndClassForSorting = function(orderName) {
+      var sortTypeToArrowTypeMap = {
+        ascending: 'fa fa-sort-asc active',
+        descending: 'fa fa-sort-desc active',
+        none: 'fa fa-sort text-muted-light'
+      };
+      var sortType = $scope.getSortingType(orderName);
+
+      return sortTypeToArrowTypeMap[sortType];
     };
 
     this.openAccordian = function (item) {
