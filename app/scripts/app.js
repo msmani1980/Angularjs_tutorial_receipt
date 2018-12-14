@@ -53,6 +53,7 @@ angular.module('ts5App', [
   bit: /^(0|1)$/,
   number: /^-?([0-9]*)$/,
   positiveNumber: /^([0-9]*)$/,
+  greaterThanZero: /^[1-9][0-9]*$/,
   alpha: /^[a-zA-z]+$/,
   alphanumeric: /^[a-zA-Z0-9]+$/,
   alphaWithSpecial: '[a-zA-Z0-9\"\?\(\)\.\_\ \%\@\&\#\$\!,;:\-]+$',
