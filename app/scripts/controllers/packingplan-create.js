@@ -8,13 +8,14 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PackingplanCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, packingplanFactory, messageService, lodash) {
+  .controller('PackingplanCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, packingplanFactory, messageService, lodash, formValidationUtility) {
   
   var $this = this;
   $scope.viewName = 'Packing Plan';
   $scope.shouldDisableEndDate = false;
   $scope.menuMasterList = [];
   $scope.itemMasterList = [];
+  $scope.validation = formValidationUtility;
   $scope.plan = {
     startDate: '',
     endDate: '',

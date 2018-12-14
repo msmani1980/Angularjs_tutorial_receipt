@@ -12,20 +12,44 @@
   </div>
   <error-dialog form-object="packingPlanDataForm" error-response="errorResponse" display="displayError"></error-dialog>
   <!-- Data Input Section -->
-  <form name="packingPlanDataForm">
+  <form name="packingPlanDataForm" novalidate>
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="row">
-          <div class="col-xs-12 col-sm-4">
+          <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(packingPlanDataForm, 'Name')">
             <label for="packingPlanName">Name*</label>
-            <input ng-model="plan.name" type="text" name="Name" required class="form-control" id="packingPlanName" placeholder="Packing Plan Name" ng-disabled="isDisabled()">
+            <input
+              ng-model="plan.name"
+              type="text"
+              name="Name"
+              required
+              class="form-control"
+              id="packingPlanName"
+              placeholder="Packing Plan Name"
+              ng-disabled="isDisabled()">
           </div>
-          <div class="col-xs-12 col-sm-4">
-            <date-picker-field form="packingPlanDataForm" name="EffectiveStartDate" label="Plan Effective Start Date" disable="isDisabled()" required="true" disable-past="true" ng-model="plan.startDate">
+          <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(packingPlanDataForm, 'EffectiveStartDate')">
+            <date-picker-field
+              form="packingPlanDataForm"
+              name="EffectiveStartDate"
+              label="Plan Effective Start Date"
+              disable="isDisabled()"
+              required="true"
+              disable-past="true"
+              ng-model="plan.startDate">
             </date-picker-field>
           </div>
-          <div class="col-xs-12 col-sm-4">
-            <date-picker-field form="packingPlanDataForm" name="EffectiveEndDate" label="Plan Effective End Date" disable="readOnly || shouldDisableEndDate" ng-model="plan.endDate" end-current-effective="!viewEditItem" custom-effective="true" custom-date="plan.endDate" required="true">
+          <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(packingPlanDataForm, 'EffectiveEndDate')">
+            <date-picker-field
+              form="packingPlanDataForm"
+              name="EffectiveEndDate"
+              label="Plan Effective End Date"
+              disable="readOnly || shouldDisableEndDate"
+              ng-model="plan.endDate"
+              end-current-effective="!viewEditItem"
+              custom-effective="true"
+              custom-date="plan.endDate"
+              required="true">
             </date-picker-field>
           </div>
         </div>
@@ -77,11 +101,18 @@
                   <div class="row">
                     <div class="col-xs-12 col-sm-12">
                       <div class="row">
-                        <div class="col-xs-12 col-sm-4">
+                        <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(packingPlanDataForm, 'ObjectName')">
                           <label for="planObjectName">Name*</label>
-                          <input ng-model="planObject.name" name="ObjectName" type="text" class="form-control" id="planObjectName" placeholder="Plan Object Name" ng-disabled="isDisabled()">
+                          <input
+                            ng-model="planObject.name"
+                            name="ObjectName"
+                            type="text"
+                            class="form-control"
+                            id="planObjectName"
+                            placeholder="Plan Object Name"
+                            ng-disabled="isDisabled()">
                         </div>
-                        <div class="col-xs-12 col-sm-4">
+                        <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(packingPlanDataForm, 'ObjectEffectiveStartDate')">
                           <date-picker-field
                             disable="isDisabled()"
                             form="packingPlanDataForm"
@@ -93,7 +124,7 @@
                             ng-change="refreshPlanObjectItems(planObject)">
                           </date-picker-field>
                         </div>
-                        <div class="col-xs-12 col-sm-4">
+                        <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(packingPlanDataForm, 'ObjectEffectiveEndDate')">
                           <date-picker-field
                             disable="readOnly || shouldDisableEndDate"
                             form="packingPlanDataForm"
@@ -130,9 +161,20 @@
                       </div>
                       <div class="row">
                         <div class="col-xs-12 col-sm-3">
-                          <div class="form-group">
+                          <div class="form-group" ng-class="validation.fieldCssClass(packingPlanDataForm, 'Length')">
                             <label for="measurements">Measurements</label>
-                            <input ng-model="planObject.length" id="measurements" ng-required="planObject.breadth || planObject.height || planObject.dimensionType" type="text" placeholder="Length" oninput="this.value=this.value.replace(/[^0-9.]/g,'');" ng-pattern="/^\d*\.?\d*$/" maxlength="10" name="Length" ng-disabled="isDisabled()" class="form-control">
+                            <input
+                              ng-model="planObject.length"
+                              id="measurements"
+                              ng-required="planObject.breadth || planObject.height || planObject.dimensionType"
+                              type="text"
+                              placeholder="Length"
+                              oninput="this.value=this.value.replace(/[^0-9.]/g,'');"
+                              ng-pattern="/^\d*\.?\d*$/"
+                              maxlength="10"
+                              name="Length"
+                              ng-disabled="isDisabled()"
+                              class="form-control">
                           </div>
                         </div>
                         <div class="col-xs-12 col-sm-3">
