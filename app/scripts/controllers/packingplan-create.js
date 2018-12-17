@@ -295,7 +295,7 @@ angular.module('ts5App')
     var cachedStartDate = (packingPlanObject.planObjectItemsCache) ? packingPlanObject.planObjectItemsCache.startDate : null;
     var cachedEndDate = (packingPlanObject.planObjectItemsCache) ? packingPlanObject.planObjectItemsCache.endDate : null;
 
-    return $this.isPlanObjectItemDatesSet(packingPlanObject) && (packingPlanObject.startDate !== cachedStartDate ||packingPlanObject.endDate !== cachedEndDate);
+    return $this.isPlanObjectItemDatesSet(packingPlanObject) && (packingPlanObject.startDate !== cachedStartDate || packingPlanObject.endDate !== cachedEndDate);
   };
 
   $scope.refreshPlanObjectItems = function (packingPlanObject, forceRefresh) {
