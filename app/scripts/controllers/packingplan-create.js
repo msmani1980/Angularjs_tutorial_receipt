@@ -292,8 +292,8 @@ angular.module('ts5App')
   };
 
   this.isPlanObjectItemDatesChanged = function (packingPlanObject) {
-    var cachedStartDate = (packingPlanObject.planObjectItemsCache) ? packingPlanObject.planObjectItemsCache.startDate: null;
-    var cachedEndDate = (packingPlanObject.planObjectItemsCache) ? packingPlanObject.planObjectItemsCache.endDate: null;
+    var cachedStartDate = (packingPlanObject.planObjectItemsCache) ? packingPlanObject.planObjectItemsCache.startDate : null;
+    var cachedEndDate = (packingPlanObject.planObjectItemsCache) ? packingPlanObject.planObjectItemsCache.endDate : null;
 
     return $this.isPlanObjectItemDatesSet(packingPlanObject) && (packingPlanObject.startDate !== cachedStartDate ||packingPlanObject.endDate !== cachedEndDate);
   };
