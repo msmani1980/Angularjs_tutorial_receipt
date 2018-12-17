@@ -319,7 +319,7 @@ angular.module('ts5App')
 
   $scope.$watch('plan.packingPlanMenu', function () {
     if ($scope.plan && $scope.plan.packingPlanMenu && ($scope.isCreate || !$scope.isDisabled())) {
-      $scope.plan.packingPlanObject.forEach(function (value, key) {
+      $scope.plan.packingPlanObject.forEach(function (value) {
         $scope.refreshPlanObjectItems(value, true);
       });
     }
