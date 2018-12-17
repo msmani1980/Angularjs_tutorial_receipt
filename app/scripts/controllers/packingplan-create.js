@@ -11,6 +11,7 @@ angular.module('ts5App')
   .controller('PackingplanCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, packingplanFactory, messageService, lodash, formValidationUtility) {
   
   var $this = this;
+
   $scope.viewName = 'Packing Plan';
   $scope.shouldDisableEndDate = false;
   $scope.menuMasterList = [];
@@ -287,9 +288,7 @@ angular.module('ts5App')
   };
 
   this.isPlanObjectItemDatesSet = function (packingPlanObject) {
-    return packingPlanObject !== null
-      && packingPlanObject.startDate !== null
-      && packingPlanObject.endDate !== null;
+    return packingPlanObject !== null && packingPlanObject.startDate !== null && packingPlanObject.endDate !== null;
   };
 
   this.isPlanObjectItemDatesChanged = function (packingPlanObject) {
