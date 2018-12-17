@@ -27,7 +27,7 @@ angular.module('ts5App')
 
       if (form) {
         hasError = !fieldValue && form.$submitted;
-        hasSuccess = fieldValue;
+        hasSuccess = fieldValue && form.$submitted;
       }
 
       return { 'has-error': hasError, 'has-success': hasSuccess };
