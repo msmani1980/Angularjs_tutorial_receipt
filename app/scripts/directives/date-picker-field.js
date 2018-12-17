@@ -13,6 +13,7 @@ angular.module('ts5App')
       restrict: 'E',
       scope: {
         ngModel: '=',
+        ngChange: '=',
         name: '@',
         label: '@',
         orientation: '=',
