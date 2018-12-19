@@ -316,8 +316,6 @@ angular.module('ts5App')
   };
 
   $scope.filteredPackingPlanObjectItems = function (planObject, selectedItemMasterId) {
-    console.log(planObject.packingPlanObjectItem)
-    console.log(selectedItemMasterId)
     return lodash.filter(planObject.itemMasterList, function (item) {
       return selectedItemMasterId === item.id || !lodash.find(planObject.packingPlanObjectItem, { itemMasterId: item.id });
     });
