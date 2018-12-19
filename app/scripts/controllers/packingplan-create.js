@@ -309,6 +309,12 @@ angular.module('ts5App')
     }
   };
 
+  $scope.filteredPackingPlanObjectItems = function (planObject, selectedItemMasterId) {
+    return lodash.filter(planObject.itemMasterList, function (item) {
+      return selectedItemMasterId === item.id || !lodash.find(planObject.packingPlanObjectItem, { itemMasterId: item.id });
+    });
+  };
+
   $scope.omitSelectedMenus = function (menu) {
     var selectedMenu = $scope.plan.packingPlanMenu.filter(function (existingMenu) {
       return (existingMenu.id === menu.id);
