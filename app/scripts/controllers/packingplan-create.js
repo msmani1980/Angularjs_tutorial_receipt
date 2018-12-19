@@ -234,6 +234,12 @@ angular.module('ts5App')
 
   $scope.removeObjectItemRestrictions = function(_array, key) {
     _array.splice(key, 1);
+
+    console.log(packingPlanObject.packingPlanObjectItem)
+    console.log(item)
+
+    /*var x = lodash.filter(_array, { id: item.id })
+    packingPlanObject.packingPlanObjectItem = x;*/
   };
 
   $scope.addPackingPlanObject = function() {
@@ -307,6 +313,14 @@ angular.module('ts5App')
 
       $this.getItemMasterFromMenu(packingPlanObject, $scope.plan.packingPlanMenu, false);
     }
+  };
+
+  $scope.filteredPackingPlanObjectItems = function (planObject, selectedItemMasterId) {
+    console.log(planObject.packingPlanObjectItem)
+    console.log(selectedItemMasterId)
+    return lodash.filter(planObject.itemMasterList, function (item) {
+      return selectedItemMasterId === item.id || !lodash.find(planObject.packingPlanObjectItem, { itemMasterId: item.id });
+    });
   };
 
   $scope.omitSelectedMenus = function (menu) {

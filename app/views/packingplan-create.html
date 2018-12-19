@@ -246,10 +246,15 @@
                       <div class="row" ng-repeat="(itemKey, item) in planObject.packingPlanObjectItem track by $index">
                         <div class="col-xs-12 col-sm-5">
                           <div class="form-group" ng-class="validation.fieldCssClass(packingPlanDataForm, 'retailItem[' + (itemKey + 1) + ']')">
-                            <label>Retail Item</label>
-                            <ui-select ng-if="!(isDisabled() || isItemInactive(planObject, item))" name="retailItem[{{ itemKey + 1 }}]" theme="bootstrap" ng-model="item.itemMasterId" ng-required="item.maxQty || item.minQty">
+                            <label>Retail Item {{item.itemMasterId}}</label>
+                            <ui-select
+                                ng-if="!(isDisabled() || isItemInactive(planObject, item))"
+                                name="retailItem[{{ itemKey + 1 }}]"
+                                theme="bootstrap"
+                                ng-model="item.itemMasterId"
+                                ng-required="item.maxQty || item.minQty">
                               <ui-select-match placeholder="Select Retail Item">{{$select.selected.itemName}}</ui-select-match>
-                              <ui-select-choices repeat="itm.id as itm in planObject.itemMasterList | unique: 'id' ">
+                              <ui-select-choices repeat="itm.id as itm in filteredPackingPlanObjectItems(planObject, item.itemMasterId) | unique: 'id' ">
                                 <div ng-bind-html="itm.itemName"></div>
                               </ui-select-choices>
                             </ui-select>
