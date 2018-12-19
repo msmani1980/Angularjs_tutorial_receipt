@@ -234,12 +234,6 @@ angular.module('ts5App')
 
   $scope.removeObjectItemRestrictions = function(_array, key) {
     _array.splice(key, 1);
-
-    console.log(packingPlanObject.packingPlanObjectItem)
-    console.log(item)
-
-    /*var x = lodash.filter(_array, { id: item.id })
-    packingPlanObject.packingPlanObjectItem = x;*/
   };
 
   $scope.addPackingPlanObject = function() {
