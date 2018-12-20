@@ -178,12 +178,38 @@ angular.module('ts5App')
 
     $scope.saveEdit = function () {
       showLoadingModal('Editing Record');
+      $scope.displayError = false;
+      var isValid = validateEditForm();
+
+      if (!isValid) {
+        hideLoadingModal();
+        return;  
+      }
+
       var payload = formatRecordForAPI($scope.recordToEdit);
+      var companyId = globalMenuService.company.get();
+      payload.companyId = companyId;
       exciseDutyFactory.updateExciseDuty($scope.recordToEdit.id, payload).then(function () {
         $scope.cancelEdit();
         reloadAfterAPISuccess();
       }, showErrors);
     };
+
+    function validateEditForm () {
+      var isValid = true;
+      if (!angular.isDefined($scope.recordToEdit.commodityCode) || $scope.recordToEdit.commodityCode === '') {
+        isValid = false;  
+        $scope.exciseDutyEditForm.editCommodityCode.$valid = false;
+      }
+
+      if (!angular.isDefined($scope.recordToEdit.dutyRate) || $scope.recordToEdit.dutyRate === '') {
+        isValid = false;  
+        $scope.exciseDutyEditForm.editDutyRate.$valid = false;
+      }
+
+      $scope.displayEditError = !isValid;
+      return isValid;
+    }
 
     $scope.cancelEdit = function () {
       $scope.inEditMode = false;

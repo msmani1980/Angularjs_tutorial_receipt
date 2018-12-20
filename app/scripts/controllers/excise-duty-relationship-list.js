@@ -282,7 +282,7 @@ angular.module('ts5App')
 
     function validateCreateForm() {
       var isValid = !!$scope.newRecord.retailItem && !!$scope.newRecord.commodityCode;
-      $scope.itemExciseDutyCreateForm.retailItem.$setValidity('required', !!$scope.newRecord.retailItem);
+      $scope.itemExciseDutyCreateForm.dutyFreeRetailItem.$setValidity('required', !!$scope.newRecord.retailItem);
       $scope.itemExciseDutyCreateForm.commodityCode.$setValidity('required', !!$scope.newRecord.commodityCode);
       $scope.displayError = !isValid;
     }
