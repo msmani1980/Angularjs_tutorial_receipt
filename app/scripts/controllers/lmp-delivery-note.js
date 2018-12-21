@@ -21,6 +21,7 @@ angular.module('ts5App')
     };
 
     // private vars
+    var savedCatererStationList = [];
     var _formSaveSuccessText = null;
     var _cateringStationItems = [];
     var _reasonCodeTypeUllage = 'Ullage';
@@ -49,16 +50,6 @@ angular.module('ts5App')
       $scope.errorResponse = response;
       $scope.displayError = true;
       hideLoadingModal();
-    }
-
-    function showFormErrors() {
-      if ($scope.form && $scope.form.$valid && !deliveryNoteHasItems()) {
-        $scope.errorCustom = [{
-          field: 'Items Required',
-          value: 'There must be at least one Item attached to this Delivery Note'
-        }];
-        showResponseErrors();
-      }
     }
 
     function deliveryNoteHasItems() {
@@ -262,6 +253,10 @@ angular.module('ts5App')
       }
 
       init();
+
+      if (savedCatererStationList !== null && savedCatererStationList.length && ($scope.deliveryNote.catererStationId === null || !$scope.deliveryNote.catererStationId.length)) {
+        $scope.catererStationList = savedCatererStationList;
+      }      
     }
 
     function getMasterItemIdFromItem(item) {
@@ -367,8 +362,16 @@ angular.module('ts5App')
     };
 
     $scope.toggleReview = function() {
+      savedCatererStationList = $scope.catererStationList;
+      var isFormValid = validateForm();
+      if (!isFormValid) {
+        hideLoadingModal();
+        return;
+      }
+
       $scope.canReview = canReview();
       $scope.hideReview = false;
+      $scope.form.$setSubmitted(true);
 
       if ($scope.prevState) {
         $scope.state = $scope.prevState;
@@ -379,8 +382,17 @@ angular.module('ts5App')
         return;
       }
 
-      if ($scope.form && !$scope.form.$valid || !$scope.canReview) {
-        showFormErrors();
+      if ($scope.form && !$scope.form.$valid) {
+        $scope.displayError = true;
+        return;
+      }
+
+      if ($scope.form && $scope.form.$valid && !deliveryNoteHasItems()) {
+        $scope.errorCustom = [{
+          field: 'Items Required',
+          value: 'There must be at least one Item attached to this Delivery Note'
+        }];
+        $scope.displayError = true;
         return;
       }
 
@@ -465,6 +477,13 @@ angular.module('ts5App')
     }
 
     $scope.save = function(_isAccepted) {
+      savedCatererStationList = $scope.catererStationList;
+      var isFormValid = validateForm();
+      if (!isFormValid) {
+        hideLoadingModal();
+        return;
+      }
+      
       if ($scope.deliveryNote.isAccepted) {
         return;
       }
@@ -472,6 +491,11 @@ angular.module('ts5App')
       generateSavePayload(_isAccepted);
       saveDeliveryNote();
     };
+
+    function validateForm () {
+      $scope.displayError = !$scope.form.$valid;
+      return $scope.form.$valid;
+    }
 
     $scope.changeItem = function(newItem, index) {
       newItem.canEdit = $scope.deliveryNote.items[index].canEdit;

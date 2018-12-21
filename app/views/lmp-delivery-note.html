@@ -3,7 +3,6 @@
   <error-dialog form-object="form" error-response="errorResponse" display="displayError">
   </error-dialog>
 
-
   <form class="form edit-form delivery-note-form" name="form">
 
   <div class="edit-controls">
@@ -56,7 +55,7 @@
       <div class="panel-heading">
         <div class="row">
           <div class="col-xs-12 col-sm-6 col-md-4">
-            <div class="form-group" ng-class="formErrorClass('lmp-station')">
+            <div class="form-group" ng-class="{ 'has-error' : !deliveryNote.catererStationId && deliveryNote.deliveryDate && displayError, 'has-success' : deliveryNote.catererStationId }">
               <label for="lmp-station">LMP Station*</label>
               <select class="form-control"
                       name="LMP Station"
@@ -82,39 +81,42 @@
         <div class="row" ng-hide="state == 'review'">
 
           <div class="col-xs-12 col-sm-3">
-            <div class="form-group" ng-class="formErrorClass('purchase-order-number')">
+            <div class="form-group" ng-class="{ 'has-error' : !deliveryNote.purchaseOrderNumber && displayError, 'has-success' : deliveryNote.purchaseOrderNumber }">           
               <label for="purchase-order-number">Purchase Order Number*</label>
-              <input ng-model="deliveryNote.purchaseOrderNumber" type="text"
-                     class="form-control" id="purchase-order-number"
-                     name="Purchase Order Number"
-                     required custom-validity custom-pattern="alphanumeric"
-                     ng-readonly="readOnly || !isDeliveryDateSelected()">
+              <input type="text"
+                 class="form-control"
+                 id="purchase-order-number"
+                 name="Purchase Order Number"
+                 ng-model="deliveryNote.purchaseOrderNumber"
+                 ng-disabled="readOnly || !isDeliveryDateSelected()"
+                 ng-pattern="regexp.alphanumeric"
+                 required="true">
             </div>
           </div>
 
           <div class="col-xs-12 col-sm-3">
-            <div class="form-group" ng-class="formErrorClass('delivery-note-number')">
+            <div class="form-group" ng-class="{ 'has-error' : !deliveryNote.deliveryNoteNumber && displayError, 'has-success' : deliveryNote.deliveryNoteNumber }">
               <label for="delivery-note-number">Delivery Note Number*</label>
-              <input ng-model="deliveryNote.deliveryNoteNumber" type="text"
-                     class="form-control" id="delivery-note-number"
+              <input type="text" 
+                     class="form-control" 
+                     id="delivery-note-number"
+                     ng-model="deliveryNote.deliveryNoteNumber" 
                      name="Delivery Note Number"
-                     required custom-validity custom-pattern="alphanumeric"
-                     ng-readonly="readOnly || !isDeliveryDateSelected()">
+                     ng-pattern="regexp.alphanumeric"
+                     ng-readonly="readOnly || !isDeliveryDateSelected()"
+                     required="true">
             </div>
           </div>
 
           <div class="col-xs-12 col-sm-6 col-md-3">
-            <div class="form-group" ng-class="formErrorClass('Delivery Date', true)">
-              <date-picker
-                disable-date-range="true"
-                start-date-model="deliveryNote.deliveryDate"
-                is-search-field="true"
-                disable-start-date="readOnly"
-                required="required"
-                label-from="Delivery Date*"
-                name-from="Delivery Date">
-              </date-picker>
-
+            <div class="form-group" ng-class="{ 'has-error' : !deliveryNote.deliveryDate && displayError, 'has-success' : deliveryNote.deliveryDate }">
+              <date-picker-field 
+                 name="DeliveryDate" 
+                 label="Delivery Date"  
+                 custom-effective="editing"
+                 required="true"
+                 ng-model="deliveryNote.deliveryDate">
+               </date-picker-field>
             </div>
           </div>
 
@@ -213,11 +215,12 @@
             </div>
 
             <div class="col-xs-6 col-sm-3 col-md-1">
-              <div class="form-group" ng-class="formErrorClass('delivered-qty-' + item.masterItemId)">
+              <div class="form-group">
                 <label>Delivered*</label>
                 <input ng-model="item.deliveredQuantity" type="number" min="0" step="1" class="form-control"
                        id="delivered-qty-{{ item.masterItemId }}"
-                       ng-readonly="readOnly" ng-required="item.expectedQuantity"
+                       ng-readonly="readOnly" 
+                       ng-required="item.expectedQuantity"
                        name="Delivered ( {{ item.itemCode }} - {{ item.itemName }} )">
               </div>
             </div>
