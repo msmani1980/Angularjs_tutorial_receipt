@@ -21,6 +21,7 @@ angular.module('ts5App')
     };
 
     // private vars
+    var savedCatererStationList = [];
     var _formSaveSuccessText = null;
     var _cateringStationItems = [];
     var _reasonCodeTypeUllage = 'Ullage';
@@ -252,6 +253,10 @@ angular.module('ts5App')
       }
 
       init();
+
+      if (savedCatererStationList !== null && savedCatererStationList.length && ($scope.deliveryNote.catererStationId === null || !$scope.deliveryNote.catererStationId.length)) {
+        $scope.catererStationList = savedCatererStationList;
+      }      
     }
 
     function getMasterItemIdFromItem(item) {
@@ -357,6 +362,13 @@ angular.module('ts5App')
     };
 
     $scope.toggleReview = function() {
+      savedCatererStationList = $scope.catererStationList;
+      var isFormValid = validateForm();
+      if (!isFormValid) {
+        hideLoadingModal();
+        return;
+      }
+
       $scope.canReview = canReview();
       $scope.hideReview = false;
       $scope.form.$setSubmitted(true);
@@ -465,6 +477,13 @@ angular.module('ts5App')
     }
 
     $scope.save = function(_isAccepted) {
+      savedCatererStationList = $scope.catererStationList;
+      var isFormValid = validateForm();
+      if (!isFormValid) {
+        hideLoadingModal();
+        return;
+      }
+      
       if ($scope.deliveryNote.isAccepted) {
         return;
       }
@@ -472,6 +491,11 @@ angular.module('ts5App')
       generateSavePayload(_isAccepted);
       saveDeliveryNote();
     };
+
+    function validateForm () {
+      $scope.displayError = !$scope.form.$valid;
+      return $scope.form.$valid;
+    }
 
     $scope.changeItem = function(newItem, index) {
       newItem.canEdit = $scope.deliveryNote.items[index].canEdit;

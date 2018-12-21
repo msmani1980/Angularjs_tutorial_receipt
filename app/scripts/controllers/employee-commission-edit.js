@@ -231,6 +231,12 @@ angular.module('ts5App')
     }
 
     $scope.submitForm = function() {
+      var isFormValid = validateForm();
+      if (!isFormValid) {
+        hideLoadingModal();
+        return;
+      }
+
       if (!$scope.employeeCommissionForm.$valid && !$scope.isCommissionReadOnly()) {
         return false;
       }
@@ -240,6 +246,11 @@ angular.module('ts5App')
       var apiCall = $scope.commission.id ? 'updateCommission' : 'createCommission';
       employeeCommissionFactory[apiCall](payload).then(requestSuccessHandler, requestErrorHandler);
     };
+
+    function validateForm () {
+      $scope.displayError = !$scope.employeeCommissionForm.$valid;
+      return $scope.employeeCommissionForm.$valid;
+    }
     
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
