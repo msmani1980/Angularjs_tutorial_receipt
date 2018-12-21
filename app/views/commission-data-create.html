@@ -14,7 +14,7 @@
   <error-dialog form-object="commissionDataForm" error-response="errorResponse" display="displayError">
   </error-dialog>
 
-  <form name="commissionDataForm" class="edit-form" ng-submit="saveData()">
+  <form name="commissionDataForm" class="edit-form">
 
     <!--/TopHeader -->
 
@@ -24,7 +24,7 @@
 
         <div class="row">
           <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
+            <div class="form-group" ng-class="{ 'has-error' : !commissionData.crewBaseTypeId && displayError, 'has-success' : commissionData.crewBaseTypeId}">
               <label>Crew Base *</label>
               <select class="form-control"
                       id="crewBase"
@@ -39,9 +39,9 @@
           </div>
 
           <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
+            <div class="form-group" ng-class="{ 'has-error' : !commissionData.startDate && displayError, 'has-success' : commissionData.startDate}">
               <date-picker-field
-                name="startDate"
+                name="effectiveFrom"
                 class="form-group"
                 form="commissionDataForm"
                 ng-model="commissionData.startDate"
@@ -53,9 +53,9 @@
 
           </div>
             <div class="col-xs-12 col-sm-4">
-              <div class="form-group">
+              <div class="form-group" ng-class="{ 'has-error' : !commissionData.endDate && displayError, 'has-success' : commissionData.endDate}">
                 <date-picker-field
-                  name="endDate"
+                  name="effectiveTo"
                   class="form-group"
                   form="commissionDataForm"
                   ng-model="commissionData.endDate"
@@ -77,10 +77,10 @@
         <div class="row">
 
           <div class="col-xs-12 col-sm-6">
-            <div class="form-group">
+            <div class="form-group" ng-class="{ 'has-error' : !commissionData.commissionPayableTypeId && displayError, 'has-success' : commissionData.commissionPayableTypeId}">
               <label>Commission Payable On *</label>
               <select class="form-control"
-                      name="commissionType"
+                      name="CommissionPayableOn"
                       required="true"
                       ng-model="commissionData.commissionPayableTypeId"
                       ng-change="updateCommissionPercent()"
@@ -93,6 +93,7 @@
           </div>
 
           <div class="col-xs-12 col-sm-6">
+            <div class="form-group" ng-class="{ 'has-error' : !commissionData.commissionPercentage && displayError, 'has-success' : commissionData.commissionPercentage}">
             <label>Commission Percent *</label>
             <input ng-model="commissionData.commissionPercentage"
                    name="commissionPercent"
@@ -103,6 +104,7 @@
                    custom-pattern="percentage"
                    ng-required="commissionPercentRequired"
                    ng-disabled="commissionPercentDisabled || readOnly">
+            </div>       
           </div>
         </div>
 
@@ -110,7 +112,7 @@
 
         <div class="row">
           <div class="col-xs-12 col-sm-6">
-            <div class="form-group">
+            <div class="form-group" ng-class="{ 'has-error' : !commissionData.manualBarsCommissionValueTypeId && displayError, 'has-success' : commissionData.manualBarsCommissionValueTypeId}">
               <label>Manual Bars Commission Type *</label>
               <select class="form-control"
                       name="manualBarsCommissionType"
@@ -128,7 +130,7 @@
           </div>
 
           <div class="col-xs-10 col-sm-5">
-            <div class="form-group">
+            <div class="form-group" ng-class="{ 'has-error' : !commissionData.manualBarsCommissionValue && displayError, 'has-success' : commissionData.manualBarsCommissionValue}">
               <label>Manual Bars Commisssion Value *</label>
               <input ng-model="commissionData.manualBarsCommissionValue"
                      type="text"
@@ -158,10 +160,10 @@
 
         <div class="row">
           <div class="col-xs-12 col-sm-6">
-            <div class="form-group">
+            <div class="form-group" ng-class="{ 'has-error' : !commissionData.discrepancyDeductionsCashPercentage && displayError, 'has-success' : commissionData.discrepancyDeductionsCashPercentage}">
               <label>Cash Percent *</label>
               <input ng-model="commissionData.discrepancyDeductionsCashPercentage"
-                     name="discrepancyDeductionsCashPercentage"
+                     name="cashPercent"
                      type="text"
                      class="form-control"
                      placeholder="57.5"
@@ -174,10 +176,10 @@
           </div>
 
           <div class="col-xs-12 col-sm-6">
-            <div class="form-group">
+            <div class="form-group" ng-class="{ 'has-error' : !commissionData.discrepancyDeductionsStockPercentage && displayError, 'has-success' : commissionData.discrepancyDeductionsStockPercentage}">
               <label>Stock Percent *</label>
               <input ng-model="commissionData.discrepancyDeductionsStockPercentage"
-                     name="discrepancyDeductionsStockPercentage"
+                     name="stockPercent"
                      type="text"
                      class="form-control"
                      placeholder="57.5"
@@ -194,10 +196,10 @@
 
         <div class="row">
           <div class="col-xs-12 col-sm-6">
-            <div class="form-group">
+            <div class="form-group" ng-class="{ 'has-error' : !commissionData.commissionValueTypeId && displayError, 'has-success' : commissionData.commissionValueTypeId}">
               <label>Commission Type *</label>
               <select class="form-control"
-                      name="commissionValueTypeId"
+                      name="commissionType"
                       required="true"
                       ng-model="commissionData.commissionValueTypeId"
                       ng-change="updateIncentiveIncrement()"
@@ -210,7 +212,7 @@
           </div>
 
           <div class="col-xs-10 col-sm-5">
-            <div class="form-group">
+            <div class="form-group" ng-class="{ 'has-error' : !commissionData.commissionValue && displayError, 'has-success' : commissionData.commissionValue}">
               <label>Commisssion Value *</label>
               <input ng-model="commissionData.commissionValue"
                      name="commissionValue"
@@ -240,10 +242,11 @@
 
       </div>
       <div class="panel-footer text-right">
-        <button type="submit" class="btn btn-primary" ng-hide="readOnly">
+        <button type="submit" class="btn btn-primary" ng-hide="readOnly" ng-click="saveData()">
           <span class="fa fa-check-square-o" aria-hidden="true"></span>
           <span class="hidden-xs">Save</span>
         </button>
+        
         <a href="#/commission-data-table" class="btn btn-default" ng-hide="readOnly">Cancel</a>
       </div>
     </div>

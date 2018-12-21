@@ -3,7 +3,7 @@
 <error-dialog form-object="employeeCommissionForm" error-response="errorResponse" display="displayError">
 </error-dialog>
 
-<form name="employeeCommissionForm" class="form edit-form" ng-submit="submitForm()">
+<form name="employeeCommissionForm" class="form edit-form">
 
   <div class="edit-controls">
     <div class="row">
@@ -13,7 +13,7 @@
 
       <div class="col-xs-6 text-right">
         <a class="btn btn-default" ng-href="#/employee-commission-list" class="btn">Back</a>
-        <button ng-show="!isViewOnly() && employeeCommissionForm.$dirty" class="btn btn-success">
+        <button ng-show="!isViewOnly() && employeeCommissionForm.$dirty" class="btn btn-success" ng-click="submitForm()">
           <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
           <span class="hidden-xs">Save</span>
         </button>
@@ -37,42 +37,51 @@
 	  
 	<div class="col-sm-3">
 	  <div class="form-group">
+        <div class="form-group" ng-class="{ 'has-error' : !commission.startDate && displayError, 'has-success' : commission.startDate}">
 		  <date-picker-field ng-if="!isCommissionReadOnly()"
-			   name="startDate"
+			   name="effectiveFrom"
 			   min-date="minDate"
 			   label="Effective From"
 			   required="true" 
 			   ng-model="commission.startDate">
 		  </date-picker-field>
+		</div>  
+        <div class="form-group" ng-class="{ 'has-error' : !commission.startDate && displayError, 'has-success' : commission.startDate}">
 		  <date-picker-field ng-if="isCommissionReadOnly()"
 		       disable="true"
-			   name="startDate"
+			   name="effectiveFrom"
 			   custom-effective="true"
 			   label="Effective From"
 			   required="true" 
 			   ng-model="commission.startDate">
 		  </date-picker-field>
-		  
+		</div>  
+        <div class="form-group" ng-class="{ 'has-error' : !commission.endDate && displayError, 'has-success' : commission.endDate}">
 		  <date-picker-field ng-if="isCurrentEffectiveDate(commission)"
 			   disable="isViewOnly()"
+			   name="effectiveTo" 
 			   end-current-effective="!isCreate()"
 			   label="Effective To"
 			   required="true" 
 			   ng-model="commission.endDate"
 			   disable-past="true">
 		  </date-picker-field>
+		</div>  
+        <div class="form-group" ng-class="{ 'has-error' : !commission.endDate && displayError, 'has-success' : commission.endDate}">
 		  <date-picker-field ng-if="!isCurrentEffectiveDate(commission)"
 			   disable="isViewOnly()"
+			   name="effectiveTo" 
 			   end-current-effective="false"
 			   label="Effective To"
 			   required="true" 
 			   ng-model="commission.endDate"
 			   disable-past="true">
 		  </date-picker-field>
+		</div>  
 	  </div>
 	</div>
     <div class="col-sm-3">
-    <div class="form-group">
+    <div class="form-group" ng-class="{ 'has-error' : !commission.selectedItem && displayError, 'has-success' : commission.selectedItem}">
       <label class="control-label" for="itemName">Item Name *</label>
       <select
         class="form-control"
@@ -87,7 +96,7 @@
   </div>
 
   <div class="col-sm-3">
-    <div class="form-group">
+    <div class="form-group" ng-class="{ 'has-error' : !commission.selectedPriceType && displayError, 'has-success' : commission.selectedPriceType}">
       <label class="control-label" for="saleType">Sale Type *</label>
       <select
         class="form-control"
@@ -102,7 +111,7 @@
   </div>
 
   <div class="col-sm-3">
-    <div class="form-group">
+    <div class="form-group" ng-class="{ 'has-error' : !commission.selectedRateType && displayError, 'has-success' : commission.selectedRateType}">
       <label class="control-label" for="rateType">Rate Type *</label>
       <select
         class="form-control"
@@ -117,9 +126,8 @@
   </div>
 
   <div class="col-sm-3" ng-if="commission.selectedRateType.id == 2">
-    <div class="form-group">
+    <div class="form-group" ng-class="{ 'has-error' : !commission.percentage && displayError, 'has-success' : commission.percentage}">
       <label class="control-label">Rate *</label>
-
       <div class="input-group">
         <span class="input-group-addon">
           <i class="fa fa-pie-chart"></i>
@@ -130,7 +138,7 @@
                required="true"
                ng-readonly="isCommissionReadOnly()"
                type="text"
-               name="ratePercentage"
+               name="rate"
                placeholder="0.00"
                class="form-control"
                aria-label="Amount (to the nearest dollar)"/>
@@ -141,7 +149,7 @@
   <div class="col-sm-3" ng-if="commission.selectedRateType.id == 1">
     <label class="control-label">Rate for Currency *</label>
 
-    <div class="form-group" ng-repeat="currency in companyCurrencies">
+    <div class="form-group" ng-repeat="currency in companyCurrencies" ng-class="{ 'has-error' : !commission.currenciesFields[currency.code] && displayError, 'has-success' : commission.currenciesFields[currency.code]}">
 
       <div class="input-group">
         <span class="input-group-addon">

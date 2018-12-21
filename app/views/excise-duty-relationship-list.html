@@ -20,7 +20,7 @@
     <error-dialog form-object="itemExciseDutyCreateForm" error-response="errorResponse" display="displayError">
     </error-dialog>
 
-    <form name="itemExciseDutyCreateForm" ng-submit="createRelationship()">
+    <form name="itemExciseDutyCreateForm">
 
       <div class="panel panel-default collapse no-transition" id="create-collapse">
         <div class="panel-heading">
@@ -44,7 +44,7 @@
                 </select>
               </div>
             </div>
-            <div class="col-xs-6 col-sm-4">
+            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : !newRecord.startDate && displayError, 'has-success' : newRecord.startDate}">
               <date-picker-field
                 name="startDate"
                 class="form-group"
@@ -56,7 +56,7 @@
                 ng-required="shouldRequireCreateFields()">
               </date-picker-field>
             </div>
-            <div class="col-xs-6 col-sm-4">
+            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : !newRecord.endDate && displayError, 'has-success' : newRecord.endDate}">
               <date-picker-field
                 name="endDate"
                 class="form-group"
@@ -71,7 +71,7 @@
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-4">
-              <div class="form-group">
+              <div class="form-group" ng-class="{ 'has-error' : !newRecord.retailItem && displayError, 'has-success' : newRecord.retailItem}">
                 <label>Duty Free Retail Item *</label>
                 <ui-select required="true"
                            ng-model="newRecord.retailItem"
@@ -79,7 +79,7 @@
                            placeholder="Select an Item"
                            ng-required="shouldRequireCreateFields()"
                            ng-disabled="!itemListForCreate.length"
-                           name="retailItem">
+                           name="dutyFreeRetailItem">
                   <ui-select-match placeholder="Select a retail Item">{{ $select.selected.itemName}}</ui-select-match>
                   <ui-select-choices repeat="item in itemListForCreate | filter: {itemName:$select.search} track by item.id">
                     <div ng-bind-html="item.itemName | highlight: $select.search"></div>
@@ -88,7 +88,7 @@
               </div>
             </div>
             <div class="col-xs-12 col-sm-4">
-              <div class="form-group">
+              <div class="form-group" ng-class="{ 'has-error' : !newRecord.commodityCode && displayError, 'has-success' : newRecord.commodityCode}">
                 <label>Commodity Code *</label>
                 <ui-select required="true"
                            ng-model="newRecord.commodityCode"
@@ -105,11 +105,11 @@
               </div>
             </div>
             <div class="col-xs-6 col-sm-4">
-              <div class="form-group">
+              <div class="form-group" ng-class="{ 'has-error' : !newRecord.alcoholVolume && displayError, 'has-success' : newRecord.alcoholVolume}">
                 <label>Alcohol Volume *</label>
-                <input ng-model="newRecord.alcoholVolume"
-                       custom-validity
-                       custom-pattern="decimalWithTwoDecimalPlaces"
+                <input type = "text"
+                       ng-model="newRecord.alcoholVolume"
+                       ng-pattern="regexp.sixNumberWithTwoDecimal"
                        maxlength="7"
                        class="form-control"
                        name="alcoholVolume"
@@ -120,7 +120,7 @@
         </div>
         <div class="panel-footer text-right">
           <button type="button" class="btn btn-default" ng-click="clearCreateForm(true)" id="clearExciseDutyRelationshipId">Clear All</button>
-          <button type="submit" class="btn btn-success" id="submitExciseDutyRelationshipId"><span class="fa fa-check"></span> Save</button>
+          <button type="submit" class="btn btn-success" ng-click="createRelationship()" id="submitExciseDutyRelationshipId"><span class="fa fa-check"></span> Save</button>
         </div>
       </div>
     </form>
