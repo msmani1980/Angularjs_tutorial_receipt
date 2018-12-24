@@ -164,8 +164,8 @@
         <td ng-hide="isOpen(item)">{{ item.versions[0].categoryName }}</td>
         <td ng-hide="isOpen(item)">{{ item.versions[0].startDate }}</td>
         <td ng-hide="isOpen(item)">{{ item.versions[0].endDate }}</td>
-        <td ng-hide="isOpen(item)">{{ getUpdatedOn(item.versions[item.versions.length - 1]) }}</td>
-        <td ng-hide="isOpen(item)">{{ getUpdateBy(item.versions[item.versions.length - 1]) }}</td>
+        <td ng-hide="isOpen(item)">{{ getUpdatedOn(item.versions[0]) }}</td>
+        <td ng-hide="isOpen(item)">{{ getUpdateBy(item.versions[0]) }}</td>
         <td ng-hide="isOpen(item)">
           <a class="btn btn-info btn-xs" ng-href="#/item-view/{{item.versions[0].id}}">
             <i class="fa fa-file"></i>
