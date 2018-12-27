@@ -755,7 +755,29 @@ angular.module('ts5App')
       return !angular.isUndefined($scope.formData.filters[index].arrivalStation.id);
     }
 
-    
+    function setStationGlobals(dataFromAPI) {
+      $scope.selectOptions.companyStationGlobals = dataFromAPI.response;
+    }
+
+    this.getStationGlobals = function () {
+      return discountFactory.getStationGlobals().then(setStationGlobals)
+    };
+
+    $scope.disabledDepartureStations = function (station, stations) {
+      if (!stations.arrivalStation) {
+        return false;
+      }
+
+      return lodash.find($scope.formData.filters, { arrivalStation: stations.arrivalStation, departureStation: station });
+    };
+
+    $scope.disabledArrivalStations = function (station, stations) {
+      if (!stations.departureStation) {
+        return false;
+      }
+
+      return lodash.find($scope.formData.filters, { departureStation: stations.departureStation, arrivalStation: station });
+    };
 
     this.validateForm = function() {
       $scope.displayError = !$scope.form.$valid || $scope.errorCustom.length > 0;
