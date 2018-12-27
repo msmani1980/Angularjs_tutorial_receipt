@@ -661,7 +661,57 @@ angular.module('ts5App')
       return activeBtn;
     };
 
-    
+    $scope.addBlankObjectToArray = function (_array) {
+      if ($scope.readOnly || $scope.isDisabled()) {
+        return false;
+      }
+
+      _array.push({});
+    };
+
+    $scope.removeFromStationListByIndex = function ($index) {
+      var arrivalId = -1;
+      var departureId = -1;
+
+      if (!$scope.formData.filters[$index]) {
+        return false;
+      }
+
+      if ($scope.formData.filters[$index].arrivalStation) {
+        arrivalId = $scope.formData.filters[$index].arrivalStation.id;
+      }
+
+      if ($scope.formData.filters[$index].departureStation) {
+        departureId = $scope.formData.filters[$index].departureStation.id;
+      }
+
+      removeDepartureFromHasArrival(arrivalId, departureId);
+      removeArrivalFromHasDeparture(arrivalId, departureId);
+      $scope.formData.filters.splice($index, 1);
+    };
+
+    function removeDepartureFromHasArrival(arrivalId, departureId) {
+      var departureIndex = -1;
+      if ($scope.repeatableStations.arrivalHas[arrivalId]) {
+        departureIndex = $scope.repeatableStations.arrivalHas[arrivalId].indexOf(departureId);
+      }
+
+      if (departureIndex !== -1) {
+        $scope.repeatableStations.arrivalHas[arrivalId].splice(departureIndex, 1);
+      }
+    }
+
+    function removeArrivalFromHasDeparture(arrivalId, departureId) {
+      var arrivalIndex = -1;
+      if ($scope.repeatableStations.departureHas[departureId]) {
+        arrivalIndex = $scope.repeatableStations.departureHas[departureId].indexOf(arrivalId);
+      }
+
+      if (arrivalIndex !== -1) {
+        $scope.repeatableStations.departureHas[departureId].splice(arrivalIndex, 1);
+      }
+    }
+
 
     this.validateForm = function() {
       $scope.displayError = !$scope.form.$valid || $scope.errorCustom.length > 0;
