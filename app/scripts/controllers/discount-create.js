@@ -731,6 +731,30 @@ angular.module('ts5App')
       $scope.repeatableStations.arrivalHas[arrivalId].push(departureId);
     };
 
+    function hasCompleteStationObject(index) {
+      if (angular.isUndefined($scope.formData.filters[index])) {
+        return false;
+      }
+
+      return hasDepartureStationObject(index) && hasCompleteArrivalStation(index);
+    }
+
+    function hasDepartureStationObject(index) {
+      if (angular.isUndefined($scope.formData.filters[index].departureStation)) {
+        return false;
+      }
+
+      return !angular.isUndefined($scope.formData.filters[index].departureStation.id);
+    }
+
+    function hasCompleteArrivalStation(index) {
+      if (angular.isUndefined($scope.formData.filters[index].arrivalStation)) {
+        return false;
+      }
+
+      return !angular.isUndefined($scope.formData.filters[index].arrivalStation.id);
+    }
+
     
 
     this.validateForm = function() {
