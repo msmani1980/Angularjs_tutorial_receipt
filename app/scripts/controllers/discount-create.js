@@ -31,6 +31,11 @@ angular.module('ts5App')
     $scope.salesCategoriesList = [];
     $scope.salesCategoriesMap = {};
     $scope.addRestrictedItemsNumber = 1;
+    $scope.repeatableStations = {
+      arrivalHas: [],
+      departureHas: []
+    };
+    $scope.selectOptions = { };
 
     this.getCleanFormData = function() {
       var path = $location.path();
@@ -45,7 +50,8 @@ angular.module('ts5App')
           discountAmountLimitPerTransactionValue: {},
           limitByShopDiscountType: 1,
           limitByTransactionDiscountType: 1,
-          limitBySeatDiscountType: 1
+          limitBySeatDiscountType: 1,
+          filters: []
         };
       } else {
         return {
@@ -59,7 +65,8 @@ angular.module('ts5App')
           discountAmountLimitPerTransactionValue: {},
           limitByShopDiscountType: 1,
           limitByTransactionDiscountType: 1,
-          limitBySeatDiscountType: 1
+          limitBySeatDiscountType: 1,
+          filters: []
         };
       }
     };
@@ -226,7 +233,8 @@ angular.module('ts5App')
         $this.getGlobalDiscountTypesList(),
         $this.getDiscountTypesList(),
         $this.getCompanyCurrencyGlobals(),
-        $this.getSalesCategoriesList()
+        $this.getSalesCategoriesList(),
+        $this.getStationGlobals()
       ];
     };
 
@@ -652,6 +660,8 @@ angular.module('ts5App')
       }, 'slow');
       return activeBtn;
     };
+
+    
 
     this.validateForm = function() {
       $scope.displayError = !$scope.form.$valid || $scope.errorCustom.length > 0;
