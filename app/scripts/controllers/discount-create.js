@@ -712,6 +712,26 @@ angular.module('ts5App')
       }
     }
 
+    $scope.stationListChanged = function ($index) {
+      if (!hasCompleteStationObject($index)) {
+        return false;
+      }
+
+      var departureId = $scope.formData.filters[$index].departureStation.id;
+      var arrivalId = $scope.formData.filters[$index].arrivalStation.id;
+      if (!$scope.repeatableStations.departureHas[departureId]) {
+        $scope.repeatableStations.departureHas[departureId] = [];
+      }
+
+      $scope.repeatableStations.departureHas[departureId].push(arrivalId);
+      if (!$scope.repeatableStations.arrivalHas[arrivalId]) {
+        $scope.repeatableStations.arrivalHas[arrivalId] = [];
+      }
+
+      $scope.repeatableStations.arrivalHas[arrivalId].push(departureId);
+    };
+
+    
 
     this.validateForm = function() {
       $scope.displayError = !$scope.form.$valid || $scope.errorCustom.length > 0;
