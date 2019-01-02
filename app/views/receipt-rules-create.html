@@ -64,10 +64,10 @@
             <div class="form-group">
               <label for="auto-print">Print Auto-Receipt For*</label>
               <div  class="input-group">
-                <input type="radio" name="autoPrint" value="All" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'All' " ng-required=true > All Items
+                <input type="radio" name="autoPrint" value="All" ng-disabled="readOnly" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'All' " ng-required=true > All Items
               </div>
               <div>
-                <input type="radio" name="autoPrint" value="Item" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'Item' "> Specific Retail Items ('Print Receipt' flagged in the item setup screen)
+                <input type="radio" name="autoPrint" value="Item" ng-disabled="readOnly" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'Item' "> Specific Retail Items ('Print Receipt' flagged in the item setup screen)
               </div>  
                  
             </div>
