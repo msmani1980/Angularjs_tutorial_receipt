@@ -28,10 +28,10 @@ angular.module('ts5App')
     }
 
     function showErrors(dataFromAPI) {
-        hideLoadingModal();
-        $scope.displayError = true;
-        $scope.errorResponse = dataFromAPI;
-      }
+      hideLoadingModal();
+      $scope.displayError = true;
+      $scope.errorResponse = dataFromAPI;
+    }
 
     function hideErrors() {
       $scope.displayError = false;
