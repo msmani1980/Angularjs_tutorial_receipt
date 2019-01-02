@@ -28,9 +28,14 @@ angular.module('ts5App')
     }
 
     function showErrors(dataFromAPI) {
-      hideLoadingModal();
-      $scope.displayError = true;
-      $scope.errorResponse = dataFromAPI;
+        hideLoadingModal();
+        $scope.displayError = true;
+        $scope.errorResponse = dataFromAPI;
+      }
+
+    function hideErrors() {
+      $scope.displayError = false;
+      $scope.errorResponse = null;
     }
 
     function isPanelOpen(panelName) {
@@ -97,6 +102,7 @@ angular.module('ts5App')
     };
 
     $scope.clearSearchForm = function () {
+      hideErrors();
       $scope.search = null;
       $scope.exciseDutyList = null;
       initLazyLoadingMeta();
@@ -133,6 +139,7 @@ angular.module('ts5App')
     };
 
     $scope.searchExciseData = function () {
+      hideErrors();
       initLazyLoadingMeta();
       $scope.exciseDutyList = null;
       showLoadingModal('fetching records');
@@ -214,6 +221,7 @@ angular.module('ts5App')
     $scope.cancelEdit = function () {
       $scope.inEditMode = false;
       $scope.recordToEdit = null;
+      hideErrors();
     };
 
     $scope.canEdit = function (exciseDuty) {
@@ -247,6 +255,9 @@ angular.module('ts5App')
       var isValid = !!$scope.newRecord.country;
       $scope.exciseDutyCreateForm.country.$setValidity('required', isValid);
       $scope.displayError = !isValid;
+      if (isValid) {
+        $scope.displayError = !$scope.exciseDutyCreateForm.$valid;
+      }
     }
 
     $scope.createExciseDuty = function () {

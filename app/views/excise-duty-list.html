@@ -30,7 +30,7 @@
               <h3>Create New Excise Duty</h3>
             </div>
             <div class="col-xs-4" >
-              <div class="form-group" ng-class="{ 'has-error' : newRecord.country && displayError , 'has-success' : newRecord.country }">
+              <div class="form-group" ng-class="{ 'has-error' : !newRecord.country && displayError && shouldRequireCreateFields(), 'has-success' : newRecord.country }">
               <label>Country *</label>
               <ui-select required="true"
                          ng-model="newRecord.country"
@@ -46,11 +46,14 @@
               </div>
             </div>
           </div>
+          
         </div>
+        
+        
         <div class="panel-body">
           <div class="row">
             <div class="col-xs-12 col-sm-4">
-              <div class="form-group" ng-class="{ 'has-error' : !newRecord.commodityCode && displayError , 'has-success' : newRecord.commodityCode }">
+              <div class="form-group" ng-class="{ 'has-error' : !newRecord.commodityCode && displayError && shouldRequireCreateFields() , 'has-success' : newRecord.commodityCode }">
                 <label>Commodity Code *</label>
                 <input type="text"
                        class="form-control"
@@ -61,7 +64,7 @@
                        ng-required="shouldRequireCreateFields()">
               </div>
             </div>
-            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : !newRecord.startDate && displayError , 'has-success' : newRecord.startDate}">
+            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : !newRecord.startDate && displayError  && shouldRequireCreateFields() , 'has-success' : newRecord.startDate}">
               <date-picker-field
                 name="startDate"
                 class="form-group"
@@ -72,7 +75,7 @@
                 ng-required="shouldRequireCreateFields()">
               </date-picker-field>
             </div>
-            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : !newRecord.startDate && displayError , 'has-success' : newRecord.startDate}">
+            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : !newRecord.endDate && displayError && shouldRequireCreateFields() , 'has-success' : newRecord.endDate}">
               <date-picker-field
                 name="endDate"
                 class="form-group"
@@ -86,7 +89,7 @@
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-4">
-              <div class="form-group" ng-class="{ 'has-error' : !newRecord.dutyRate && displayError , 'has-success' : newRecord.dutyRate}">
+              <div class="form-group" ng-class="{ 'has-error' : !newRecord.dutyRate && displayError && shouldRequireCreateFields() , 'has-success' : newRecord.dutyRate}">
                 <label>Duty Rate *</label>
 
                 <div class="input-group">
@@ -102,7 +105,7 @@
               </div>
             </div>
             <div class="col-xs-6 col-sm-4">
-              <div class="form-group" ng-class="{ 'has-error' : !newRecord.volumeUnitId && displayError , 'has-success' : newRecord.volumeUnitId}">
+              <div class="form-group" ng-class="{ 'has-error' : !newRecord.volumeUnitId && displayError && shouldRequireCreateFields() , 'has-success' : newRecord.volumeUnitId}">
                 <label>Volumetric Measure *</label>
                 <select class="form-control"
                         ng-model="newRecord.volumeUnitId"
