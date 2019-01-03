@@ -766,7 +766,7 @@ angular.module('ts5App')
     }
 
     this.getStationGlobals = function () {
-      return discountFactory.getStationGlobals().then(setStationGlobals)
+      return discountFactory.getStationGlobals().then(setStationGlobals);
     };
 
     $scope.disabledDepartureStations = function (station, stations) {
@@ -891,7 +891,6 @@ angular.module('ts5App')
       $this.validateDiscountLimitPerShop();
       $this.validateItemLimitPerTransaction();
       $this.validateDiscountLimitPerTransaction();
-      // TODO: validate item restrictions
 
       $scope.form.$setSubmitted(true);
       if (formData && $this.validateForm() && $scope.errorCustom.length === 0) {
