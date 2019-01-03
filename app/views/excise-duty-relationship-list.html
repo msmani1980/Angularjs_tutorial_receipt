@@ -17,8 +17,9 @@
       </div>
     </div>
 
-    <error-dialog form-object="itemExciseDutyCreateForm" error-response="errorResponse" display="displayError">
-    </error-dialog>
+    <!-- error-dialog form-object="itemExciseDutyCreateForm" error-response="errorResponse" display="displayError">
+    </error-dialog-->
+    <error-dialog error-response="errorResponse" display="displayError"></error-dialog>
 
     <form name="itemExciseDutyCreateForm">
 
@@ -120,7 +121,7 @@
         </div>
         <div class="panel-footer text-right">
           <button type="button" class="btn btn-default" ng-click="clearCreateForm(true)" id="clearExciseDutyRelationshipId">Clear All</button>
-          <button type="submit" class="btn btn-success" ng-click="createRelationship()" id="submitExciseDutyRelationshipId"><span class="fa fa-check"></span> Save</button>
+          <button type="button" class="btn btn-success" ng-click="createRelationship()" id="submitExciseDutyRelationshipId"><span class="fa fa-check"></span> Save</button>
         </div>
       </div>
     </form>
@@ -197,7 +198,7 @@
       </form>>
     </div>
     <br>
-
+    
     <form name="itemExciseDutyEditForm">
       <div class="table-responsive">
         <table ng-if="itemExciseDutyList.length > 0" infinite-scroll="getItemExciseDutyList()" infinite-scroll-immediate-check="false"
@@ -262,12 +263,11 @@
             </span>
           </td>
           <td>
-          <div class="form-group" ng-class="{ 'has-error' : !recordToEdit.alcoholVolume && displayEditError, 'has-success' : recordToEdit.alcoholVolume }">
+          <div class="form-group" ng-class="{ 'has-error' : !isAlcoholVolumeValid(recordToEdit) && displayError, 'has-success' : isAlcoholVolumeValid(recordToEdit) }">
             <span ng-hide="isSelectedToEdit(relationship) && canDelete(relationship)">{{ relationship.alcoholVolume }}</span>
             <span ng-show="isSelectedToEdit(relationship) && canDelete(relationship)">
-            <input ng-model="recordToEdit.alcoholVolume"
-                   custom-validity
-                   custom-pattern="decimalWithTwoDecimalPlaces"
+            <input type = "text"
+                   ng-model="recordToEdit.alcoholVolume"
                    maxlength="7"
                    class="form-control"
                    name="alcoholVolume"
@@ -302,7 +302,7 @@
           <td>{{ getUpdatedOn(relationship) }}</td>
           <td>{{ getUpdateBy(relationship) }}</td>
           <td ng-show="isCRUD">
-            <button type="submit"
+            <button type="button"
                     class="btn btn-success btn-xs"
                     tabindex="0"
                     ng-show="isSelectedToEdit(relationship)"

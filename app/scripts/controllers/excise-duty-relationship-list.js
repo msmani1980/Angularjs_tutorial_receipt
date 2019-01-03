@@ -246,12 +246,19 @@ angular.module('ts5App')
 
     function validateEditForm () {
       $scope.displayEditError = !$scope.itemExciseDutyEditForm.$valid;
-      return $scope.form.$valid;
+      return $scope.itemExciseDutyEditForm.$valid;
     };
 
     $scope.saveEdit = function() {
-      console.log ('$scope.displayEditError', $scope.displayEditError);
-      console.log ('$scope.itemExciseDutyEditForm', $scope.itemExciseDutyEditForm);
+      $this.clearErrors();
+      if ($scope.displayError === true) {
+          $this.clearCustomErrors();
+      }    	
+
+      var isAlcoholVolumeValid =  $this.validateNewData ($scope.recordToEdit);
+      if (!isAlcoholVolumeValid) {
+    	  return;
+      }
 
       validateEditForm ();
       showLoadingModal('Editing Record');
@@ -261,6 +268,8 @@ angular.module('ts5App')
     };
 
     $scope.cancelEdit = function() {
+      $this.clearErrors();
+      $scope.errorResponse = [];
       $scope.inEditMode = false;
       $scope.recordToEdit = null;
     };
@@ -551,6 +560,7 @@ angular.module('ts5App')
       $scope.inEditMode = false;
       $scope.inCreateMode = false;
       $scope.minDate = dateUtility.nowFormattedDatePicker();
+      $scope.errorCustom = [];
     }
 
     function initWatchGroups() {
@@ -570,7 +580,77 @@ angular.module('ts5App')
 
     init();
 
+    $scope.isAlcoholVolumeValueInvalid = function (record) {
+      var isInvalid = false; 
+      if (record !== null && angular.isDefined(record.alcoholVolume)) {	
+        isInvalid =  !record.alcoholVolume || (record.alcoholVolume && !record.alcoholVolume.match(/^\d{0,6}(\.\d{0,2})?$/));
+      }
+
+      return isInvalid;
+    };    
+
+    $scope.isAlcoholVolumeValid = function (record) {
+        return this.validateNewData (record);
+      };    
+      
+    
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate));
+    };
+
+    this.showValidationError = function (field, isPattern) {
+      var payload = { };
+
+      if (isPattern) {
+        payload = {
+          field: field,
+          value: 'field contains invalid characters'
+        };
+      } else {
+        payload = {
+          field: field,
+          value: 'is a required field. Please update and try again!'
+        };
+      }
+
+      $scope.errorCustom.push(payload);
+      $scope.displayError = true;
+    };
+
+    this.isFieldEmpty = function (value) {
+      return (value === undefined || value === null || value.length === 0 || value === 'Invalid date');
+    };
+
+    this.validateNewData = function (record) {
+    	console.log ('validateNewData-->record', record);
+    	var isEmplty = $this.isFieldEmpty(record.alcoholVolume)
+    	console.log ('validateNewData-->isEmplty', isEmplty);
+      if ($this.isFieldEmpty(record.alcoholVolume)) {
+        $this.showValidationError("alcoholVolume", false);
+        return false;
+      }
+
+      var isAlcoholVolumeValueInvalid = $scope.isAlcoholVolumeValueInvalid(record);
+  	console.log ('validateNewData-->isAlcoholVolumeValueInvalid', isAlcoholVolumeValueInvalid);
+	
+      if (angular.isDefined(record.alcoholVolume) && $scope.isAlcoholVolumeValueInvalid(record)) {
+        $this.showValidationError("alcoholVolume", true);
+        return false;
+      }
+
+
+      return true;
+    };
+
+    this.clearCustomErrors = function () {
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+    };
+
+    this.clearErrors = function () {
+      $this.clearCustomErrors();
+      $scope.displayError = false;
+      $scope.errorResponse = [];
+      $scope.errorCustom = [];
     };
   });
