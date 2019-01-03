@@ -33,6 +33,11 @@ angular.module('ts5App')
       $scope.errorResponse = dataFromAPI;
     }
 
+    function hideErrors() {
+      $scope.displayError = false;
+      $scope.errorResponse = null;
+    }
+
     function isPanelOpen(panelName) {
       return !angular.element(panelName).hasClass('collapse');
     }
@@ -87,10 +92,12 @@ angular.module('ts5App')
     };
 
     $scope.clearCreateForm = function(shouldClearAll) {
+      hideErrors();
       var currentItemType = $scope.newRecord.itemType;
       $scope.displayError = false;
       $scope.newRecord = {
-        itemType: (shouldClearAll) ? null : currentItemType
+        itemType: (shouldClearAll) ? null : currentItemType,
+        alcoholVolume: null
       };
 
       $scope.itemExciseDutyCreateForm.endDate.$setUntouched();
@@ -104,10 +111,12 @@ angular.module('ts5App')
     };
 
     $scope.toggleSearchPanel = function() {
+      hideErrors();
       togglePanel('#search-collapse');
     };
 
     $scope.toggleCreatePanel = function() {
+      hideErrors();
       $scope.clearCreateForm(true);
       $scope.clearSearchForm();
       $scope.cancelEdit();
@@ -138,6 +147,7 @@ angular.module('ts5App')
     };
 
     $scope.searchItemExciseData = function() {
+      hideErrors();
       initLazyLoadingMeta();
       $scope.itemExciseDutyList = null;
       showLoadingModal('Fetching Data');
@@ -234,7 +244,16 @@ angular.module('ts5App')
       reloadAfterAPISuccess();
     }
 
+    function validateEditForm () {
+      $scope.displayEditError = !$scope.itemExciseDutyEditForm.$valid;
+      return $scope.form.$valid;
+    };
+
     $scope.saveEdit = function() {
+      console.log ('$scope.displayEditError', $scope.displayEditError);
+      console.log ('$scope.itemExciseDutyEditForm', $scope.itemExciseDutyEditForm);
+
+      validateEditForm ();
       showLoadingModal('Editing Record');
       var payload = formatRecordForAPI($scope.recordToEdit);
       exciseDutyRelationshipFactory.updateRelationship($scope.recordToEdit.id, payload).then(saveSuccess,
@@ -285,9 +304,13 @@ angular.module('ts5App')
       $scope.itemExciseDutyCreateForm.dutyFreeRetailItem.$setValidity('required', !!$scope.newRecord.retailItem);
       $scope.itemExciseDutyCreateForm.commodityCode.$setValidity('required', !!$scope.newRecord.commodityCode);
       $scope.displayError = !isValid;
+      if (isValid) {
+        $scope.displayError = !$scope.itemExciseDutyCreateForm.$valid;
+      }
     }
 
     $scope.createRelationship = function() {
+      hideErrors();
       validateCreateForm();
       if ($scope.itemExciseDutyCreateForm.$valid) {
         showLoadingModal('Creating New Record');
