@@ -51,4 +51,22 @@ angular.module('ts5App')
       return !!featuresInRoleMatch && isTypeIdSame(template) && isCompanyDateDefined(template);
     };
     
-  });
+    $scope.requestParamTooltip = function (params) {
+       var paramString = '<ul>';
+       angular.forEach(params, function(value, key){
+         paramString += '<li><span><strong>'+ key +' : </strong>'+value+'</span></li>';
+       });
+       paramString += '</ul>';
+       return paramString;
+    };
+    
+  }).directive( 'tooltipSpecialPopup', function () {
+      return {
+        restrict: 'EA',
+        replace: true,
+        scope: { content: '@', placement: '@', animation: '&', isOpen: '&' },
+        templateUrl: 'views/directives/report-param-tooltip.html'
+      };
+  }).directive( 'tooltipSpecial', [ '$tooltip', function ( $tooltip ) {
+      return $tooltip( 'tooltipSpecial', 'tooltip', 'mouseenter' );
+  }]);

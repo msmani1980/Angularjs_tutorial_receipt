@@ -1,3 +1,16 @@
+<style>
+div.tooltip-inner {
+    min-width: 100px;
+    max-width: 100%; 
+}
+div.container.tooltip.top  {
+    left: 150px !important;
+}
+
+div.container.tooltip ul li {
+    text-align: left;
+}
+</style>
 <!-- /Container  Starts -->
 <div class="container">
    <h2>Report Queue</h2>
@@ -16,7 +29,8 @@
        </tr>
      </thead>
      <tbody>
-       <tr ng-repeat="job in jobs track by job.id" ng-if="isTemplateInFeaturesInRole(job.template)">
+       <tr ng-repeat="job in jobs track by job.id" ng-if="isTemplateInFeaturesInRole(job.template)"
+       tooltip-special="{{ requestParamTooltip(job.requestedParams) }}" tooltip-placement="top">
          <th>{{job.name}}</th>
          <th>{{job.status}}</th>
          <th>{{job.id}}</th>
