@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('DiscountCreateCtrl', function($scope, $q, $location, $routeParams, dateUtility, discountFactory,
-    recordsService, currencyFactory, companiesFactory, itemsFactory, formValidationUtility, lodash) {
+    recordsService, currencyFactory, companiesFactory, itemsFactory, formValidationUtility, lodash, $filter) {
 
     var $this = this;
     $scope.validation = formValidationUtility;
@@ -358,6 +358,11 @@ angular.module('ts5App')
       $this.deserializeLimitationPerTransaction(discountData);
       $this.deserializeLimitationPerSeat(discountData);
       $this.deserializeRestrictions(discountData);
+      $this.deserializeInclusionFilters(discountData);
+    };
+
+    this.deserializeInclusionFilters = function (discountData) {
+      $scope.formData.filters = mapFilters(discountData.filters, true);
     };
 
     this.serializeDiscountInformation = function(formData, discount) {
