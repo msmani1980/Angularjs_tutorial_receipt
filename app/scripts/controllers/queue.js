@@ -52,10 +52,10 @@ angular.module('ts5App')
     };
     
     $scope.requestParamTooltip = function (params) {
-       var paramString = '<ul>';
-       angular.forEach(params, function(value, key){
-         paramString += '<li><span><strong>'+ key +' : </strong>'+value+'</span></li>';
-       });
+      var paramString = '<ul>';
+      angular.forEach(params, function( value, key ) {
+        paramString += '<li><span><strong>' + key + ' : </strong>' + value + '</span></li>';
+      });
        paramString += '</ul>';
        return paramString;
     };
