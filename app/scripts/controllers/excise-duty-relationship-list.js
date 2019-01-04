@@ -633,7 +633,6 @@ angular.module('ts5App')
         return false;
       }
 
-
       return true;
     };
 
