@@ -69,5 +69,5 @@ angular.module('ts5App')
         templateUrl: 'views/directives/report-param-tooltip.html'
       };
   }).directive('tooltipSpecial', ['$tooltip', function ($tooltip) {
-      return $tooltip('tooltipSpecial', 'tooltip', 'mouseenter');
+    return $tooltip('tooltipSpecial', 'tooltip', 'mouseenter');
   }]);
