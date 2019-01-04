@@ -590,7 +590,7 @@ angular.module('ts5App')
     };    
 
     $scope.isAlcoholVolumeValid = function (record) {
-        return this.validateNewData (record);
+        return $this.validateNewData (record);
       };    
       
     
@@ -622,17 +622,12 @@ angular.module('ts5App')
     };
 
     this.validateNewData = function (record) {
-    	console.log ('validateNewData-->record', record);
-    	var isEmplty = $this.isFieldEmpty(record.alcoholVolume)
-    	console.log ('validateNewData-->isEmplty', isEmplty);
       if ($this.isFieldEmpty(record.alcoholVolume)) {
         $this.showValidationError("alcoholVolume", false);
         return false;
       }
 
       var isAlcoholVolumeValueInvalid = $scope.isAlcoholVolumeValueInvalid(record);
-  	console.log ('validateNewData-->isAlcoholVolumeValueInvalid', isAlcoholVolumeValueInvalid);
-	
       if (angular.isDefined(record.alcoholVolume) && $scope.isAlcoholVolumeValueInvalid(record)) {
         $this.showValidationError("alcoholVolume", true);
         return false;
