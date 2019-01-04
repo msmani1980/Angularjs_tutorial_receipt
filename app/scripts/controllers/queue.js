@@ -53,20 +53,21 @@ angular.module('ts5App')
     
     $scope.requestParamTooltip = function (params) {
       var paramString = '<ul>';
-      angular.forEach(params, function( value, key ) {
+      angular.forEach(params, function(value, key) {
         paramString += '<li><span><strong>' + key + ' : </strong>' + value + '</span></li>';
       });
-       paramString += '</ul>';
-       return paramString;
+    
+      paramString += '</ul>';
+      return paramString;
     };
     
-  }).directive( 'tooltipSpecialPopup', function () {
-      return {
+  }).directive('tooltipSpecialPopup', function () {
+    return {
         restrict: 'EA',
         replace: true,
         scope: { content: '@', placement: '@', animation: '&', isOpen: '&' },
         templateUrl: 'views/directives/report-param-tooltip.html'
       };
-  }).directive( 'tooltipSpecial', [ '$tooltip', function ( $tooltip ) {
-      return $tooltip( 'tooltipSpecial', 'tooltip', 'mouseenter' );
+  }).directive('tooltipSpecial', ['$tooltip', function ($tooltip) {
+      return $tooltip('tooltipSpecial', 'tooltip', 'mouseenter');
   }]);
