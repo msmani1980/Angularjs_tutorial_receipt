@@ -30,12 +30,22 @@ angular.module('ts5App')
     function showErrors(dataFromAPI) {
       hideLoadingModal();
       $scope.displayError = true;
+      $scope.displayEditError = false;
       $scope.errorResponse = dataFromAPI;
+    }
+
+    function showEditErrors(dataFromAPI) {
+      hideLoadingModal();
+      $scope.displayError = false;
+      $scope.displayEditError = true;
+      $scope.errorResponseEdit = dataFromAPI;
     }
 
     function hideErrors() {
       $scope.displayError = false;
+      $scope.displayEditError = false;
       $scope.errorResponse = null;
+      $scope.errorResponseEdit = null;
     }
 
     function isPanelOpen(panelName) {
@@ -95,6 +105,7 @@ angular.module('ts5App')
       hideErrors();
       var currentItemType = $scope.newRecord.itemType;
       $scope.displayError = false;
+      $scope.displayEditError = false;
       $scope.newRecord = {
         itemType: (shouldClearAll) ? null : currentItemType,
         alcoholVolume: null
@@ -106,6 +117,8 @@ angular.module('ts5App')
 
     $scope.clearSearchForm = function() {
       $scope.search = {};
+      $scope.displayError = false;
+      $scope.displayEditError = false;
       $scope.itemExciseDutyList = null;
       initLazyLoadingMeta();
     };
@@ -157,6 +170,7 @@ angular.module('ts5App')
     function reloadAfterAPISuccess() {
       hideLoadingModal();
       $scope.displayError = false;
+      $scope.displayEditError = false;
       $scope.searchItemExciseData();
     }
 
@@ -265,14 +279,16 @@ angular.module('ts5App')
       validateEditForm();
       showLoadingModal('Editing Record');
       var payload = formatRecordForAPI($scope.recordToEdit);
-      exciseDutyRelationshipFactory.updateRelationship($scope.recordToEdit.id, payload).then(saveSuccess, showErrors);
+      exciseDutyRelationshipFactory.updateRelationship($scope.recordToEdit.id, payload).then(saveSuccess, showEditErrors);
     };
 
     $scope.cancelEdit = function() {
       $this.clearErrors();
       $scope.errorResponse = [];
+      $scope.errorResponseEdit = [];
       $scope.inEditMode = false;
       $scope.recordToEdit = null;
+      $scope.inCreateMode = true;
     };
 
     $scope.canEdit = function(record) {
@@ -295,6 +311,7 @@ angular.module('ts5App')
       $scope.recordToEdit.commodityCode = exciseDutyMatch;
       $scope.recordToEdit.itemType = parseInt($scope.recordToEdit.itemTypeId);
       $scope.inEditMode = true;
+      $scope.inCreateMode = false; 
     };
 
     function createSuccess(newRecordFromAPI) {
@@ -320,6 +337,10 @@ angular.module('ts5App')
     }
 
     $scope.createRelationship = function() {
+      if ($scope.inEditMode && !$scope.inCreateMode) {
+        return;
+      }
+
       hideErrors();
       validateCreateForm();
       if ($scope.itemExciseDutyCreateForm.$valid) {
@@ -649,6 +670,7 @@ angular.module('ts5App')
       $scope.displayError = false;
       $scope.displayEditError = false;
       $scope.errorResponse = [];
+      $scope.errorResponseEdit = [];
       $scope.errorCustom = [];
     };
   });

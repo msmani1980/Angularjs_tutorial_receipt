@@ -19,7 +19,7 @@
 
     <error-dialog form-object="itemExciseDutyCreateForm" error-response="errorResponse" display="displayError">
     </error-dialog>
-    <error-dialog error-response="errorResponse" display="displayEditError"></error-dialog>
+    <error-dialog error-response="errorResponseEdit" display="displayEditError"></error-dialog>
 
     <form name="itemExciseDutyCreateForm">
 
@@ -195,7 +195,7 @@
         <button type="button" class="btn btn-default" ng-click="clearSearchForm()" id="clearExciseDutyRelationshipListId">Clear</button>
         <button type="submit" class="btn btn-primary" id="searchExciseDutyRelationshipListId">Search</button>
       </div>
-      </form>>
+      </form>
     </div>
     <br>
     
@@ -279,6 +279,7 @@
             <date-picker-field
               name="editStartDate"
               class="form-group"
+              form="itemExciseDutyEditForm"
               min-date="minDate"
               ng-model="recordToEdit.startDate"
               ng-show="isSelectedToEdit(relationship) && canDelete(relationship)">
@@ -289,6 +290,7 @@
             <date-picker-field
               name="editEndDate"
               class="form-group"
+              form="itemExciseDutyEditForm"
               min-date="minDate"
               ng-model="recordToEdit.endDate"
               ng-show="isSelectedToEdit(relationship)">
