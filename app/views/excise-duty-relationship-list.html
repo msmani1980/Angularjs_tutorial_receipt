@@ -19,6 +19,7 @@
 
     <error-dialog form-object="itemExciseDutyCreateForm" error-response="errorResponse" display="displayError">
     </error-dialog>
+    <error-dialog error-response="errorResponse" display="displayEditError"></error-dialog>
 
     <form name="itemExciseDutyCreateForm">
 
@@ -44,7 +45,7 @@
                 </select>
               </div>
             </div>
-            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : !newRecord.startDate && displayError, 'has-success' : newRecord.startDate}">
+            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : !newRecord.startDate && displayError && shouldRequireCreateFields(), 'has-success' : newRecord.startDate}">
               <date-picker-field
                 name="startDate"
                 class="form-group"
@@ -56,7 +57,7 @@
                 ng-required="shouldRequireCreateFields()">
               </date-picker-field>
             </div>
-            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : !newRecord.endDate && displayError, 'has-success' : newRecord.endDate}">
+            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : !newRecord.endDate && displayError && shouldRequireCreateFields(), 'has-success' : newRecord.endDate}">
               <date-picker-field
                 name="endDate"
                 class="form-group"
@@ -71,7 +72,7 @@
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-4">
-              <div class="form-group" ng-class="{ 'has-error' : !newRecord.retailItem && displayError, 'has-success' : newRecord.retailItem}">
+              <div class="form-group" ng-class="{ 'has-error' : !newRecord.retailItem && displayError && shouldRequireCreateFields(), 'has-success' : newRecord.retailItem}">
                 <label>Duty Free Retail Item *</label>
                 <ui-select required="true"
                            ng-model="newRecord.retailItem"
@@ -88,7 +89,7 @@
               </div>
             </div>
             <div class="col-xs-12 col-sm-4">
-              <div class="form-group" ng-class="{ 'has-error' : !newRecord.commodityCode && displayError, 'has-success' : newRecord.commodityCode}">
+              <div class="form-group" ng-class="{ 'has-error' : !newRecord.commodityCode && displayError && shouldRequireCreateFields(), 'has-success' : newRecord.commodityCode}">
                 <label>Commodity Code *</label>
                 <ui-select required="true"
                            ng-model="newRecord.commodityCode"
@@ -105,7 +106,7 @@
               </div>
             </div>
             <div class="col-xs-6 col-sm-4">
-              <div class="form-group" ng-class="{ 'has-error' : !newRecord.alcoholVolume && displayError, 'has-success' : newRecord.alcoholVolume}">
+              <div class="form-group" ng-class="{ 'has-error' : !newRecord.alcoholVolume && displayError && shouldRequireCreateFields(), 'has-success' : newRecord.alcoholVolume}">
                 <label>Alcohol Volume *</label>
                 <input type = "text"
                        ng-model="newRecord.alcoholVolume"
@@ -120,7 +121,7 @@
         </div>
         <div class="panel-footer text-right">
           <button type="button" class="btn btn-default" ng-click="clearCreateForm(true)" id="clearExciseDutyRelationshipId">Clear All</button>
-          <button type="submit" class="btn btn-success" ng-click="createRelationship()" id="submitExciseDutyRelationshipId"><span class="fa fa-check"></span> Save</button>
+          <button type="button" class="btn btn-success" ng-click="createRelationship()" id="submitExciseDutyRelationshipId"><span class="fa fa-check"></span> Save</button>
         </div>
       </div>
     </form>
@@ -197,8 +198,8 @@
       </form>>
     </div>
     <br>
-
-    <form name="itemExciseDutyEditForm" ng-submit="saveEdit()">
+    
+    <form name="itemExciseDutyEditForm">
       <div class="table-responsive">
         <table ng-if="itemExciseDutyList.length > 0" infinite-scroll="getItemExciseDutyList()" infinite-scroll-immediate-check="false"
              class="table table-bordered table-hover table-responsive">
@@ -262,23 +263,22 @@
             </span>
           </td>
           <td>
+          <div class="form-group" ng-class="{ 'has-error' : (!recordToEdit.alcoholVolume || isAlcoholVolumeValueInvalid(recordToEdit)) && displayEditError, 'has-success' : !isAlcoholVolumeValueInvalid(recordToEdit) }">
             <span ng-hide="isSelectedToEdit(relationship) && canDelete(relationship)">{{ relationship.alcoholVolume }}</span>
             <span ng-show="isSelectedToEdit(relationship) && canDelete(relationship)">
-            <input ng-model="recordToEdit.alcoholVolume"
-                   custom-validity
-                   custom-pattern="decimalWithTwoDecimalPlaces"
+            <input type = "text"
+                   ng-model="recordToEdit.alcoholVolume"
                    maxlength="7"
                    class="form-control"
-                   name="alcoholVolume"
-                   ng-required="true"/>
+                   name="alcoholVolume"/>
               </span>
+          </div>
           </td>
           <td>
             <span ng-hide="isSelectedToEdit(relationship) && canDelete(relationship)">{{ relationship.startDate }}</span>
             <date-picker-field
               name="editStartDate"
               class="form-group"
-              form="itemExciseDutyCreateForm"
               min-date="minDate"
               ng-model="recordToEdit.startDate"
               ng-show="isSelectedToEdit(relationship) && canDelete(relationship)">
@@ -287,12 +287,9 @@
           <td>
             <span ng-hide="isSelectedToEdit(relationship)">{{ relationship.endDate }}</span>
             <date-picker-field
-              name="itemExciseDutyCreateForm"
-              custom-effective="true"
-              custom-date="recordToEdit.endDate"
+              name="editEndDate"
               class="form-group"
               min-date="minDate"
-              form="exciseDutyCreateForm"
               ng-model="recordToEdit.endDate"
               ng-show="isSelectedToEdit(relationship)">
             </date-picker-field>
@@ -300,10 +297,11 @@
           <td>{{ getUpdatedOn(relationship) }}</td>
           <td>{{ getUpdateBy(relationship) }}</td>
           <td ng-show="isCRUD">
-            <button type="submit"
+            <button type="button"
                     class="btn btn-success btn-xs"
                     tabindex="0"
-                    ng-show="isSelectedToEdit(relationship)">
+                    ng-show="isSelectedToEdit(relationship)"
+                    ng-click="saveEdit()">
               <i class="fa fa-check"></i>
             </button>
             <button type="button"
