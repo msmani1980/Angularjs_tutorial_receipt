@@ -288,7 +288,6 @@ angular.module('ts5App')
       $scope.errorResponseEdit = [];
       $scope.inEditMode = false;
       $scope.recordToEdit = null;
-      $scope.inCreateMode = true;
     };
 
     $scope.canEdit = function(record) {
@@ -337,10 +336,11 @@ angular.module('ts5App')
     }
 
     $scope.createRelationship = function() {
-      if ($scope.inEditMode && !$scope.inCreateMode) {
+      if ($scope.inEditMode) {
         return;
       }
 
+      $scope.inCreateMode = true;
       hideErrors();
       validateCreateForm();
       if ($scope.itemExciseDutyCreateForm.$valid) {
