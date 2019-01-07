@@ -247,24 +247,25 @@ angular.module('ts5App')
     function validateEditForm () {
       $scope.displayEditError = !$scope.itemExciseDutyEditForm.$valid;
       return $scope.itemExciseDutyEditForm.$valid;
-    };
+    }
 
     $scope.saveEdit = function() {
       $this.clearErrors();
-      if ($scope.displayError === true) {
-          $this.clearCustomErrors();
-      }    	
-
-      var isAlcoholVolumeValid =  $this.validateNewData ($scope.recordToEdit);
-      if (!isAlcoholVolumeValid) {
-    	  return;
+      if ($scope.displayEditError === true) {
+        $this.clearCustomErrors();
       }
 
-      validateEditForm ();
+      $scope.displayError = false;
+
+      var isAlcoholVolumeValid =  $this.validateNewData($scope.recordToEdit);
+      if (!isAlcoholVolumeValid) {
+        return;
+      }
+
+      validateEditForm();
       showLoadingModal('Editing Record');
       var payload = formatRecordForAPI($scope.recordToEdit);
-      exciseDutyRelationshipFactory.updateRelationship($scope.recordToEdit.id, payload).then(saveSuccess,
-        showErrors);
+      exciseDutyRelationshipFactory.updateRelationship($scope.recordToEdit.id, payload).then(saveSuccess, showErrors);
     };
 
     $scope.cancelEdit = function() {
@@ -561,6 +562,9 @@ angular.module('ts5App')
       $scope.inCreateMode = false;
       $scope.minDate = dateUtility.nowFormattedDatePicker();
       $scope.errorCustom = [];
+      $scope.displayError = false;
+      $scope.displayEditError = false;
+
     }
 
     function initWatchGroups() {
@@ -590,10 +594,9 @@ angular.module('ts5App')
     };    
 
     $scope.isAlcoholVolumeValid = function (record) {
-        return $this.validateNewData (record);
-      };    
-      
-    
+      return $this.validateNewData(record);
+    };
+
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate));
     };
@@ -614,7 +617,7 @@ angular.module('ts5App')
       }
 
       $scope.errorCustom.push(payload);
-      $scope.displayError = true;
+      $scope.displayEditError = true;
     };
 
     this.isFieldEmpty = function (value) {
@@ -622,14 +625,13 @@ angular.module('ts5App')
     };
 
     this.validateNewData = function (record) {
-      if ($this.isFieldEmpty(record.alcoholVolume)) {
-        $this.showValidationError("alcoholVolume", false);
+      if (record !== null && $this.isFieldEmpty(record.alcoholVolume)) {
+        $this.showValidationError('alcoholVolume', false);
         return false;
       }
 
-      var isAlcoholVolumeValueInvalid = $scope.isAlcoholVolumeValueInvalid(record);
-      if (angular.isDefined(record.alcoholVolume) && $scope.isAlcoholVolumeValueInvalid(record)) {
-        $this.showValidationError("alcoholVolume", true);
+      if (record !== null && angular.isDefined(record.alcoholVolume) && $scope.isAlcoholVolumeValueInvalid(record)) {
+        $this.showValidationError('alcoholVolume', true);
         return false;
       }
 
@@ -639,11 +641,13 @@ angular.module('ts5App')
     this.clearCustomErrors = function () {
       $scope.errorCustom = [];
       $scope.displayError = false;
+      $scope.displayEditError = false;
     };
 
     this.clearErrors = function () {
       $this.clearCustomErrors();
       $scope.displayError = false;
+      $scope.displayEditError = false;
       $scope.errorResponse = [];
       $scope.errorCustom = [];
     };

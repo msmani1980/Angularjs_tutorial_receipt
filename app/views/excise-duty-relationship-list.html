@@ -17,9 +17,9 @@
       </div>
     </div>
 
-    <!-- error-dialog form-object="itemExciseDutyCreateForm" error-response="errorResponse" display="displayError">
-    </error-dialog-->
-    <error-dialog error-response="errorResponse" display="displayError"></error-dialog>
+    <error-dialog form-object="itemExciseDutyCreateForm" error-response="errorResponse" display="displayError">
+    </error-dialog>
+    <error-dialog error-response="errorResponse" display="displayEditError"></error-dialog>
 
     <form name="itemExciseDutyCreateForm">
 
@@ -263,15 +263,14 @@
             </span>
           </td>
           <td>
-          <div class="form-group" ng-class="{ 'has-error' : !isAlcoholVolumeValid(recordToEdit) && displayError, 'has-success' : isAlcoholVolumeValid(recordToEdit) }">
+          <div class="form-group" ng-class="{ 'has-error' : (!recordToEdit.alcoholVolume || isAlcoholVolumeValueInvalid(recordToEdit)) && displayEditError, 'has-success' : !isAlcoholVolumeValueInvalid(recordToEdit) }">
             <span ng-hide="isSelectedToEdit(relationship) && canDelete(relationship)">{{ relationship.alcoholVolume }}</span>
             <span ng-show="isSelectedToEdit(relationship) && canDelete(relationship)">
             <input type = "text"
                    ng-model="recordToEdit.alcoholVolume"
                    maxlength="7"
                    class="form-control"
-                   name="alcoholVolume"
-                   ng-required="true"/>
+                   name="alcoholVolume"/>
               </span>
           </div>
           </td>
@@ -280,7 +279,6 @@
             <date-picker-field
               name="editStartDate"
               class="form-group"
-              form="itemExciseDutyCreateForm"
               min-date="minDate"
               ng-model="recordToEdit.startDate"
               ng-show="isSelectedToEdit(relationship) && canDelete(relationship)">
@@ -289,12 +287,9 @@
           <td>
             <span ng-hide="isSelectedToEdit(relationship)">{{ relationship.endDate }}</span>
             <date-picker-field
-              name="itemExciseDutyCreateForm"
-              custom-effective="true"
-              custom-date="recordToEdit.endDate"
+              name="editEndDate"
               class="form-group"
               min-date="minDate"
-              form="exciseDutyCreateForm"
               ng-model="recordToEdit.endDate"
               ng-show="isSelectedToEdit(relationship)">
             </date-picker-field>
