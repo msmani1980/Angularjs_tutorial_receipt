@@ -1,3 +1,38 @@
+<style>
+.param-header .hidden-xs {
+  display: inline-flex !important;
+  font-weight: bold;
+  color: #0088cc !important;
+  font-size: 13px !important;
+  padding: 5px !important;
+}
+
+.param-header > li {
+	margin-left : 5px!important;
+}
+
+.report-param-tooltip-button {
+	font-size:15px!important;
+	color:#5bc0de!important;
+	border:none!important;
+	background:none!important
+}
+
+.tooltip > .tooltip-inner {
+  border: 1.5px solid #ddd;
+  max-width: 320px;
+  color: black;
+  text-align: left;
+  background-color: white;
+  background: white;
+  padding-bottom: 5px !important;
+  opacity: 1.0;
+  filter: alpha(opacity=100);
+} 
+   
+.tooltip > .tooltip-arrow { border-bottom-color:black; }
+.tooltip.in{opacity:1!important;}
+</style>
 <!-- /Container  Starts -->
 <div class="container">
    <h2>Report Queue</h2>
@@ -17,7 +52,9 @@
      </thead>
      <tbody>
        <tr ng-repeat="job in jobs track by job.id" ng-if="isTemplateInFeaturesInRole(job.template)">
-         <th>{{job.name}}</th>
+         <th>
+         	<button type="button" class="fa fa-info-circle tooltip-focus report-param-tooltip-button"  tooltip-special="{{ requestParamTooltip(job.requestedParams) }}" tooltip-placement="bottom"></button> 
+         {{job.name}}</th>
          <th>{{job.status}}</th>
          <th>{{job.id}}</th>
          <th>{{job.created | date : 'medium'}}</th>
