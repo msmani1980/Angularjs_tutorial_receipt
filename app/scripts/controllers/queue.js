@@ -52,12 +52,12 @@ angular.module('ts5App')
     };
     
     $scope.requestParamTooltip = function (params) {
-      var paramString = '<ul>';
+      var paramString = '<div class="param-header"><i class="fa fa-tags"></i><span class="hidden-xs">Report Parameters</span>';
       angular.forEach(params, function(value, key) {
         paramString += '<li><span><strong>' + key + ' : </strong>' + value + '</span></li>';
       });
-    
-      paramString += '</ul>';
+
+      paramString += '</div>';
       return paramString;
     };
     
@@ -69,5 +69,5 @@ angular.module('ts5App')
         templateUrl: 'views/directives/report-param-tooltip.html'
       };
   }).directive('tooltipSpecial', ['$tooltip', function ($tooltip) {
-    return $tooltip('tooltipSpecial', 'tooltip', 'mouseenter');
+    return $tooltip('tooltipSpecial', 'tooltip', 'focus');
   }]);
