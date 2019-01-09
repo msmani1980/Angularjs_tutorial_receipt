@@ -729,30 +729,30 @@ angular.module('ts5App')
       var selectedArrivalCountryId = $scope.countryInclusionFilterSelections.arrival;
 
       var departureStations = lodash.filter($scope.selectOptions.companyStationGlobals, function (station) {
-        return station.countryId === selectedDepartureCountryId
+        return station.countryId === selectedDepartureCountryId;
       });
 
       var arrivalStations = lodash.filter($scope.selectOptions.companyStationGlobals, function (station) {
-        return station.countryId === selectedArrivalCountryId
+        return station.countryId === selectedArrivalCountryId;
       });
 
       if (departureStations.length > 0 && arrivalStations.length > 0) {
         departureStations.forEach(function (ds) {
           arrivalStations.forEach(function (as) {
-            $scope.addInclusionFilterRow(ds, as)
+            $scope.addInclusionFilterRow(ds, as);
           })
         });
       }
 
       if (departureStations.length == 0) {
         arrivalStations.forEach(function (as) {
-          $scope.addInclusionFilterRow(null, as)
+          $scope.addInclusionFilterRow(null, as);
         })
       }
 
       if (arrivalStations.length == 0) {
         departureStations.forEach(function (ds) {
-          $scope.addInclusionFilterRow(ds, null)
+          $scope.addInclusionFilterRow(ds, null);
         })
       }
 
