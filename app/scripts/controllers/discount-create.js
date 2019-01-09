@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('DiscountCreateCtrl', function($scope, $q, $location, $routeParams, dateUtility, discountFactory,
-    recordsService, currencyFactory, companiesFactory, itemsFactory, formValidationUtility, lodash, $filter, countriesService) {
+    recordsService, currencyFactory, companiesFactory, itemsFactory, formValidationUtility, lodash, $filter, _) {
 
     var $this = this;
     $scope.validation = formValidationUtility;
@@ -36,6 +36,7 @@ angular.module('ts5App')
       departureHas: []
     };
     $scope.selectOptions = { };
+    $scope.countryInclusionFilterSelections = {};
 
     this.getCleanFormData = function() {
       var path = $location.path();
@@ -719,7 +720,21 @@ angular.module('ts5App')
     }
 
     $scope.showInclusionFilterByCountryModal = function() {
+      $scope.countryInclusionFilterSelections = { };
+      angular.element('#inclusion-filter-countries-modal').modal('show');
+    };
 
+
+
+    $scope.addInclusionFilterRow = function (departureStation, arrivalStation) {
+      if ($scope.readOnly || $scope.isDisabled()) {
+        return false;
+      }
+
+      $scope.formData.filters.push({
+        departureStation: departureStation,
+        arrivalStation: arrivalStation
+      });
     };
 
     $scope.stationListChanged = function ($index) {
@@ -774,12 +789,12 @@ angular.module('ts5App')
     function setCountryList(stationsFromAPI) {
       var countries = stationsFromAPI.map(function (station) {
         return {
-          id: station.station.countryId,
-          name: station.station.countryName
+          id: station.countryId,
+          name: station.countryName
         };
       });
 
-      $scope.countryList = lodash.uniqBy(countries, function (e) {
+      $scope.countryList = _.uniqBy(countries, function (e) {
         return e.id;
       });
     }
