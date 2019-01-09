@@ -722,16 +722,6 @@ angular.module('ts5App')
 
     };
 
-    /*this.setCountryList = function (dataFromAPI) {
-      $scope.countryList = angular.copy(dataFromAPI.countries);
-    };
-
-    this.getCountryList = function () {
-      var payload = { limit: 9000 };
-
-      return countriesService.getCountriesList(payload).then($this.setCountryList);
-    };*/
-
     $scope.stationListChanged = function ($index) {
       if (!hasCompleteStationObject($index)) {
         return false;
