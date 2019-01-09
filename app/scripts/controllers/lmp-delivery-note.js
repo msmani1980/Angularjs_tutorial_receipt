@@ -362,6 +362,9 @@ angular.module('ts5App')
     };
 
     $scope.toggleReview = function() {
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+
       savedCatererStationList = $scope.catererStationList;
       var isFormValid = validateForm();
       if (!isFormValid) {

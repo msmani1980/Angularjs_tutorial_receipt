@@ -329,6 +329,7 @@ angular.module('ts5App')
       var isValid = !!$scope.newRecord.retailItem && !!$scope.newRecord.commodityCode;
       $scope.itemExciseDutyCreateForm.dutyFreeRetailItem.$setValidity('required', !!$scope.newRecord.retailItem);
       $scope.itemExciseDutyCreateForm.commodityCode.$setValidity('required', !!$scope.newRecord.commodityCode);
+      $scope.itemExciseDutyCreateForm.alcoholVolume.$setValidity('required', !!$scope.itemExciseDutyCreateForm.alcoholVolume.$$rawModelValue);
       $scope.displayError = !isValid;
       if (isValid) {
         $scope.displayError = !$scope.itemExciseDutyCreateForm.$valid;
@@ -337,6 +338,13 @@ angular.module('ts5App')
 
     $scope.createRelationship = function() {
       if ($scope.inEditMode) {
+        var errPayload = {
+          value: 'You are in edit mode. Please exit the edit mode and try again!'
+        };
+
+        $scope.errorCustom.push(errPayload);
+        $scope.displayError = true;
+
         return;
       }
 
