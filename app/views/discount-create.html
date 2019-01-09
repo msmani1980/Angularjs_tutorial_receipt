@@ -494,6 +494,50 @@
   </div>
 </div>
 
+<div class="modal" id="inclusion-filter-countries-modal" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="row">
+          <div class="col-xs-8">
+            <h4 class="modal-title">Select countries</h4>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label>Departure</label>
+                <select required name="globalDiscountType" class="form-control"
+                        ng-options="country.id as country.name for country in countryList | orderBy: 'name'"
+                        ng-model="countryInclusionFilterSelections.departure">
+                  <option value="">Please select</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label>Arrival</label>
+                <select required name="globalDiscountType" class="form-control"
+                        ng-options="country.id as country.name for country in countryList | orderBy: 'name'"
+                        ng-model="countryInclusionFilterSelections.arrival">
+                  <option value="">Please select</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default btn-cancel" data-dismiss="modal">Close</button>
+            <button class="btn btn-success" ng-click="addSelectedCountriesForInclusionFilter()">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- /Container -->
 <form-success-modal list-path="discounts" create-path="discounts/create"></form-success-modal>
 <form-update-modal list-path="discounts"></form-update-modal>
