@@ -234,8 +234,7 @@ angular.module('ts5App')
         $this.getDiscountTypesList(),
         $this.getCompanyCurrencyGlobals(),
         $this.getSalesCategoriesList(),
-        $this.getStationGlobals(),
-        //$this.getCountryList()
+        $this.getStationGlobals()
       ];
     };
 
