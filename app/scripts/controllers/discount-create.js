@@ -740,20 +740,20 @@ angular.module('ts5App')
         departureStations.forEach(function (ds) {
           arrivalStations.forEach(function (as) {
             $scope.addInclusionFilterRow(ds, as);
-          })
+          });
         });
       }
 
       if (departureStations.length === 0) {
         arrivalStations.forEach(function (as) {
           $scope.addInclusionFilterRow(null, as);
-        })
+        });
       }
 
       if (arrivalStations.length === 0) {
         departureStations.forEach(function (ds) {
           $scope.addInclusionFilterRow(ds, null);
-        })
+        });
       }
 
       angular.element('#inclusion-filter-countries-modal').modal('hide');
@@ -816,7 +816,7 @@ angular.module('ts5App')
     function setStationGlobals(dataFromAPI) {
       $scope.selectOptions.companyStationGlobals = dataFromAPI.response;
 
-      setCountryList(dataFromAPI.response)
+      setCountryList(dataFromAPI.response);
     }
 
     function setCountryList(stationsFromAPI) {
