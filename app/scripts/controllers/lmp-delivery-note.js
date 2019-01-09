@@ -34,6 +34,14 @@ angular.module('ts5App')
       return angular.isDefined(value) && value !== null && parseInt(value) >= 0;
     }
 
+    $scope.isNumberGreaterThanOrEqualToZero = function(value) {
+      return angular.isDefined(value) && value !== null && parseInt(value) >= 0;
+    };
+
+    $scope.isNumberGreaterThanZero = function(value) {
+      return angular.isDefined(value) && value !== null && parseInt(value) > 0;
+    };
+
     function showMessage(message, messageType) {
       messageService.display(messageType, '<strong>Delivery Note</strong>: ' + message);
     }
@@ -361,7 +369,18 @@ angular.module('ts5App')
       return '';
     };
 
+    /*jshint maxcomplexity:7 */
     $scope.toggleReview = function() {
+      if (angular.isDefined($scope.filterInput) && (angular.isDefined($scope.filterInput.itemCode) || angular.isDefined($scope.filterInput.itemName))) {
+        var errPayload = {
+          value: 'You are in the filter mode. Please clear the filter and try again!'
+        };
+
+        $scope.errorCustom.push(errPayload);
+        $scope.displayError = true;
+        return;
+      }
+
       $scope.errorCustom = [];
       $scope.displayError = false;
 
@@ -410,6 +429,9 @@ angular.module('ts5App')
     };
 
     $scope.clearFilter = function() {
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+
       if (angular.isUndefined($scope.filterInput)) {
         return;
       }
