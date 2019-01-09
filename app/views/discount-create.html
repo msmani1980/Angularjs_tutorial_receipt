@@ -420,10 +420,23 @@
       </div>
 
 
-      <h3 id="discount-inclusion-filter">Inclusion Filter <a class="pull-right"
-                                                              ng-click="addBlankObjectToArray(formData.filters)"
-                                                              ng-hide="isDisabled()"
-                                                              ng-disabled="isDisabled()">Add Discount Inclusion Filter</a></h3>
+      <h3 id="discount-inclusion-filter">
+        Inclusion Filter
+
+        <span class="pull-right">
+          <a ng-click="addBlankObjectToArray(formData.filters)"
+          ng-hide="isDisabled()"
+          ng-disabled="isDisabled()">Per Station</a>
+        </span>
+        <span class="pull-right" style="margin-right:5px">
+          <a ng-click="showInclusionFilterByCountryModal()"
+             ng-hide="isDisabled()"
+             ng-disabled="isDisabled()">Per Country</a>
+        </span>
+
+        <span class="pull-right" style="margin-right:5px">Add Discount Inclusion Filter: </span>
+
+      </h3>
       <div class="row" ng-repeat="inclusionFilterData in formData.filters">
         <div class="col-xs-10 col-sm-5">
           <div class="form-group">
