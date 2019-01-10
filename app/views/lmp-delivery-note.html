@@ -214,7 +214,7 @@
             </div>
 
             <div class="col-xs-6 col-sm-3 col-md-1">
-              <div class="form-group" ng-class="{ 'has-error' : !deliveryNote.catererStationId && displayError, 'has-success' : deliveryNote.catererStationId }">
+              <div class="form-group"  ng-class="{ 'has-error' : !isNumberGreaterThanOrEqualToZero(item.deliveredQuantity) && isNumberGreaterThanZero(item.expectedQuantity) && displayError, 'has-success' : isNumberGreaterThanOrEqualToZero(item.deliveredQuantity)}">
                 <label>Delivered*</label>
                 <input ng-model="item.deliveredQuantity" type="number" min="0" step="1" class="form-control"
                        id="delivered-qty-{{ item.masterItemId }}"
