@@ -371,6 +371,9 @@ angular.module('ts5App')
 
     /*jshint maxcomplexity:7 */
     $scope.toggleReview = function() {
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+
       if (angular.isDefined($scope.filterInput) && (angular.isDefined($scope.filterInput.itemCode) || angular.isDefined($scope.filterInput.itemName))) {
         var errPayload = {
           value: 'You are in the filter mode. Please clear the filter and try again!'
@@ -380,9 +383,6 @@ angular.module('ts5App')
         $scope.displayError = true;
         return;
       }
-
-      $scope.errorCustom = [];
-      $scope.displayError = false;
 
       savedCatererStationList = $scope.catererStationList;
       var isFormValid = validateForm();
