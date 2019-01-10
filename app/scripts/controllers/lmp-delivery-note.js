@@ -372,6 +372,7 @@ angular.module('ts5App')
     /*jshint maxcomplexity:7 */
     $scope.toggleReview = function() {
       $scope.errorCustom = [];
+      $scope.errorResponse = null;
       $scope.displayError = false;
 
       if (angular.isDefined($scope.filterInput) && (angular.isDefined($scope.filterInput.itemCode) || angular.isDefined($scope.filterInput.itemName))) {
