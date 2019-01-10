@@ -29,27 +29,27 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-12 col-sm-6">
-            <div class="form-group" ng-class="{'has-error' : !receiptRule.countryId && displayError , 'has-success' : receiptRule.countryId}">
+            <div class="form-group">
               <label for="country-id">Country *</label>
               <select class="form-control"
-                      name="Country"
-                      id="countryId"
+                      name="countryId"
                       ng-model="receiptRule.countryId"
+                      ng-selected="receiptRule.countryId === countrie.id"
+                      ng-options="countrie.id as countrie.countryName for countrie in countriesList"
                       ng-disabled="readOnly"
-                      ng-options="country.id as country.countryName for country in countriesList | orderBy: 'countryName'"
                       required="true"
-                      ng-selected="receiptRule.countryId === country.id"
                       ng-change="onCounrtyChange()"
-                      required>
+                      required
+                      id="countryId">
                 <option selected="selected" value>Select Country</option>
               </select>
             </div>
           </div>
 
           <div class="col-xs-12 col-sm-6">
-            <div class="form-group" ng-class="{'has-error' : (!multiSelectedValues.globalStationList || multiSelectedValues.globalStationList && multiSelectedValues.globalStationList.length ===0)&& displayError , 'has-success' : multiSelectedValues.globalStationList}">
+            <div class="form-group">
                 <label for="globalStationList">Station *</label>
-          	     <ui-select id="globalStationList" multiple ng-model="multiSelectedValues.globalStationList"  theme="bootstrap" name="Station" ng-disabled="readOnly" on-select="onSelected()">
+          	     <ui-select id="globalStationList" multiple ng-model="multiSelectedValues.globalStationList"  theme="bootstrap" name="globalStationList"ng-disabled="readOnly" >
 	               <ui-select-match placeholder="Select Stations..">{{ $item.code }}</ui-select-match>
 	               <ui-select-choices  
 	               					  repeat="station in globalStationList | filter: $select.search | orderBy: 'station.name'">
@@ -61,45 +61,32 @@
       </div>
       <div class="row">
           <div class="col-xs-12 col-sm-6">
-            
-            <div class="form-group" ng-if="!receiptRule.autoPrint && displayError" ng-class="{'has-error' : !receiptRule.autoPrint && displayError , 'has-success' : receiptRule.autoPrint}" style="border:1px solid #a94442">
-              <label for="auto-print">Print Auto-Receipt For1*</label>
-              <div  class="input-group" >
-                <input type="radio" name="PrintAutoReceiptFor" value="All" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'All' " ng-required=true > All Items
+            <div class="form-group">
+              <label for="auto-print">Print Auto-Receipt For*</label>
+              <div  class="input-group">
+                <input type="radio" name="autoPrint" value="All" ng-disabled="readOnly" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'All' " ng-required=true > All Items
               </div>
               <div>
-                <input type="radio" name="PrintAutoReceiptFor" value="Item" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'Item' "> Specific Retail Items ('Print Receipt' flagged in the item setup screen)
+                <input type="radio" name="autoPrint" value="Item" ng-disabled="readOnly" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'Item' "> Specific Retail Items ('Print Receipt' flagged in the item setup screen)
               </div>  
+                 
             </div>
-            <div class="form-group" ng-if="receiptRule.autoPrint || !displayError">
-              <label for="auto-print">Print Auto-Receipt For2*</label>
-              <div  class="input-group" >
-                <input type="radio" name="PrintAutoReceiptFor" value="All" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'All' " ng-required=true > All Items
-              </div>
-              <div>
-                <input type="radio" name="PrintAutoReceiptFor" value="Item" ng-model="receiptRule.autoPrint" ng-selected="receiptRule.autoPrint === 'Item' "> Specific Retail Items ('Print Receipt' flagged in the item setup screen)
-              </div>  
-            </div>
-            
           </div>
           <div class="col-xs-12 col-sm-6">
             <div class="form-group">
-              <label for="receipt-rule-limit">Receipt Floor Limit Value *</label>
-              <div class="row" ng-repeat="receiptFloorLimitAmountData in receiptFloorLimitAmountsUi track by $index | orderBy: 'receiptFloorLimitAmountData.code'" ng-class="{'has-error' : !receiptFloorLimitAmountData.amount && displayError , 'has-success' : receiptFloorLimitAmountData.amount}">
+              <label for="receipt-rule-limit">Receipt Floor Limit Value*</label>
+              <div class="row" ng-repeat="receiptFloorLimitAmountData in receiptFloorLimitAmountsUi track by $index | orderBy: 'receiptFloorLimitAmountData.code'">
               <div class="col-xs-2 col-sm-1 text-right">{{ receiptFloorLimitAmountData.code }}</div>
               <div class="col-xs-10 col-sm-8">
                 <div class="input-group">
                   <span class="input-group-addon"><i class="fa fa-money"></i></span>
-                    <input 
-                         type="text" 
-                         class="form-control"
+                  <input type="text" class="form-control"
                          name="receiptFloorLimitAmountData{{ receiptFloorLimitAmountData.code }}"
-                         ng-pattern="regexp.sixNumberWithTwoDecimal"
+                         custom-validity
+                         custom-pattern="numberOrDecimal"
                          ng-model="receiptFloorLimitAmountData.amount"
                          ng-disabled="readOnly || isDisabled"
-                         maxlength="9"
-                         required
-                         >
+                         required>
                 </div>
               </div>
           </div>
