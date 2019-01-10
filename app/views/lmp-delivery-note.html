@@ -55,7 +55,6 @@
       <div class="panel-heading">
         <div class="row">
           <div class="col-xs-12 col-sm-6 col-md-4">
-            <div class="form-group" ng-class="{ 'has-error' : !deliveryNote.catererStationId && displayError, 'has-success' : deliveryNote.catererStationId }">
             <div class="form-group" ng-class="{ 'has-error' : !deliveryNote.catererStationId && deliveryNote.deliveryDate && displayError, 'has-success' : deliveryNote.catererStationId }">
               <label for="lmp-station">LMP Station*</label>
               <select class="form-control"
@@ -215,13 +214,10 @@
             </div>
 
             <div class="col-xs-6 col-sm-3 col-md-1">
-              <div class="form-group"  ng-class="{ 'has-error' : !isNumberGreaterThanOrEqualToZero(item.deliveredQuantity) && isNumberGreaterThanZero(item.expectedQuantity) && displayError, 'has-success' : isNumberGreaterThanOrEqualToZero(item.deliveredQuantity)}">
               <div class="form-group">
                 <label>Delivered*</label>
                 <input ng-model="item.deliveredQuantity" type="number" min="0" step="1" class="form-control"
                        id="delivered-qty-{{ item.masterItemId }}"
-                       ng-readonly="readOnly" 
-                       ng-required="isNumberGreaterThanZero(item.expectedQuantity)"
                        ng-readonly="readOnly" 
                        ng-required="item.expectedQuantity"
                        name="Delivered ( {{ item.itemCode }} - {{ item.itemName }} )">
