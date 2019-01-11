@@ -80,6 +80,45 @@ angular.module('ts5App')
       return !!(itemsSet.length);
     }
 
+    function deliveryNoteHasAllValidItems() {
+      var result = false;
+      if (angular.isUndefined($scope.deliveryNote)) {
+        return result;
+      }
+
+      if (!$scope.deliveryNote.items) {
+        return result;
+      }
+
+      if (!$scope.deliveryNote.items.length) {
+        return result;
+      }
+
+      var itemsSet = $scope.deliveryNote.items.filter(function(item) {
+        return isNumberGreaterThanOrEqualTo0(item.deliveredQuantity);
+      });
+
+      result =  !!(itemsSet.length);
+      if (result) {
+        var ullageItemsSet = $scope.deliveryNote.items.filter(function(item) {
+          return $scope.isNumberGreaterThanZero(item.ullageQuantity);
+        });
+
+        angular.forEach(ullageItemsSet, function (item) {
+          if (!isFieldEmpty(item.ullageQuantity) && (angular.isUndefined(item.ullageReason) || isFieldEmpty(item.ullageReason))) {
+            result = false;
+            return result;
+          }
+        });
+      }
+  
+      return result;
+    }
+
+    function isFieldEmpty (value) {
+      return (value === undefined || value === null || value.length === 0 || value === 'Invalid date');
+    }
+
     function canReview() {
       if ($scope.state !== 'create' && $scope.state !== 'edit') {
         return false;
@@ -371,24 +410,18 @@ angular.module('ts5App')
 
     /*jshint maxcomplexity:7 */
     $scope.toggleReview = function() {
-      $scope.errorCustom = [];
-      $scope.errorResponse = null;
-      $scope.displayError = false;
-
-      if (angular.isDefined($scope.filterInput) && (angular.isDefined($scope.filterInput.itemCode) || angular.isDefined($scope.filterInput.itemName))) {
-        var errPayload = {
-          value: 'You are in the filter mode. Please clear the filter and try again!'
-        };
-
-        $scope.errorCustom.push(errPayload);
-        $scope.displayError = true;
-        return;
-      }
+      $scope.clearFilter();
 
       savedCatererStationList = $scope.catererStationList;
       var isFormValid = validateForm();
       if (!isFormValid) {
         hideLoadingModal();
+        return;
+      }
+
+      var isItemsValid = deliveryNoteHasAllValidItems();
+      if (!isItemsValid) {
+        $scope.displayError = true;
         return;
       }
 
