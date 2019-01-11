@@ -422,6 +422,13 @@ angular.module('ts5App')
       var isItemsValid = deliveryNoteHasAllValidItems();
       if (!isItemsValid) {
         $scope.displayError = true;
+        if ($scope.form && $scope.form.$valid && !deliveryNoteHasItems()) {
+          $scope.errorCustom = [{
+            field: 'Items Required',
+            value: 'There must be at least one Item attached to this Delivery Note'
+          }];
+        } 
+
         return;
       }
 
