@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('DiscountCreateCtrl', function($scope, $q, $location, $routeParams, dateUtility, discountFactory,
-    recordsService, currencyFactory, companiesFactory, itemsFactory, formValidationUtility, lodash) {
+    recordsService, currencyFactory, companiesFactory, itemsFactory, formValidationUtility, lodash, $filter) {
 
     var $this = this;
     $scope.validation = formValidationUtility;
@@ -31,6 +31,11 @@ angular.module('ts5App')
     $scope.salesCategoriesList = [];
     $scope.salesCategoriesMap = {};
     $scope.addRestrictedItemsNumber = 1;
+    $scope.repeatableStations = {
+      arrivalHas: [],
+      departureHas: []
+    };
+    $scope.selectOptions = { };
 
     this.getCleanFormData = function() {
       var path = $location.path();
@@ -45,7 +50,8 @@ angular.module('ts5App')
           discountAmountLimitPerTransactionValue: {},
           limitByShopDiscountType: 1,
           limitByTransactionDiscountType: 1,
-          limitBySeatDiscountType: 1
+          limitBySeatDiscountType: 1,
+          filters: []
         };
       } else {
         return {
@@ -59,7 +65,8 @@ angular.module('ts5App')
           discountAmountLimitPerTransactionValue: {},
           limitByShopDiscountType: 1,
           limitByTransactionDiscountType: 1,
-          limitBySeatDiscountType: 1
+          limitBySeatDiscountType: 1,
+          filters: []
         };
       }
     };
@@ -226,7 +233,8 @@ angular.module('ts5App')
         $this.getGlobalDiscountTypesList(),
         $this.getDiscountTypesList(),
         $this.getCompanyCurrencyGlobals(),
-        $this.getSalesCategoriesList()
+        $this.getSalesCategoriesList(),
+        $this.getStationGlobals()
       ];
     };
 
@@ -350,6 +358,11 @@ angular.module('ts5App')
       $this.deserializeLimitationPerTransaction(discountData);
       $this.deserializeLimitationPerSeat(discountData);
       $this.deserializeRestrictions(discountData);
+      $this.deserializeInclusionFilters(discountData);
+    };
+
+    this.deserializeInclusionFilters = function (discountData) {
+      $scope.formData.filters = mapFilters(discountData.filters, true);
     };
 
     this.serializeDiscountInformation = function(formData, discount) {
@@ -563,6 +576,7 @@ angular.module('ts5App')
       $this.serializeLimitationPerTransaction(formData, discount);
       $this.serializeLimitationPerSeat(formData, discount);
       $this.serializeRestrictions(formData, discount);
+      $this.serializeInclusionFilters(formData, discount);
 
       return {
         companyDiscount: discount
@@ -652,6 +666,189 @@ angular.module('ts5App')
       }, 'slow');
       return activeBtn;
     };
+
+    $scope.addBlankObjectToArray = function (_array) {
+      if ($scope.readOnly || $scope.isDisabled()) {
+        return false;
+      }
+
+      _array.push({});
+    };
+
+    $scope.removeFromStationListByIndex = function ($index) {
+      var arrivalId = -1;
+      var departureId = -1;
+
+      if (!$scope.formData.filters[$index]) {
+        return false;
+      }
+
+      if ($scope.formData.filters[$index].arrivalStation) {
+        arrivalId = $scope.formData.filters[$index].arrivalStation.id;
+      }
+
+      if ($scope.formData.filters[$index].departureStation) {
+        departureId = $scope.formData.filters[$index].departureStation.id;
+      }
+
+      removeDepartureFromHasArrival(arrivalId, departureId);
+      removeArrivalFromHasDeparture(arrivalId, departureId);
+      $scope.formData.filters.splice($index, 1);
+    };
+
+    function removeDepartureFromHasArrival(arrivalId, departureId) {
+      var departureIndex = -1;
+      if ($scope.repeatableStations.arrivalHas[arrivalId]) {
+        departureIndex = $scope.repeatableStations.arrivalHas[arrivalId].indexOf(departureId);
+      }
+
+      if (departureIndex !== -1) {
+        $scope.repeatableStations.arrivalHas[arrivalId].splice(departureIndex, 1);
+      }
+    }
+
+    function removeArrivalFromHasDeparture(arrivalId, departureId) {
+      var arrivalIndex = -1;
+      if ($scope.repeatableStations.departureHas[departureId]) {
+        arrivalIndex = $scope.repeatableStations.departureHas[departureId].indexOf(arrivalId);
+      }
+
+      if (arrivalIndex !== -1) {
+        $scope.repeatableStations.departureHas[departureId].splice(arrivalIndex, 1);
+      }
+    }
+
+    $scope.stationListChanged = function ($index) {
+      if (!hasCompleteStationObject($index)) {
+        return false;
+      }
+
+      var departureId = $scope.formData.filters[$index].departureStation.id;
+      var arrivalId = $scope.formData.filters[$index].arrivalStation.id;
+      if (!$scope.repeatableStations.departureHas[departureId]) {
+        $scope.repeatableStations.departureHas[departureId] = [];
+      }
+
+      $scope.repeatableStations.departureHas[departureId].push(arrivalId);
+      if (!$scope.repeatableStations.arrivalHas[arrivalId]) {
+        $scope.repeatableStations.arrivalHas[arrivalId] = [];
+      }
+
+      $scope.repeatableStations.arrivalHas[arrivalId].push(departureId);
+    };
+
+    function hasCompleteStationObject(index) {
+      if (angular.isUndefined($scope.formData.filters[index])) {
+        return false;
+      }
+
+      return hasDepartureStationObject(index) && hasCompleteArrivalStation(index);
+    }
+
+    function hasDepartureStationObject(index) {
+      if (angular.isUndefined($scope.formData.filters[index].departureStation)) {
+        return false;
+      }
+
+      return !angular.isUndefined($scope.formData.filters[index].departureStation.id);
+    }
+
+    function hasCompleteArrivalStation(index) {
+      if (angular.isUndefined($scope.formData.filters[index].arrivalStation)) {
+        return false;
+      }
+
+      return !angular.isUndefined($scope.formData.filters[index].arrivalStation.id);
+    }
+
+    function setStationGlobals(dataFromAPI) {
+      $scope.selectOptions.companyStationGlobals = dataFromAPI.response;
+    }
+
+    this.getStationGlobals = function () {
+      return discountFactory.getStationGlobals().then(setStationGlobals);
+    };
+
+    $scope.disabledDepartureStations = function (station, stations) {
+      if (!stations.arrivalStation) {
+        return false;
+      }
+
+      return lodash.find($scope.formData.filters, { arrivalStation: stations.arrivalStation, departureStation: station });
+    };
+
+    $scope.disabledArrivalStations = function (station, stations) {
+      if (!stations.departureStation) {
+        return false;
+      }
+
+      return lodash.find($scope.formData.filters, { departureStation: stations.departureStation, arrivalStation: station });
+    };
+
+    this.serializeInclusionFilters = function (formData, discount) {
+      discount.filters = mapFilters($scope.formData.filters);
+    };
+
+    function mapFilters(arrayToMap, bindWholeObjectForView) {
+      return arrayToMap.map(function (stationData) {
+        var stationFilters = {};
+        if (angular.isDefined(stationData.id)) {
+          stationFilters = angular.copy(stationData);
+        }
+
+        stationFilters.arrivalStationId = getArrivalStationId(stationData);
+        stationFilters.departureStationId = getDepartureStationId(stationData);
+        if (bindWholeObjectForView) {
+          stationFilters.arrivalStation = getObjectByIdFromSelectOptions('companyStationGlobals', {
+            id: stationData.arrivalStationId
+          });
+          stationFilters.departureStation = getObjectByIdFromSelectOptions('companyStationGlobals', {
+            id: stationData.departureStationId
+          });
+        } else if (angular.isDefined(stationFilters.arrivalStation)) {
+          delete stationFilters.arrivalStation;
+          delete stationFilters.departureStation;
+        }
+
+        return stationFilters;
+      });
+    }
+
+    function getArrivalStationId(stationData) {
+      if (angular.isDefined(stationData.arrivalStation) && angular.isDefined(stationData.arrivalStation.id)) {
+        return stationData.arrivalStation.id;
+      }
+
+      if (angular.isDefined(stationData.arrivalStationId)) {
+        return stationData.arrivalStationId;
+      }
+
+      return null;
+    }
+
+    function getDepartureStationId(stationData) {
+      if (angular.isDefined(stationData.departureStation) && angular.isDefined(stationData.departureStation.id)) {
+        return stationData.departureStation.id;
+      }
+
+      if (angular.isDefined(stationData.departureStationId)) {
+        return stationData.departureStationId;
+      }
+
+      return null;
+    }
+
+    function getObjectByIdFromSelectOptions(arrayName, objectById) {
+      var resultList = $scope.selectOptions[arrayName];
+      var objectToReturn = $filter('filter')(resultList, objectById, true);
+      if (!objectToReturn || !objectToReturn.length) {
+        return {
+          id: null
+        };
+      }
+
+      return objectToReturn[0];
+    }
 
     this.validateForm = function() {
       $scope.displayError = !$scope.form.$valid || $scope.errorCustom.length > 0;

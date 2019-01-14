@@ -418,6 +418,49 @@
           </div>
         </div>
       </div>
+
+
+      <h3 id="discount-inclusion-filter">Inclusion Filter <a class="pull-right"
+                                                              ng-click="addBlankObjectToArray(formData.filters)"
+                                                              ng-hide="isDisabled()"
+                                                              ng-disabled="isDisabled()">Add Discount Inclusion Filter</a></h3>
+      <div class="row" ng-repeat="inclusionFilterData in formData.filters">
+        <div class="col-xs-10 col-sm-5">
+          <div class="form-group">
+            <label>Departure Station</label>
+            <ui-select theme="bootstrap" ng-model="inclusionFilterData.departureStation" ng-disabled="isDisabled()"
+                       ng-change="stationListChanged($index)">
+              <ui-select-match placeholder="Select Departure Station">{{ $select.selected.code }}</ui-select-match>
+              <ui-select-choices repeat="companyStation in selectOptions.companyStationGlobals | filter: $select.search"
+                                 ui-disable-choice="disabledDepartureStations(companyStation, inclusionFilterData)">
+                {{ companyStation.code }} - {{ companyStation.name }}
+              </ui-select-choices>
+            </ui-select>
+          </div>
+        </div>
+        <div class="col-xs-10 col-sm-5 col-sm-offset-1">
+          <div class="form-group">
+            <label>Arrival Station</label>
+            <ui-select theme="bootstrap" ng-model="inclusionFilterData.arrivalStation" ng-disabled="isDisabled()"
+                       ng-change="stationListChanged($index)">
+              <ui-select-match placeholder="Select Arrival Station">{{ $select.selected.code }}</ui-select-match>
+              <ui-select-choices repeat="companyStation in selectOptions.companyStationGlobals | filter: $select.search"
+                                 ui-disable-choice="disabledArrivalStations(companyStation, inclusionFilterData)">
+                {{ companyStation.code }} - {{ companyStation.name }}
+              </ui-select-choices>
+            </ui-select>
+          </div>
+        </div>
+        <div class="col-xs-2 col-sm-1 text-right">
+          <label ng-hide="isDisabled()" class="invisible">Remove</label>
+          <button type="button" class="btn-remove-price-group btn btn-danger btn-xs"
+                  ng-click="removeFromStationListByIndex($index)"
+                  ng-disabled="isDisabled()" ng-hide="isDisabled()">
+            <i class="fa fa-close"></i>
+          </button>
+        </div>
+      </div>
+
     </form>
   </div>
 </div>
