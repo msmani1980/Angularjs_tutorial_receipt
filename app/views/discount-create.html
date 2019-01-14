@@ -434,9 +434,9 @@
              ng-disabled="isDisabled()">Per Country</a>
         </span>
 
-        <span class="pull-right" style="margin-right:5px">Add Discount Inclusion Filter: </span>
-
+        <span class="pull-right" style="margin-right:5px" ng-hide="isDisabled()">Add Discount Inclusion Filter: </span>
       </h3>
+
       <div class="row" ng-repeat="inclusionFilterData in formData.filters">
         <div class="col-xs-10 col-sm-5">
           <div class="form-group">

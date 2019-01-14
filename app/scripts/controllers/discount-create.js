@@ -746,13 +746,13 @@ angular.module('ts5App')
 
       if (departureStations.length === 0) {
         arrivalStations.forEach(function (as) {
-          $scope.addInclusionFilterRow(null, as);
+          $scope.addInclusionFilterRow({}, as);
         });
       }
 
       if (arrivalStations.length === 0) {
         departureStations.forEach(function (ds) {
-          $scope.addInclusionFilterRow(ds, null);
+          $scope.addInclusionFilterRow(ds, {});
         });
       }
 
