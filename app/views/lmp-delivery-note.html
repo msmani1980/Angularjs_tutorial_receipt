@@ -209,6 +209,7 @@
                 <label>Expected</label>
                 <input ng-model="item.expectedQuantity" type="number" min="0" step="1" class="form-control"
                        id="expected-qty-{{ item.masterItemId }}"
+                       onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                        ng-readonly="readOnly">
               </div>
             </div>
@@ -219,6 +220,7 @@
                 <input ng-model="item.deliveredQuantity" type="number" min="0" step="1" class="form-control"
                        id="delivered-qty-{{ item.masterItemId }}"
                        ng-readonly="readOnly" 
+                       onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                        ng-required="isNumberGreaterThanZero(item.expectedQuantity) || isNumberGreaterThanZero(item.ullageQuantity)"
                        name="Delivered ( {{ item.itemCode }} - {{ item.itemName }} )">
               </div>
@@ -229,6 +231,7 @@
                 <label>Ullage</label>
                 <input ng-model="item.ullageQuantity" type="number" min="0" step="1" class="form-control"
                        id="ullage-qty-{{ item.masterItemId }}" ng-readonly="readOnly"
+                       onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                        ng-disabled="!item.deliveredQuantity"
                        ng-change="ullageQuantityChanged(item)">
               </div>
