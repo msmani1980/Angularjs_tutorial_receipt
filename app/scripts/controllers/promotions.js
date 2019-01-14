@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PromotionsCtrl', function ($scope, $location, $routeParams, $q, $filter, promotionsFactory, dateUtility, $timeout, lodash) {
+  .controller('PromotionsCtrl', function ($scope, $location, $routeParams, $q, $filter, promotionsFactory, dateUtility, $timeout, lodash, _) {
 
     $scope.readOnly = true;
     $scope.editing = false;
@@ -21,6 +21,8 @@ angular.module('ts5App')
       promotionCategories: [],
       activePromotionCategories: []
     };
+    $scope.countryInclusionFilterSelections = {};
+
     $scope.itemCategorySelects = [];
     $scope.repeatableItemListSelectOptions = [];
     $scope.repeatableProductPurchaseItemIds = [];
@@ -80,6 +82,57 @@ angular.module('ts5App')
     var cachedRetailItemsByCatId = [];
 
     // private controller functions
+
+    $scope.showInclusionFilterByCountryModal = function() {
+      $scope.countryInclusionFilterSelections = { };
+      angular.element('#inclusion-filter-countries-modal').modal('show');
+    };
+
+    $scope.addSelectedCountriesForInclusionFilter = function() {
+      var selectedDepartureCountryId = $scope.countryInclusionFilterSelections.departure;
+      var selectedArrivalCountryId = $scope.countryInclusionFilterSelections.arrival;
+
+      var departureStations = lodash.filter($scope.selectOptions.companyStationGlobals, function (station) {
+        return station.countryId === selectedDepartureCountryId;
+      });
+
+      var arrivalStations = lodash.filter($scope.selectOptions.companyStationGlobals, function (station) {
+        return station.countryId === selectedArrivalCountryId;
+      });
+
+      if (departureStations.length > 0 && arrivalStations.length > 0) {
+        departureStations.forEach(function (ds) {
+          arrivalStations.forEach(function (as) {
+            $scope.addInclusionFilterRow(ds, as);
+          });
+        });
+      }
+
+      if (departureStations.length === 0) {
+        arrivalStations.forEach(function (as) {
+          $scope.addInclusionFilterRow(null, as);
+        });
+      }
+
+      if (arrivalStations.length === 0) {
+        departureStations.forEach(function (ds) {
+          $scope.addInclusionFilterRow(ds, null);
+        });
+      }
+
+      angular.element('#inclusion-filter-countries-modal').modal('hide');
+    };
+
+    $scope.addInclusionFilterRow = function (departureStation, arrivalStation) {
+      if ($scope.readOnly || $scope.isDisabled) {
+        return false;
+      }
+
+      $scope.promotion.filters.push({
+        departureStation: departureStation,
+        arrivalStation: arrivalStation
+      });
+    };
 
     function getObjectByIdFromSelectOptions(arrayName, objectById) {
       var resultList = $scope.selectOptions[arrayName];
@@ -532,6 +585,21 @@ angular.module('ts5App')
 
     function setStationGlobals(dataFromAPI) {
       $scope.selectOptions.companyStationGlobals = dataFromAPI.response;
+
+      setCountryList(dataFromAPI.response);
+    }
+
+    function setCountryList(stationsFromAPI) {
+      var countries = stationsFromAPI.map(function (station) {
+        return {
+          id: station.countryId,
+          name: station.countryName
+        };
+      });
+
+      $scope.countryList = _.uniqBy(countries, function (e) {
+        return e.id;
+      });
     }
 
     function getStationGlobals() {
