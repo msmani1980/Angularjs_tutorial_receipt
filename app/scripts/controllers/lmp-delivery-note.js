@@ -1,3 +1,4 @@
+ /*jshint maxcomplexity:7 */
 'use strict';
 
 /**
@@ -271,6 +272,10 @@ angular.module('ts5App')
 
     function catererStationIdWatcher(newValue, oldValue) {
       if ($routeParams.state === 'edit' && !oldValue) {
+        if (newValue) {
+          getMasterRetailItemsByCatererStationId(newValue);
+        }
+
         return newValue;
       }
 
