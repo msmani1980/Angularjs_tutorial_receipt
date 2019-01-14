@@ -113,6 +113,20 @@ angular.module('ts5App')
         });
       }
   
+      if (result) {
+        var itemsExpQtySet = $scope.deliveryNote.items.filter(function(item) {
+          return $scope.isNumberGreaterThanZero(item.expectedQuantity);
+        });
+
+        angular.forEach(itemsExpQtySet, function (item) {
+          if (!isFieldEmpty(item.expectedQuantity) && (angular.isUndefined(item.deliveredQuantity) || isFieldEmpty(item.deliveredQuantity))) {
+            result = false;
+            return result;
+          }
+        });
+
+      }  
+
       return result;
     }
 
