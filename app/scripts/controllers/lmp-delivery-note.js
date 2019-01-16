@@ -576,7 +576,7 @@ angular.module('ts5App')
 
     $scope.isLMPStationIsDisabled = function() {
       if ($scope.readOnly ||
-        Array.isArray($scope.catererStationList) && $scope.catererStationList.length === 1) {
+        Array.isArray($scope.catererStationList) && $scope.catererStationList.length === 0) {
         return true;
       }
 
