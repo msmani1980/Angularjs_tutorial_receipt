@@ -420,10 +420,23 @@
       </div>
 
 
-      <h3 id="discount-inclusion-filter">Inclusion Filter <a class="pull-right"
-                                                              ng-click="addBlankObjectToArray(formData.filters)"
-                                                              ng-hide="isDisabled()"
-                                                              ng-disabled="isDisabled()">Add Discount Inclusion Filter</a></h3>
+      <h3 id="discount-inclusion-filter">
+        Inclusion Filter
+
+        <span class="pull-right">
+          <a ng-click="addBlankObjectToArray(formData.filters)"
+          ng-hide="isDisabled()"
+          ng-disabled="isDisabled()">Per Station</a>
+        </span>
+        <span class="pull-right" style="margin-right:5px">
+          <a ng-click="showInclusionFilterByCountryModal()"
+             ng-hide="isDisabled()"
+             ng-disabled="isDisabled()">Per Country</a>
+        </span>
+
+        <span class="pull-right" style="margin-right:5px" ng-hide="isDisabled()">Add Discount Inclusion Filter: </span>
+      </h3>
+
       <div class="row" ng-repeat="inclusionFilterData in formData.filters">
         <div class="col-xs-10 col-sm-5">
           <div class="form-group">
@@ -476,6 +489,50 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" ng-click="deleteRestrictedItem()">Continue</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="inclusion-filter-countries-modal" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="row">
+          <div class="col-xs-8">
+            <h4 class="modal-title">Select countries</h4>
+          </div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label>Departure</label>
+                <select required name="globalDiscountType" class="form-control"
+                        ng-options="country.id as country.name for country in countryList | orderBy: 'name'"
+                        ng-model="countryInclusionFilterSelections.departure">
+                  <option value="">Please select</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label>Arrival</label>
+                <select required name="globalDiscountType" class="form-control"
+                        ng-options="country.id as country.name for country in countryList | orderBy: 'name'"
+                        ng-model="countryInclusionFilterSelections.arrival">
+                  <option value="">Please select</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default btn-cancel" data-dismiss="modal">Close</button>
+            <button class="btn btn-success" ng-click="addSelectedCountriesForInclusionFilter()">Add</button>
+        </div>
       </div>
     </div>
   </div>
