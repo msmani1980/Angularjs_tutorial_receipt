@@ -53,7 +53,7 @@
      <tbody>
        <tr ng-repeat="job in jobs track by job.id" ng-if="isTemplateInFeaturesInRole(job.template)">
          <th>
-         	<button type="button" class="fa fa-info-circle tooltip-focus report-param-tooltip-button"  tooltip-special="{{ requestParamTooltip(job.requestedParams) }}" tooltip-placement="bottom"></button> 
+         	<button type="button" class="fa fa-info-circle tooltip-focus report-param-tooltip-button"  tooltip-report="{{ requestParamTooltip(job.requestedParams) }}" tooltip-placement="bottom"></button> 
          {{job.name}}</th>
          <th>{{job.status}}</th>
          <th>{{job.id}}</th>
