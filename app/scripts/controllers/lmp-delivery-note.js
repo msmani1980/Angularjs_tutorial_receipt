@@ -1,3 +1,4 @@
+ /*jshint maxcomplexity:7 */
 'use strict';
 
 /**
@@ -21,6 +22,7 @@ angular.module('ts5App')
     };
 
     // private vars
+    var savedCatererStationList = [];
     var _formSaveSuccessText = null;
     var _cateringStationItems = [];
     var _reasonCodeTypeUllage = 'Ullage';
@@ -32,6 +34,14 @@ angular.module('ts5App')
     function isNumberGreaterThanOrEqualTo0(value) {
       return angular.isDefined(value) && value !== null && parseInt(value) >= 0;
     }
+
+    $scope.isNumberGreaterThanOrEqualToZero = function(value) {
+      return angular.isDefined(value) && value !== null && parseInt(value) >= 0;
+    };
+
+    $scope.isNumberGreaterThanZero = function(value) {
+      return angular.isDefined(value) && value !== null && parseInt(value) > 0;
+    };
 
     function showMessage(message, messageType) {
       messageService.display(messageType, '<strong>Delivery Note</strong>: ' + message);
@@ -69,6 +79,59 @@ angular.module('ts5App')
       });
 
       return !!(itemsSet.length);
+    }
+
+    function deliveryNoteHasAllValidItems() {
+      var result = false;
+      if (angular.isUndefined($scope.deliveryNote)) {
+        return result;
+      }
+
+      if (!$scope.deliveryNote.items) {
+        return result;
+      }
+
+      if (!$scope.deliveryNote.items.length) {
+        return result;
+      }
+
+      var itemsSet = $scope.deliveryNote.items.filter(function(item) {
+        return isNumberGreaterThanOrEqualTo0(item.deliveredQuantity);
+      });
+
+      result =  !!(itemsSet.length);
+      if (result) {
+        var ullageItemsSet = $scope.deliveryNote.items.filter(function(item) {
+          return $scope.isNumberGreaterThanZero(item.ullageQuantity);
+        });
+
+        angular.forEach(ullageItemsSet, function (item) {
+          if (!isFieldEmpty(item.ullageQuantity) && (angular.isUndefined(item.ullageReason) || isFieldEmpty(item.ullageReason))) {
+            result = false;
+            return result;
+          }
+        });
+      }
+  
+      if (result) {
+        var itemsExpQtySet = $scope.deliveryNote.items.filter(function(item) {
+          return $scope.isNumberGreaterThanZero(item.expectedQuantity);
+        });
+
+        angular.forEach(itemsExpQtySet, function (item) {
+          if (!isFieldEmpty(item.expectedQuantity) && (angular.isUndefined(item.deliveredQuantity) || isFieldEmpty(item.deliveredQuantity))) {
+            result = false;
+            return result;
+          }
+        });
+
+      }  
+
+      return result;
+    }
+
+    function isFieldEmpty (value) {
+      return (value === undefined || value === null || value.length === 0 || value === 'Invalid date');
     }
 
     function canReview() {
@@ -223,6 +286,10 @@ angular.module('ts5App')
 
     function catererStationIdWatcher(newValue, oldValue) {
       if ($routeParams.state === 'edit' && !oldValue) {
+        if (newValue) {
+          getMasterRetailItemsByCatererStationId(newValue);
+        }
+
         return newValue;
       }
 
@@ -252,6 +319,10 @@ angular.module('ts5App')
       }
 
       init();
+
+      if (savedCatererStationList !== null && savedCatererStationList.length && ($scope.deliveryNote.catererStationId === null || !$scope.deliveryNote.catererStationId.length)) {
+        $scope.catererStationList = savedCatererStationList;
+      }      
     }
 
     function getMasterItemIdFromItem(item) {
@@ -296,7 +367,7 @@ angular.module('ts5App')
     }
 
     $scope.isDeliveryDateSelected = function () {
-      return $scope.deliveryNote !== 'undefined' && $scope.deliveryNote !== null && $scope.deliveryNote.deliveryDate !== undefined && $scope.deliveryNote.deliveryDate !== null;
+      return $scope.deliveryNote !== 'undefined' && $scope.deliveryNote !== null && $scope.deliveryNote.deliveryDate !== undefined && $scope.deliveryNote.deliveryDate !== null && $scope.deliveryNote.deliveryDate !== '';
     };
 
     $scope.$watch('deliveryNote.deliveryDate', function () {
@@ -356,7 +427,30 @@ angular.module('ts5App')
       return '';
     };
 
+    /*jshint maxcomplexity:7 */
     $scope.toggleReview = function() {
+      $scope.clearFilter();
+
+      savedCatererStationList = $scope.catererStationList;
+      var isFormValid = validateForm();
+      if (!isFormValid) {
+        hideLoadingModal();
+        return;
+      }
+
+      var isItemsValid = deliveryNoteHasAllValidItems();
+      if (!isItemsValid) {
+        $scope.displayError = true;
+        if ($scope.form && $scope.form.$valid && !deliveryNoteHasItems()) {
+          $scope.errorCustom = [{
+            field: 'Items Required',
+            value: 'There must be at least one Item attached to this Delivery Note'
+          }];
+        } 
+
+        return;
+      }
+
       $scope.canReview = canReview();
       $scope.hideReview = false;
       $scope.form.$setSubmitted(true);
@@ -395,6 +489,9 @@ angular.module('ts5App')
     };
 
     $scope.clearFilter = function() {
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+
       if (angular.isUndefined($scope.filterInput)) {
         return;
       }
@@ -465,6 +562,13 @@ angular.module('ts5App')
     }
 
     $scope.save = function(_isAccepted) {
+      savedCatererStationList = $scope.catererStationList;
+      var isFormValid = validateForm();
+      if (!isFormValid) {
+        hideLoadingModal();
+        return;
+      }
+      
       if ($scope.deliveryNote.isAccepted) {
         return;
       }
@@ -472,6 +576,11 @@ angular.module('ts5App')
       generateSavePayload(_isAccepted);
       saveDeliveryNote();
     };
+
+    function validateForm () {
+      $scope.displayError = !$scope.form.$valid;
+      return $scope.form.$valid;
+    }
 
     $scope.changeItem = function(newItem, index) {
       newItem.canEdit = $scope.deliveryNote.items[index].canEdit;

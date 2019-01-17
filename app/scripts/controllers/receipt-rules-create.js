@@ -12,6 +12,7 @@ angular.module('ts5App')
     var $this = this;
     var payload = null;
     
+    $scope.displayError = false;
     $scope.readOnly = true;
     $scope.editing = false;
     $scope.viewName = 'Create Rules';
@@ -23,22 +24,33 @@ angular.module('ts5App')
     $scope.countriesList = [];
     $scope.globalCompanyCurrecnyList = [];
     $scope.receiptRule = [];
-    $scope.receiptRule.countryId = [];
+    $scope.receiptRule.countryId = null;
     $scope.receiptFloorLimitAmountsUi = [];
-    
+    $scope.multiSelectedValues.globalStationList = null;
+
+    $scope.onSelected = function() {
+      $scope.receiptRuleFormData.Station.$setValidity('required', true);
+    };
+
     $scope.formSave = function() {
-        if ($this.validateForm()) {
-          var saveFunctionName = ($routeParams.action + 'ReceiptRule');
-          if ($this[saveFunctionName]) {
-            $this[saveFunctionName]();
-          }
-        } else {
-          $scope.displayError = true;
+      if (!$scope.receiptRuleFormData.Station.$modelValue || ($scope.receiptRuleFormData.Station.$modelValue && $scope.receiptRuleFormData.Station.$modelValue.length === 0)) {
+        $scope.receiptRuleFormData.Station.$setValidity('required', false);
+      } else {
+        $scope.receiptRuleFormData.Station.$setValidity('required', true);
+      }
+
+      if ($this.validateForm()) {
+        var saveFunctionName = ($routeParams.action + 'ReceiptRule');
+        if ($this[saveFunctionName]) {
+          $this[saveFunctionName]();
         }
-      };
+      } else {
+        $scope.displayError = true;
+      }
+    };
       
     $scope.onCounrtyChange = function() {
-      $scope.multiSelectedValues.globalStationList = {};
+      $scope.multiSelectedValues.globalStationList = null;
       var payload = {
         startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
         countryId: $scope.receiptRule.countryId
@@ -230,7 +242,7 @@ angular.module('ts5App')
         }
 
         return apiArray.map(function (item) {
-          item.code = getCurrencyCodeFromCurrencyId(item.operatingCompanyCurrencyId);
+          item.code = getCurrencyCodeFromCurrencyId(parseInt(item.operatingCompanyCurrencyId));
           item.amount = item.floorLimitAmount;
           return item;
         });
@@ -274,9 +286,10 @@ angular.module('ts5App')
 
         return promises;
       };
-        
+
     this.init = function() {
       $this.showLoadingModal('Loading Data');
+      $scope.displayError = false;
       var initPromises = $this.makeInitPromises();
       $q.all(initPromises).then($this.initDependenciesSuccess);
     };

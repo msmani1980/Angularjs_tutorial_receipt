@@ -33,6 +33,11 @@ angular.module('ts5App')
       $scope.errorResponse = dataFromAPI;
     }
 
+    function hideErrors() {
+      $scope.displayError = false;
+      $scope.errorResponse = null;
+    }
+
     function isPanelOpen(panelName) {
       return !angular.element(panelName).hasClass('collapse');
     }
@@ -97,6 +102,7 @@ angular.module('ts5App')
     };
 
     $scope.clearSearchForm = function () {
+      hideErrors();
       $scope.search = null;
       $scope.exciseDutyList = null;
       initLazyLoadingMeta();
@@ -133,6 +139,7 @@ angular.module('ts5App')
     };
 
     $scope.searchExciseData = function () {
+      hideErrors();
       initLazyLoadingMeta();
       $scope.exciseDutyList = null;
       showLoadingModal('fetching records');
@@ -178,16 +185,43 @@ angular.module('ts5App')
 
     $scope.saveEdit = function () {
       showLoadingModal('Editing Record');
+      $scope.displayError = false;
+      var isValid = validateEditForm();
+
+      if (!isValid) {
+        hideLoadingModal();
+        return;  
+      }
+
       var payload = formatRecordForAPI($scope.recordToEdit);
+      var companyId = globalMenuService.company.get();
+      payload.companyId = companyId;
       exciseDutyFactory.updateExciseDuty($scope.recordToEdit.id, payload).then(function () {
         $scope.cancelEdit();
         reloadAfterAPISuccess();
       }, showErrors);
     };
 
+    function validateEditForm () {
+      var isValid = true;
+      if (!angular.isDefined($scope.recordToEdit.commodityCode) || $scope.recordToEdit.commodityCode === '') {
+        isValid = false;  
+        $scope.exciseDutyEditForm.editCommodityCode.$valid = false;
+      }
+
+      if (!angular.isDefined($scope.recordToEdit.dutyRate) || $scope.recordToEdit.dutyRate === '') {
+        isValid = false;  
+        $scope.exciseDutyEditForm.editDutyRate.$valid = false;
+      }
+
+      $scope.displayEditError = !isValid;
+      return isValid;
+    }
+
     $scope.cancelEdit = function () {
       $scope.inEditMode = false;
       $scope.recordToEdit = null;
+      hideErrors();
     };
 
     $scope.canEdit = function (exciseDuty) {
@@ -221,6 +255,9 @@ angular.module('ts5App')
       var isValid = !!$scope.newRecord.country;
       $scope.exciseDutyCreateForm.country.$setValidity('required', isValid);
       $scope.displayError = !isValid;
+      if (isValid) {
+        $scope.displayError = !$scope.exciseDutyCreateForm.$valid;
+      }
     }
 
     $scope.createExciseDuty = function () {
