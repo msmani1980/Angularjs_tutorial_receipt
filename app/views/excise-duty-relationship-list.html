@@ -231,6 +231,7 @@
           <td>
             <span ng-hide="isSelectedToEdit(relationship) && canDelete(relationship)">{{ relationship.itemName }}</span>
             <span ng-show="isSelectedToEdit(relationship) && canDelete(relationship)">
+              <div class="form-group" ng-class="{ 'has-error' : !recordToEdit.retailItem && displayEditError, 'has-success' : recordToEdit.retailItem}">
               <ui-select ng-model="recordToEdit.retailItem"
                          theme="bootstrap"
                          placeholder="Select an Item"
@@ -242,11 +243,13 @@
                   <div ng-bind-html="item.itemName | highlight: $select.search"></div>
                 </ui-select-choices>
               </ui-select>
+              </div>
             </span>
           </td>
           <td>
             <span ng-hide="isSelectedToEdit(relationship) && canDelete(relationship)">{{ relationship.commodityCode }}</span>
             <span ng-show="isSelectedToEdit(relationship) && canDelete(relationship)">
+              <div class="form-group" ng-class="{ 'has-error' : !recordToEdit.commodityCode && displayEditError, 'has-success' : recordToEdit.commodityCode}">
               <ui-select required="true"
                          ng-model="recordToEdit.commodityCode"
                          theme="bootstrap"
@@ -259,6 +262,7 @@
                   <div ng-bind-html="record.commodityCode | highlight: $select.search"></div>
                 </ui-select-choices>
               </ui-select>
+              </div>
             </span>
           </td>
           <td>
@@ -275,17 +279,20 @@
           </td>
           <td>
             <span ng-hide="isSelectedToEdit(relationship) && canDelete(relationship)">{{ relationship.startDate }}</span>
+            <div ng-class="{ 'has-error' : isDateValueInvalid(recordToEdit.startDate, recordToEdit) && displayEditError, 'has-success' : !isDateValueInvalid(recordToEdit.startDate, recordToEdit) }">
             <date-picker-field
               name="editStartDate"
-              class="form-group"
+              class="form-group"              
               form="itemExciseDutyEditForm"
               min-date="minDate"
               ng-model="recordToEdit.startDate"
               ng-show="isSelectedToEdit(relationship) && canDelete(relationship)">
             </date-picker-field>
+            </div>
           </td>
           <td>
             <span ng-hide="isSelectedToEdit(relationship)">{{ relationship.endDate }}</span>
+            <div ng-class="{ 'has-error' : isDateValueInvalid(recordToEdit.endDate, recordToEdit) && displayEditError, 'has-success' : !isDateValueInvalid(recordToEdit.endDate, recordToEdit) }">
             <date-picker-field
               name="editEndDate"
               class="form-group"
@@ -294,6 +301,7 @@
               ng-model="recordToEdit.endDate"
               ng-show="isSelectedToEdit(relationship)">
             </date-picker-field>
+            </div>
           </td>
           <td>{{ getUpdatedOn(relationship) }}</td>
           <td>{{ getUpdateBy(relationship) }}</td>

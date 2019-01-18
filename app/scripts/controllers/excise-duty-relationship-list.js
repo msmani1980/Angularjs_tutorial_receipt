@@ -270,9 +270,10 @@ angular.module('ts5App')
       }
 
       $scope.displayError = false;
-
-      var isAlcoholVolumeValid =  $this.validateNewData($scope.recordToEdit);
-      if (!isAlcoholVolumeValid) {
+      console.log ('$scope.recordToEdit', $scope.recordToEdit);
+      var isDataValid =  $this.validateNewData($scope.recordToEdit);
+      if (!isDataValid) {
+        $scope.displayEditError = true;  
         return;
       }
 
@@ -649,22 +650,49 @@ angular.module('ts5App')
       $scope.displayEditError = true;
     };
 
-    this.isFieldEmpty = function (value) {
+    $scope.isFieldEmpty = function (value) {
       return (value === undefined || value === null || value.length === 0 || value === 'Invalid date');
     };
 
     this.validateNewData = function (record) {
-      if (record !== null && $this.isFieldEmpty(record.alcoholVolume)) {
-        $this.showValidationError('alcoholVolume', false);
-        return false;
+      var result = true;
+
+      if (record !== null && $scope.isFieldEmpty(record.startDate)) {
+        $this.showValidationError('Start Date', false);
+        result = false;
       }
 
-      if (record !== null && angular.isDefined(record.alcoholVolume) && $scope.isAlcoholVolumeValueInvalid(record)) {
-        $this.showValidationError('alcoholVolume', true);
-        return false;
+      if (record !== null && $scope.isFieldEmpty(record.endDate)) {
+        $this.showValidationError('End Date', false);
+        result = false;
       }
 
-      return true;
+      if (record !== null && !$scope.isFieldEmpty(record.endDate) && !$scope.isFieldEmpty(record.startDate)) {
+        var isValid = $this.validateStartAndEndDates(record);
+        result = result === true ? isValid : false;
+      }
+
+      if (record !== null && $scope.isFieldEmpty(record.alcoholVolume)) {
+        $this.showValidationError('Alcohol Volume', false);
+        result = false;
+      }
+
+      if (record !== null && !$scope.isFieldEmpty(record.alcoholVolume) && $scope.isAlcoholVolumeValueInvalid(record)) {
+        $this.showValidationError('Alcohol Volume', true);
+        result = false;
+      }
+
+      if (record !== null && $scope.isFieldEmpty(record.commodityCode)) {
+        $this.showValidationError('Commodity Code', false);
+        result = false;
+      }
+      
+      if (record !== null && $scope.isFieldEmpty(record.retailItem)) {
+        $this.showValidationError('Duty Free Retail Item', false);
+        result = false;
+      }
+
+      return result;
     };
 
     this.clearCustomErrors = function () {
@@ -681,4 +709,23 @@ angular.module('ts5App')
       $scope.errorResponseEdit = [];
       $scope.errorCustom = [];
     };
+
+    $scope.isDateValueInvalid = function (value, record) {
+      var isInValid = $scope.isFieldEmpty(value) || (record.startDate && record.endDate && dateUtility.isAfterDatePicker(record.startDate, record.endDate));
+      return isInValid;
+    };
+
+    this.validateStartAndEndDates = function(record) {
+      var isValid = true;
+      if ($scope.isDateValueInvalid(record.startDate, record)) {
+        $scope.errorCustom.push({
+          field: 'Start Date and End Date',
+          value: ' End Date should be later than or equal to Start date.'
+        });
+
+        isValid = false;
+      }
+      return isValid; 
+    };
+
   });
