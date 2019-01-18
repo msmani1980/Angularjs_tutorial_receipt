@@ -61,13 +61,13 @@ angular.module('ts5App')
       return paramString;
     };
     
-  }).directive('tooltipSpecialPopup', function () {
+  }).directive('tooltipReportPopup', function () {
     return {
         restrict: 'EA',
         replace: true,
         scope: { content: '@', placement: '@', animation: '&', isOpen: '&' },
         templateUrl: 'views/directives/report-param-tooltip.html'
       };
-  }).directive('tooltipSpecial', ['$tooltip', function ($tooltip) {
-    return $tooltip('tooltipSpecial', 'tooltip', 'focus');
+  }).directive('tooltipReport', ['$tooltip', function ($tooltip) {
+    return $tooltip('tooltipReport', 'tooltip', 'focus');
   }]);
