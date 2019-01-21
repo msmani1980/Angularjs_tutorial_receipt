@@ -22,7 +22,7 @@
       </label>
       <p ng-show="disabledAndNoSeals()">There are no seals assigned</p>
       <div class="form-group" ng-class="$parent.validateSeals(sealTypeObject)" ng-hide="disabledAndNoSeals()">
-        <ui-select ng-disabled="isReadOnly()" name="{{sealTypeObject.name}}" multiple tagging tagging-label="(Add 'New' Seal)" ng-model="sealTypeObject.seals.numbers"
+        <ui-select ng-disabled="isReadOnly()" name="{{sealTypeObject.name}}" multiple tagging tagging-label="{{ taggingLabel }}" ng-model="sealTypeObject.seals.numbers"
                    theme="bootstrap" sortable="true" title="Add Seals...">
           <ui-select-match ui-locked-choice="true" placeholder="Add Seals Here, Enter After Each Seal">{{$item}}</ui-select-match>
           <ui-select-choices repeat="number in sealTypeObject.seals.numbers | filter:$select.search">

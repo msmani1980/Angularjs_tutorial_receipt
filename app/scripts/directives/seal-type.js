@@ -10,6 +10,24 @@ angular.module('ts5App')
   .directive('sealType', function() {
     var sealTypeController = function($scope) {
 
+      var $this = this;
+      $scope.taggingLabel = '(Add \'New\' Seal)';
+
+      $scope.$watch('sealTypeObject.seals.numbers', function (newSealNumbers, oldSealNumbers) {
+        if (newSealNumbers.length !== oldSealNumbers.length) {
+          var normalizedSealNumbers = $scope.sealTypeObject.seals.numbers.map(function (sealNumber) {
+            return $this.extractNumber(sealNumber.replace($scope.taggingLabel, ''));
+          });
+
+          $scope.sealTypeObject.seals.numbers = normalizedSealNumbers;
+        }
+      });
+
+      this.extractNumber = function (value) {
+        var number = value.match(/\d/g);
+        return number.join('');
+      };
+
       $scope.isSequentialPossible = function() {
         if ($scope.$parent.readOnly) {
           return false;
