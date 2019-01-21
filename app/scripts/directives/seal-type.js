@@ -9,7 +9,6 @@
 angular.module('ts5App')
   .directive('sealType', function() {
     var sealTypeController = function($scope) {
-
       var $this = this;
       $scope.taggingLabel = '(Add \'New\' Seal)';
 
