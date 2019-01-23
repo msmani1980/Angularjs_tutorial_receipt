@@ -299,7 +299,6 @@ angular.module('ts5App')
       $scope.recordToEdit.commodityCode = exciseDutyMatch;
       $scope.recordToEdit.itemType = parseInt($scope.recordToEdit.itemTypeId);
       $scope.inEditMode = true;
-      //$scope.inCreateMode = false;
     };
 
     function createSuccess(newRecordFromAPI) {
