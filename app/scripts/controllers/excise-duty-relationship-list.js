@@ -204,18 +204,6 @@ angular.module('ts5App')
       return dateUtility.isAfterTodayDatePicker(exciseDuty.startDate);
     };
 
-    /*
-    function formatBadDates(record, oldRecord) {
-      if ($scope.inEditMode && !record.startDate) {
-        record.startDate = oldRecord.startDate;
-      }
-
-      if ($scope.inEditMode && !record.endDate) {
-        record.endDate = oldRecord.endDate;
-      }
-    }
-    */
-
     function formatRecordForAPI(record) {
       var oldRecordMatch = lodash.findWhere($scope.itemExciseDutyList, {
         id: record.id
