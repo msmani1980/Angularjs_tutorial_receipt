@@ -209,8 +209,6 @@ angular.module('ts5App')
         id: record.id
       });
 
-      //formatBadDates(record, oldRecordMatch);
-
       var payload = {
         startDate: dateUtility.formatDateForAPI(record.startDate),
         endDate: dateUtility.formatDateForAPI(record.endDate),
