@@ -698,7 +698,6 @@ angular.module('ts5App')
       return isInValid;
     };
 
-    
     this.validateStartAndEndDates = function(record) {
       var isValid = true;
       if (!$scope.isFieldEmpty(record.startDate) && !$scope.isFieldEmpty(record.endDate) && $scope.isDateValueRangeInvalid(record)) {
