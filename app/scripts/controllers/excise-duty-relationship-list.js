@@ -326,7 +326,7 @@ angular.module('ts5App')
 
     $scope.createRelationship = function() {
       if ($scope.inEditMode) {
-    	$scope.errorCustom = [];  
+        $scope.errorCustom = [];
         var errPayload = {
           value: 'You are in edit mode. Please exit the edit mode and try again!'
         };
