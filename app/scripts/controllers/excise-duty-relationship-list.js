@@ -708,6 +708,7 @@ angular.module('ts5App')
 
         isValid = false;
       }
+
       return isValid; 
     };
 
