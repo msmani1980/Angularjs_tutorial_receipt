@@ -204,6 +204,7 @@ angular.module('ts5App')
       return dateUtility.isAfterTodayDatePicker(exciseDuty.startDate);
     };
 
+    /*
     function formatBadDates(record, oldRecord) {
       if ($scope.inEditMode && !record.startDate) {
         record.startDate = oldRecord.startDate;
@@ -213,12 +214,14 @@ angular.module('ts5App')
         record.endDate = oldRecord.endDate;
       }
     }
+    */
 
     function formatRecordForAPI(record) {
       var oldRecordMatch = lodash.findWhere($scope.itemExciseDutyList, {
         id: record.id
       });
-      formatBadDates(record, oldRecordMatch);
+
+      //formatBadDates(record, oldRecordMatch);
 
       var payload = {
         startDate: dateUtility.formatDateForAPI(record.startDate),
@@ -270,7 +273,6 @@ angular.module('ts5App')
       }
 
       $scope.displayError = false;
-      console.log ('$scope.recordToEdit', $scope.recordToEdit);
       var isDataValid =  $this.validateNewData($scope.recordToEdit);
       if (!isDataValid) {
         $scope.displayEditError = true;  
@@ -311,7 +313,7 @@ angular.module('ts5App')
       $scope.recordToEdit.commodityCode = exciseDutyMatch;
       $scope.recordToEdit.itemType = parseInt($scope.recordToEdit.itemTypeId);
       $scope.inEditMode = true;
-      $scope.inCreateMode = false; 
+      //$scope.inCreateMode = false;
     };
 
     function createSuccess(newRecordFromAPI) {
@@ -339,12 +341,13 @@ angular.module('ts5App')
 
     $scope.createRelationship = function() {
       if ($scope.inEditMode) {
+    	$scope.errorCustom = [];  
         var errPayload = {
           value: 'You are in edit mode. Please exit the edit mode and try again!'
         };
 
         $scope.errorCustom.push(errPayload);
-        $scope.displayError = true;
+        $scope.displayEditError = true;
 
         return;
       }
@@ -654,45 +657,35 @@ angular.module('ts5App')
       return (value === undefined || value === null || value.length === 0 || value === 'Invalid date');
     };
 
-    this.validateNewData = function (record) {
+    this.validateNewDataField = function (record, fieldName, fieldValidationName) {
       var result = true;
 
-      if (record !== null && $scope.isFieldEmpty(record.startDate)) {
-        $this.showValidationError('Start Date', false);
-        result = false;
-      }
-
-      if (record !== null && $scope.isFieldEmpty(record.endDate)) {
-        $this.showValidationError('End Date', false);
-        result = false;
-      }
-
-      if (record !== null && !$scope.isFieldEmpty(record.endDate) && !$scope.isFieldEmpty(record.startDate)) {
-        var isValid = $this.validateStartAndEndDates(record);
-        result = result === true ? isValid : false;
-      }
-
-      if (record !== null && $scope.isFieldEmpty(record.alcoholVolume)) {
-        $this.showValidationError('Alcohol Volume', false);
-        result = false;
-      }
-
-      if (record !== null && !$scope.isFieldEmpty(record.alcoholVolume) && $scope.isAlcoholVolumeValueInvalid(record)) {
-        $this.showValidationError('Alcohol Volume', true);
-        result = false;
-      }
-
-      if (record !== null && $scope.isFieldEmpty(record.commodityCode)) {
-        $this.showValidationError('Commodity Code', false);
-        result = false;
-      }
-      
-      if (record !== null && $scope.isFieldEmpty(record.retailItem)) {
-        $this.showValidationError('Duty Free Retail Item', false);
+      if (record !== null && $scope.isFieldEmpty(record[fieldName])) {
+        $this.showValidationError(fieldValidationName, false);
         result = false;
       }
 
       return result;
+    };
+
+    this.validateNewData = function (record) {
+      var validateRi = $this.validateNewDataField(record, 'retailItem', 'Duty Free Retail Item');
+      var validateCc = $this.validateNewDataField(record, 'commodityCode', 'Commodity Code');
+      var validateAv = $this.validateNewDataField(record, 'alcoholVolume', 'Alcohol Volume');
+      var validateAvChar = true;
+      if (record !== null && !$scope.isFieldEmpty(record.alcoholVolume) && $scope.isAlcoholVolumeValueInvalid(record)) {
+        $this.showValidationError('Alcohol Volume', true);
+        validateAvChar = false;
+      }
+
+      var validateSd = $this.validateNewDataField(record, 'startDate', 'Start Date');
+      var validateEd = $this.validateNewDataField(record, 'endDate', 'End Date');
+      var isValidDr = true;
+      if (record !== null && !$scope.isFieldEmpty(record.endDate) && !$scope.isFieldEmpty(record.startDate)) {
+    	isValidDr = $this.validateStartAndEndDates(record);
+      }
+      
+      return validateRi && validateCc && validateAv && validateAvChar && validateSd && validateEd && isValidDr;
     };
 
     this.clearCustomErrors = function () {
@@ -715,9 +708,15 @@ angular.module('ts5App')
       return isInValid;
     };
 
+    $scope.isDateValueRangeInvalid = function (record) {
+      var isInValid = dateUtility.isAfterDatePicker(record.startDate, record.endDate);
+      return isInValid;
+    };
+
+    
     this.validateStartAndEndDates = function(record) {
       var isValid = true;
-      if ($scope.isDateValueInvalid(record.startDate, record)) {
+      if (!$scope.isFieldEmpty(record.startDate) && !$scope.isFieldEmpty(record.endDate) && $scope.isDateValueRangeInvalid(record)) {
         $scope.errorCustom.push({
           field: 'Start Date and End Date',
           value: ' End Date should be later than or equal to Start date.'
