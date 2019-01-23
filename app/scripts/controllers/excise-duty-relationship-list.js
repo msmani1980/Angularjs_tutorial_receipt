@@ -667,7 +667,7 @@ angular.module('ts5App')
       var validateEd = $this.validateNewDataField(record, 'endDate', 'End Date');
       var isValidDr = true;
       if (record !== null && !$scope.isFieldEmpty(record.endDate) && !$scope.isFieldEmpty(record.startDate)) {
-    	isValidDr = $this.validateStartAndEndDates(record);
+        isValidDr = $this.validateStartAndEndDates(record);
       }
       
       return validateRi && validateCc && validateAv && validateAvChar && validateSd && validateEd && isValidDr;
