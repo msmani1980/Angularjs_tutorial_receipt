@@ -445,7 +445,7 @@ angular.module('ts5App')
 
     this.determineSealsToCreate = function(sealTypeObject) {
       var existingSeals = this.getExistingSealsByType(sealTypeObject.id);
-      var currentSeals = $this.normalizeSealNumbers(sealTypeObject.seals.numbers);
+      var currentSeals = sealTypeObject.seals.numbers;
 
       var diff = this.diffExistingSeals(currentSeals, existingSeals);
       var newSeals = [];
@@ -459,7 +459,7 @@ angular.module('ts5App')
 
     this.determineSealsToDelete = function(sealTypeObject) {
       var existingSeals = this.getExistingSealsByType(sealTypeObject.id);
-      var currentSeals = $this.normalizeSealNumbers(sealTypeObject.seals.numbers);
+      var currentSeals = sealTypeObject.seals.numbers;
 
       var diff = this.diffExistingSeals(existingSeals, currentSeals);
       var sealsToDelete = [];
@@ -469,17 +469,6 @@ angular.module('ts5App')
       }
 
       return sealsToDelete;
-    };
-
-    this.normalizeSealNumbers = function (sealNumbers) {
-      return sealNumbers.map(function (sealNumber) {
-        return $this.extractNumber(sealNumber);
-      });
-    };
-
-    this.extractNumber = function (value) {
-      var number = value.match(/\d/g);
-      return number.join('');
     };
 
     this.formatPayload = function(sealTypeObject, seals) {
