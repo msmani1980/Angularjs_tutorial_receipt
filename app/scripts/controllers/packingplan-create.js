@@ -8,13 +8,15 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PackingplanCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, packingplanFactory, messageService) {
+  .controller('PackingplanCreateCtrl', function ($scope, $q, $location, dateUtility, $routeParams, packingplanFactory, messageService, lodash, formValidationUtility) {
   
   var $this = this;
+
   $scope.viewName = 'Packing Plan';
   $scope.shouldDisableEndDate = false;
   $scope.menuMasterList = [];
   $scope.itemMasterList = [];
+  $scope.validation = formValidationUtility;
   $scope.plan = {
     startDate: '',
     endDate: '',
@@ -53,8 +55,35 @@ angular.module('ts5App')
     return $scope.disablePastDate || $scope.readOnly;
   };
 
+  $scope.isItemInactive = function(planObject, packingItem) {
+    if ($scope.viewEditItem && planObject && packingItem && packingItem.itemMasterId) {
+      return !lodash.find(planObject.itemMasterList, { id: packingItem.itemMasterId });
+    }
+
+    return false;
+  };
+
+  this.packingPlanObjectsHaveDuplicates = function () {
+    var names = $scope.plan.packingPlanObject.map(function (value) {
+      return value.name;
+    });
+
+    return lodash.uniq(names).length !== names.length;
+  };
+
   this.validateForm = function() {
     $this.resetErrors();
+
+    if (this.packingPlanObjectsHaveDuplicates()) {
+      $scope.errorCustom = [{
+        field: 'Packing Plan Object Name',
+        value: 'Duplicate values are not allowed.'
+      }];
+
+      $scope.displayError = true;
+      return false;
+    }
+
     return $scope.packingPlanDataForm.$valid;
   };
 
@@ -209,8 +238,8 @@ angular.module('ts5App')
 
   $scope.addPackingPlanObject = function() {
     $scope.plan.packingPlanObject.push({
-      startDate: '',
-      endDate: '',
+      startDate: null,
+      endDate: null,
       packingPlanObjectItem: []
     });
   };
@@ -230,13 +259,13 @@ angular.module('ts5App')
     });
   };
 
-  this.getItemMasterFromMenu = function(menus, viewedit, startDate, endDate) {
+  this.getItemMasterFromMenu = function(packingPlanObject, menus, viewedit) {
     var totalItems = [];
     angular.forEach(menus, function (menu) {
       var payload = {
         menuId: menu.id,
-        startDate: dateUtility.formatDateForAPI(startDate),
-        endDate: dateUtility.formatDateForAPI(endDate)
+        startDate: dateUtility.formatDateForAPI(packingPlanObject.startDate),
+        endDate: dateUtility.formatDateForAPI(packingPlanObject.endDate)
       };
       if (viewedit) {
         payload.menuId = menu.menuMasterId;
@@ -255,7 +284,35 @@ angular.module('ts5App')
       });
     });
 
-    $scope.itemMasterList = totalItems;
+    packingPlanObject.itemMasterList =  totalItems;
+  };
+
+  this.isPlanObjectItemDatesSet = function (packingPlanObject) {
+    return packingPlanObject !== null && packingPlanObject.startDate !== null && packingPlanObject.endDate !== null;
+  };
+
+  this.isPlanObjectItemDatesChanged = function (packingPlanObject) {
+    var cachedStartDate = (packingPlanObject.planObjectItemsCache) ? packingPlanObject.planObjectItemsCache.startDate : null;
+    var cachedEndDate = (packingPlanObject.planObjectItemsCache) ? packingPlanObject.planObjectItemsCache.endDate : null;
+
+    return $this.isPlanObjectItemDatesSet(packingPlanObject) && (packingPlanObject.startDate !== cachedStartDate || packingPlanObject.endDate !== cachedEndDate);
+  };
+
+  $scope.refreshPlanObjectItems = function (packingPlanObject, forceRefresh) {
+    if (($scope.isCreate || !$scope.isDisabled()) && $this.isPlanObjectItemDatesSet(packingPlanObject) && (forceRefresh || $this.isPlanObjectItemDatesChanged(packingPlanObject))) {
+      packingPlanObject.planObjectItemsCache = {
+        startDate: packingPlanObject.startDate,
+        endDate: packingPlanObject.endDate
+      };
+
+      $this.getItemMasterFromMenu(packingPlanObject, $scope.plan.packingPlanMenu, false);
+    }
+  };
+
+  $scope.filteredPackingPlanObjectItems = function (planObject, selectedItemMasterId) {
+    return lodash.filter(planObject.itemMasterList, function (item) {
+      return selectedItemMasterId === item.id || !lodash.find(planObject.packingPlanObjectItem, { itemMasterId: item.id });
+    });
   };
 
   $scope.omitSelectedMenus = function (menu) {
@@ -266,19 +323,18 @@ angular.module('ts5App')
     return (selectedMenu.length === 0);
   };
 
-  $scope.$watchGroup(['plan.packingPlanMenu', 'plan.startDate', 'plan.endDate'], function () {
-    if ($scope.plan && $scope.plan.packingPlanMenu && ($scope.isCreate || !$scope.isDisabled()) && $scope.plan.startDate && $scope.plan.endDate) {
-      $this.getItemMasterFromMenu($scope.plan.packingPlanMenu, false, $scope.plan.startDate, $scope.plan.endDate);
+  $scope.$watch('plan.packingPlanMenu', function () {
+    if ($scope.plan && $scope.plan.packingPlanMenu && ($scope.isCreate || !$scope.isDisabled())) {
+      $scope.plan.packingPlanObject.forEach(function (value) {
+        $scope.refreshPlanObjectItems(value, true);
+      });
     }
-
   });
 
   $scope.$watchGroup(['plan.startDate', 'plan.endDate'], function () {
     if ($scope.plan && $scope.plan.startDate && $scope.plan.endDate) {
-      if ($scope.isCreate) {
-        $this.getMenuMasterList($scope.plan.startDate, $scope.plan.endDate);
-      }        
-    }  
+      $this.getMenuMasterList($scope.plan.startDate, $scope.plan.endDate);
+    }
   });
 
   this.formatViewMenus = function(menus) {
@@ -344,7 +400,6 @@ angular.module('ts5App')
     $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
     $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker($scope.viewStartDate);
     if (!$scope.isDisabled()) {
-      $this.getItemMasterFromMenu(response.packingPlanMenu, true, $scope.viewStartDate, $scope.viewEndDate);
       $this.getMenuMasterList($scope.viewStartDate, $scope.viewEndDate);
     }
 

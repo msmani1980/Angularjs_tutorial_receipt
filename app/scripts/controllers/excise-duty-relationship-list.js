@@ -30,7 +30,22 @@ angular.module('ts5App')
     function showErrors(dataFromAPI) {
       hideLoadingModal();
       $scope.displayError = true;
+      $scope.displayEditError = false;
       $scope.errorResponse = dataFromAPI;
+    }
+
+    function showEditErrors(dataFromAPI) {
+      hideLoadingModal();
+      $scope.displayError = false;
+      $scope.displayEditError = true;
+      $scope.errorResponseEdit = dataFromAPI;
+    }
+
+    function hideErrors() {
+      $scope.displayError = false;
+      $scope.displayEditError = false;
+      $scope.errorResponse = null;
+      $scope.errorResponseEdit = null;
     }
 
     function isPanelOpen(panelName) {
@@ -87,10 +102,13 @@ angular.module('ts5App')
     };
 
     $scope.clearCreateForm = function(shouldClearAll) {
+      hideErrors();
       var currentItemType = $scope.newRecord.itemType;
       $scope.displayError = false;
+      $scope.displayEditError = false;
       $scope.newRecord = {
-        itemType: (shouldClearAll) ? null : currentItemType
+        itemType: (shouldClearAll) ? null : currentItemType,
+        alcoholVolume: null
       };
 
       $scope.itemExciseDutyCreateForm.endDate.$setUntouched();
@@ -99,15 +117,19 @@ angular.module('ts5App')
 
     $scope.clearSearchForm = function() {
       $scope.search = {};
+      $scope.displayError = false;
+      $scope.displayEditError = false;
       $scope.itemExciseDutyList = null;
       initLazyLoadingMeta();
     };
 
     $scope.toggleSearchPanel = function() {
+      hideErrors();
       togglePanel('#search-collapse');
     };
 
     $scope.toggleCreatePanel = function() {
+      hideErrors();
       $scope.clearCreateForm(true);
       $scope.clearSearchForm();
       $scope.cancelEdit();
@@ -138,6 +160,7 @@ angular.module('ts5App')
     };
 
     $scope.searchItemExciseData = function() {
+      hideErrors();
       initLazyLoadingMeta();
       $scope.itemExciseDutyList = null;
       showLoadingModal('Fetching Data');
@@ -147,6 +170,7 @@ angular.module('ts5App')
     function reloadAfterAPISuccess() {
       hideLoadingModal();
       $scope.displayError = false;
+      $scope.displayEditError = false;
       $scope.searchItemExciseData();
     }
 
@@ -234,14 +258,34 @@ angular.module('ts5App')
       reloadAfterAPISuccess();
     }
 
+    function validateEditForm () {
+      $scope.displayEditError = !$scope.itemExciseDutyEditForm.$valid;
+      return $scope.itemExciseDutyEditForm.$valid;
+    }
+
     $scope.saveEdit = function() {
+      $this.clearErrors();
+      if ($scope.displayEditError === true) {
+        $this.clearCustomErrors();
+      }
+
+      $scope.displayError = false;
+
+      var isAlcoholVolumeValid =  $this.validateNewData($scope.recordToEdit);
+      if (!isAlcoholVolumeValid) {
+        return;
+      }
+
+      validateEditForm();
       showLoadingModal('Editing Record');
       var payload = formatRecordForAPI($scope.recordToEdit);
-      exciseDutyRelationshipFactory.updateRelationship($scope.recordToEdit.id, payload).then(saveSuccess,
-        showErrors);
+      exciseDutyRelationshipFactory.updateRelationship($scope.recordToEdit.id, payload).then(saveSuccess, showEditErrors);
     };
 
     $scope.cancelEdit = function() {
+      $this.clearErrors();
+      $scope.errorResponse = [];
+      $scope.errorResponseEdit = [];
       $scope.inEditMode = false;
       $scope.recordToEdit = null;
     };
@@ -266,6 +310,7 @@ angular.module('ts5App')
       $scope.recordToEdit.commodityCode = exciseDutyMatch;
       $scope.recordToEdit.itemType = parseInt($scope.recordToEdit.itemTypeId);
       $scope.inEditMode = true;
+      $scope.inCreateMode = false; 
     };
 
     function createSuccess(newRecordFromAPI) {
@@ -282,12 +327,29 @@ angular.module('ts5App')
 
     function validateCreateForm() {
       var isValid = !!$scope.newRecord.retailItem && !!$scope.newRecord.commodityCode;
-      $scope.itemExciseDutyCreateForm.retailItem.$setValidity('required', !!$scope.newRecord.retailItem);
+      $scope.itemExciseDutyCreateForm.dutyFreeRetailItem.$setValidity('required', !!$scope.newRecord.retailItem);
       $scope.itemExciseDutyCreateForm.commodityCode.$setValidity('required', !!$scope.newRecord.commodityCode);
+      $scope.itemExciseDutyCreateForm.alcoholVolume.$setValidity('required', !!$scope.itemExciseDutyCreateForm.alcoholVolume.$$rawModelValue);
       $scope.displayError = !isValid;
+      if (isValid) {
+        $scope.displayError = !$scope.itemExciseDutyCreateForm.$valid;
+      }
     }
 
     $scope.createRelationship = function() {
+      if ($scope.inEditMode) {
+        var errPayload = {
+          value: 'You are in edit mode. Please exit the edit mode and try again!'
+        };
+
+        $scope.errorCustom.push(errPayload);
+        $scope.displayError = true;
+
+        return;
+      }
+
+      $scope.inCreateMode = true;
+      hideErrors();
       validateCreateForm();
       if ($scope.itemExciseDutyCreateForm.$valid) {
         showLoadingModal('Creating New Record');
@@ -528,6 +590,10 @@ angular.module('ts5App')
       $scope.inEditMode = false;
       $scope.inCreateMode = false;
       $scope.minDate = dateUtility.nowFormattedDatePicker();
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+      $scope.displayEditError = false;
+
     }
 
     function initWatchGroups() {
@@ -547,7 +613,72 @@ angular.module('ts5App')
 
     init();
 
+    $scope.isAlcoholVolumeValueInvalid = function (record) {
+      var isInvalid = false; 
+      if (record !== null && angular.isDefined(record.alcoholVolume)) {	
+        isInvalid =  !record.alcoholVolume || (record.alcoholVolume && !record.alcoholVolume.match(/^\d{0,6}(\.\d{0,2})?$/));
+      }
+
+      return isInvalid;
+    };    
+
+    $scope.isAlcoholVolumeValid = function (record) {
+      return $this.validateNewData(record);
+    };
+
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate));
+    };
+
+    this.showValidationError = function (field, isPattern) {
+      var payload = { };
+
+      if (isPattern) {
+        payload = {
+          field: field,
+          value: 'field contains invalid characters'
+        };
+      } else {
+        payload = {
+          field: field,
+          value: 'is a required field. Please update and try again!'
+        };
+      }
+
+      $scope.errorCustom.push(payload);
+      $scope.displayEditError = true;
+    };
+
+    this.isFieldEmpty = function (value) {
+      return (value === undefined || value === null || value.length === 0 || value === 'Invalid date');
+    };
+
+    this.validateNewData = function (record) {
+      if (record !== null && $this.isFieldEmpty(record.alcoholVolume)) {
+        $this.showValidationError('alcoholVolume', false);
+        return false;
+      }
+
+      if (record !== null && angular.isDefined(record.alcoholVolume) && $scope.isAlcoholVolumeValueInvalid(record)) {
+        $this.showValidationError('alcoholVolume', true);
+        return false;
+      }
+
+      return true;
+    };
+
+    this.clearCustomErrors = function () {
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+      $scope.displayEditError = false;
+    };
+
+    this.clearErrors = function () {
+      $this.clearCustomErrors();
+      $scope.displayError = false;
+      $scope.displayEditError = false;
+      $scope.errorResponse = [];
+      $scope.errorResponseEdit = [];
+      $scope.errorCustom = [];
     };
   });

@@ -148,12 +148,23 @@ angular.module('ts5App')
     };
 
     $scope.saveData = function() {
+      var isFormValid = validateForm();
+      if (!isFormValid) {
+        $this.hideLoadingModal();
+        return;
+      }
+
       var payload = $this.createPayload();
       var initFunctionName = ($routeParams.state + 'CommissionData');
       if ($this[initFunctionName]) {
         $this[initFunctionName](payload);
       }
     };
+
+    function validateForm () {
+      $scope.displayError = !$scope.commissionDataForm.$valid;
+      return $scope.commissionDataForm.$valid;
+    }
 
     this.getCrewBaseListSuccess = function(dataFromAPI) {
       angular.forEach(dataFromAPI.response, function(baseStation) {
@@ -202,7 +213,6 @@ angular.module('ts5App')
       if (nameObject[$routeParams.state]) {
         $scope.viewName = nameObject[$routeParams.state];
       }
-
     };
 
     this.completeInitializeAfterDependencies = function(responseCollection) {

@@ -8,7 +8,7 @@
  * Factory in the ts5App.
  */
 angular.module('ts5App')
-  .factory('discountFactory', function (discountService, discountTypesService) {
+  .factory('discountFactory', function (discountService, discountTypesService, stationsService) {
     var getDiscountList = function (payload) {
       return discountService.getDiscountList(payload);
     };
@@ -33,12 +33,17 @@ angular.module('ts5App')
       return discountService.deleteDiscount(discountId);
     };
 
+    function getStationGlobals(payload) {
+      return stationsService.getGlobalStationList(payload);
+    }
+
     return {
       getDiscountList: getDiscountList,
       getDiscountTypesList: getDiscountTypesList,
       deleteDiscount: deleteDiscount,
       getDiscount: getDiscount,
       createDiscount: createDiscount,
-      updateDiscount: updateDiscount
+      updateDiscount: updateDiscount,
+      getStationGlobals: getStationGlobals,
     };
   });
