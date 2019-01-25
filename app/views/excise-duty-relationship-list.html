@@ -106,7 +106,7 @@
               </div>
             </div>
             <div class="col-xs-6 col-sm-4">
-              <div class="form-group" ng-class="{ 'has-error' : !newRecord.alcoholVolume && displayError && shouldRequireCreateFields(), 'has-success' : newRecord.alcoholVolume}">
+              <div class="form-group" ng-class="{ 'has-error' : (!newRecord.alcoholVolume || isAlcoholVolumeValueInvalid(newRecord)) && displayError && shouldRequireCreateFields(), 'has-success' : newRecord.alcoholVolume}">
                 <label>Alcohol Volume *</label>
                 <input type = "text"
                        ng-model="newRecord.alcoholVolume"
