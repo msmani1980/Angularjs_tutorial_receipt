@@ -325,8 +325,8 @@ angular.module('ts5App')
     }
 
     $scope.createRelationship = function() {
+      $scope.errorCustom = [];
       if ($scope.inEditMode) {
-        $scope.errorCustom = [];
         var errPayload = {
           value: 'You are in edit mode. Please exit the edit mode and try again!'
         };
@@ -339,6 +339,12 @@ angular.module('ts5App')
 
       $scope.inCreateMode = true;
       hideErrors();
+      var isDataValid =  $this.validateNewData($scope.newRecord);
+      if (!isDataValid) {
+        $scope.displayError = true;  
+        return;
+      }
+
       validateCreateForm();
       if ($scope.itemExciseDutyCreateForm.$valid) {
         showLoadingModal('Creating New Record');
@@ -635,7 +641,6 @@ angular.module('ts5App')
       }
 
       $scope.errorCustom.push(payload);
-      $scope.displayEditError = true;
     };
 
     $scope.isFieldEmpty = function (value) {
@@ -656,6 +661,11 @@ angular.module('ts5App')
     this.validateNewData = function (record) {
       var validateRi = $this.validateNewDataField(record, 'retailItem', 'Duty Free Retail Item');
       var validateCc = $this.validateNewDataField(record, 'commodityCode', 'Commodity Code');
+      var alcoholVolumeRawValue = $scope.itemExciseDutyCreateForm.alcoholVolume.$$rawModelValue;
+      if ($scope.isFieldEmpty(record.alcoholVolume) && !$scope.isFieldEmpty(alcoholVolumeRawValue)) {
+        record.alcoholVolume = alcoholVolumeRawValue;
+      }
+
       var validateAv = $this.validateNewDataField(record, 'alcoholVolume', 'Alcohol Volume');
       var validateAvChar = true;
       if (record !== null && !$scope.isFieldEmpty(record.alcoholVolume) && $scope.isAlcoholVolumeValueInvalid(record)) {
