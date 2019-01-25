@@ -314,7 +314,9 @@ angular.module('ts5App')
     }
 
     function validateCreateForm() {
+    	console.log ('$scope.newRecord', $scope.newRecord);
       var isValid = !!$scope.newRecord.retailItem && !!$scope.newRecord.commodityCode;
+  	console.log ('!!$scope.newRecord.retailItem', !!$scope.newRecord.retailItem);
       $scope.itemExciseDutyCreateForm.dutyFreeRetailItem.$setValidity('required', !!$scope.newRecord.retailItem);
       $scope.itemExciseDutyCreateForm.commodityCode.$setValidity('required', !!$scope.newRecord.commodityCode);
       $scope.itemExciseDutyCreateForm.alcoholVolume.$setValidity('required', !!$scope.itemExciseDutyCreateForm.alcoholVolume.$$rawModelValue);
@@ -325,8 +327,8 @@ angular.module('ts5App')
     }
 
     $scope.createRelationship = function() {
+      $scope.errorCustom = [];
       if ($scope.inEditMode) {
-        $scope.errorCustom = [];
         var errPayload = {
           value: 'You are in edit mode. Please exit the edit mode and try again!'
         };
@@ -339,7 +341,41 @@ angular.module('ts5App')
 
       $scope.inCreateMode = true;
       hideErrors();
+      var alcoholVolume = !!$scope.itemExciseDutyCreateForm.alcoholVolume.$$rawModelValue;
+      var isDataValid =  $this.validateNewData($scope.newRecord);
+      if (!isDataValid) {
+        $scope.displayError = true;  
+        console.log ('$scope.displayEditError', $scope.displayEditError);
+        return;
+      }
+
       validateCreateForm();
+    //  console.log ('$scope', $scope); 
+    /*  
+      if ($scope.newRecord.startDate && $scope.newRecord.endDate) {
+          if (dateUtility.diff($scope.newRecord.startDate, $scope.newRecord.endDate) < 0) {
+            var errorData = {
+              data: [
+                {
+                  field: 'Effective To',
+                  code: '021'
+                }
+              ]
+            };
+            $scope.errorResponse = angular.copy(errorData);
+            $scope.displayError = true;
+
+            return;
+          }
+      }*/
+
+      //var isValidDateRange = $this.validateStartAndEndDates($scope.newRecord);
+      //console.log ('$scope.itemExciseDutyCreateForm', $scope.itemExciseDutyCreateForm);
+      //console.log ('isValidDateRange', isValidDateRange);
+      //if (!isValidDateRange) {
+      //  $scope.displayError = true;  
+      //}
+
       if ($scope.itemExciseDutyCreateForm.$valid) {
         showLoadingModal('Creating New Record');
         var payload = formatRecordForAPI($scope.newRecord);
@@ -635,7 +671,6 @@ angular.module('ts5App')
       }
 
       $scope.errorCustom.push(payload);
-      $scope.displayEditError = true;
     };
 
     $scope.isFieldEmpty = function (value) {
@@ -656,7 +691,12 @@ angular.module('ts5App')
     this.validateNewData = function (record) {
       var validateRi = $this.validateNewDataField(record, 'retailItem', 'Duty Free Retail Item');
       var validateCc = $this.validateNewDataField(record, 'commodityCode', 'Commodity Code');
+      
+      record.alcoholVolume = $scope.itemExciseDutyCreateForm.alcoholVolume.$$rawModelValue;
+      console.log ('record.alcoholVolume', record.alcoholVolume);
       var validateAv = $this.validateNewDataField(record, 'alcoholVolume', 'Alcohol Volume');
+      console.log ('validateAv', validateAv);
+      
       var validateAvChar = true;
       if (record !== null && !$scope.isFieldEmpty(record.alcoholVolume) && $scope.isAlcoholVolumeValueInvalid(record)) {
         $this.showValidationError('Alcohol Volume', true);

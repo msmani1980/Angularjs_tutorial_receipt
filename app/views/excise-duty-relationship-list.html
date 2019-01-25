@@ -45,7 +45,7 @@
                 </select>
               </div>
             </div>
-            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : !newRecord.startDate && displayError && shouldRequireCreateFields(), 'has-success' : newRecord.startDate}">
+            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : isDateValueInvalid(newRecord.startDate, newRecord) && displayError && shouldRequireCreateFields(), 'has-success' : !isDateValueInvalid(newRecord.startDate, newRecord) }">
               <date-picker-field
                 name="startDate"
                 class="form-group"
@@ -57,7 +57,7 @@
                 ng-required="shouldRequireCreateFields()">
               </date-picker-field>
             </div>
-            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : !newRecord.endDate && displayError && shouldRequireCreateFields(), 'has-success' : newRecord.endDate}">
+            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : isDateValueInvalid(newRecord.endDate, newRecord) && displayError && shouldRequireCreateFields(), 'has-success' : !isDateValueInvalid(newRecord.endDate, newRecord) }">
               <date-picker-field
                 name="endDate"
                 class="form-group"
