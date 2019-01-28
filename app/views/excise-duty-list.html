@@ -17,9 +17,8 @@
       </div>
     </div>
 
-      <error-dialog form-object="exciseDutyCreateForm" error-response="errorResponse" display="displayError">
-      </error-dialog>
-
+    <error-dialog form-object="exciseDutyCreateForm" error-response="errorResponse" display="displayError"></error-dialog>
+    <error-dialog error-response="errorResponseEdit" display="displayEditError"></error-dialog>
 
     <form name="exciseDutyCreateForm" class="form edit-form create-item-form">
 
@@ -64,7 +63,7 @@
                        ng-required="shouldRequireCreateFields()">
               </div>
             </div>
-            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : !newRecord.startDate && displayError  && shouldRequireCreateFields() , 'has-success' : newRecord.startDate}">
+            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : isDateValueInvalid(newRecord.startDate, newRecord) && displayError && shouldRequireCreateFields(), 'has-success' : !isDateValueInvalid(newRecord.startDate, newRecord) }">
               <date-picker-field
                 name="startDate"
                 class="form-group"
@@ -75,7 +74,7 @@
                 ng-required="shouldRequireCreateFields()">
               </date-picker-field>
             </div>
-            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : !newRecord.endDate && displayError && shouldRequireCreateFields() , 'has-success' : newRecord.endDate}">
+            <div class="col-xs-6 col-sm-4" ng-class="{ 'has-error' : isDateValueInvalid(newRecord.endDate, newRecord) && displayError && shouldRequireCreateFields(), 'has-success' : !isDateValueInvalid(newRecord.endDate, newRecord) }">
               <date-picker-field
                 name="endDate"
                 class="form-group"
@@ -89,18 +88,16 @@
           </div>
           <div class="row">
             <div class="col-xs-12 col-sm-4">
-              <div class="form-group" ng-class="{ 'has-error' : !newRecord.dutyRate && displayError && shouldRequireCreateFields() , 'has-success' : newRecord.dutyRate}">
+              <div class="form-group" ng-class="{ 'has-error' : (!newRecord.dutyRate || isDutyRateValueInvalid(newRecord)) && displayError && shouldRequireCreateFields(), 'has-success' : newRecord.dutyRate}">            
                 <label>Duty Rate *</label>
-
                 <div class="input-group">
                   <span class="input-group-addon">{{ baseCurrency }}</span>
-                  <input ng-model="newRecord.dutyRate"
-                         custom-validity
-                         custom-pattern="decimalWithTwoDecimalPlaces"
-                         maxlength="10"
+                  <input type = "text"
+                         ng-model="newRecord.dutyRate"
+                         ng-pattern="regexp.sixNumberWithTwoDecimal"
+                         maxlength="9"
                          class="form-control"
-                         name="dutyRate"
-                         ng-required="shouldRequireCreateFields()"/>
+                         name="dutyRate"/>
                 </div>
               </div>
             </div>
@@ -120,7 +117,6 @@
             <div class="col-xs-6 col-sm-4">
               <div class="form-group">
                 <label>Alcohol % *</label>
-
                 <div class="input-group">
                   <input bs-switch
                          ng-model="newRecord.alcoholic"
