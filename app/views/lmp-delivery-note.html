@@ -111,8 +111,8 @@
             <div class="form-group" ng-class="{ 'has-error' : !deliveryNote.deliveryDate && displayError, 'has-success' : deliveryNote.deliveryDate }">
               <date-picker-field 
                  name="DeliveryDate" 
-                 label="Delivery Date"  
-                 custom-effective="editing"
+                 label="Delivery Date"
+                 disable="readOnly"  
                  required="true"
                  ng-model="deliveryNote.deliveryDate">
                </date-picker-field>

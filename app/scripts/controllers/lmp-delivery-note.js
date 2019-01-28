@@ -715,6 +715,7 @@ angular.module('ts5App')
       $scope.masterItems = $filter('orderBy')(responseFromAPI.masterItems, 'itemName');
       setWatchers();
       setStationIdOnCreate();
+      $scope.deliveryNote.deliveryDate = $scope.deliveryDateStore; 
       hideLoadingModal();
     }
 
@@ -760,6 +761,7 @@ angular.module('ts5App')
       $scope.deliveryNote = angular.copy(response);
       $scope.deliveryNote.items = $filter('orderBy')($scope.deliveryNote.items, 'itemName');
       $scope.deliveryNote.deliveryDate = dateUtility.formatDateForApp($scope.deliveryNote.deliveryDate);
+      $scope.deliveryDateStore = $scope.deliveryNote.deliveryDate;
       $scope.deliveryNote.createdOn = dateUtility.formatTimestampForApp($scope.deliveryNote.createdOn);
       $scope.deliveryNote.updatedOn = dateUtility.formatTimestampForApp($scope.deliveryNote.updatedOn);
 
