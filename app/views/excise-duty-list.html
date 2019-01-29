@@ -92,7 +92,6 @@
                   <span class="input-group-addon">{{ baseCurrency }}</span>
                   <input type = "text"
                          ng-model="newRecord.dutyRate"
-                         ng-pattern="regexp.sixNumberWithTwoDecimal"
                          maxlength="9"
                          class="form-control"
                          name="dutyRate"/>
@@ -204,6 +203,7 @@
           <td>
             <span ng-hide="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">{{ exciseDuty.countryName }}</span>
           <span ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">
+            <div class="form-group" ng-class="{ 'has-error' : !recordToEdit.country && displayEditError, 'has-success' : recordToEdit.country}">
             <ui-select required="true"
                        name="editCountry"
                        ng-model="recordToEdit.country"
@@ -221,16 +221,14 @@
             <span ng-hide="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">{{ exciseDuty.commodityCode }}</span>
           <span ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">
               <div class="form-group" ng-class="{ 'has-error' : !recordToEdit.commodityCode && displayEditError, 'has-success' : recordToEdit.commodityCode }">
-              <input type="text" class="form-control"  ng-model="recordToEdit.commodityCode" name="editCommodityCode" required="true"  ng-pattern="regexp.alphaWithSpecialCharMenuItem" ng-disabled="!canDelete(exciseDuty)">
-              <div ng-if="!recordToEdit.commodityCode && displayEditError" ng-class="has-error">
-               <font color="red">The Commodity Code is a required field !</font> 
-              </div>
-              <!-- input class="form-control"
-                   name="editCommodityCode"
-                   ng-pattern="regexp.alphaWithSpecialCharMenuItem"
-                   ng-model="recordToEdit.commodityCode"
-                   ng-disabled="!canDelete(exciseDuty)"
-                   required="true"-->
+              <input 
+              	type="text" 
+              	class="form-control"  
+              	ng-model="recordToEdit.commodityCode" 
+              	name="editCommodityCode" 
+              	required="true"  
+              	ng-pattern="regexp.alphaWithSpecialCharMenuItem" 
+              	ng-disabled="!canDelete(exciseDuty)">
               </input>     
               </div>     
           </span>
@@ -238,6 +236,7 @@
           <td>
             <span ng-hide="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">{{ exciseDuty.volumeUnit }}</span>
           <span ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">
+            <div class="form-group" ng-class="{ 'has-error' : !recordToEdit.volumeUnitId && displayEditError, 'has-success' : recordToEdit.volumeUnitId}">
             <select class="form-control"
                     ng-model="recordToEdit.volumeUnitId"
                     ng-options="unit.id as (unit.unitName + ' (' + unit.unitCode + ')') for unit in volumeUnits"
@@ -258,23 +257,19 @@
           <td>
             <span ng-hide="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">{{ exciseDuty.dutyRate | number: 2}}</span>
           <span ng-show="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">
-            <div class="form-group" ng-class="{ 'has-error' : !recordToEdit.dutyRate && displayEditError, 'has-success' : recordToEdit.dutyRate}">
-            <input ng-model="recordToEdit.dutyRate"
-                   name="editDutyRate"
-                   ng-pattern="regexp.sixNumberWithTwoDecimal"
+            <div class="form-group" ng-class="{ 'has-error' : (!recordToEdit.dutyRate || isDutyRateValueInvalid(recordToEdit)) && displayEditError, 'has-success' : !isDutyRateValueInvalid(recordToEdit) }">
+            <input type = "text"
+                   ng-model="recordToEdit.dutyRate"
+                   name="dutyRate"
                    maxlength="9"
                    ng-disabled="!canDelete(exciseDuty)"
-                   class="form-control"
-                   required="true">
+                   class="form-control">
             </div>       
-              <div ng-if="!recordToEdit.dutyRate && displayEditError" ng-class="has-error">
-               <font color="red">The Duty Rate is a required Decimal With Two Decimal Places field !</font> 
-              </div>
           </span>
           </td>
           <td>
             <span ng-hide="isSelectedToEdit(exciseDuty) && canDelete(exciseDuty)">{{ exciseDuty.startDate }}</span>
-            <div class="form-group" ng-class="{ 'has-error' : !recordToEdit.startDate && displayEditError, 'has-success' : recordToEdit.startDate}">
+            <div ng-class="{ 'has-error' : isDateValueInvalid(recordToEdit.startDate, recordToEdit) && displayEditError, 'has-success' : !isDateValueInvalid(recordToEdit.startDate, recordToEdit) }">            
             <date-picker-field
               name="editStartDate"
               class="form-group"
@@ -286,7 +281,7 @@
           </td>
           <td>
             <span ng-hide="isSelectedToEdit(exciseDuty)">{{ exciseDuty.endDate }}</span>
-            <div class="form-group" ng-class="{ 'has-error' : !recordToEdit.endDate && displayEditError, 'has-success' : recordToEdit.endDate}">            
+            <div ng-class="{ 'has-error' : isDateValueInvalid(recordToEdit.endDate, recordToEdit) && displayEditError, 'has-success' : !isDateValueInvalid(recordToEdit.endDate, recordToEdit) }">            
             <date-picker-field
               name="editEndDate"
               custom-effective="true"
@@ -301,8 +296,11 @@
           <td>{{ getUpdatedOn(exciseDuty) }}</td>
           <td>{{ getUpdateBy(exciseDuty) }}</td>
           <td ng-show="isCRUD">
-            <!-- button type="submit" class="btn btn-success btn-xs" tabindex="0" ng-show="isSelectedToEdit(exciseDuty)"-->
-            <button class="btn btn-success btn-xs" tabindex="0" ng-show="isSelectedToEdit(exciseDuty)" ng-click="saveEdit()">
+            <button type="button"
+                    class="btn btn-success btn-xs" 
+                    tabindex="0" 
+                    ng-show="isSelectedToEdit(exciseDuty)" 
+                    ng-click="saveEdit()">
               <i class="fa fa-check"></i>
             </button>
             <button type="button"
