@@ -185,7 +185,25 @@ angular.module('ts5App')
 
     $scope.saveEdit = function () {
       showLoadingModal('Editing Record');
+      
       $this.clearErrors();
+      if ($scope.displayEditError === true) {
+        $this.clearCustomErrors();
+      }
+
+      $scope.displayError = false;
+      var dutyRateRawValue = $scope.exciseDutyEditForm.dutyRate.$$rawModelValue;
+      if ($scope.isFieldEmpty($scope.recordToEdit.dutyRate) && !$scope.isFieldEmpty(dutyRateRawValue)) {
+        $scope.recordToEdit.dutyRate = dutyRateRawValue;
+      }
+
+      var isDataValid =  $this.validateNewData($scope.recordToEdit);
+      if (!isDataValid) {
+        hideLoadingModal();
+        $scope.displayEditError = true;  
+        return;
+      }
+      
       var isValid = validateEditForm();
 
       if (!isValid) {
@@ -219,6 +237,8 @@ angular.module('ts5App')
     }
 
     $scope.cancelEdit = function () {
+      $scope.errorResponse = [];
+      $scope.errorResponseEdit = [];
       $this.clearErrors();
       $scope.inEditMode = false;
       $scope.recordToEdit = null;
@@ -285,6 +305,11 @@ angular.module('ts5App')
       }
 
       hideErrors();
+      var dutyRateRawValue = $scope.exciseDutyCreateForm.dutyRate.$$rawModelValue;
+      if ($scope.isFieldEmpty($scope.newRecord.dutyRate) && !$scope.isFieldEmpty(dutyRateRawValue)) {
+        $scope.newRecord.dutyRate = dutyRateRawValue;
+      }
+      
       var isDataValid =  $this.validateNewData($scope.newRecord);
       if (!isDataValid) {
         $scope.displayError = true;  
@@ -416,15 +441,10 @@ angular.module('ts5App')
       if (record !== null && !$scope.isFieldEmpty(record.endDate) && !$scope.isFieldEmpty(record.startDate)) {
         isValidDrange = $this.validateStartAndEndDates(record);
       }
-
-      var dutyRateRawValue = $scope.exciseDutyCreateForm.dutyRate.$$rawModelValue;
-      if ($scope.isFieldEmpty(record.dutyRate) && !$scope.isFieldEmpty(dutyRateRawValue)) {
-        record.dutyRate = dutyRateRawValue;
-      }
-
+      
       var validateDrate = $this.validateNewDataField(record, 'dutyRate', 'Duty Rate');
       var validateDrateChar = true;
-      if (record !== null && !$scope.isFieldEmpty(record.dutyRate) && $scope.isDutyRateValueInvalid(record)) {
+      if (record !== null && validateDrate && $scope.isDutyRateValueInvalid(record)) {
         $this.showValidationError('Duty Rate', true);
         validateDrateChar = false;
       }
