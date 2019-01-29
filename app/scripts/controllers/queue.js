@@ -54,6 +54,7 @@ angular.module('ts5App')
     $scope.requestParamTooltip = function (params) {
       var paramString = '<div class="param-header"><i class="fa fa-tags"></i><span class="hidden-xs">Report Parameters</span>';
       angular.forEach(params, function(value, key) {
+        value = (value === 'No filter' ? 'All' : value);
         paramString += '<li><span><strong>' + key + ' : </strong>' + value + '</span></li>';
       });
 
