@@ -259,6 +259,12 @@ angular.module('ts5App')
       }
 
       $scope.displayError = false;
+      
+      var alcoholVolumeRawValue = $scope.itemExciseDutyEditForm.alcoholVolume.$$rawModelValue;
+      if ($scope.isFieldEmpty($scope.recordToEdit.alcoholVolume) && !$scope.isFieldEmpty(alcoholVolumeRawValue)) {
+        $scope.recordToEdit.alcoholVolume = alcoholVolumeRawValue;
+      }
+
       var isDataValid =  $this.validateNewData($scope.recordToEdit);
       if (!isDataValid) {
         $scope.displayEditError = true;  
