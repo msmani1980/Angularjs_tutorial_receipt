@@ -1,4 +1,4 @@
-<div class="module-container">
+<div class="container module-container">
   <div class="row">
     <div class="col-xs-6">
       <h2 class="view-name">{{viewName}}</h2>
@@ -38,34 +38,47 @@
             </div>
           </div>
 
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group" ng-class="{ 'has-error' : !commissionData.startDate && displayError, 'has-success' : commissionData.startDate}">
-              <date-picker-field
-                name="effectiveFrom"
-                class="form-group"
-                form="commissionDataForm"
-                ng-model="commissionData.startDate"
-                label="Effective From"
-                disable="readOnly"
-                required="true">
-              </date-picker-field>
-            </div>
-
+          <div class="col-xs-12 col-sm-4"  ng-class="{ 'has-error' : !commissionData.startDate && displayError, 'has-success' : commissionData.startDate}">
+                <date-picker-field ng-if="disableEditField"
+                  name="effectiveFrom"
+                  custom-effective="true"
+                  form="commissionDataForm"
+                  ng-model="commissionData.startDate"
+                  label="Effective From"
+                  disable="disableEditField"
+                  required="true">
+                </date-picker-field>
+                <date-picker-field ng-if="!disableEditField"
+                  name="effectiveFrom"
+                  custom-effective="true"
+                  min-date="minDate"
+                  form="commissionDataForm"
+                  ng-model="commissionData.startDate"
+                  label="Effective From"
+                  disable="disableEditField"
+                  required="true">
+                </date-picker-field>
           </div>
-            <div class="col-xs-12 col-sm-4">
-              <div class="form-group" ng-class="{ 'has-error' : !commissionData.endDate && displayError, 'has-success' : commissionData.endDate}">
-                <date-picker-field
+          <div class="col-xs-12 col-sm-4" ng-class="{ 'has-error' : !commissionData.endDate && displayError, 'has-success' : commissionData.endDate}">
+                <date-picker-field ng-if="readOnly"
                   name="effectiveTo"
-                  class="form-group"
+                  custom-effective="true"
                   form="commissionDataForm"
                   ng-model="commissionData.endDate"
                   label="Effective To"
                   disable="readOnly"
                   required="true">
                 </date-picker-field>
-              </div>
-            </div>
-
+                <date-picker-field ng-if="!readOnly"
+                  name="effectiveTo"
+                  custom-effective="true"
+                  min-date="minDate"
+                  form="commissionDataForm"
+                  ng-model="commissionData.endDate"
+                  label="Effective To"
+                  disable="readOnly"
+                  required="true">
+                </date-picker-field>
           </div>
         </div>
       </div>

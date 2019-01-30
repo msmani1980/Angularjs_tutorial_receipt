@@ -23,6 +23,7 @@ angular.module('ts5App')
     $scope.manualBarsCharLimit = 10;
     $scope.commissionValueCharLimit = 10;
     $scope.crewBaseList = [];
+    $scope.minDate = dateUtility.dateNumDaysAfterTodayFormattedDatePicker(1);
 
     this.showToast = function(className, type, message) {
       messageService.display(className, message, type);
@@ -124,22 +125,26 @@ angular.module('ts5App')
 
     this.getCommissionDataSuccess = function(dataFromAPI) {
       var newData = angular.copy(dataFromAPI);
-      newData.startDate = dateUtility.formatDateForApp(newData.startDate);
-      newData.endDate = dateUtility.formatDateForApp(newData.endDate);
-      newData.commissionPercentage = (newData.commissionPercentage) ? parseFloat(newData.commissionPercentage).toFixed(
-        2) : null;
-      newData.commissionValue = parseFloat(newData.commissionValue).toFixed(2);
-      newData.discrepancyDeductionsCashPercentage = parseFloat(newData.discrepancyDeductionsCashPercentage).toFixed(
-        2);
-      newData.discrepancyDeductionsStockPercentage = parseFloat(newData.discrepancyDeductionsStockPercentage).toFixed(
-        2);
-      newData.manualBarsCommissionValue = parseFloat(newData.manualBarsCommissionValue).toFixed(2);
+      var sDate = angular.copy(dateUtility.formatDateForApp(newData.startDate));
+      var eDate = angular.copy(dateUtility.formatDateForApp(newData.endDate));
 
-      $scope.commissionData = newData;
+      $scope.commissionData.startDate = sDate.toString();
+      $scope.commissionData.endDate = eDate.toString();
+      $scope.commissionData.commissionPercentage = (newData.commissionPercentage) ? parseFloat(newData.commissionPercentage).toFixed(2) : null;
+      $scope.commissionData.commissionValue = parseFloat(newData.commissionValue).toFixed(2);
+      $scope.commissionData.discrepancyDeductionsCashPercentage = parseFloat(newData.discrepancyDeductionsCashPercentage).toFixed(2);
+      $scope.commissionData.discrepancyDeductionsStockPercentage = parseFloat(newData.discrepancyDeductionsStockPercentage).toFixed(2);
+      $scope.commissionData.manualBarsCommissionValue = parseFloat(newData.manualBarsCommissionValue).toFixed(2);
+      $scope.commissionData.commissionPayableTypeId = newData.commissionPayableTypeId;
+      $scope.commissionData.manualBarsCommissionValueTypeId = newData.manualBarsCommissionValueTypeId;
+      $scope.commissionData.commissionValueTypeId = newData.commissionValueTypeId;
+      $scope.commissionData.crewBaseTypeId = newData.crewBaseTypeId;
+
       $scope.updateManualBars();
       $scope.updateIncentiveIncrement();
       $scope.updateCommissionPercent();
       $this.hideLoadingModal();
+      $this.setViewVariables();
     };
 
     this.getCommissionData = function() {
@@ -210,6 +215,7 @@ angular.module('ts5App')
         edit: 'Editing Commission Data',
         create: 'Creating Commission Data'
       };
+
       if (nameObject[$routeParams.state]) {
         $scope.viewName = nameObject[$routeParams.state];
       }
@@ -231,6 +237,27 @@ angular.module('ts5App')
 
     };
 
+    this.setViewVariables = function () {
+      var canEdit = false;
+
+      if ($routeParams.state === 'edit' && $scope.commissionData) {
+        var isInFuture = dateUtility.isAfterTodayDatePicker($scope.commissionData.startDate) && dateUtility.isAfterTodayDatePicker($scope.commissionData.endDate);
+        var isInPast = dateUtility.isYesterdayOrEarlierDatePicker($scope.commissionData.endDate);
+        if (isInPast) {
+          $scope.readOnly = true; 
+        }
+
+        canEdit = isInFuture;
+        $scope.isViewOnly = isInPast;
+      } else {
+        $scope.isViewOnly = $routeParams.state === 'view';
+        canEdit = $routeParams.state === 'create';
+      }
+
+      $scope.displayError = false;
+      $scope.disableEditField = !canEdit || $scope.isViewOnly;
+    };
+
     this.initializeDataFromAPI = function(companyDataFromAPI) {
       var initPromises = [
         $this.getCrewBaseList(),
@@ -246,6 +273,7 @@ angular.module('ts5App')
 
     this.init = function() {
       var companyId = globalMenuService.company.get();
+      $scope.disableEditField = false;
       $this.showLoadingModal();
       $this.setViewName();
       $scope.readOnly = ($routeParams.state === 'view');
