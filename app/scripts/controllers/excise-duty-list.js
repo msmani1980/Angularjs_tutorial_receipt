@@ -185,7 +185,25 @@ angular.module('ts5App')
 
     $scope.saveEdit = function () {
       showLoadingModal('Editing Record');
+      
+      $this.clearErrors();
+      if ($scope.displayEditError === true) {
+        $this.clearCustomErrors();
+      }
+
       $scope.displayError = false;
+      var dutyRateRawValue = $scope.exciseDutyEditForm.dutyRate.$$rawModelValue;
+      if ($scope.isFieldEmpty($scope.recordToEdit.dutyRate) && !$scope.isFieldEmpty(dutyRateRawValue)) {
+        $scope.recordToEdit.dutyRate = dutyRateRawValue;
+      }
+
+      var isDataValid =  $this.validateNewData($scope.recordToEdit);
+      if (!isDataValid) {
+        hideLoadingModal();
+        $scope.displayEditError = true;  
+        return;
+      }
+      
       var isValid = validateEditForm();
 
       if (!isValid) {
@@ -219,6 +237,9 @@ angular.module('ts5App')
     }
 
     $scope.cancelEdit = function () {
+      $scope.errorResponse = [];
+      $scope.errorResponseEdit = [];
+      $this.clearErrors();
       $scope.inEditMode = false;
       $scope.recordToEdit = null;
       hideErrors();
@@ -254,6 +275,16 @@ angular.module('ts5App')
     function validateCreateForm() {
       var isValid = !!$scope.newRecord.country;
       $scope.exciseDutyCreateForm.country.$setValidity('required', isValid);
+      $scope.exciseDutyCreateForm.commodityCode.$setValidity('required', !!$scope.newRecord.commodityCode);
+
+      var dutyRateRawValue = $scope.exciseDutyCreateForm.dutyRate.$$rawModelValue;
+      if ($scope.isFieldEmpty($scope.newRecord.dutyRate) && !$scope.isFieldEmpty(dutyRateRawValue)) {
+        $scope.newRecord.dutyRate = dutyRateRawValue;
+      }
+
+      $scope.exciseDutyCreateForm.dutyRate.$setValidity('required', !!$scope.newRecord.dutyRate);
+      $scope.exciseDutyCreateForm.volumetricUnit.$setValidity('required', !!$scope.newRecord.volumeUnitId);
+
       $scope.displayError = !isValid;
       if (isValid) {
         $scope.displayError = !$scope.exciseDutyCreateForm.$valid;
@@ -261,6 +292,30 @@ angular.module('ts5App')
     }
 
     $scope.createExciseDuty = function () {
+      $scope.errorCustom = [];
+      if ($scope.inEditMode) {
+        var errPayload = {
+          value: 'You are in edit mode. Please exit the edit mode and try again!'
+        };
+
+        $scope.errorCustom.push(errPayload);
+        $scope.displayEditError = true;
+
+        return;
+      }
+
+      hideErrors();
+      var dutyRateRawValue = $scope.exciseDutyCreateForm.dutyRate.$$rawModelValue;
+      if ($scope.isFieldEmpty($scope.newRecord.dutyRate) && !$scope.isFieldEmpty(dutyRateRawValue)) {
+        $scope.newRecord.dutyRate = dutyRateRawValue;
+      }
+      
+      var isDataValid =  $this.validateNewData($scope.newRecord);
+      if (!isDataValid) {
+        $scope.displayError = true;  
+        return;
+      }
+
       validateCreateForm();
       if ($scope.exciseDutyCreateForm.$valid) {
         var payload = formatRecordForAPI($scope.newRecord);
@@ -361,7 +416,104 @@ angular.module('ts5App')
 
     init();
 
+    this.clearErrors = function () {
+      $scope.displayError = false;
+      $scope.displayEditError = false;
+      $scope.errorResponse = [];
+      $scope.errorResponseEdit = [];
+      $scope.errorCustom = [];
+    };
+
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && dateUtility.isAfterTodayDatePicker(date.endDate));
     };
+
+    $scope.isFieldEmpty = function (value) {
+      return (value === undefined || value === null || value.length === 0 || value === 'Invalid date');
+    };
+
+    this.validateNewData = function (record) {//newRecord.country
+      var validateCntry = $this.validateNewDataField(record, 'country', 'Country');
+      var validateCcode = $this.validateNewDataField(record, 'commodityCode', 'Commodity Code');
+      var validateSdate = $this.validateNewDataField(record, 'startDate', 'Start Date');
+      var validateEdate = $this.validateNewDataField(record, 'endDate', 'End Date');
+      var isValidDrange = true;
+      if (record !== null && !$scope.isFieldEmpty(record.endDate) && !$scope.isFieldEmpty(record.startDate)) {
+        isValidDrange = $this.validateStartAndEndDates(record);
+      }
+      
+      var validateDrate = $this.validateNewDataField(record, 'dutyRate', 'Duty Rate');
+      var validateDrateChar = true;
+      if (record !== null && validateDrate && $scope.isDutyRateValueInvalid(record)) {
+        $this.showValidationError('Duty Rate', true);
+        validateDrateChar = false;
+      }
+
+      var validateVMeasure = $this.validateNewDataField(record, 'volumeUnitId', 'Volumetric Measure');
+        
+      return validateCntry && validateCcode && validateSdate && validateEdate && isValidDrange && validateDrate && validateDrateChar && validateVMeasure;
+    };
+
+    $scope.isDutyRateValueInvalid = function (record) {
+      var isInvalid = false; 
+      if (record !== null && angular.isDefined(record.dutyRate)) {	
+        isInvalid =  !record.dutyRate || (record.dutyRate && !record.dutyRate.match(/^\d{0,6}(\.\d{0,2})?$/));
+      }
+
+      return isInvalid;
+    };    
+
+    this.validateNewDataField = function (record, fieldName, fieldValidationName) {
+      var result = true;
+
+      if (record !== null && $scope.isFieldEmpty(record[fieldName])) {
+        $this.showValidationError(fieldValidationName, false);
+        result = false;
+      }
+
+      return result;
+    };
+
+    this.showValidationError = function (field, isPattern) {
+      var payload = { };
+
+      if (isPattern) {
+        payload = {
+          field: field,
+          value: 'field contains invalid characters'
+        };
+      } else {
+        payload = {
+          field: field,
+          value: 'is a required field. Please update and try again!'
+        };
+      }
+
+      $scope.errorCustom.push(payload);
+    };
+
+    this.validateStartAndEndDates = function(record) {
+      var isValid = true;
+      if (!$scope.isFieldEmpty(record.startDate) && !$scope.isFieldEmpty(record.endDate) && $scope.isDateValueRangeInvalid(record)) {
+        $scope.errorCustom.push({
+          field: 'Start Date and End Date',
+          value: ' End Date should be later than or equal to Start date.'
+        });
+
+        isValid = false;
+      }
+
+      return isValid; 
+    };
+
+    $scope.isDateValueInvalid = function (value, record) {
+      var isInValid = $scope.isFieldEmpty(value) || (record.startDate && record.endDate && dateUtility.isAfterDatePicker(record.startDate, record.endDate));
+      return isInValid;
+    };
+
+    $scope.isDateValueRangeInvalid = function (record) {
+      var isInValid = dateUtility.isAfterDatePicker(record.startDate, record.endDate);
+      return isInValid;
+    };
+
   });
