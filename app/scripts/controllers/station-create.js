@@ -212,8 +212,13 @@ angular.module('ts5App')
     };
 
     this.createStation = function() {
-      $this.displayLoadingModal('Creating Station');
+      var isDataValid =  $this.validateNewData($scope.formData);
+      if (!isDataValid) {
+        $scope.displayError = true;  
+        return;
+      }
 
+      $this.displayLoadingModal('Creating Station');
       var payload = this.generatePayload();
 
       stationsFactory.createStation(payload).then($this.saveFormSuccess, $this.saveFormFailure).finally($this.hideLoadingModal);
@@ -228,6 +233,8 @@ angular.module('ts5App')
     };
 
     this.submitForm = function() {
+      $this.clearErrors();
+
       if (this.validateForm()) {
         if ($routeParams.id) {
           this.updateStation();
@@ -341,6 +348,7 @@ angular.module('ts5App')
       $scope.displayError = false;
       $scope.buttonText = 'Add';
       $scope.viewLabel = 'Add';
+      $scope.errorCustom = [];
 
       var promises = this.makeInitPromises();
       $q.all(promises).then($this.initSuccessHandler);
@@ -508,5 +516,85 @@ angular.module('ts5App')
       $this.preselectCountryBasedOnStation();
       $this.preselectCityBasedOnStation();
     });
+
+    this.validateNewData = function (record) {
+      var validateCntry = $this.validateNewDataField(record, 'country', 'Country');
+      var validateCity = $this.validateNewDataField(record, 'city', 'City');
+      var validateStation = $this.validateNewDataField(record, 'station', 'Station');
+      var validateIsCtrr = $this.validateNewDataField(record, 'isCaterer', 'Is Catering Station');
+      var validateSd = $this.validateNewDataField(record, 'startDate', 'Start Date');
+      var validateEd = $this.validateNewDataField(record, 'endDate', 'End Date');
+      var isValidDr = true;
+      if (record !== null && !$scope.isFieldEmpty(record.endDate) && !$scope.isFieldEmpty(record.startDate)) {
+        isValidDr = $this.validateStartAndEndDates(record);
+      }
+
+      return validateCntry && validateCity && validateStation && validateIsCtrr && validateSd && validateEd && isValidDr;
+    };
+
+    this.validateNewDataField = function (record, fieldName, fieldValidationName) {
+      var result = true;
+
+      if (record !== null && $scope.isFieldEmpty(record[fieldName])) {
+        $this.showValidationError(fieldValidationName, false);
+        result = false;
+      }
+
+      return result;
+    };
+
+    $scope.isFieldEmpty = function (value) {
+      return (value === undefined || value === null || value.length === 0 || value === 'Invalid date');
+    };
+
+    this.showValidationError = function (field, isPattern) {
+      var payload = { };
+
+      if (isPattern) {
+        payload = {
+          field: field,
+          value: 'field contains invalid characters'
+        };
+      } else {
+        payload = {
+          field: field,
+          value: 'is a required field. Please update and try again!'
+        };
+      }
+
+      $scope.errorCustom.push(payload);
+    };
+
+    $scope.isDateValueInvalid = function (value, record) {
+      var isInValid = $scope.isFieldEmpty(value) || (record.startDate && record.endDate && dateUtility.isAfterDatePicker(record.startDate, record.endDate));
+      return isInValid;
+    };
+
+    $scope.isDateValueRangeInvalid = function (record) {
+      var isInValid = dateUtility.isAfterDatePicker(record.startDate, record.endDate);
+      return isInValid;
+    };
+
+    this.validateStartAndEndDates = function(record) {
+      var isValid = true;
+      if (!$scope.isFieldEmpty(record.startDate) && !$scope.isFieldEmpty(record.endDate) && $scope.isDateValueRangeInvalid(record)) {
+        $scope.errorCustom.push({
+          field: 'Start Date and End Date',
+          value: ' End Date should be later than or equal to Start date.'
+        });
+
+        isValid = false;
+      }
+
+      return isValid; 
+    };
+
+    this.clearErrors = function () {
+      $scope.displayError = false;
+      $scope.displayEditError = false;
+      $scope.errorResponse = [];
+      $scope.errorResponseEdit = [];
+      $scope.errorCustom = [];
+    };
 
   });

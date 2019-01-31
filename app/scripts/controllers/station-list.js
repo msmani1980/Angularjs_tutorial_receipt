@@ -231,10 +231,14 @@ angular.module('ts5App')
     };
 
     this.saveStations = function() {
-      $scope.displayError = false;
-
+      $this.clearErrors();
+      var isDataValid =  $this.validateNewData($scope.dateRange);
+      if (!isDataValid) {
+        $scope.displayError = true;  
+        return;
+      }
+      
       this.displayLoadingModal('Saving stations');
-
       var payload = {
         stations: [],
         startDate: dateUtility.formatDateForAPI($scope.dateRange.startDate),
@@ -261,9 +265,13 @@ angular.module('ts5App')
         return;
       }
 
-      $scope.displayError = false;
-
       var station = $scope.formData.stations[index];
+      $this.clearErrors();
+      var isDataValid =  $this.validateNewData(station);
+      if (!isDataValid) {
+        $scope.displayError = true;  
+        return;
+      }
 
       this.displayLoadingModal('Saving stations');
 
@@ -463,6 +471,7 @@ angular.module('ts5App')
       this.displayLoadingModal('Retrieving Station information');
       $scope.isCRUD = accessService.crudAccessGranted('COMPANY', 'COMPANYSTATION', 'STATIONCRUD');
       var promises = this.makeInitPromises();
+      $scope.errorCustom = [];
       $q.all(promises).then($this.initSuccessHandler);
     };
 
@@ -565,6 +574,8 @@ angular.module('ts5App')
     };
 
     $scope.removeRecord = function (stationId) {
+      $this.clearErrors();
+
       $this.displayLoadingModal('Removing Station id');
 
       stationsFactory.removeStation(stationId)
@@ -590,4 +601,79 @@ angular.module('ts5App')
     $scope.$watch('allStationsSelected', function(selectAll) {
       $this.toggleAllStations(selectAll);
     });
+
+    $scope.isFieldEmpty = function (value) {
+      return (value === undefined || value === null || value.length === 0 || value === 'Invalid date');
+    };
+
+    this.validateNewDataField = function (record, fieldName, fieldValidationName) {
+      var result = true;
+
+      if (record !== null && $scope.isFieldEmpty(record[fieldName])) {
+        $this.showValidationError(fieldValidationName, false);
+        result = false;
+      }
+
+      return result;
+    };
+
+    this.validateNewData = function (record) {
+      var validateSd = $this.validateNewDataField(record, 'startDate', 'Start Date');
+      var validateEd = $this.validateNewDataField(record, 'endDate', 'End Date');
+      var isValidDr = true;
+      if (record !== null && validateSd && validateEd) {
+        isValidDr = $this.validateStartAndEndDates(record);
+      }
+        
+      return validateSd && validateEd && isValidDr;
+    };
+
+    this.clearErrors = function () {
+      $scope.displayError = false;
+      $scope.errorResponse = [];
+      $scope.errorCustom = [];
+    };
+
+    $scope.isDateValueInvalid = function (value, record) {
+      var isInValid = $scope.isFieldEmpty(value) || (record.startDate && record.endDate && dateUtility.isAfterDatePicker(record.startDate, record.endDate));
+      return isInValid;
+    };
+
+    $scope.isDateValueRangeInvalid = function (record) {
+      var isInValid = dateUtility.isAfterDatePicker(record.startDate, record.endDate);
+      return isInValid;
+    };
+
+    this.validateStartAndEndDates = function(record) {
+      var isValid = true;
+      if (!$scope.isFieldEmpty(record.startDate) && !$scope.isFieldEmpty(record.endDate) && $scope.isDateValueRangeInvalid(record)) {
+        $scope.errorCustom.push({
+          field: 'Start Date and End Date',
+          value: ' End Date should be later than or equal to Start date.'
+        });
+
+        isValid = false;
+      }
+
+      return isValid; 
+    };
+
+    this.showValidationError = function (field, isPattern) {
+      var payload = { };
+
+      if (isPattern) {
+        payload = {
+          field: field,
+          value: 'field contains invalid characters'
+        };
+      } else {
+        payload = {
+          field: field,
+          value: 'is a required field. Please update and try again!'
+        };
+      }
+
+      $scope.errorCustom.push(payload);
+    };
+
   });
