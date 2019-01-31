@@ -100,7 +100,7 @@
         </div>
       </div>
 
-      <div class="col-xs-12 col-sm-6" ng-class="{'has-error' : !formData.startDate && displayError , 'has-success' : formData.startDate}">
+      <div class="col-xs-12 col-sm-6" ng-class="{ 'has-error' : isDateValueInvalid(formData.startDate, formData) && displayError, 'has-success' : !isDateValueInvalid(formData.startDate, formData) }">
         <date-picker-field
           ng-if="dataReady && !isInFutureWithMaxStartDateBeforeToday(maxStartDate, formData.startDate)"
           disable="isDisabled() || isInFutureWithMaxStartDateBeforeToday(maxStartDate, formData.startDate)"
@@ -126,7 +126,7 @@
         </date-picker-field>
       </div>
 
-      <div class="col-xs-12 col-sm-6" ng-class="{'has-error' : !formData.endDate && displayError , 'has-success' : formData.endDate}">
+      <div class="col-xs-12 col-sm-6" ng-class="{ 'has-error' : isDateValueInvalid(formData.endDate, formData) && displayError, 'has-success' : !isDateValueInvalid(formData.endDate, formData) }">
         <date-picker-field
           ng-if="dataReady"
           form="stationCreateForm"
