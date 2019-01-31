@@ -255,7 +255,7 @@ angular.module('ts5App')
       }
 
       $scope.displayError = false;
-      $scope.disableEditField = !canEdit || $scope.isViewOnly;
+      $scope.disableEditField = !canEdit || $scope.isViewOnly || $scope.readOnly;
     };
 
     this.initializeDataFromAPI = function(companyDataFromAPI) {
