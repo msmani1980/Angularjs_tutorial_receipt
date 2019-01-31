@@ -147,12 +147,11 @@
 
 						<div class="row">
 
-							<div class="col-xs-12 col-sm-6 col-md-4">
+                            <div class="col-xs-12 col-sm-6 col-md-4" ng-class="{ 'has-error' : isDateValueInvalid(dateRange.startDate, dateRange) && displayError, 'has-success' : !isDateValueInvalid(dateRange.startDate, dateRange) }">
 								<date-picker-field name="EffectiveFrom" label="Effective From" min-date="'+1d'"
 									ng-model="dateRange.startDate"></date-picker-field>
 							</div>
-
-							<div class="col-xs-12 col-sm-6 col-md-4">
+                            <div class="col-xs-12 col-sm-6 col-md-4" ng-class="{ 'has-error' : isDateValueInvalid(dateRange.endDate, dateRange) && displayError, 'has-success' : !isDateValueInvalid(dateRange.endDate, dateRange) }">
 								<date-picker-field  name="EffectiveTo" label="Effective To" min-date="'0d'"
 									ng-model="dateRange.endDate"></date-picker-field>
 							</div>
@@ -228,7 +227,7 @@
             <td>UTC {{station.utcDstOffset}}</td>
 
             <td width="200px">
-              <div ng-show="isCRUD">
+              <div ng-show="isCRUD" ng-class="{ 'has-error' : isDateValueInvalid(formData.stations[$index].startDate, formData.stations[$index]) && displayEditError, 'has-success' : !isDateValueInvalid(formData.stations[$index].startDate, formData.stations[$index]) }">
                 <date-picker-field ng-if="!isInFutureWithMaxStartDateBeforeToday(station.maxStartDate, station.startDate)" form="stationListForm" name="Start Date {{$index+1}}" required="true"
                   ng-model="formData.stations[$index].startDate"
                   disable="isDateActive(station.startDate) || isInFutureWithMaxStartDateBeforeToday(station.maxStartDate, station.startDate)"
@@ -245,7 +244,7 @@
             </td>
 
             <td width="200px">
-              <div ng-show="isCRUD">
+              <div ng-show="isCRUD" ng-class="{ 'has-error' : isDateValueInvalid(formData.stations[$index].endDate, formData.stations[$index]) && displayEditError, 'has-success' : !isDateValueInvalid(formData.stations[$index].endDate, formData.stations[$index]) }">
                 <date-picker-field
                   form="stationListForm"
                   name="End Date {{$index+1}}"
