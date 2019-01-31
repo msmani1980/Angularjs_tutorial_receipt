@@ -194,7 +194,10 @@ angular.module('ts5App')
     };
 
     this.getDiscountTypesSuccess = function(dataFromAPI) {
-      $scope.discountTypes = angular.copy(dataFromAPI);
+      $scope.discountTypes = lodash.filter(angular.copy(dataFromAPI), function (type) {
+        return type.id !== 3;
+      });
+
     };
 
     this.getDiscountTypes = function() {
