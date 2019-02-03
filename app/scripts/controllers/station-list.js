@@ -207,12 +207,12 @@ angular.module('ts5App')
     };
 
     this.validateForm = function() {
-      $scope.displayError = $scope.stationListForm.$invalid;
+      $scope.displayListError = $scope.stationListForm.$invalid;
       return $scope.stationListForm.$valid;
     };
 
     this.errorHandler = function(dataFromAPI) {
-      $scope.displayError = true;
+      $scope.displayListError = true;
       $scope.errorResponse = dataFromAPI;
     };
 
@@ -234,7 +234,7 @@ angular.module('ts5App')
       $this.clearErrors();
       var isDataValid =  $this.validateNewData($scope.dateRange);
       if (!isDataValid) {
-        $scope.displayError = true;  
+        $scope.displayListError = true;  
         return;
       }
       
@@ -255,6 +255,13 @@ angular.module('ts5App')
     };
 
     this.submitForm = function() {
+      $this.clearErrors();
+      var isDataValid =  $this.validateNewData($scope.dateRange);
+      if (!isDataValid) {
+        $scope.displayBatchError = true;
+        return;
+      }
+
       if ($this.validateForm()) {
         $this.saveStations();
       }
@@ -269,7 +276,7 @@ angular.module('ts5App')
       $this.clearErrors();
       var isDataValid =  $this.validateNewData(station);
       if (!isDataValid) {
-        $scope.displayError = true;  
+        $scope.displayListError = true;  
         return;
       }
 
@@ -515,7 +522,8 @@ angular.module('ts5App')
         offset: 0
       };
 
-      $scope.displayError = false;
+      $scope.displayListError = false;
+      $scope.displayBatchError = false;
       $scope.isSearch = true;
       $scope.stationList = [];
 
@@ -629,7 +637,8 @@ angular.module('ts5App')
     };
 
     this.clearErrors = function () {
-      $scope.displayError = false;
+      $scope.displayListError = false;
+      $scope.displayBatchError = false;
       $scope.errorResponse = [];
       $scope.errorCustom = [];
     };
@@ -676,4 +685,9 @@ angular.module('ts5App')
       $scope.errorCustom.push(payload);
     };
 
+    $scope.isDateRangeInValidEditList = function (value, record) {
+      var isInValid = $scope.isFieldEmpty(value) || (record.startDate && record.endDate && dateUtility.isAfterDatePicker(record.startDate, record.endDate));
+      return isInValid;
+    };
+ 
   });

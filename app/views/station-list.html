@@ -140,6 +140,8 @@
 
 			</div>
 
+<error-dialog error-response="errorResponse" display="displayBatchError">
+</error-dialog>
 			<!-- Station Edit Controls Panel -->
 			<div class="panel panel-default" ng-show="canSave()">
 
@@ -147,12 +149,12 @@
 
 						<div class="row">
 
-                            <div class="col-xs-12 col-sm-6 col-md-4" ng-class="{ 'has-error' : isDateValueInvalid(dateRange.startDate, dateRange) && displayError, 'has-success' : !isDateValueInvalid(dateRange.startDate, dateRange) }">
-								<date-picker-field name="EffectiveFrom" label="Effective From" min-date="'+1d'"
+                            <div class="col-xs-12 col-sm-6 col-md-4" ng-class="{ 'has-error' : isDateValueInvalid(dateRange.startDate, dateRange) && displayBatchError, 'has-success' : !isDateValueInvalid(dateRange.startDate, dateRange) }">
+								<date-picker-field name="EffectiveFrom A" label="Effective From" min-date="'+1d'"
 									ng-model="dateRange.startDate"></date-picker-field>
 							</div>
-                            <div class="col-xs-12 col-sm-6 col-md-4" ng-class="{ 'has-error' : isDateValueInvalid(dateRange.endDate, dateRange) && displayError, 'has-success' : !isDateValueInvalid(dateRange.endDate, dateRange) }">
-								<date-picker-field  name="EffectiveTo" label="Effective To" min-date="'0d'"
+                            <div class="col-xs-12 col-sm-6 col-md-4" ng-class="{ 'has-error' : isDateValueInvalid(dateRange.endDate, dateRange) && displayBatchError, 'has-success' : !isDateValueInvalid(dateRange.endDate, dateRange) }">
+								<date-picker-field  name="EffectiveTo B" label="Effective To" min-date="'0d'"
 									ng-model="dateRange.endDate"></date-picker-field>
 							</div>
 
@@ -177,8 +179,8 @@
 
 	</div>
 
-	<error-dialog form-object="stationListForm" error-response="errorResponse" display="displayError">
-  </error-dialog>
+<error-dialog form-object="stationListForm" error-response="errorResponse" display="displayListError">
+</error-dialog>
 
 	<form name="stationListForm" ng-show="stationList.length">
     <div class="table-responsive">
@@ -227,24 +229,26 @@
             <td>UTC {{station.utcDstOffset}}</td>
 
             <td width="200px">
-              <div ng-show="isCRUD" ng-class="{ 'has-error' : isDateValueInvalid(formData.stations[$index].startDate, formData.stations[$index]) && displayEditError, 'has-success' : !isDateValueInvalid(formData.stations[$index].startDate, formData.stations[$index]) }">
+              <div ng-show="isCRUD" ng-class="{ 'has-error' : isDateRangeInValidEditList(formData.stations[$index].startDate, formData.stations[$index]) && displayError, 'has-success' : !isDateRangeInValidEditList(formData.stations[$index].startDate, formData.stations[$index]) }">
                 <date-picker-field ng-if="!isInFutureWithMaxStartDateBeforeToday(station.maxStartDate, station.startDate)" form="stationListForm" name="Start Date {{$index+1}}" required="true"
                   ng-model="formData.stations[$index].startDate"
                   disable="isDateActive(station.startDate) || isInFutureWithMaxStartDateBeforeToday(station.maxStartDate, station.startDate)"
-                  end-date="station.maxStartDate">
+                  end-date="station.maxStartDate"
+                  onSelect="isDateRangeValidEditList(formData.stations[$index].startDate, formData.stations[$index])">
                 </date-picker-field>
                 <date-picker-field ng-if="isInFutureWithMaxStartDateBeforeToday(station.maxStartDate, station.startDate)" form="stationListForm" name="Start Date {{$index+1}}" required="true"
                   ng-model="formData.stations[$index].startDate"
                   disable="isDateActive(station.startDate) || isInFutureWithMaxStartDateBeforeToday(station.maxStartDate, station.startDate)"
                   end-date="station.maxStartDate"
-                  data-toggle="tooltip" data-placement="left" title="Disabled since this company station is already in use">
+                  data-toggle="tooltip" data-placement="left" title="Disabled since this company station is already in use"
+                  onSelect="isDateRangeValidEditList(formData.stations[$index].startDate, formData.stations[$index])">
                 </date-picker-field>
               </div>
               <div ng-hide="isCRUD">{{ formData.stations[$index].startDate }}</div>
             </td>
 
             <td width="200px">
-              <div ng-show="isCRUD" ng-class="{ 'has-error' : isDateValueInvalid(formData.stations[$index].endDate, formData.stations[$index]) && displayEditError, 'has-success' : !isDateValueInvalid(formData.stations[$index].endDate, formData.stations[$index]) }">
+              <div ng-show="isCRUD" ng-class="{ 'has-error' : isDateRangeInValidEditList(formData.stations[$index].endDate, formData.stations[$index]) && displayError, 'has-success' : !isDateRangeInValidEditList(formData.stations[$index].endDate, formData.stations[$index]) }">
                 <date-picker-field
                   form="stationListForm"
                   name="End Date {{$index+1}}"
@@ -253,7 +257,8 @@
                   disable-past="true"
                   end-current-effective="true"
                   disable="canEdit(station.endDate)"
-                  start-date="station.minEndDate">
+                  start-date="station.minEndDate"
+                  onSelect="isDateRangeValidEditList(formData.stations[$index].endDate, formData.stations[$index])">
                 </date-picker-field>
               </div>
               <div ng-hide="isCRUD">{{ formData.stations[$index].endDate }}</div>
