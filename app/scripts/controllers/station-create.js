@@ -234,6 +234,11 @@ angular.module('ts5App')
 
     this.submitForm = function() {
       $this.clearErrors();
+      var isDataValid =  $this.validateNewData($scope.formData);
+      if (!isDataValid) {
+        $scope.displayError = true;  
+        return;
+      }
 
       if (this.validateForm()) {
         if ($routeParams.id) {
@@ -525,7 +530,7 @@ angular.module('ts5App')
       var validateSd = $this.validateNewDataField(record, 'startDate', 'Start Date');
       var validateEd = $this.validateNewDataField(record, 'endDate', 'End Date');
       var isValidDr = true;
-      if (record !== null && !$scope.isFieldEmpty(record.endDate) && !$scope.isFieldEmpty(record.startDate)) {
+      if (record !== null && validateSd && validateEd) {
         isValidDr = $this.validateStartAndEndDates(record);
       }
 
