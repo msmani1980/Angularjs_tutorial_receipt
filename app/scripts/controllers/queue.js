@@ -51,4 +51,25 @@ angular.module('ts5App')
       return !!featuresInRoleMatch && isTypeIdSame(template) && isCompanyDateDefined(template);
     };
     
-  });
+    $scope.requestParamTooltip = function (params) {
+      var paramString = '<div class="param-header"><i class="fa fa-tags"></i><span class="hidden-xs">Report Parameters</span>';
+      paramString += '<li><span><strong>Company Number : </strong>' + identityAccessFactory.getSessionObject().companyData.companyName + '</span></li>';
+      angular.forEach(params, function(value, key) {
+        value = (value === 'No filter' ? 'All' : value);
+        paramString += '<li><span><strong>' + key + ' : </strong>' + value + '</span></li>';
+      });
+
+      paramString += '</div>';
+      return paramString;
+    };
+    
+  }).directive('tooltipReportPopup', function () {
+    return {
+        restrict: 'EA',
+        replace: true,
+        scope: { content: '@', placement: '@', animation: '&', isOpen: '&' },
+        templateUrl: 'views/directives/report-param-tooltip.html'
+      };
+  }).directive('tooltipReport', ['$tooltip', function ($tooltip) {
+    return $tooltip('tooltipReport', 'tooltip', 'focus');
+  }]);
