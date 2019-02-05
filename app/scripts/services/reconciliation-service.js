@@ -12,6 +12,7 @@ angular.module('ts5App')
 
     var stockURL = ENV.apiUrl + '/rsvr/api/reconciliation/stock-totals';
     var promotionURL = ENV.apiUrl + '/rsvr/api/reconciliation/promotion-totals';
+    var crewDiscountURL = ENV.apiUrl + '/rsvr/api/reconciliation/crewdiscount-totals';
     var reconciliationPrecheckDevicesURL = ENV.apiUrl + '/rsvr/api/reconciliation/pre-check/:storeInstanceId/devices';
     var reconciliationPrecheckSchedulesResourceURL = ENV.apiUrl + '/rsvr/api/reconciliation/pre-check/:storeInstanceId/schedules';
     var reconciliationPrecheckCashbagsResourceURL = ENV.apiUrl + '/rsvr/api/reconciliation/pre-check/:storeInstanceId/cashbags';
@@ -34,6 +35,9 @@ angular.module('ts5App')
         method: 'GET'
       },
       getPromotionTotals: {
+        method: 'GET'
+      },
+      getCrewDiscountTotals: {
         method: 'GET'
       },
       getRevenue: {
@@ -61,6 +65,7 @@ angular.module('ts5App')
 
     var stockResource = $resource(stockURL, requestParameters, actions);
     var promotionResource = $resource(promotionURL, requestParameters, actions);
+    var crewDiscountResource = $resource(crewDiscountURL, requestParameters, actions);
     var paymentReportResource = $resource(paymentReportURL, requestParameters, actions);
     var reconciliationPrecheckDevicesResource = $resource(reconciliationPrecheckDevicesURL, requestParameters, actions);
     var getReconciliationPrecheckSchedulesResource = $resource(reconciliationPrecheckSchedulesResourceURL, requestParameters, actions);
@@ -79,6 +84,13 @@ angular.module('ts5App')
         storeInstanceId: storeInstanceId
       };
       return promotionResource.getPromotionTotals(payload).$promise;
+    }
+
+    function getCrewDiscountTotals(storeInstanceId) {
+      var payload = {
+        storeInstanceId: storeInstanceId
+      };
+      return crewDiscountResource.getCrewDiscountTotals(payload).$promise;
     }
 
     function getPaymentReport(storeInstanceId, cashBagNumber) {
@@ -150,6 +162,7 @@ angular.module('ts5App')
       getStockTotals: getStockTotals,
       getPaymentReport: getPaymentReport,
       getPromotionTotals: getPromotionTotals,
+      getCrewDiscountTotals: getCrewDiscountTotals,
       getCHCashBagRevenue: getCHCashBagRevenue,
       getCHCreditCardRevenue: getCHCreditCardRevenue,
       getCHDiscountRevenue: getCHDiscountRevenue,
