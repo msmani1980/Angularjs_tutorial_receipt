@@ -403,6 +403,21 @@ angular.module('ts5App')
       };
     }
 
+    function getTotalsForCrewDiscount(crewTotals) {
+      var total = 0;
+      var qty = 0;
+      angular.forEach(crewTotals, function (crewItem) {
+        total += crewItem.lineItemAmount;
+        qty += crewItem.qty;
+      });
+
+      return {
+        totalLMP: formatAsCurrency(total),
+        totalEPOS: formatAsCurrency(total),
+        totalQty: qty
+      };
+    }
+
     this.checkIfCompanyUseCash = function () {
       var cashPreference = lodash.where($this.companyPreferences, {
         choiceName: 'Active',
@@ -494,7 +509,7 @@ angular.module('ts5App')
       });
     }
 
-    function getManualItemDataSet(itemTypeName) {
+    function getManualItemDataSet(itemTypeName, stockTotals) {
       var manualItemArray = [];
       var dataType = itemTypeName.toLowerCase();
       angular.forEach($this.manualData[dataType], function (manualItem) {
@@ -511,14 +526,24 @@ angular.module('ts5App')
         }
       });
 
+      if (dataType === 'crewdisc') {
+        var newCrewItem = {
+          eposQuantity: stockTotals.totalCrewDisc.totalQty,
+          eposTotal: stockTotals.totalCrewDisc.totalEPOS,
+          itemName: 'Employee Discount',
+          itemTypeName: itemTypeName
+        };
+        manualItemArray.push(newCrewItem);
+      }
+
       return manualItemArray;
     }
 
-    function getManualItemData() {
-      var itemTypes = ['Virtual', 'Voucher', 'Promotion'];
+    function getManualItemData(stockTotals) {
+      var itemTypes = ['Virtual', 'Voucher', 'Promotion', 'CrewDisc'];
       var allManualItemsArray = [];
       angular.forEach(itemTypes, function (itemType) {
-        allManualItemsArray = allManualItemsArray.concat(getManualItemDataSet(itemType));
+        allManualItemsArray = allManualItemsArray.concat(getManualItemDataSet(itemType, stockTotals));
       });
 
       return allManualItemsArray;
@@ -527,9 +552,9 @@ angular.module('ts5App')
     function setNetTotals(stockData) {
       var stockTotals = angular.copy(stockData);
       var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher
-          .parsedEPOS - stockTotals.totalPromotion.parsedLMP;
+          .parsedEPOS - stockTotals.totalPromotion.parsedLMP - stockTotals.totalCrewDisc.totalLMP;
       var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher
-          .parsedEPOS - stockTotals.totalPromotion.parsedEPOS;
+          .parsedEPOS - stockTotals.totalPromotion.parsedEPOS - stockTotals.totalCrewDisc.totalEPOS;
 
       var netTotals = {
         netLMP: formatAsCurrency(netLMP),
@@ -537,7 +562,7 @@ angular.module('ts5App')
       };
 
       var stockItems = $this.stockTotals.concat($this.promotionTotals);
-      stockItems = stockItems.concat(getManualItemData());
+      stockItems = stockItems.concat(getManualItemData(stockTotals));
 
       $scope.stockTotals = angular.extend(stockTotals, {
         totalNet: netTotals
@@ -666,6 +691,16 @@ angular.module('ts5App')
       return mergedArray;
     }
 
+    this.consolidateCrewDiscountTotals = function() {
+      var consolidatedDiscount = [];
+      angular.forEach($scope.crewDiscountList, function (crewdiscount) {
+        crewdiscount.lineItemAmount = makeFinite(crewdiscount.qty * crewdiscount.crewDiscountAmount);  
+        consolidatedDiscount.push(crewdiscount);
+      });  
+
+      $scope.crewDiscountList = consolidatedDiscount;
+    };
+
     function setupData(responseCollection) {
       $this.countTypes = angular.copy(responseCollection[0]);
       $this.stockTotals = angular.copy(responseCollection[1].response);
@@ -682,6 +717,8 @@ angular.module('ts5App')
       setCashPreference(responseCollection[8]);
       setStatusList(responseCollection[9]);
       $this.carrierInstanceList = angular.copy(responseCollection[10].response);
+      $scope.crewDiscountList = angular.copy(responseCollection[11].response);
+      $this.consolidateCrewDiscountTotals();
       $scope.totalCHManualValue =  getCHManualData($this.chRevenue);
       $scope.totalRevenue = {
         cashHandler: $scope.companyIsUsingCash ? formatAsCurrency(getCHRevenue($this.chRevenue)) : 0,
@@ -698,6 +735,7 @@ angular.module('ts5App')
       }
 
       var totalPromotion = getTotalsForPromotions($this.promotionTotals);
+      var totalCrewDisc = getTotalsForCrewDiscount($scope.crewDiscountList);
       var totalItems = getTotalsFor($this.stockTotals, 'Regular');
       var totalVirtual = getTotalsFor($this.stockTotals, 'Virtual');
       var totalVoucher = getTotalsFor($this.stockTotals, 'Voucher');
@@ -706,7 +744,8 @@ angular.module('ts5App')
         totalRetail: totalItems,
         totalVirtual: totalVirtual,
         totalVoucher: totalVoucher,
-        totalPromotion: totalPromotion
+        totalPromotion: totalPromotion,
+        totalCrewDisc: totalCrewDisc
       };
 
       getCashBagData();
@@ -749,7 +788,8 @@ angular.module('ts5App')
         reconciliationFactory.getPaymentReport($routeParams.storeInstanceId),
         reconciliationFactory.getCompanyPreferences(),
         reconciliationFactory.getStoreStatusList(),
-        reconciliationFactory.getCarrierInstanceList($routeParams.storeInstanceId)
+        reconciliationFactory.getCarrierInstanceList($routeParams.storeInstanceId),
+        reconciliationFactory.getCrewDiscountTotals($routeParams.storeInstanceId)
       ];
 
       $q.all(promiseArray).then(setupData, handleResponseError);
@@ -970,12 +1010,14 @@ angular.module('ts5App')
       var modalNameToHeaderMap = {
         Virtual: 'Virtual Product Revenue',
         Voucher: 'Voucher Product Revenue',
-        Promotion: 'ePOS Discount'
+        Promotion: 'ePOS Discount',
+        CrewDisc: 'ePOS Crew Discount'
       };
       var modalNamToTableHeaderMap = {
         Virtual: 'Virtual Product Name',
         Voucher: 'Voucher Product Name',
-        Promotion: 'Promotion Name'
+        Promotion: 'Promotion Name',
+        CrewDisc: 'Crew Discount Name'
       };
       if (!$scope.stockTotals || !$scope.stockTotals['total' + modalName]) {
         return;

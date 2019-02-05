@@ -98,6 +98,10 @@ angular.module('ts5App')
         return reconciliationService.getPromotionTotals(storeInstanceId);
       }
 
+      function getCrewDiscountTotals(storeInstanceId) {
+        return reconciliationService.getCrewDiscountTotals(storeInstanceId);
+      }
+
       function getItemTypesList() {
         return itemTypesService.getItemTypesList();
       }
@@ -169,6 +173,7 @@ angular.module('ts5App')
         getCountTypes: getCountTypes,
         getStockTotals: getStockTotals,
         getPromotionTotals: getPromotionTotals,
+        getCrewDiscountTotals: getCrewDiscountTotals,
         getItemTypesList: getItemTypesList,
         getItem: getItem,
         getMasterItem: getMasterItem,
