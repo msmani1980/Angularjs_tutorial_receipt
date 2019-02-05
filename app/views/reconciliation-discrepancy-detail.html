@@ -368,6 +368,10 @@
                   <td>Promotion Discounts</td>
                   <td class="value stockTotals totalPromotion totalLMP" value="-{{stockTotals.totalPromotion.totalLMP}}">-{{stockTotals.totalPromotion.totalLMP}}</td>
                 </tr>
+                <tr ng-if="crewDiscountList.length > 0">
+                  <td>Crew Discount</td>
+                  <td class="value stockTotals totalPromotion totalLMP" value="-{{stockTotals.totalCrewDisc.totalLMP}}">-{{stockTotals.totalCrewDisc.totalLMP}}</td>
+                </tr>
                 <tr class="active">
                   <td>Net Value of LMP Stock</td>
                   <td class="value stockTotals totalNet netLMP" value="{{stockTotals.totalNet.netLMP}}">{{stockTotals.totalNet.netLMP}}</td>
@@ -394,6 +398,10 @@
                 <tr>
                   <td><a ng-click="showModal('Promotion')">Promotion Discount</a></td>
                   <td class="value stockTotals totalPromotion totalEPOS" value="-{{stockTotals.totalPromotion.totalEPOS}}">-{{stockTotals.totalPromotion.totalEPOS}}</td>
+                </tr>
+                <tr ng-if="crewDiscountList.length > 0">
+                  <td><a ng-click="showModal('CrewDisc')">Crew Discount</a></td>
+                  <td class="value stockTotals totalPromotion totalEPOS" value="-{{stockTotals.totalCrewDisc.totalEPOS}}">-{{stockTotals.totalCrewDisc.totalEPOS}}</td>
                 </tr>
                 <tr class="active">
                   <td>Net Value of ePOS Sales</td>
