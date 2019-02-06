@@ -334,6 +334,8 @@ angular.module('ts5App')
         }
       });
 
+      $scope.cashBag.cashBagCurrencies = $scope.cashBag.cashBagCurrencies || [];
+
       angular.forEach(dailyExchangeRateCurrencies, function(currency) {
         $scope.cashBag.cashBagCurrencies.push({
           currencyId: currency.retailCompanyCurrencyId,
