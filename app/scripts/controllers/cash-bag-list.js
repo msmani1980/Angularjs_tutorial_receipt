@@ -36,11 +36,6 @@ angular.module('ts5App')
     $scope.storeInstanceList = [];
     delete $localStorage.isEditFromList;
 
-    function showSuccessMessage(error) {
-      messageService.display('success', '<strong>Cash bag</strong>:' + error);
-      $scope.formErrors = {};
-    }
-
     function showLoadingModal() {
       $scope.displayError = false;
       angular.element('.loading-more').show();
@@ -85,9 +80,6 @@ angular.module('ts5App')
           cashbag.updatedOn = '';
         }
 
-        if ($scope.isNew(cashbag.id)) {
-          showSuccessMessage('successfully created');
-        }
       });
 
       if ($this.meta.count === 1 && $scope.search.cashBagNumber && $scope.isCashBagEditable($scope.cashBagList[0])) {
