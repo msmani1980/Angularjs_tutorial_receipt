@@ -8,7 +8,7 @@
  */
 angular.module('ts5App').controller('ItemCreateCtrl',
   function($scope, $document, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory, companyRelationshipFactory,
-    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _, languagesService) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _, languagesService, recordsService) {
 
     var $this = this;
     $scope.formData = {
@@ -64,6 +64,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.substitutions = [];
     $scope.recommendations = [];
     $scope.eposDisplayOrderList = [];
+    $scope.allergenTags = [];
 
     this.checkFormState = function() {
       var path = $location.path();
@@ -570,7 +571,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         itemsFactory.getPriceTypesList(),
         companiesFactory.getCompany(companyId),
         itemsFactory.getVoucherDurationsList(),
-        itemsFactory.getEposDisplayOrder()
+        itemsFactory.getEposDisplayOrder(),
+        recordsService.getAllergenTags()
       ];
     };
 
@@ -796,6 +798,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setCompany(response[11]);
       $this.setVoucherDurations(response[12]);
       $this.setEposDisplayOrderList(response[13]);
+      $this.setAllergenTagList(response[14]);
       if ($scope.editingItem || $scope.cloningItem || $scope.viewOnly) {
         $this.getItem($routeParams.id);
       } else {
@@ -818,6 +821,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.setAllergens = function(data) {
       $scope.allergens = data;
+    };
+
+    this.setAllergenTagList = function(data) {
+      $scope.allergenTags = data;
     };
 
     this.setItemTypes = function(data) {
