@@ -280,20 +280,37 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
     };
 
-    this.formatAllergens = function(itemData) {
-      var allergenPayload = [];
-      for (var allergenKey in itemData.allergens) {
-        var allergen = itemData.allergens[allergenKey];
-        allergenPayload[allergenKey] = {
-          allergenId: allergen.allergenId
-        };
-        if (!$scope.cloningItem) {
-          allergenPayload[allergenKey].itemId = itemData.id;
-          allergenPayload[allergenKey].id = allergen.id;
-        }
-      }
+    this.deserializeItemAllergens = function(itemData) {
+      var formData = angular.copy(itemData);
+      $scope.existingAllergenIds = {};
 
-      return allergenPayload;
+      formData.itemAllergens.forEach(function(itemAllergen) {
+        $scope.existingAllergenIds[itemAllergen.allergen.id] = itemAllergen.id;
+      });
+
+      itemData.itemAllergens = {
+        contains: [],
+        may_contain: []
+      };
+
+      formData.itemAllergens.forEach(function (allergen) {
+        itemData.itemAllergens[allergen.allergenPrefix].push(allergen.allergen);
+      });
+    };
+
+    this.deserializeItemAllergenTags = function(itemData) {
+      var formData = angular.copy(itemData);
+      $scope.existingAllergenTagIds = {};
+
+      formData.itemAllergenTags.forEach(function(itemAllergenTag) {
+        $scope.existingAllergenTagIds[itemAllergenTag.allergenTag.id] = itemAllergenTag.id;
+      });
+
+      itemData.itemAllergenTags = [];
+
+      formData.itemAllergenTags.forEach(function (allergenTag) {
+        itemData.itemAllergenTags.push(allergenTag.allergenTag);
+      });
     };
 
     this.formatItemAllergens = function(itemData) {
@@ -310,8 +327,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           };
 
           if ($scope.editingItem) {
-            allergenPayloadItem.itemId = itemData.id;
-            allergenPayloadItem.id = allergen.id;
+            allergenPayloadItem.id = $scope.existingAllergenIds[allergen.id];
           }
 
           allergenPayload.push(allergenPayloadItem);
@@ -330,8 +346,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         };
 
         if ($scope.editingItem) {
-          allergenTagPayload.itemId = itemData.id;
-          allergenTagPayload.id = tag.id;
+          allergenTagPayload.id = $scope.existingAllergenTagIds[tag.id];
         }
 
         return allergenTagPayload;
@@ -555,6 +570,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
       this.deserializeTags(itemData);
       this.deserializeAllergens(itemData);
+      this.deserializeItemAllergens(itemData);
+      this.deserializeItemAllergenTags(itemData);
       this.deserializeCharacteristics(itemData);
       this.formatImageDates(itemData.images);
 
