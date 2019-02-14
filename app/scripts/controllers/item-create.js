@@ -65,6 +65,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.recommendations = [];
     $scope.eposDisplayOrderList = [];
     $scope.allergenTags = [];
+    $scope.allergenPrefixes = [
+      { prefix: 'contains', name: 'Contains' },
+      { prefix: 'may_contain', name: 'May contain' }
+    ];
 
     this.checkFormState = function() {
       var path = $location.path();
@@ -290,6 +294,48 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
 
       return allergenPayload;
+    };
+
+    this.formatItemAllergens = function(itemData) {
+      var allergenPayload = [];
+      for (var allergenKey in itemData.itemAllergens) {
+        var allergens = itemData.itemAllergens[allergenKey];
+
+        allergens.forEach(function (allergen) {
+          var allergenPayloadItem = {
+            allergen: {
+              id: allergen.allergenId
+            },
+            allergenPrefix: allergenKey
+          };
+
+          if ($scope.editingItem) {
+            allergenPayloadItem.itemId = itemData.id;
+            allergenPayloadItem.id = allergen.id;
+          }
+
+          allergenPayload.push(allergenPayloadItem);
+        });
+      }
+
+      return allergenPayload;
+    };
+
+    this.formatItemAllergenTags = function(itemData) {
+      return itemData.itemAllergenTags.map(function (tag) {
+        var allergenTagPayload = {
+          allergenTag: {
+            id: tag.id
+          }
+        };
+
+        if ($scope.editingItem) {
+          allergenTagPayload.itemId = itemData.id;
+          allergenTagPayload.id = tag.id;
+        }
+
+        return allergenTagPayload;
+      });
     };
 
     this.formatGlobalTradeNumbers = function(itemData) {
@@ -1465,7 +1511,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.formatPayload = function(itemData) {
       itemData.tags = $this.formatTags(itemData);
-      itemData.allergens = $this.formatAllergens(itemData);
+      itemData.itemAllergens = $this.formatItemAllergens(itemData);
+      itemData.itemAllergenTags = $this.formatItemAllergenTags(itemData);
       itemData.characteristics = $this.formatCharacteristics(itemData);
       itemData.substitutions = $this.formatSubstitutions(itemData);
       itemData.recommendations = $this.formatRecommendations(itemData);
