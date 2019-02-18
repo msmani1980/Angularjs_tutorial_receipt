@@ -700,6 +700,18 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return ($scope.formData.startDate && $scope.formData.endDate);
     };
 
+    $scope.isAllergenAvailable = function (allergen) {
+      var isSelected = false;
+
+      $scope.allergenPrefixes.forEach(function (prefix) {
+        if ($scope.formData.itemAllergens && $scope.formData.itemAllergens[prefix.prefix] && !isSelected) {
+          isSelected = lodash.find($scope.formData.itemAllergens[prefix.prefix], { allergenId: allergen.allergenId });
+        }
+      });
+
+      return !isSelected;
+    };
+
     this.handleRetailItemsOnStartEndDateUpdate = function() {
       $scope.itemsAreBeingLoaded = true;
       var payload = {
