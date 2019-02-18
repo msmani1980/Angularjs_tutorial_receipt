@@ -29,11 +29,13 @@
 		</div>
 
 		<!-- Search Panel -->
+<error-dialog error-response="errorResponse" display="displaySearchError">
+</error-dialog>
 		<div class="panel panel-default no-transition in" id="filter-controls">
 
 			<div class="panel-heading">Search for Stations</div>
 
-			<form name="searchForm" class="form" ng-submit="searchRecords()">
+			<form name="searchForm" class="form">
 
 				<div class="panel-body">
 
@@ -99,29 +101,26 @@
               </div>
             </div>
 
-            <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="col-xs-12 col-sm-6 col-md-4"  ng-class="{ 'has-error' : isDateValueInvalid(search.startDate, search) && displaySearchError, 'has-success' : !isDateValueInvalid(search.startDate, search) }">
               <date-picker-field name="EffectiveFrom" label="Effective From" custom-effective="true"
                 ng-model="search.startDate"></date-picker-field>
             </div>
 
-            <div class="col-xs-12 col-sm-6 col-md-4">
+            <div class="col-xs-12 col-sm-6 col-md-4" ng-class="{ 'has-error' : isDateValueInvalid(search.endDate, search) && displaySearchError, 'has-success' : !isDateValueInvalid(search.endDate, search) }">
               <date-picker-field name="EffectiveTo" label="Effective To" custom-effective="true"
                 ng-model="search.endDate"></date-picker-field>
             </div>
 
-					</div>
+            </div>
 
-				</div>
+          </div>
 
-				<div class="panel-footer text-right">
+          <div class="panel-footer text-right">
 
-          <button type="button" class="btn btn-default btn-search-clear" ng-click="clearSearchFilters()" ng-show="showClearButton()">
-            Clear
-          </button>
+          <button type="button" class="btn btn-default btn-search-clear" ng-click="clearSearchFilters()" ng-show="showClearButton()">Clear</button>
+          <button type="button" class="btn btn-primary btn-search" ng-click="searchRecords()" id="searchStationListId">Search</button>
 
-          <button type="submit" class="btn btn-primary btn-search" id="searchStationListId">
-            Search
-          </button>
+          
           
           <div class="dropdown pull-right" style="margin-left:3px;">
             <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
