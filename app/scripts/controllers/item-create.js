@@ -288,10 +288,14 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         $scope.existingAllergenIds[itemAllergen.allergen.id] = itemAllergen.id;
       });
 
+      // jshint ignore: start
+      // jscs:disable
       itemData.itemAllergens = {
         contains: [],
         may_contain: []
       };
+      // jshint ignore: end
+      // jscs:enable
 
       formData.itemAllergens.forEach(function (allergen) {
         itemData.itemAllergens[allergen.allergenPrefix].push(allergen.allergen);
@@ -313,6 +317,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       });
     };
 
+    // jshint ignore: start
+    // jscs:disable
     this.formatItemAllergens = function(itemData) {
       var allergenPayload = [];
       for (var allergenKey in itemData.itemAllergens) {
@@ -336,6 +342,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
       return allergenPayload;
     };
+    // jshint ignore: end
+    // jscs:enable
 
     this.formatItemAllergenTags = function(itemData) {
       return itemData.itemAllergenTags.map(function (tag) {
