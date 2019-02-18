@@ -515,6 +515,13 @@ angular.module('ts5App')
     };
 
     $scope.searchRecords = function() {
+      $this.clearErrors();
+      var isDateRangeValid =  $this.validateSearchDateRange($scope.search);
+      if (!isDateRangeValid) {
+        $scope.displaySearchError = true;  
+        return;
+      }
+      
       showLoadModal('Searching');
       $this.meta = {
         count: undefined,
@@ -539,6 +546,7 @@ angular.module('ts5App')
     };
 
     $scope.clearSearchFilters = function() {
+      $this.clearErrors();
       $scope.search = {};
       $scope.stationList = [];
       $scope.isSearch = false;
@@ -637,6 +645,7 @@ angular.module('ts5App')
     };
 
     this.clearErrors = function () {
+      $scope.displaySearchError = false;  
       $scope.displayListError = false;
       $scope.displayBatchError = false;
       $scope.errorResponse = [];
@@ -689,5 +698,18 @@ angular.module('ts5App')
       var isInValid = $scope.isFieldEmpty(value) || (record.startDate && record.endDate && dateUtility.isAfterDatePicker(record.startDate, record.endDate));
       return isInValid;
     };
- 
+
+    this.validateSearchDateRange = function (record) {
+      var isValid = true;
+      var validateSd = $this.validateNewDataField(record, 'startDate', 'Start Date');
+      var validateEd = $this.validateNewDataField(record, 'endDate', 'End Date');
+      var isValidDr = true;
+      if (record !== null && validateSd && validateEd) {
+        isValidDr = $this.validateStartAndEndDates(record);
+        isValid = validateSd && validateEd && isValidDr; 
+      }
+          
+      return isValid;
+    };
+
   });
