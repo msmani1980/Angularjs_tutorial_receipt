@@ -8,7 +8,7 @@
  */
 angular.module('ts5App').controller('ItemCreateCtrl',
   function($scope, $document, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory, companyRelationshipFactory,
-    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _, languagesService) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _, languagesService, recordsService) {
 
     var $this = this;
     $scope.formData = {
@@ -64,6 +64,11 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.substitutions = [];
     $scope.recommendations = [];
     $scope.eposDisplayOrderList = [];
+    $scope.allergenTags = [];
+    $scope.allergenPrefixes = [
+      { prefix: 'contains', name: 'Contains' },
+      { prefix: 'may_contain', name: 'May contain' }
+    ];
 
     this.checkFormState = function() {
       var path = $location.path();
@@ -275,20 +280,85 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
     };
 
-    this.formatAllergens = function(itemData) {
+    this.deserializeItemAllergens = function(itemData) {
+      var formData = angular.copy(itemData);
+      $scope.existingAllergenIds = {};
+
+      formData.itemAllergens.forEach(function(itemAllergen) {
+        $scope.existingAllergenIds[itemAllergen.allergen.id] = itemAllergen.id;
+      });
+
+      // jshint ignore: start
+      // jscs:disable
+      itemData.itemAllergens = {
+        contains: [],
+        may_contain: []
+      };
+      // jshint ignore: end
+      // jscs:enable
+
+      formData.itemAllergens.forEach(function (allergen) {
+        itemData.itemAllergens[allergen.allergenPrefix].push(allergen.allergen);
+      });
+    };
+
+    this.deserializeItemAllergenTags = function(itemData) {
+      var formData = angular.copy(itemData);
+      $scope.existingAllergenTagIds = {};
+
+      formData.itemAllergenTags.forEach(function(itemAllergenTag) {
+        $scope.existingAllergenTagIds[itemAllergenTag.allergenTag.id] = itemAllergenTag.id;
+      });
+
+      itemData.itemAllergenTags = [];
+
+      formData.itemAllergenTags.forEach(function (allergenTag) {
+        itemData.itemAllergenTags.push(allergenTag.allergenTag);
+      });
+    };
+
+    // jshint ignore: start
+    // jscs:disable
+    this.formatItemAllergens = function(itemData) {
       var allergenPayload = [];
-      for (var allergenKey in itemData.allergens) {
-        var allergen = itemData.allergens[allergenKey];
-        allergenPayload[allergenKey] = {
-          allergenId: allergen.allergenId
-        };
-        if (!$scope.cloningItem) {
-          allergenPayload[allergenKey].itemId = itemData.id;
-          allergenPayload[allergenKey].id = allergen.id;
-        }
+      for (var allergenKey in itemData.itemAllergens) {
+        var allergens = itemData.itemAllergens[allergenKey];
+
+        allergens.forEach(function (allergen) {
+          var allergenPayloadItem = {
+            allergen: {
+              id: allergen.allergenId
+            },
+            allergenPrefix: allergenKey
+          };
+
+          if ($scope.editingItem) {
+            allergenPayloadItem.id = $scope.existingAllergenIds[allergen.id];
+          }
+
+          allergenPayload.push(allergenPayloadItem);
+        });
       }
 
       return allergenPayload;
+    };
+    // jshint ignore: end
+    // jscs:enable
+
+    this.formatItemAllergenTags = function(itemData) {
+      return itemData.itemAllergenTags.map(function (tag) {
+        var allergenTagPayload = {
+          allergenTag: {
+            id: tag.id
+          }
+        };
+
+        if ($scope.editingItem) {
+          allergenTagPayload.id = $scope.existingAllergenTagIds[tag.id];
+        }
+
+        return allergenTagPayload;
+      });
     };
 
     this.formatGlobalTradeNumbers = function(itemData) {
@@ -508,6 +578,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
       this.deserializeTags(itemData);
       this.deserializeAllergens(itemData);
+      this.deserializeItemAllergens(itemData);
+      this.deserializeItemAllergenTags(itemData);
       this.deserializeCharacteristics(itemData);
       this.formatImageDates(itemData.images);
 
@@ -570,7 +642,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         itemsFactory.getPriceTypesList(),
         companiesFactory.getCompany(companyId),
         itemsFactory.getVoucherDurationsList(),
-        itemsFactory.getEposDisplayOrder()
+        itemsFactory.getEposDisplayOrder(),
+        recordsService.getAllergenTags()
       ];
     };
 
@@ -633,6 +706,18 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     $scope.areDatesSelected = function () {
       return ($scope.formData.startDate && $scope.formData.endDate);
+    };
+
+    $scope.isAllergenAvailable = function (allergen) {
+      var isSelected = false;
+
+      $scope.allergenPrefixes.forEach(function (prefix) {
+        if ($scope.formData.itemAllergens && $scope.formData.itemAllergens[prefix.prefix] && !isSelected) {
+          isSelected = lodash.find($scope.formData.itemAllergens[prefix.prefix], { allergenId: allergen.allergenId });
+        }
+      });
+
+      return !isSelected;
     };
 
     this.handleRetailItemsOnStartEndDateUpdate = function() {
@@ -796,6 +881,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setCompany(response[11]);
       $this.setVoucherDurations(response[12]);
       $this.setEposDisplayOrderList(response[13]);
+      $this.setAllergenTagList(response[14]);
       if ($scope.editingItem || $scope.cloningItem || $scope.viewOnly) {
         $this.getItem($routeParams.id);
       } else {
@@ -818,6 +904,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.setAllergens = function(data) {
       $scope.allergens = data;
+    };
+
+    this.setAllergenTagList = function(data) {
+      $scope.allergenTags = data;
     };
 
     this.setItemTypes = function(data) {
@@ -1458,7 +1548,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.formatPayload = function(itemData) {
       itemData.tags = $this.formatTags(itemData);
-      itemData.allergens = $this.formatAllergens(itemData);
+      itemData.itemAllergens = $this.formatItemAllergens(itemData);
+      itemData.itemAllergenTags = $this.formatItemAllergenTags(itemData);
       itemData.characteristics = $this.formatCharacteristics(itemData);
       itemData.substitutions = $this.formatSubstitutions(itemData);
       itemData.recommendations = $this.formatRecommendations(itemData);
