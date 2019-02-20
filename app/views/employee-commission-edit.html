@@ -22,22 +22,8 @@
     <p>All required fields are marked with a *</p>
   </div>
 
-	 <!--  <date-picker
-	    class="col-xs-12 col-md-6 col-sm-6"
-	    element-class="col-xs-6 col-sm-6"
-	    start-date-model="commission.startDate"
-	    end-date-model="commission.endDate"
-	    label-from="Effective From *"
-	    label-to="Effective To *"
-	    required="true"
-	    disable-start-date="isCommissionReadOnly()"
-	    disable-end-date="isViewOnly()"
-	    disable-past="true">
-	  </date-picker> -->
-	  
 	<div class="col-sm-3">
-	  <div class="form-group">
-        <div class="form-group" ng-class="{ 'has-error' : !commission.startDate && displayError, 'has-success' : commission.startDate}">
+        <div class="form-group"  ng-class="{ 'has-error' : isDateValueInvalid(commission.startDate, commission) && displayError, 'has-success' : !isDateValueInvalid(commission.startDate, commission) }">
 		  <date-picker-field ng-if="!isCommissionReadOnly()"
 			   name="effectiveFrom"
 			   min-date="minDate"
@@ -45,8 +31,6 @@
 			   required="true" 
 			   ng-model="commission.startDate">
 		  </date-picker-field>
-		</div>  
-        <div class="form-group" ng-class="{ 'has-error' : !commission.startDate && displayError, 'has-success' : commission.startDate}">
 		  <date-picker-field ng-if="isCommissionReadOnly()"
 		       disable="true"
 			   name="effectiveFrom"
@@ -55,8 +39,10 @@
 			   required="true" 
 			   ng-model="commission.startDate">
 		  </date-picker-field>
-		</div>  
-        <div class="form-group" ng-class="{ 'has-error' : !commission.endDate && displayError, 'has-success' : commission.endDate}">
+		</div>
+	</div>	  
+	<div class="col-sm-3">
+        <div class="form-group" ng-class="{ 'has-error' : isDateValueInvalid(commission.endDate, commission) && displayError, 'has-success' : !isDateValueInvalid(commission.endDate, commission) }">
 		  <date-picker-field ng-if="isCurrentEffectiveDate(commission)"
 			   disable="isViewOnly()"
 			   name="effectiveTo" 
@@ -66,8 +52,6 @@
 			   ng-model="commission.endDate"
 			   disable-past="true">
 		  </date-picker-field>
-		</div>  
-        <div class="form-group" ng-class="{ 'has-error' : !commission.endDate && displayError, 'has-success' : commission.endDate}">
 		  <date-picker-field ng-if="!isCurrentEffectiveDate(commission)"
 			   disable="isViewOnly()"
 			   name="effectiveTo" 
@@ -77,12 +61,12 @@
 			   ng-model="commission.endDate"
 			   disable-past="true">
 		  </date-picker-field>
-		</div>  
-	  </div>
-	</div>
+	    </div>  
+    </div>
+	
     <div class="col-sm-3">
+    <label class="control-label" for="itemName">Item Name *</label>
     <div class="form-group" ng-class="{ 'has-error' : !commission.selectedItem && displayError, 'has-success' : commission.selectedItem}">
-      <label class="control-label" for="itemName">Item Name *</label>
       <select
         class="form-control"
         name="itemName"
@@ -96,8 +80,8 @@
   </div>
 
   <div class="col-sm-3">
+    <label class="control-label" for="saleType">Sale Type *</label>
     <div class="form-group" ng-class="{ 'has-error' : !commission.selectedPriceType && displayError, 'has-success' : commission.selectedPriceType}">
-      <label class="control-label" for="saleType">Sale Type *</label>
       <select
         class="form-control"
         name="saleType"
@@ -111,8 +95,8 @@
   </div>
 
   <div class="col-sm-3">
+    <label class="control-label" for="rateType">Rate Type *</label>
     <div class="form-group" ng-class="{ 'has-error' : !commission.selectedRateType && displayError, 'has-success' : commission.selectedRateType}">
-      <label class="control-label" for="rateType">Rate Type *</label>
       <select
         class="form-control"
         name="rateType"
@@ -126,18 +110,13 @@
   </div>
 
   <div class="col-sm-3" ng-if="commission.selectedRateType.id == 2">
-    <div class="form-group" ng-class="{ 'has-error' : !commission.percentage && displayError, 'has-success' : commission.percentage}">
-      <label class="control-label">Rate *</label>
+    <label class="control-label">Rate *</label>
+    <div class="form-group" ng-class="{ 'has-error' : (!commission.percentage || isValueInvalid(commission.percentage)) && displayError, 'has-success' : commission.percentage}"> 
       <div class="input-group">
-        <span class="input-group-addon">
-          <i class="fa fa-pie-chart"></i>
-        </span>
-        <input custom-validity
-               custom-pattern="currencyWithTwoDecimalPlace"
+        <span class="input-group-addon"><i class="fa fa-pie-chart"></i></span>
+        <input type="text"
                ng-model="commission.percentage"
-               required="true"
                ng-readonly="isCommissionReadOnly()"
-               type="text"
                name="rate"
                placeholder="0.00"
                class="form-control"
@@ -147,24 +126,19 @@
   </div>
 
   <div class="col-sm-3" ng-if="commission.selectedRateType.id == 1">
-    <label class="control-label">Rate for Currency *</label>
-
-    <div class="form-group" ng-repeat="currency in companyCurrencies" ng-class="{ 'has-error' : !commission.currenciesFields[currency.code] && displayError, 'has-success' : commission.currenciesFields[currency.code]}">
-
-      <div class="input-group">
-        <span class="input-group-addon">
-                {{currency.code}}
-        </span>
-        <input custom-validity
-               custom-pattern="currencyWithTwoDecimalPlace"
+    <div class="form-group"> 
+      <label class="control-label">Rate for Currency *</label>
+      <div class="form-group" ng-repeat="currency in companyCurrencies" ng-class="{ 'has-error' : (!commission.currenciesFields[currency.code] || isValueInvalid(commission.currenciesFields[currency.code])) && displayError, 'has-success' : commission.currenciesFields[currency.code]}">
+        <div class="input-group">
+          <span class="input-group-addon">{{currency.code}}</span>
+          <input type="text"
                ng-model="commission.currenciesFields[currency.code]"
                ng-readonly="isCommissionReadOnly()"
-               required="true"
-               type="text"
                name="rate{{currency.code}}"
                placeholder="0.00"
                class="form-control"
                aria-label="Amount (to the nearest dollar)"/>
+        </div>
       </div>
     </div>
   </div>
