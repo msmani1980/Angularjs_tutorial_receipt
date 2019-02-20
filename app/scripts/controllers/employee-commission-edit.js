@@ -7,15 +7,14 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('EmployeeCommissionEditCtrl', function($scope, employeeCommissionFactory, dateUtility, messageService,
-    $location, $routeParams, $filter) {
+  .controller('EmployeeCommissionEditCtrl', function($scope, employeeCommissionFactory, dateUtility, messageService, $location, $routeParams, $filter) {
 
+    var $this = this;
     $scope.viewName = 'Employee Commission';
-
     angular.element('.retail-name-multiple-select').select2();
-
     $scope.startDate = dateUtility.tomorrowFormattedDatePicker();
-
+    $scope.errorCustom = [];
+    
     $scope.commission = {
       startDate: angular.copy($scope.startDate),
       currenciesFields: {}
@@ -231,6 +230,14 @@ angular.module('ts5App')
     }
 
     $scope.submitForm = function() {
+      $scope.errorCustom = [];
+      var isDataValid = $this.validateNewData($scope.commission);
+      if (!isDataValid) {
+        hideLoadingModal();
+        $scope.displayError = true;  
+        return;
+      }
+
       var isFormValid = validateForm();
       if (!isFormValid) {
         hideLoadingModal();
@@ -251,8 +258,127 @@ angular.module('ts5App')
       $scope.displayError = !$scope.employeeCommissionForm.$valid;
       return $scope.employeeCommissionForm.$valid;
     }
-    
+
+    this.validateNewDataField = function (record, fieldName, fieldValidationName) {
+      var result = true;
+
+      if (record !== null && $scope.isFieldEmpty(record[fieldName])) {
+        $this.showValidationError(fieldValidationName, false);
+        result = false;
+      }
+
+      return result;
+    };
+
+    this.showValidationError = function (field, isPattern) {
+      var payload = { };
+
+      if (isPattern) {
+        payload = {
+          field: field,
+          value: 'field contains invalid characters'
+        };
+      } else {
+        payload = {
+          field: field,
+          value: 'is a required field. Please update and try again!'
+        };
+      }
+
+      $scope.errorCustom.push(payload);
+    };
+
+    /*jshint maxcomplexity:8 */    
+    this.validateNewData = function (record) {
+      var validateItem = $this.validateNewDataField(record, 'selectedItem', 'Item Name');
+      var validatePriceType = $this.validateNewDataField(record, 'selectedPriceType', 'Sale Type');
+      var validateRateType = $this.validateNewDataField(record, 'selectedRateType', 'Rate Type');
+      var isFieldValidatePriceAmount = true;
+      var isFieldValidatePricePercent = true;
+
+      if (validateRateType) {
+        var rateTypeValue =  record.selectedRateType;
+        if (rateTypeValue && rateTypeValue.taxRateType === 'Amount') {
+
+          angular.forEach($scope.companyCurrencies, function(currency) {
+            var fieldName = currency.code;
+            var isFieldValidateOneCurr = $this.validateNewDataField(record.currenciesFields, fieldName, 'Rate for Currency [' + currency.code + ']');
+            if (isFieldValidateOneCurr) {
+              var sAmount = angular.isString(record.currenciesFields[fieldName]) ? record.currenciesFields[fieldName] : record.currenciesFields[fieldName].toString();
+              isFieldValidateOneCurr =  sAmount.match(/^\d{0,6}(\.\d{0,2})?$/);
+              if (!isFieldValidateOneCurr) {
+                $this.showValidationError('Rate for Currency [' + currency.code + ']', true);
+              }
+            }
+
+            if (!isFieldValidateOneCurr) {
+              isFieldValidatePriceAmount = false;
+            }
+
+          });
+        }
+
+        if (rateTypeValue && rateTypeValue.taxRateType === 'Percentage') {
+          isFieldValidatePricePercent = $this.validateNewDataField(record, 'percentage', 'Percentage');
+          if (isFieldValidatePricePercent) {
+            var sPercentage =   angular.isString(record.percentage) ? record.percentage : record.percentage.toString();
+            isFieldValidatePricePercent =  sPercentage.match(/^\d{0,6}(\.\d{0,2})?$/);
+            if (!isFieldValidatePricePercent) {
+              $this.showValidationError('Percentage', true);
+            }
+          }
+        }
+      }
+
+      var validateSd = $this.validateNewDataField(record, 'startDate', 'Start Date');
+      var validateEd = $this.validateNewDataField(record, 'endDate', 'End Date');
+      var isValidDr = true;
+      if (record !== null && validateSd && validateEd) {
+        isValidDr = $this.validateStartAndEndDates(record);
+      }
+
+      return validateItem && validatePriceType && validateRateType && isFieldValidatePriceAmount && isFieldValidatePricePercent && validateSd && validateEd && isValidDr;
+    };
+
+    this.validateStartAndEndDates = function(record) {
+      var isValid = true;
+      if (!$scope.isFieldEmpty(record.startDate) && !$scope.isFieldEmpty(record.endDate) && $scope.isDateValueRangeInvalid(record)) {
+        $scope.errorCustom.push({
+          field: 'Start Date and End Date',
+          value: 'End Date should be later than or equal to Start date.'
+        });
+
+        isValid = false;
+      }
+
+      return isValid; 
+    };
+
+    $scope.isDateValueRangeInvalid = function (record) {
+      var isInValid = dateUtility.isAfterDatePicker(record.startDate, record.endDate);
+      return isInValid;
+    };
+
     $scope.isCurrentEffectiveDate = function (date) {
       return (dateUtility.isTodayOrEarlierDatePicker(date.startDate) && (dateUtility.isAfterTodayDatePicker(date.endDate) || dateUtility.isTodayDatePicker(date.endDate)));
     };
+
+    $scope.isFieldEmpty = function (value) {
+      return (value === undefined || value === null || value.length === 0 || value === 'Invalid date');
+    };
+
+    $scope.isDateValueInvalid = function (value, record) {
+      var isInValid = $scope.isFieldEmpty(value) || (record.startDate && record.endDate && dateUtility.isAfterDatePicker(record.startDate, record.endDate));
+      return isInValid;
+    };
+
+    $scope.isValueInvalid = function (field) {
+      var isInvalid = false; 
+      if (field !== null) {	
+        var sField =   angular.isString(field) ? field : field.toString();
+        isInvalid =  !field || !(sField.match(/^\d{0,6}(\.\d{0,2})?$/));
+      }
+
+      return isInvalid;
+    };    
   });
