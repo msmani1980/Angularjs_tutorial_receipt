@@ -346,6 +346,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     // jscs:enable
 
     this.formatItemAllergenTags = function(itemData) {
+      if (!itemData.itemAllergenTags) {
+        return [];
+      }
+
       return itemData.itemAllergenTags.map(function (tag) {
         var allergenTagPayload = {
           allergenTag: {
