@@ -38,7 +38,7 @@
             </div>
           </div>
 
-          <div class="col-xs-12 col-sm-4"  ng-class="{ 'has-error' : !commissionData.startDate && displayError, 'has-success' : commissionData.startDate}">
+          <div class="col-xs-12 col-sm-4"  ng-class="{ 'has-error' : isDateValueInvalid(commissionData.startDate, commissionData) && displayError, 'has-success' : !isDateValueInvalid(commissionData.startDate, commissionData) }">
                 <date-picker-field ng-if="disableEditField"
                   name="effectiveFrom"
                   custom-effective="true"
@@ -59,7 +59,7 @@
                   required="true">
                 </date-picker-field>
           </div>
-          <div class="col-xs-12 col-sm-4" ng-class="{ 'has-error' : !commissionData.endDate && displayError, 'has-success' : commissionData.endDate}">
+          <div class="col-xs-12 col-sm-4" ng-class="{ 'has-error' : isDateValueInvalid(commissionData.endDate, commissionData) && displayError, 'has-success' : !isDateValueInvalid(commissionData.endDate, commissionData) }">
                 <date-picker-field ng-if="readOnly"
                   name="effectiveTo"
                   custom-effective="true"
@@ -106,15 +106,13 @@
           </div>
 
           <div class="col-xs-12 col-sm-6">
-            <div class="form-group" ng-class="{ 'has-error' : !commissionData.commissionPercentage && displayError, 'has-success' : commissionData.commissionPercentage}">
+            <div class="form-group" ng-class="{ 'has-error' : (!commissionData.commissionPercentage || isPercentInvalid(commissionData.commissionPercentage)) && displayError, 'has-success' : commissionData.commissionPercentage}">
             <label>Commission Percent *</label>
             <input ng-model="commissionData.commissionPercentage"
                    name="commissionPercent"
                    type="text"
                    class="form-control"
                    maxlength="6"
-                   custom-validity
-                   custom-pattern="percentage"
                    ng-required="commissionPercentRequired"
                    ng-disabled="commissionPercentDisabled || readOnly">
             </div>       
@@ -143,7 +141,7 @@
           </div>
 
           <div class="col-xs-10 col-sm-5">
-            <div class="form-group" ng-class="{ 'has-error' : !commissionData.manualBarsCommissionValue && displayError, 'has-success' : commissionData.manualBarsCommissionValue}">
+            <div class="form-group" ng-class="{ 'has-error' : (!commissionData.manualBarsCommissionValue || isManualBarsCommisssionValueInvalid()) && displayError, 'has-success' : commissionData.manualBarsCommissionValue}">
               <label>Manual Bars Commisssion Value *</label>
               <input ng-model="commissionData.manualBarsCommissionValue"
                      type="text"
@@ -152,8 +150,6 @@
                      placeholder="57.5"
                      ng-readonly="readOnly"
                      maxlength="{{ manualBarsCharLimit }}"
-                     custom-validity
-                     custom-pattern="decimalWithTwoDecimalPlaces"
                      required="true">
             </div>
           </div>
@@ -173,7 +169,7 @@
 
         <div class="row">
           <div class="col-xs-12 col-sm-6">
-            <div class="form-group" ng-class="{ 'has-error' : !commissionData.discrepancyDeductionsCashPercentage && displayError, 'has-success' : commissionData.discrepancyDeductionsCashPercentage}">
+            <div class="form-group" ng-class="{ 'has-error' : (!commissionData.discrepancyDeductionsCashPercentage || isPercentInvalid(commissionData.discrepancyDeductionsCashPercentage)) && displayError, 'has-success' : commissionData.discrepancyDeductionsCashPercentage}">
               <label>Cash Percent *</label>
               <input ng-model="commissionData.discrepancyDeductionsCashPercentage"
                      name="cashPercent"
@@ -181,15 +177,13 @@
                      class="form-control"
                      placeholder="57.5"
                      maxlength="6"
-                     custom-validity
-                     custom-pattern="percentage"
                      required="true"
                      ng-readonly="readOnly">
             </div>
           </div>
 
           <div class="col-xs-12 col-sm-6">
-            <div class="form-group" ng-class="{ 'has-error' : !commissionData.discrepancyDeductionsStockPercentage && displayError, 'has-success' : commissionData.discrepancyDeductionsStockPercentage}">
+            <div class="form-group" ng-class="{ 'has-error' : (!commissionData.discrepancyDeductionsStockPercentage || isPercentInvalid(commissionData.discrepancyDeductionsStockPercentage)) && displayError, 'has-success' : commissionData.discrepancyDeductionsStockPercentage}">
               <label>Stock Percent *</label>
               <input ng-model="commissionData.discrepancyDeductionsStockPercentage"
                      name="stockPercent"
@@ -197,8 +191,6 @@
                      class="form-control"
                      placeholder="57.5"
                      maxlength="6"
-                     custom-validity
-                     custom-pattern="percentage"
                      required="true"
                      ng-readonly="readOnly">
             </div>
@@ -225,7 +217,7 @@
           </div>
 
           <div class="col-xs-10 col-sm-5">
-            <div class="form-group" ng-class="{ 'has-error' : !commissionData.commissionValue && displayError, 'has-success' : commissionData.commissionValue}">
+            <div class="form-group" ng-class="{ 'has-error' : (!commissionData.commissionValue || isCommisssionValueInvalid()) && displayError, 'has-success' : commissionData.commissionValue}">
               <label>Commisssion Value *</label>
               <input ng-model="commissionData.commissionValue"
                      name="commissionValue"
@@ -234,8 +226,6 @@
                      placeholder="57.5"
                      maxlength="{{commissionValueCharLimit}}"
                      ng-readonly="readOnly"
-                     custom-validity
-                     custom-pattern="decimalWithTwoDecimalPlaces"
                      required="true">
             </div>
           </div>
