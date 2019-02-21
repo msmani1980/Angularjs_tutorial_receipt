@@ -153,6 +153,15 @@ angular.module('ts5App')
     };
 
     $scope.saveData = function() {
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+      var isDataValid = $this.validateNewData($scope.commissionData);
+      if (!isDataValid) {
+        $this.hideLoadingModal();
+        $scope.displayError = true;
+        return;
+      }
+
       var isFormValid = validateForm();
       if (!isFormValid) {
         $this.hideLoadingModal();
@@ -277,9 +286,182 @@ angular.module('ts5App')
       $this.showLoadingModal();
       $this.setViewName();
       $scope.readOnly = ($routeParams.state === 'view');
+      $scope.errorCustom = [];
       commissionFactory.getCompanyData(companyId).then($this.initializeDataFromAPI);
     };
 
     this.init();
+
+    /*jshint maxcomplexity:8 */    
+    this.validateNewData = function (record) {
+      var isCrewBase = $this.validateNewDataField(record, 'crewBaseTypeId', 'Crew Base');
+        
+      var isSd = $this.validateNewDataField(record, 'startDate', 'Effective From');
+      var isEd = $this.validateNewDataField(record, 'endDate', 'Effective To');
+      var isValidDr = true;
+      if (record !== null && isSd && isEd) {
+        isValidDr = $this.validateStartAndEndDates(record);
+      }
+
+      var isPayTypeId = $this.validateNewDataField(record, 'commissionPayableTypeId', 'Commission Payable On');
+      var isFieldValidateCommissionPercent = $this.validatePercentField(record, 'commissionPercentage', 'Commission Percent');
+      var isManualTypeId = $this.validateNewDataField(record, 'manualBarsCommissionValueTypeId', 'Manual Bars Commission Type');
+      var isFieldValidateManualCommissionPercent = true;
+      if ($scope.commissionData.manualBarsCommissionValueTypeId === 1) {
+        isFieldValidateManualCommissionPercent = $this.validatePercentField(record, 'manualBarsCommissionValue', 'Manual Bars Commisssion Value');
+      } else {
+        isFieldValidateManualCommissionPercent = $this.validateCurrencyField(record, 'manualBarsCommissionValue', 'Manual Bars Commisssion Value');
+      }
+      
+      var isFieldValidateCashPercent = $this.validatePercentField(record, 'discrepancyDeductionsCashPercentage', 'Cash Percent');
+      var isFieldValidateStockPercent = $this.validatePercentField(record, 'discrepancyDeductionsStockPercentage', 'Stock Percent');
+      var isCommType = $this.validateNewDataField(record, 'commissionValueTypeId', 'Commission Type');
+      var isFieldValidateCommissionVlaue = true;
+      if ($scope.commissionData.commissionValueTypeId === 1) {
+        isFieldValidateCommissionVlaue = $this.validatePercentField(record, 'commissionValue', 'Commisssion Value');
+      } else {
+        isFieldValidateCommissionVlaue = $this.validateCurrencyField(record, 'commissionValue', 'Commisssion Value');
+      }
+      
+      var result = isCrewBase && isSd && isEd && isValidDr && isPayTypeId && isFieldValidateCommissionPercent &&
+      isManualTypeId && isFieldValidateManualCommissionPercent && isFieldValidateCashPercent && isFieldValidateStockPercent &&
+      isCommType && isFieldValidateCommissionVlaue;
+
+      return result;
+    };
+
+    this.validateCurrencyField = function (record, fieldName, fieldValidationName) {
+      var isValid = $this.validateNewDataField(record, fieldName, fieldValidationName);
+      if (isValid) {
+        var strValue =   angular.isString(record[fieldName]) ? record[fieldName] : record[fieldName].toString();
+        isValid =  strValue.match(/^\d{0,6}(\.\d{0,2})?$/);
+        if (!isValid) {
+          $this.showValidationError(fieldValidationName, true, '');
+        }
+      }
+
+      return isValid;
+    };
+
+    this.validatePercentField = function (record, fieldName, fieldValidationName) {
+      var isValid = $this.validateNewDataField(record, fieldName, fieldValidationName);
+      if (isValid) {
+        var strValue =   angular.isString(record[fieldName]) ? record[fieldName] : record[fieldName].toString();
+        isValid =  strValue.match(/^[-+]?([0-9]\d?(\.\d{1,3})?|0\.(\d?[1-9]|[1-9]\d))$|^100$|^100.00$/);
+        if (!isValid) {
+          $this.showValidationError(fieldValidationName, true, ', and should use percentage format 0-100');
+        }
+      }
+
+      return isValid;
+    };
+
+    this.validateNewDataField = function (record, fieldName, fieldValidationName) {
+      var result = true;
+
+      if (record !== null && $scope.isFieldEmpty(record[fieldName])) {
+        $this.showValidationError(fieldValidationName, false);
+        result = false;
+      }
+
+      return result;
+    };
+
+    this.showValidationError = function (field, isPattern, isPatternValue) {
+      var payload = { };
+
+      if (isPattern) {
+        payload = {
+          field: field,
+          value: 'field contains invalid characters' + isPatternValue
+        };
+      } else {
+        payload = {
+          field: field,
+          value: 'is a required field. Please update and try again!'
+        };
+      }
+
+      $scope.errorCustom.push(payload);
+    };
+
+    this.validateStartAndEndDates = function(record) {
+      var isValid = true;
+      if (!$scope.isFieldEmpty(record.startDate) && !$scope.isFieldEmpty(record.endDate) && $scope.isDateValueRangeInvalid(record)) {
+        $scope.errorCustom.push({
+          field: 'Start Date and End Date',
+          value: 'End Date should be later than or equal to Start date.'
+        });
+
+        isValid = false;
+      }
+
+      return isValid; 
+    };
+
+    $scope.isDateValueRangeInvalid = function (record) {
+      var isInValid = dateUtility.isAfterDatePicker(record.startDate, record.endDate);
+      return isInValid;
+    };
+
+    $scope.isDateValueInvalid = function (value, record) {
+      var isInValid = $scope.isFieldEmpty(value) || (record.startDate && record.endDate && dateUtility.isAfterDatePicker(record.startDate, record.endDate));
+      return isInValid;
+    };
+
+    $scope.isFieldEmpty = function (value) {
+      return (value === undefined || value === null || value.length === 0 || value === 'Invalid date');
+    };
+
+    $scope.isAmountInvalid = function (field) {
+      var isInvalid = false; 
+      if (angular.isDefined(field) && field !== null) {	
+        var sField =   angular.isString(field) ? field : field.toString();
+        isInvalid =  !field || !(sField.match(/^\d{0,6}(\.\d{0,2})?$/));
+      }
+
+      return isInvalid;
+    };    
+
+    $scope.isPercentInvalid = function (field) {
+      var isInvalid = false; 
+      if (angular.isDefined(field) && field !== null) {	
+        var sField =   angular.isString(field) ? field : field.toString();
+        isInvalid =  !field || !(sField.match(/^[-+]?([0-9]\d?(\.\d{1,3})?|0\.(\d?[1-9]|[1-9]\d))$|^100$|^100.00$/));
+      }
+
+      return isInvalid;
+    };    
+
+    $scope.isManualBarsCommisssionValueInvalid  = function () {
+      var isInvalid = false;
+      if ($scope.isFieldEmpty($scope.commissionData.manualBarsCommissionValueTypeId) || $scope.isFieldEmpty($scope.commissionData.manualBarsCommissionValue)) {
+        return isInvalid;
+      }
+
+      if ($scope.commissionData.manualBarsCommissionValueTypeId === 1) {
+        isInvalid = $scope.isPercentInvalid($scope.commissionData.manualBarsCommissionValue);
+      } else {
+        isInvalid = $scope.isAmountInvalid($scope.commissionData.manualBarsCommissionValue);
+      }
+
+      return isInvalid;
+    };
+
+    $scope.isCommisssionValueInvalid  = function () {
+      var isInvalid = false;
+
+      if ($scope.isFieldEmpty($scope.commissionData.commissionValueTypeId) || $scope.isFieldEmpty($scope.commissionData.commissionValue)) {
+        return isInvalid;
+      } 
+
+      if ($scope.commissionData.commissionValueTypeId === 1) {
+        isInvalid = $scope.isPercentInvalid($scope.commissionData.commissionValue);
+      } else {
+        isInvalid = $scope.isAmountInvalid($scope.commissionData.commissionValue);
+      }
+
+      return isInvalid;
+    };
 
   });
