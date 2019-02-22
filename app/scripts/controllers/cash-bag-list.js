@@ -47,7 +47,7 @@ angular.module('ts5App')
       angular.element('#cashBagNumber').focus();
     }
 
-    function formatScheduleDateForApp(containingArray) {
+    function formatDates(containingArray) {
       if (!angular.isArray(containingArray)) {
         return;
       }
@@ -55,6 +55,12 @@ angular.module('ts5App')
       containingArray.map(function(obj) {
         if (obj.scheduleDate) {
           obj.scheduleDate = dateUtility.formatDateForApp(obj.scheduleDate);
+        }
+
+        if (obj.updatedOn) {
+          obj.updatedOn = dateUtility.formatTimestampForApp(obj.updatedOn);
+        }else {
+          obj.updatedOn = '';
         }
       });
 
@@ -64,7 +70,7 @@ angular.module('ts5App')
     function getCashBagResponseHandler(response) {
       hideLoadingModal();
       $this.meta.count = $this.meta.count || response.meta.count;
-      $scope.cashBagList = $scope.cashBagList.concat(formatScheduleDateForApp(angular.copy(response.cashBags)));
+      $scope.cashBagList = $scope.cashBagList.concat(formatDates(angular.copy(response.cashBags)));
       angular.forEach($scope.cashBagList, function(cashbag) {
         if (cashbag.updatedBy !== undefined && cashbag.updatedBy === -1) {
           cashbag._updatedBy = 'AUTO';
@@ -73,13 +79,6 @@ angular.module('ts5App')
         } else {
           cashbag._updatedBy = cashbag.updatedByPerson.userName;
         }
-
-        if (cashbag.updatedOn) {
-          cashbag.updatedOn = dateUtility.formatTimestampForApp(cashbag.updatedOn);
-        }else {
-          cashbag.updatedOn = '';
-        }
-
       });
 
       if ($this.meta.count === 1 && $scope.search.cashBagNumber && $scope.isCashBagEditable($scope.cashBagList[0])) {
@@ -340,7 +339,7 @@ angular.module('ts5App')
       var isResponseValid = validateStoreInstanceResponse(dataFromAPI.response);
       if (isResponseValid) {
         var storeListFromAPI = angular.copy(dataFromAPI.response);
-        $scope.storeInstanceList = formatScheduleDateForApp(storeListFromAPI);
+        $scope.storeInstanceList = formatDates(storeListFromAPI);
         $scope.listLoading = false;
         return;
       }
