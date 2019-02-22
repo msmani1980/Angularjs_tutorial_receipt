@@ -41,6 +41,7 @@ angular.module('ts5App')
       return ($routeParams.state === 'edit');
     };
 
+    /*jshint maxcomplexity:6*/
     $scope.isCommissionReadOnly = function() {
       if (angular.isUndefined($scope.commission)) {
         return false;
@@ -52,6 +53,10 @@ angular.module('ts5App')
 
       if ($routeParams.state === 'view') {
         return true;
+      }
+
+      if ($scope.isFieldEmpty($scope.commission.startDate) && $routeParams.state === 'edit') {
+        return false;
       }
 
       return !dateUtility.isAfterTodayDatePicker($scope.commission.startDate);
@@ -133,7 +138,7 @@ angular.module('ts5App')
 
     var datesWatcher = $scope.$watchGroup(['commission.startDate', 'commission.endDate'], function() {
       var payload = {};
-
+      
       if (!angular.isUndefined($scope.commission.startDate)) {
         payload.startDate = dateUtility.formatDateForAPI($scope.commission.startDate);
       }
