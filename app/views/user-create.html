@@ -49,7 +49,7 @@
             <input-text label="Email" name="email" required="true" pattern="regexp.sentence"
                         placeholder="Email" min-length="1" max-length="40"></input-text>
             
-            <div class="form-group">
+            <div class="form-group" ng-class="{ 'has-error' : !formData.organization && displayError, 'has-success' : formData.organization}">
             <label>Organization *</label>
             <ui-select name="organization" ng-model="formData.organization" theme="bootstrap" required ng-disabled="viewOnly">
               <ui-select-match placeholder="Start typing to find an organization">{{ $select.selected.name }}</ui-select-match>
