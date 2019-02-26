@@ -389,7 +389,7 @@ angular.module('ts5App')
       }
 
       formatMultiSelectValuesForSearchPayload('commodityCodes', 'commodityCode', 'commodityCode', payload);
-      formatMultiSelectValuesForSearchPayload('retailItems', 'id', 'itemMasterId', payload);
+      formatMultiSelectValuesForSearchPayload('retailItems', 'id', 'itemMasterIds', payload);
 
       return payload;
     }
