@@ -75,9 +75,18 @@ angular.module('ts5App')
       getReceiptTemplates: {
         method: 'GET',
         isArray: true
+      },
+      getAllergenTags: {
+        method: 'GET',
+        isArray: true
       }
     };
     var requestResource = $resource(requestURL, requestParameters, actions);
+
+    function getAllergenTags() {
+      requestParameters.api = 'allergen-tags';
+      return requestResource.getAllergenTags().$promise;
+    }
 
     function getCrewBaseTypes() {
       requestParameters.api = 'crew-base-types';
@@ -169,6 +178,7 @@ angular.module('ts5App')
       getCountTypes: getCountTypes,
       getTransactionTypes: getTransactionTypes,
       getExchangeRateTypes: getExchangeRateTypes,
-      getReceiptTemplates: getReceiptTemplates
+      getReceiptTemplates: getReceiptTemplates,
+      getAllergenTags: getAllergenTags
     };
   });
