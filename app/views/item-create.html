@@ -142,9 +142,15 @@
                           placeholder="A unique selling point" max-length="100"></input>
               </div>            
 
-              <div class="form-group">
-                <input ng-model="formData.isPrintReceipt" type="checkbox" ng-disabled="isDisabled()"/>
-                <label>Print Receipt</label>
+              <div class="row form-group">
+              	<div class="col-xs-12 col-sm-6">
+                	<input ng-model="formData.isPrintReceipt" type="checkbox" ng-disabled="isDisabled()"/>
+                	<label>Print Receipt</label>
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                	<input ng-model="formData.requiresHeating" type="checkbox" ng-disabled="isDisabledEndDateForm()"/>
+                	<label>Requires Heating</label>
+                </div>	
               </div>
 
             </fieldset>
