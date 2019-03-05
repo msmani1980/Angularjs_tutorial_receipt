@@ -25,6 +25,7 @@ angular.module('ts5App')
       $scope.masterTaxRates = [];
       $scope.taxRateToRemove = [];
       $scope.taxRateToCreate = [];
+      $scope.filteredStationsList = [];
       $scope.search = {};
       $scope.dateRange = {
         startDate: '',
@@ -309,7 +310,7 @@ angular.module('ts5App')
     };
 
     this.getStationsList = function () {
-      return routeTaxRatesFactory.getStationsList().then($this.setStationsList);
+      return routeTaxRatesFactory.getStationsList({}).then($this.setStationsList);
     };
 
     this.getCurrenciesList = function () {
@@ -335,6 +336,19 @@ angular.module('ts5App')
       return routeTaxRatesFactory.getRouteTaxRates(q).then($this.setMasterCompanyTaxRatesList);
     };
 
+    this.setFilterStationsList = function (dataFromAPI) {
+      var response = angular.copy(dataFromAPI.response);
+      var distinctStations = $filter('unique')(response, 'stationId');
+      $scope.filteredStationsList = $filter('unique')(distinctStations, 'stationId');
+    };
+
+    this.getFilterStationsList = function () {
+      var payload = {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted())
+      };
+      return routeTaxRatesFactory.getStationsList(payload).then($this.setFilterStationsList);
+    };
+
     this.errorHandler = function (dataFromAPI) {
       $this.hideLoadingModal();
       $scope.displayError = true;
@@ -357,6 +371,7 @@ angular.module('ts5App')
         $this.getTaxTypesList(),
         $this.getTaxRateTypesList(),
         $this.getStationsList(),
+        $this.getFilterStationsList(),
         $this.getCurrenciesList()
       ];
     };
@@ -1125,7 +1140,7 @@ angular.module('ts5App')
     };
 
     $scope.filterDepartureTaxRateStations = function (taxRate) {
-      taxRate.availableDepartureStations = lodash.filter($scope.masterStationsList, { countryName: taxRate.departureStationsCountryName.countryName })
+      taxRate.availableDepartureStations = lodash.filter($scope.filteredStationsList, { countryName: taxRate.departureStationsCountryName.countryName })
         .map(function (station) {
           return {
             companyStationId: station.stationId,
@@ -1139,7 +1154,7 @@ angular.module('ts5App')
     };
 
     $scope.filterArrivalTaxRateStations = function (taxRate) {
-      taxRate.availableArrivalStations = lodash.filter($scope.masterStationsList, { countryName: taxRate.arrivalStationsCountryName.countryName })
+      taxRate.availableArrivalStations = lodash.filter($scope.filteredStationsList, { countryName: taxRate.arrivalStationsCountryName.countryName })
         .map(function (station) {
           return {
             companyStationId: station.stationId,
