@@ -50,9 +50,9 @@ angular.module('ts5App')
       return countriesService.getCountriesList(companyId);
     };
 
-    this.getStationsList = function() {
+    this.getStationsList = function(payload) {
       var companyId = globalMenuService.company.get();
-      return stationsService.getStationList(companyId, 0);
+      return stationsService.getStationList(companyId, 0, payload);
     };
 
     this.getCompanyCurrencies = function(payload) {
