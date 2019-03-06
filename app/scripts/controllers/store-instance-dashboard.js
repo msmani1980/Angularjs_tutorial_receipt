@@ -357,7 +357,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       'Inbound Seals') ? 'On Floor' : storeInstance.statusName;
       storeInstance.scheduleDateApi = angular.copy(storeInstance.scheduleDate);
       storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
-      storeInstance.updatedOnDisplay = storeInstance.updatedOn ? dateUtility.formatTimestampForApp(storeInstance.updatedOn) : '';
+      storeInstance.updatedOnDisplay = storeInstance.updatedOn ? dateUtility.formatTimestampForApp(storeInstance.statusUpdatedOn) : '';
       storeInstance.inboundedOnDisplay = storeInstance.inboundedOn ? dateUtility.formatTimestampForApp(storeInstance.inboundedOn) : '';
 
       setStoreInstanceTime(storeInstance);
@@ -399,9 +399,7 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
     };
 
     $scope.getUpdatedOnForStoreInstance = function (storeInst) {
-
       var doesStoreInstanceNeedsToBeMappedToInboundedStatus = lodash.indexOf($scope.statusesThatShouldBeConsideredAsInbounded, storeInst.storeStatus.code) >= 0;
-
       if (doesStoreInstanceNeedsToBeMappedToInboundedStatus) {
         return storeInst.inboundedOnDisplay;
       }
