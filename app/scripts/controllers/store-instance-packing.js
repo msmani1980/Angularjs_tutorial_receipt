@@ -446,10 +446,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           $scope.pickListOrder = ['salesCategoryName', 'itemName'];
           return;
         }
+
         case 'itemName': {
           $scope.pickListOrder = ['itemName'];
           return;
         }
+        
         case '[menuVersionId, sortOrder]': {
           $scope.pickListOrder = ['menuVersionId', 'sortOrder'];
           return;
