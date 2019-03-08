@@ -103,7 +103,7 @@
 
         <tbody>
         <tr ng-repeat="item in pickListItems | filter:{itemDescription: itemFilterText} | orderBy:pickListOrder" ng-class="showVarianceWarningClass(item)" class="item-{{item.itemMasterId}}">
-          <td> {{item.menuVersionId}} {{item.sortOrder}}
+          <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>
           </td>
