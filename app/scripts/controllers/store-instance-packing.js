@@ -451,7 +451,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           $scope.pickListOrder = ['itemName'];
           return;
         }
-        
+
         case '[menuVersionId, sortOrder]': {
           $scope.pickListOrder = ['menuVersionId', 'sortOrder'];
           return;
