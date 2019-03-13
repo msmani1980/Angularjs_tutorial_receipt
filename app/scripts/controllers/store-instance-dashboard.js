@@ -638,6 +638,10 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
         delete $localStorage.stepTwoFromStepOne;
       }
 
+      if ($localStorage.replenishUpdateStep) {
+        delete $localStorage.replenishUpdateStep;
+      }
+
       var savedSearch = $localStorage.search;
       if (angular.isDefined(savedSearch)) {
         $scope.search = savedSearch.storeInstanceDashboard || {};
