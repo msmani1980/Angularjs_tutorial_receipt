@@ -469,6 +469,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         payload.replenishStoreInstanceId = $routeParams.storeId;
       }
 
+      if ($localStorage.replenishUpdateStep) {
+        payload.replenishStoreInstanceId = $routeParams.replenishstoreId;
+      }
+
       delete payload.menus;
       delete payload.dispatchedCateringStationId;
     };
@@ -880,6 +884,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.updateStoreInstanceSuccessHandler = function (response) {
       $this.successMessage(response, 'updated');
       $this.hideLoadingModal();
+      if ($routeParams.action === 'replenish') {
+        $this.nextStep.uri = $this.nextStep.uri.replace(/[0-9]+/, response.id);
+      }
+
       $location.url($this.nextStep.uri);
     };
 
@@ -1244,13 +1252,24 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
     };
 
+    this.modifyStoreIdFromStepTwoExist = function () {
+        var ls = $localStorage.replenishUpdateStep;
+        if (angular.isDefined(ls) && angular.isDefined(ls.storeId)) {
+          return ls.storeId;
+        }
+
+        return null;
+      };
+
     this.submitFormConditions = function (saveAndExit) {
       if ($this.isActionState('end-instance')) {
         $this.endStoreInstance(saveAndExit);
         return;
       }
 
-      if ($this.isActionState('replenish') && $scope.formData.replenishStoreInstanceId) {
+      if ($this.isActionState('replenish') && $localStorage.replenishUpdateStep) {
+        $routeParams.replenishstoreId = $routeParams.storeId;
+        $routeParams.storeId = $this.modifyStoreIdFromStepTwoExist();
         $this.updateStoreInstance(saveAndExit);
         return;
       }

@@ -30,6 +30,13 @@ angular.module('ts5App')
           storeId: $routeParams.storeId ? $routeParams.storeId : $scope.storeDetails.id
         };
       }
+
+      if ($routeParams.action === 'replenish') {
+        $localStorage.replenishUpdateStep = {
+          storeId: $routeParams.storeId ? $routeParams.storeId : $scope.storeDetails.id
+        };
+      }
+
     };
 
     this.setSealColors = function(dataFromAPI) {
