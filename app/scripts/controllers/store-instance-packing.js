@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
   function($scope, storeInstancePackingFactory, $routeParams, lodash, storeInstanceWizardConfig,
-           $location, $q, dateUtility, socketIO, $filter) {
+           $location, $q, dateUtility, socketIO, $localStorage, $filter) {
 
     var $this = this;
 
@@ -222,12 +222,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return false;
       }
 
-      var requiredQuantity = parseInt(angular.copy(item.menuQuantity)) || 1;
+      var requiredQuantity = parseInt(angular.copy(item.menuQuantity)) || 0;
       var dispatchedQuantity = parseInt(angular.copy(item.pickedQuantity)) || 0;
 
       var threshold;
       threshold = ((dispatchedQuantity / requiredQuantity) - 1) * 100;
-      item.exceedsVariance = (threshold > $scope.variance);
+
+      if (threshold === Infinity || threshold === -Infinity || threshold === undefined) {
+        item.exceedsVariance = true;
+      } else {
+        item.exceedsVariance = (threshold > $scope.variance);
+      }
+
     };
 
     this.checkVarianceOnAllItems = function() {
@@ -1068,6 +1074,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.init = function() {
       $scope.readOnly = true;
+      if ($routeParams.action === 'replenish') {
+        $localStorage.replenishUpdateStep = {
+          storeId: $routeParams.storeId ? $routeParams.storeId : $scope.storeDetails.id
+        };
+
+      }
+
       $this.showLoadingModal('Loading Store Detail for Packing...');
       $this.initControllerVars();
       var promises = $this.makeInitializePromises();

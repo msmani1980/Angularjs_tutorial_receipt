@@ -238,12 +238,23 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.filterMenusList = function () {
       $scope.filteredMenuList = [];
+      var output = [];
       angular.forEach($scope.menuCatererList, function (menuCaterer) {
         var filteredMenu = lodash.findWhere($scope.menuMasterList, {
           id: menuCaterer.menuId
         });
         if (filteredMenu) {
-          $scope.filteredMenuList.push(filteredMenu);
+          output.push(filteredMenu);
+        }
+      });
+
+      var keys = [];
+      angular.forEach(output, function(fMenu) {
+        var key = fMenu.menuId;
+        var indx = keys.indexOf(key);
+        if (indx === -1) {
+          keys.push(key);
+          $scope.filteredMenuList.push(fMenu);
         }
       });
     };
@@ -456,6 +467,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.formatReplenishPayload = function (payload) {
       if (!$scope.formData.replenishStoreInstanceId) {
         payload.replenishStoreInstanceId = $routeParams.storeId;
+      }
+
+      if ($localStorage.replenishUpdateStep) {
+        payload.replenishStoreInstanceId = $routeParams.replenishstoreId;
       }
 
       delete payload.menus;
@@ -869,6 +884,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.updateStoreInstanceSuccessHandler = function (response) {
       $this.successMessage(response, 'updated');
       $this.hideLoadingModal();
+      if ($routeParams.action === 'replenish') {
+        $this.nextStep.uri = $this.nextStep.uri.replace(/[0-9]+/, response.id);
+      }
+
       $location.url($this.nextStep.uri);
     };
 
@@ -1233,13 +1252,24 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
     };
 
+    this.modifyStoreIdFromStepTwoExist = function () {
+        var ls = $localStorage.replenishUpdateStep;
+        if (angular.isDefined(ls) && angular.isDefined(ls.storeId)) {
+          return ls.storeId;
+        }
+
+        return null;
+      };
+
     this.submitFormConditions = function (saveAndExit) {
       if ($this.isActionState('end-instance')) {
         $this.endStoreInstance(saveAndExit);
         return;
       }
 
-      if ($this.isActionState('replenish') && $scope.formData.replenishStoreInstanceId) {
+      if ($this.isActionState('replenish') && $localStorage.replenishUpdateStep) {
+        $routeParams.replenishstoreId = $routeParams.storeId;
+        $routeParams.storeId = $this.modifyStoreIdFromStepTwoExist();
         $this.updateStoreInstance(saveAndExit);
         return;
       }

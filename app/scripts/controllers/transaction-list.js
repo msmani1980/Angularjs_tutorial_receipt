@@ -50,6 +50,7 @@ angular.module('ts5App')
     };
 
     $scope.search = {};
+    $scope.isSearchLoading = false;
     $scope.isCreditCardPaymentSelected = false;
     $scope.search.transactionStartDate = dateUtility.yesterdayFormattedDatePicker();
     $scope.search.transactionEndDate = dateUtility.tomorrowFormattedDatePicker();
@@ -251,9 +252,11 @@ angular.module('ts5App')
       $scope.search = {};
       $scope.isSearch = false;
       $scope.transactions = [];
+      $scope.isSearchLoading = false;
     };
 
     $scope.searchTransactions = function () {
+      $scope.isSearchLoading = true;
       $scope.isSearch = true;
       clearTransactions();
       setDefaultMetaPayload();
@@ -371,6 +374,7 @@ angular.module('ts5App')
       }
 
       hideLoadingBar();
+      $scope.isSearchLoading = false;
     }
 
     function clearTransactions() {
