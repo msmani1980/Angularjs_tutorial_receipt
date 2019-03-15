@@ -68,20 +68,8 @@
             <div class="col-xs-6">
               <h5>Pick List</h5>
             </div>
-            <div class="col-xs-2  text-right">
-          	  <span>Sort By</span>
- 	          </div>
-        	  <div class="col-xs-2  text-right">
-  		      <select
-  		          type="text"
-                name="itemSortBy"
-                class="form-control"
-                ng-model="itemSortOrder"
-                id="itemSortBy">
-      		      <option value="[salesCategoryName,itemName]">Sales Category</option>
-          		  <option value="itemName">Item Name</option>
-       		  </select>
- 	         </div>
+            <div class="col-xs-2  text-right"></div>
+        	  <div class="col-xs-2  text-right"></div>
 
             <div class="col-xs-2 text-right">
               <button type="button" class="btn btn-info" ng-click="redirectTo('Packing')">Edit</button>
@@ -101,7 +89,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="item in pickListItems | filter:{itemDescription: itemFilterText} | orderBy:itemSortOrder"
+            <tr ng-repeat="item in pickListItems | filter:{itemDescription: itemFilterText} | orderBy:'sortOrder'"
                 ng-class="hasDiscrepancy(item)">
               <td>
                 <input type="text" class="form-control" ng-model="item.itemDescription" disabled>
