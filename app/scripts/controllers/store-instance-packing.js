@@ -128,7 +128,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'ITEMNME' && preference.isSelected) {
           $scope.offLoadItemsSortOrder = 'itemName';
           $scope.itemSortOrder = 'itemName';
-          $scope.pickListOrder = '[itemName]';
+          $scope.pickListOrder = ['itemName'];
         } else if (preference.featureName === 'Inbound' && preference.optionCode === 'IWST' && preference.choiceCode === 'ACT' && preference.isSelected) {
           $scope.defaultUllageCountsToIboundCountsForWastage = true;
         }
