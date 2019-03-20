@@ -26,7 +26,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
     $scope.scheduleDateOption = 0;
     $scope.redispatchOrReplenishNew = false;
-
+    $scope.undispatch = false;
     var $this = this;
 
     this.isActionState = function (action) {
@@ -493,6 +493,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       payload.scheduleNumber = payload.scheduleNumber.scheduleNumber;
 
       var actionSwitch = this.actionSwitch(action);
+      console.log ('actionSwitch', actionSwitch);
       switch (actionSwitch) {
         case 'replenish':
           $this.formatReplenishPayload(payload);
@@ -509,7 +510,18 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $this.formatEndInstancePayload(payload);
           break;
         default:
-          payload.storeId = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber }).id;
+          var loadStore = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber });
+          if (angular.isDefined (loadStore)) {        
+            payload.storeId = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber }).id;
+          } else {
+        	payload.storeId = null;
+            //$scope.errorCustom = [];
+            $scope.errorCustom = [{
+              field: 'Store Number',
+              value: 'Not valid for selected schedule date'
+            }];
+          }
+
           $this.formatDispatchPayload(payload);
           break;
       }
@@ -851,6 +863,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.exitOnSave = function (response) {
+
+      console.log ('this.exitOnSave');    	
       $this.hideLoadingModal();
       var responseForSuccessMessage = Array.isArray(response) ? response[0] : response;
       $this.successMessage(responseForSuccessMessage, 'saved');
@@ -871,13 +885,22 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.updateStoreInstanceSuccessHandler = function (response) {
+
+      console.log ('this.updateStoreInstanceSuccessHandler -> $scope.undispatch', $scope.undispatch);    	
+
       $this.successMessage(response, 'updated');
       $this.hideLoadingModal();
       if ($routeParams.action === 'replenish') {
         $this.nextStep.uri = $this.nextStep.uri.replace(/[0-9]+/, response.id);
       }
 
-      $location.url($this.nextStep.uri);
+      //$location.url($this.nextStep.uri);
+      if ($scope.undispatch) {
+        $location.url($this.nextStep.uri).search({undispatch: 'true'});
+      } else {
+        $location.url($this.nextStep.uri);
+      }        
+
     };
 
     this.determineNextStepURI = function (response) {
@@ -890,13 +913,21 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.createStoreInstanceSuccessHandler = function (response) {
+      console.log ('this.createStoreInstanceSuccessHandler->$scope.undispatch', $scope.undispatch);
       $this.successMessage(response[0]);
       var uri = $this.determineNextStepURI(response[0]);
       $this.hideLoadingModal();
       $localStorage.resetMinDate = {
         id: response[0].id
       };
-      $location.url(uri);
+
+      if ($scope.undispatch) {
+        $location.url(uri).search({undispatch: 'true'});
+      } else {
+        $location.url(uri);
+      }        
+
+      //$location.url(uri);
     };
 
     this.displayErrorConfirmation = function (response) {
@@ -914,9 +945,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.createStoreInstanceErrorHandler = function (response) {
+      console.log ('this.createStoreInstanceErrorHandler');
       $this.hideLoadingModal();
-      var errorResp = angular.copy(response.data);
-      if (!(angular.isUndefined(errorResp)) && errorResp[0].code === '250') {
+      var errorResp = null;
+      if (angular.isDefined(response)) {
+        errorResp = angular.copy(response.data);
+      }
+      if (angular.isDefined(errorResp) && errorResp !== null && angular.isDefined(errorResp[0]) && errorResp[0].code === '250') {
         $this.displayErrorConfirmation(errorResp[0]);
       } else {
         $scope.displayError = true;
@@ -929,6 +964,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.resetErrors = function () {
       $scope.displayError = false;
       $scope.errorResponse = null;
+      //$scope.errorCustom = null;
     };
 
     this.showMessage = function (type, message) {
@@ -1209,6 +1245,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.editDispatchedStoreInstance = function (saveAndExit) {
+
+      console.log ('this.editDispatchedStoreInstance');
+
       this.showLoadingModal('Updating Store Instance ' + $routeParams.storeId);
       if (saveAndExit) {
         this.exitToDashboard();
@@ -1251,6 +1290,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       };
 
     this.submitFormConditions = function (saveAndExit) {
+      console.log ('this.submitFormConditions');
       if ($this.isActionState('end-instance')) {
         $this.endStoreInstance(saveAndExit);
         return;
@@ -1276,6 +1316,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     $scope.submitForm = function (saveAndExit) {
+      console.log ('$scope.submitForm', saveAndExit);
       $scope.createStoreInstance.$setSubmitted(true);
       if ($this.validateForm()) {
         $this.submitFormConditions(saveAndExit);
@@ -1423,7 +1464,9 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
 
       if ($this.isActionState('dispatch')) {
-        $scope.formData.storeNumber = '';
+        if (!$scope.undispatch) {
+          $scope.formData.storeNumber = '';
+        }
         updatePromises.push($this.getStoresList());
       }
 
@@ -1681,6 +1724,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.init = function () {
+
+      if ($routeParams.undispatch) {
+        $scope.undispatch = true;    	  
+      }
+
       if ($routeParams.storeId) {
         $this.showLoadingModal('We are loading Store Instance ' + $routeParams.storeId + '.');
         $this.getStoreInstance();
@@ -1690,6 +1738,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.showLoadingModal('Hang tight, we are loading some data for you.');
         $this.getActiveCompanyPreferences();
       }
+
+      console.log ('init $scope.undispatch', $scope.undispatch);      
     };
 
     this.init();

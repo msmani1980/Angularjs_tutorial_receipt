@@ -30,7 +30,7 @@ angular.module('ts5App')
     var $this = this;
 
     $scope.saveButtonText = 'Exit';
-
+    $scope.undispatch = false;
     $scope.areWizardStepsInitialized = false;
 
     $scope.isActionState = function(actionState) {
@@ -363,7 +363,8 @@ angular.module('ts5App')
           '.pdf?sessionToken=' + sessionToken, '_blank');
       }
 
-      $location.path('store-instance-dashboard');
+      console.log ('storeInstanceStatusDispatched');
+      $location.path('store-instance-dashboard').search('undispatch', null);
     }
 
     function checkOnValidStatus() {
@@ -652,6 +653,7 @@ angular.module('ts5App')
     }
 
     function saveStoreInstanceStatus(status) {
+      console.log ('saveStoreInstanceStatus->status', status);
       $scope.formErrors = [];
       displayLoadingModal();
       if (isRedispatch() && $scope.storeDetails.prevStoreInstanceId && angular.isArray(status)) {
@@ -691,21 +693,32 @@ angular.module('ts5App')
     }
 
     this.updateInstanceToByStepName = function(stepObject) {
+    	console.log ('updateInstanceToByStepName->stepObject', stepObject);
       if (!stepObject) {
-        $location.url('/store-instance-dashboard');
+        $location.url('/store-instance-dashboard').search('undispatch', null);
         return;
       }
 
       var statusUpdatePromiseArray = [];
-      statusUpdatePromiseArray.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject
-        .stepName));
+      statusUpdatePromiseArray.push(storeInstanceFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName));
       if (isRedispatch() && $scope.storeDetails.prevStoreInstanceId) {
-        statusUpdatePromiseArray.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId,
-          stepObject.storeOne.stepName));
+        statusUpdatePromiseArray.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId, stepObject.storeOne.stepName));
       }
 
+      console.log ('stepObject', stepObject);
+      console.log ('stepObject.stepName', stepObject.stepName);
+      if (angular.isDefined (stepObject.storeOne)) {
+        console.log ('stepObject.storeOne.stepName', stepObject.storeOne.stepName);
+      }
+      console.log ('stepObject.uri', stepObject.uri);
+
       $q.all(statusUpdatePromiseArray).then(function() {
-        $location.url(stepObject.uri);
+        //$location.url(stepObject.uri);
+        if ($scope.undispatch && stepObject.stepName === '2') {
+          $location.url(stepObject.uri).search({undispatch: 'true'});
+        } else {
+          $location.url(stepObject.uri).search('undispatch', null);;
+        }        
       }, showResponseErrors);
 
     };
@@ -769,7 +782,10 @@ angular.module('ts5App')
     };
 
     $scope.exit = function() {
-      $location.url('/store-instance-dashboard');
+
+    	console.log ('$scope.exit', $scope.exit);
+
+      $location.url('/store-instance-dashboard').search('undispatch', null);;
     };
 
     $scope.hasDiscrepancy = function(item) {
@@ -818,6 +834,9 @@ angular.module('ts5App')
       _storeInstanceSeals = [];
       _nextStatusId = null;
 
+      if ($routeParams.undispatch) {
+        $scope.undispatch = true;    	  
+      }
       $scope.displayError = false;
       $scope.formErrors = [];
       $scope.action = $routeParams.action;
