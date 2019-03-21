@@ -71,9 +71,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       $q.all(statusUpdatePromiseArray).then(function() {
         $this.hideLoadingModal();
-        //$location.url(stepObject.uri);
         if ($scope.undispatch) {
-          $location.url(stepObject.uri).search({undispatch: 'true'});
+          $location.url(stepObject.uri).search({ undispatch: 'true' });
         } else {
           $location.url(stepObject.uri);
         }        
@@ -1040,7 +1039,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.init = function() {
       $scope.readOnly = true;
       if ($routeParams.undispatch) {
-        $scope.undispatch = true;    	  
+        $scope.undispatch = true;
       }
 
       if ($routeParams.action === 'replenish') {

@@ -566,12 +566,11 @@ angular.module('ts5App')
     this.statusUpdateSuccessHandler = function(stepObject) {
       $this.hideLoadingModal();
       if ($scope.undispatch) {
-        $location.path(stepObject.uri).search({undispatch: 'true'});
+        $location.path(stepObject.uri).search({ undispatch: 'true' });
       } else {
         $location.path(stepObject.uri);
       }        
 
-      //$location.path(stepObject.uri);
     };
 
     this.formatMenus = function(menus) {
@@ -775,7 +774,7 @@ angular.module('ts5App')
     this.init = function() {
       this.displayLoadingModal('Loading Seals for Store Instance');
       if ($routeParams.undispatch) {
-        $scope.undispatch = true;    	  
+        $scope.undispatch = true;
       }
 
       this.getStoreDetails();

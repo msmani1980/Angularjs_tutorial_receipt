@@ -363,7 +363,6 @@ angular.module('ts5App')
           '.pdf?sessionToken=' + sessionToken, '_blank');
       }
 
-      console.log ('storeInstanceStatusDispatched');
       $location.path('store-instance-dashboard').search('undispatch', null);
     }
 
@@ -653,7 +652,6 @@ angular.module('ts5App')
     }
 
     function saveStoreInstanceStatus(status) {
-      console.log ('saveStoreInstanceStatus->status', status);
       $scope.formErrors = [];
       displayLoadingModal();
       if (isRedispatch() && $scope.storeDetails.prevStoreInstanceId && angular.isArray(status)) {
@@ -693,7 +691,6 @@ angular.module('ts5App')
     }
 
     this.updateInstanceToByStepName = function(stepObject) {
-    	console.log ('updateInstanceToByStepName->stepObject', stepObject);
       if (!stepObject) {
         $location.url('/store-instance-dashboard').search('undispatch', null);
         return;
@@ -705,19 +702,11 @@ angular.module('ts5App')
         statusUpdatePromiseArray.push(storeInstanceFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId, stepObject.storeOne.stepName));
       }
 
-      console.log ('stepObject', stepObject);
-      console.log ('stepObject.stepName', stepObject.stepName);
-      if (angular.isDefined (stepObject.storeOne)) {
-        console.log ('stepObject.storeOne.stepName', stepObject.storeOne.stepName);
-      }
-      console.log ('stepObject.uri', stepObject.uri);
-
       $q.all(statusUpdatePromiseArray).then(function() {
-        //$location.url(stepObject.uri);
         if ($scope.undispatch && stepObject.stepName === '2') {
-          $location.url(stepObject.uri).search({undispatch: 'true'});
+          $location.url(stepObject.uri).search({ undispatch: 'true' });
         } else {
-          $location.url(stepObject.uri).search('undispatch', null);;
+          $location.url(stepObject.uri).search('undispatch', null);
         }        
       }, showResponseErrors);
 
@@ -782,10 +771,7 @@ angular.module('ts5App')
     };
 
     $scope.exit = function() {
-
-    	console.log ('$scope.exit', $scope.exit);
-
-      $location.url('/store-instance-dashboard').search('undispatch', null);;
+      $location.url('/store-instance-dashboard').search('undispatch', null);
     };
 
     $scope.hasDiscrepancy = function(item) {
@@ -835,8 +821,9 @@ angular.module('ts5App')
       _nextStatusId = null;
 
       if ($routeParams.undispatch) {
-        $scope.undispatch = true;    	  
+        $scope.undispatch = true;
       }
+
       $scope.displayError = false;
       $scope.formErrors = [];
       $scope.action = $routeParams.action;
