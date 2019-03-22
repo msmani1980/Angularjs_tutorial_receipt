@@ -15,6 +15,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.areWizardStepsInitialized = false;
     $scope.pickListOrder = [];
+    $scope.packingListSortOrderTypes = {
+      sales_category: ['salesCategoryName', 'itemName'],
+      item_name: ['itemName'],
+      menu_items: ['menuVersionId', 'sortOrder']
+    };
 
     this.showLoadingModal = function(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -62,11 +67,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       $this.showLoadingModal('Updating Status...');
       var statusUpdatePromiseArray = [];
-      statusUpdatePromiseArray.push(storeInstancePackingFactory.updateStoreInstanceStatus($routeParams.storeId,
-        stepObject.stepName));
+      statusUpdatePromiseArray.push(storeInstancePackingFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName, $scope.itemSortOrder));
       if ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
-        statusUpdatePromiseArray.push(storeInstancePackingFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId,
-          stepObject.storeOne.stepName));
+        statusUpdatePromiseArray.push(
+          storeInstancePackingFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId, stepObject.storeOne.stepName)
+        );
       }
 
       $q.all(statusUpdatePromiseArray).then(function() {
@@ -123,12 +128,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           defaultInboundToEposPreference = preference.isSelected;
         } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'SLSCTGY' && preference.isSelected) {
           $scope.offLoadItemsSortOrder = '[salesCategoryName,itemName]';
-          $scope.itemSortOrder = '[salesCategoryName,itemName]';
-          $scope.pickListOrder = ['salesCategoryName', 'itemName'];
+
+          if (!$scope.storeDetails || !$scope.storeDetails.packingListSortOrderType) {
+            $scope.itemSortOrder = 'sales_category';
+          }
         } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'ITEMNME' && preference.isSelected) {
           $scope.offLoadItemsSortOrder = 'itemName';
-          $scope.itemSortOrder = 'itemName';
-          $scope.pickListOrder = ['itemName'];
+
+          if (!$scope.storeDetails || !$scope.storeDetails.packingListSortOrderType) {
+            $scope.itemSortOrder = 'item_name';
+          }
         } else if (preference.featureName === 'Inbound' && preference.optionCode === 'IWST' && preference.choiceCode === 'ACT' && preference.isSelected) {
           $scope.defaultUllageCountsToIboundCountsForWastage = true;
         }
@@ -208,6 +217,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.getStoreDetails = function() {
       return storeInstancePackingFactory.getStoreDetails($routeParams.storeId).then(function(response) {
         $scope.storeDetails = angular.copy(response);
+
+        // Load sort order used during previous packing step
+        if($scope.storeDetails.packingListSortOrderType) {
+          $scope.itemSortOrder = $scope.storeDetails.packingListSortOrderType;
+        }
+
         $this.initWizardSteps($scope.storeDetails.replenishStoreInstanceId);
       }, this.errorHandler);
     };
@@ -440,29 +455,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       promiseArray.push(storeInstancePackingFactory.updateStoreInstanceItems(storeId, updatePayload));
     }
 
-    $scope.changePicklistOrder = function (order) {
-      switch (order) {
-        case '[salesCategoryName,itemName]': {
-          $scope.pickListOrder = ['salesCategoryName', 'itemName'];
-          return;
-        }
-
-        case 'itemName': {
-          $scope.pickListOrder = ['itemName'];
-          return;
-        }
-
-        case '[menuVersionId, sortOrder]': {
-          $scope.pickListOrder = ['menuVersionId', 'sortOrder'];
-          return;
-        }
-      }
+    $scope.getPicklistOrder = function () {
+      return ($scope.itemSortOrder) ? $scope.packingListSortOrderTypes[$scope.itemSortOrder] : $scope.packingListSortOrderTypes['itemName'];
     };
 
-    this.addPickListItemsToPayload = function(promiseArray) {
+    this.assignSortOrderForMenuItemsOrder = function () {
       var nextSort = 0;
 
-      var pickListItems = $filter('orderBy')(angular.copy($scope.pickListItems), $scope.pickListOrder).map(function (item) {
+      var pickListItems = $filter('orderBy')(angular.copy($scope.pickListItems), $scope.getPicklistOrder()).map(function (item) {
         item.sortOrder = nextSort;
         nextSort = nextSort + 1;
         return item;
@@ -474,10 +474,36 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return item;
       });
 
+      return pickListItems.concat(newPickListItems);
+    };
+
+    this.assignSortOrderForOtherOrders = function () {
+      var nextSort = 0;
+
+      var pickListItems = angular.copy($scope.pickListItems);
+      var newPickListItems = angular.copy($scope.newPickListItems);
+
       var mergedItems = pickListItems.concat(newPickListItems);
+
+      return $filter('orderBy')(mergedItems, $scope.getPicklistOrder()).map(function (item) {
+        item.sortOrder = nextSort;
+        nextSort = nextSort + 1;
+        return item;
+      });
+    };
+
+    this.addPickListItemsToPayload = function(promiseArray) {
+      var sortedItems = [];
+
+      if ($scope.itemSortOrder === 'menu_items') {
+        sortedItems = $this.assignSortOrderForMenuItemsOrder();
+      } else {
+        sortedItems = $this.assignSortOrderForOtherOrders();
+      }
+
       var items = [];
 
-      angular.forEach(mergedItems, function(item) {
+      angular.forEach(sortedItems, function(item) {
         var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open');
 
         if (item.pickedId) {
