@@ -15,11 +15,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.areWizardStepsInitialized = false;
     $scope.pickListOrder = [];
+    // jshint ignore: start
+    // jscs:disable
     $scope.packingListSortOrderTypes = {
       sales_category: ['salesCategoryName', 'itemName'],
       item_name: ['itemName'],
       menu_items: ['menuVersionId', 'sortOrder']
     };
+    // jshint ignore: end
+    // jscs:enable
 
     this.showLoadingModal = function(text) {
       angular.element('#loading').modal('show').find('p').text(text);
