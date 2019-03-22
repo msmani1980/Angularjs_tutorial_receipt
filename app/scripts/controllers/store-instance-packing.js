@@ -456,7 +456,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     }
 
     $scope.getPicklistOrder = function () {
-      return ($scope.itemSortOrder) ? $scope.packingListSortOrderTypes[$scope.itemSortOrder] : $scope.packingListSortOrderTypes['itemName'];
+      return ($scope.itemSortOrder) ? $scope.packingListSortOrderTypes[$scope.itemSortOrder] : $scope.packingListSortOrderTypes.itemName;
     };
 
     this.assignSortOrderForMenuItemsOrder = function () {
