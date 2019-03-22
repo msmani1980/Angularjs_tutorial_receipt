@@ -1,5 +1,5 @@
 'use strict';
-/*jshint maxcomplexity:7 */
+/*jshint maxcomplexity:10 */
 /**
  * @ngdoc function
  * @name ts5App.controller:StoreInstancePackingCtrl
