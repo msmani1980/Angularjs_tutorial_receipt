@@ -74,11 +74,10 @@
                 name="itemSortBy"
                 class="form-control"
                 ng-model="itemSortOrder"
-                id="itemSortBy"
-                ng-change="changePicklistOrder(itemSortOrder)">
-      		    <option value="[salesCategoryName,itemName]">Sales Category</option>
-          		<option value="itemName">Item Name</option>
-          		<option value="[menuVersionId, sortOrder]">Items in Menu</option>
+                id="itemSortBy">
+      		    <option value="sales_category">Sales Category</option>
+          		<option value="item_name">Item Name</option>
+          		<option value="menu_items">Items in Menu</option>
        		 </select>
  	       </div>
         </div>
@@ -102,7 +101,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="item in pickListItems | filter:{itemDescription: itemFilterText} | orderBy:pickListOrder" ng-class="showVarianceWarningClass(item)" class="item-{{item.itemMasterId}}">
+        <tr ng-repeat="item in pickListItems | filter:{itemDescription: itemFilterText} | orderBy:getPicklistOrder()" ng-class="showVarianceWarningClass(item)" class="item-{{item.itemMasterId}}">
           <td>
             <input type="text" class="form-control" ng-model="item.itemDescription"
                    disabled/>

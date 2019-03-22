@@ -14,8 +14,8 @@ angular.module('ts5App').service('storeInstancePackingFactory',
       return storeInstanceFactory.getStoreDetails(storeInstanceId);
     }
 
-    function updateStoreInstanceStatus(storeInstanceId, statusNum) {
-      return storeInstanceService.updateStoreInstanceStatus(storeInstanceId, statusNum);
+    function updateStoreInstanceStatus(storeInstanceId, statusNum, packingListSortOrderType) {
+      return storeInstanceService.updateStoreInstanceStatus(storeInstanceId, statusNum, null, null, null, packingListSortOrderType);
     }
 
     function getItemTypes () {
