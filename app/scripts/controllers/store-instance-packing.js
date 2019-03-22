@@ -223,7 +223,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         $scope.storeDetails = angular.copy(response);
 
         // Load sort order used during previous packing step
-        if($scope.storeDetails.packingListSortOrderType) {
+
+        if ($scope.storeDetails.packingListSortOrderType) {
           $scope.itemSortOrder = $scope.storeDetails.packingListSortOrderType;
         }
 
