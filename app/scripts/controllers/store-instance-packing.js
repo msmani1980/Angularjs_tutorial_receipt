@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
   function($scope, storeInstancePackingFactory, $routeParams, lodash, storeInstanceWizardConfig,
-           $location, $q, dateUtility, socketIO, $filter) {
+           $location, $q, dateUtility, socketIO, $filter, $localStorage) {
 
     var $this = this;
 
@@ -1102,6 +1102,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.init = function() {
       $scope.readOnly = true;
+      if ($routeParams.action === 'replenish') {
+        $localStorage.replenishUpdateStep = {
+          storeId: $routeParams.storeId ? $routeParams.storeId : $scope.storeDetails.id
+        };
+
+      }
+
       $this.showLoadingModal('Loading Store Detail for Packing...');
       $this.initControllerVars();
       var promises = $this.makeInitializePromises();
