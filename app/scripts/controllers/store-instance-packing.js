@@ -1,5 +1,5 @@
 'use strict';
-/*jshint maxcomplexity:10 */
+/*jshint maxcomplexity:9 */
 /**
  * @ngdoc function
  * @name ts5App.controller:StoreInstancePackingCtrl
@@ -15,13 +15,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.areWizardStepsInitialized = false;
     $scope.pickListOrder = [];
+
     // jshint ignore: start
     // jscs:disable
+
     $scope.packingListSortOrderTypes = {
       sales_category: ['salesCategoryName', 'itemName'],
       item_name: ['itemName'],
       menu_items: ['menuVersionId', 'sortOrder']
     };
+
     // jshint ignore: end
     // jscs:enable
 
