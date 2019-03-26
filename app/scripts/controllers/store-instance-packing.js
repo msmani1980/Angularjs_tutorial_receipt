@@ -15,6 +15,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.areWizardStepsInitialized = false;
     $scope.pickListOrder = [];
+    $scope.undispatch = false;
 
     this.showLoadingModal = function(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -71,7 +72,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       $q.all(statusUpdatePromiseArray).then(function() {
         $this.hideLoadingModal();
-        $location.url(stepObject.uri);
+        if ($scope.undispatch) {
+          $location.url(stepObject.uri).search({ undispatch: 'true' });
+        } else {
+          $location.url(stepObject.uri);
+        }
       }, handleResponseError);
     };
 
@@ -1074,6 +1079,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.init = function() {
       $scope.readOnly = true;
+      if ($routeParams.undispatch) {
+        $scope.undispatch = true;
+      }
+
       if ($routeParams.action === 'replenish') {
         $localStorage.replenishUpdateStep = {
           storeId: $routeParams.storeId ? $routeParams.storeId : $scope.storeDetails.id
