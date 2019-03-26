@@ -9,12 +9,12 @@
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
   function($scope, storeInstancePackingFactory, $routeParams, lodash, storeInstanceWizardConfig,
-           $location, $q, dateUtility, socketIO, $localStorage) {
+           $location, $q, dateUtility, socketIO, $localStorage, $filter) {
 
     var $this = this;
 
     $scope.areWizardStepsInitialized = false;
-    $scope.undispatch = false;
+    $scope.pickListOrder = [];
 
     this.showLoadingModal = function(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -71,11 +71,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       $q.all(statusUpdatePromiseArray).then(function() {
         $this.hideLoadingModal();
-        if ($scope.undispatch) {
-          $location.url(stepObject.uri).search({ undispatch: 'true' });
-        } else {
-          $location.url(stepObject.uri);
-        }        
+        $location.url(stepObject.uri);
       }, handleResponseError);
     };
 
@@ -128,9 +124,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'SLSCTGY' && preference.isSelected) {
           $scope.offLoadItemsSortOrder = '[salesCategoryName,itemName]';
           $scope.itemSortOrder = '[salesCategoryName,itemName]';
+          $scope.pickListOrder = ['salesCategoryName', 'itemName'];
         } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'ITEMNME' && preference.isSelected) {
           $scope.offLoadItemsSortOrder = 'itemName';
           $scope.itemSortOrder = 'itemName';
+          $scope.pickListOrder = ['itemName'];
         } else if (preference.featureName === 'Inbound' && preference.optionCode === 'IWST' && preference.choiceCode === 'ACT' && preference.isSelected) {
           $scope.defaultUllageCountsToIboundCountsForWastage = true;
         }
@@ -224,12 +222,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return false;
       }
 
-      var requiredQuantity = parseInt(angular.copy(item.menuQuantity)) || 1;
+      var requiredQuantity = parseInt(angular.copy(item.menuQuantity)) || 0;
       var dispatchedQuantity = parseInt(angular.copy(item.pickedQuantity)) || 0;
 
       var threshold;
       threshold = ((dispatchedQuantity / requiredQuantity) - 1) * 100;
-      item.exceedsVariance = (threshold > $scope.variance);
+
+      if (threshold === Infinity || threshold === -Infinity || threshold === undefined) {
+        item.exceedsVariance = true;
+      } else {
+        item.exceedsVariance = (threshold > $scope.variance);
+      }
+
     };
 
     this.checkVarianceOnAllItems = function() {
@@ -412,7 +416,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var countTypeId = $this.getIdByNameFromArray(countTypeName, $scope.countTypes);
       var payloadItem = {
         countTypeId: countTypeId,
-        quantity: parseInt(angular.copy(quantity))
+        quantity: parseInt(angular.copy(quantity)),
+        sortOrder: parseInt(item.sortOrder)
       };
       payloadItem.itemMasterId = (!item.isNewItem) ? item.itemMasterId : item.masterItem.id;
 
@@ -441,22 +446,51 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       promiseArray.push(storeInstancePackingFactory.updateStoreInstanceItems(storeId, updatePayload));
     }
 
+    $scope.changePicklistOrder = function (order) {
+      switch (order) {
+        case '[salesCategoryName,itemName]': {
+          $scope.pickListOrder = ['salesCategoryName', 'itemName'];
+          return;
+        }
+
+        case 'itemName': {
+          $scope.pickListOrder = ['itemName'];
+          return;
+        }
+
+        case '[menuVersionId, sortOrder]': {
+          $scope.pickListOrder = ['menuVersionId', 'sortOrder'];
+          return;
+        }
+      }
+    };
+
     this.addPickListItemsToPayload = function(promiseArray) {
-      var mergedItems = angular.copy($scope.pickListItems).concat(angular.copy($scope.newPickListItems));
+      var nextSort = 0;
+
+      var pickListItems = $filter('orderBy')(angular.copy($scope.pickListItems), $scope.pickListOrder).map(function (item) {
+        item.sortOrder = nextSort;
+        nextSort = nextSort + 1;
+        return item;
+      });
+
+      var newPickListItems = angular.copy($scope.newPickListItems).map(function (item) {
+        item.sortOrder = nextSort;
+        nextSort = nextSort + 1;
+        return item;
+      });
+
+      var mergedItems = pickListItems.concat(newPickListItems);
       var items = [];
 
       angular.forEach(mergedItems, function(item) {
+        var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open');
 
-        var didQuantityChange = (angular.isDefined(item.oldPickedQuantity)) ? parseInt(item.pickedQuantity) !== item.oldPickedQuantity : true;
-        if (didQuantityChange) {
-          var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open');
-
-          if (item.pickedId) {
-            payloadItem.id = item.pickedId;
-          }
-
-          items.push(payloadItem);
+        if (item.pickedId) {
+          payloadItem.id = item.pickedId;
         }
+
+        items.push(payloadItem);
       });
 
       saveStoreInstanceItems(promiseArray, $routeParams.storeId, items);
@@ -665,7 +699,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         isMenuItem: isFromMenu,
         isNewItem: false,
         isInOffload: ($routeParams.action === 'end-instance'),
-        salesCategoryName: itemFromAPI.salesCategoryName
+        salesCategoryName: itemFromAPI.salesCategoryName,
+        menuVersionId: itemFromAPI.menuVersionId,
+        sortOrder: itemFromAPI.sortOrder ? parseInt(itemFromAPI.sortOrder) : 0
       };
     };
 
@@ -1038,14 +1074,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.init = function() {
       $scope.readOnly = true;
-      if ($routeParams.undispatch) {
-        $scope.undispatch = true;
-      }
-
       if ($routeParams.action === 'replenish') {
         $localStorage.replenishUpdateStep = {
           storeId: $routeParams.storeId ? $routeParams.storeId : $scope.storeDetails.id
         };
+
       }
 
       $this.showLoadingModal('Loading Store Detail for Packing...');
