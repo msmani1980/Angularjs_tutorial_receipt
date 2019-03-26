@@ -13,9 +13,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     var $this = this;
 
-    $scope.undispatch = false;
     $scope.areWizardStepsInitialized = false;
     $scope.pickListOrder = [];
+
     // jshint ignore: start
     // jscs:disable
 
@@ -83,11 +83,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       $q.all(statusUpdatePromiseArray).then(function() {
         $this.hideLoadingModal();
-        if ($scope.undispatch) {
-          $location.url(stepObject.uri).search({ undispatch: 'true' });
-        } else {
-          $location.url(stepObject.uri);
-        }       
+        $location.url(stepObject.uri);
       }, handleResponseError);
     };
 
@@ -1112,10 +1108,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.init = function() {
       $scope.readOnly = true;
-      if ($routeParams.undispatch) {
-        $scope.undispatch = true;
-      }
-
       if ($routeParams.action === 'replenish') {
         $localStorage.replenishUpdateStep = {
           storeId: $routeParams.storeId ? $routeParams.storeId : $scope.storeDetails.id
