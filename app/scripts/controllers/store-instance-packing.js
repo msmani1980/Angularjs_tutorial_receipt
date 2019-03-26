@@ -373,6 +373,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.setItemDescription = function(item) {
       item.itemDescription = item.masterItem.itemCode + ' - ' + item.masterItem.itemName; 
+      item.itemName = item.masterItem.itemName;
     };
 
     this.addItemsToArray = function(array, itemNumber, isInOffload) {
@@ -984,8 +985,27 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     };
 
+    this.findSalesCategoryName = function (versions) {
+      var activeVersion = lodash.findLast(versions, function (version) {
+        var startDate = dateUtility.formatDateForApp(version.startDate);
+        var endDate = dateUtility.formatDateForApp(version.endDate);
+
+        return dateUtility.isAfterOrEqualDatePicker(endDate, $scope.storeDetails.scheduleDate) &&
+          dateUtility.isBeforeOrEqualDatePicker(startDate, $scope.storeDetails.scheduleDate);
+      });
+
+      if (activeVersion && activeVersion.category) {
+        return activeVersion.category.name;
+      } else {
+        return null;
+      }
+    };
+
     this.mergeAllItems = function(responseCollection) {
-      $scope.masterItemsList = angular.copy(responseCollection[0].masterItems);
+      $scope.masterItemsList = angular.copy(responseCollection[0].masterItems).map(function (item) {
+          item.salesCategoryName = $this.findSalesCategoryName(item.versions);
+          return item;
+        });
 
       $this.mergeAllowedMenuItemsForOffloadSection(responseCollection);
 
