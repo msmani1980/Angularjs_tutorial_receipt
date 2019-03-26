@@ -1,5 +1,5 @@
 'use strict';
-
+/*jshint maxcomplexity:7 */
 /**
  * @ngdoc function
  * @name ts5App.controller:StoreInstanceCreateCtrl
@@ -26,7 +26,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
     $scope.scheduleDateOption = 0;
     $scope.redispatchOrReplenishNew = false;
-
+    $scope.undispatch = false;
     var $this = this;
 
     this.isActionState = function (action) {
@@ -520,7 +520,17 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $this.formatEndInstancePayload(payload);
           break;
         default:
-          payload.storeId = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber }).id;
+          var loadStore = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber });
+          if (angular.isDefined(loadStore)) {
+            payload.storeId = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber }).id;
+          } else {
+            payload.storeId = null;
+            $scope.errorCustom = [{
+              field: 'Store Number',
+              value: 'Not valid for selected schedule date'
+            }];
+          }
+
           $this.formatDispatchPayload(payload);
           break;
       }
@@ -888,7 +898,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.nextStep.uri = $this.nextStep.uri.replace(/[0-9]+/, response.id);
       }
 
-      $location.url($this.nextStep.uri);
+      //$location.url($this.nextStep.uri);
+      if ($scope.undispatch) {
+        $location.url($this.nextStep.uri).search({ undispatch: 'true' });
+      } else {
+        $location.url($this.nextStep.uri);
+      }        
+
     };
 
     this.determineNextStepURI = function (response) {
@@ -907,7 +923,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $localStorage.resetMinDate = {
         id: response[0].id
       };
-      $location.url(uri);
+
+      if ($scope.undispatch) {
+        $location.url(uri).search({ undispatch: 'true' });
+      } else {
+        $location.url(uri);
+      }        
+
     };
 
     this.displayErrorConfirmation = function (response) {
@@ -926,8 +948,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
 
     this.createStoreInstanceErrorHandler = function (response) {
       $this.hideLoadingModal();
-      var errorResp = angular.copy(response.data);
-      if (!(angular.isUndefined(errorResp)) && errorResp[0].code === '250') {
+      var errorResp = null;
+      if (angular.isDefined(response)) {
+        errorResp = angular.copy(response.data);
+      }
+
+      if (angular.isDefined(errorResp) && errorResp !== null && angular.isDefined(errorResp[0]) && errorResp[0].code === '250') {
         $this.displayErrorConfirmation(errorResp[0]);
       } else {
         $scope.displayError = true;
@@ -1434,7 +1460,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
 
       if ($this.isActionState('dispatch')) {
-        $scope.formData.storeNumber = '';
+        if (!$scope.undispatch) {
+          $scope.formData.storeNumber = '';
+        }
+
         updatePromises.push($this.getStoresList());
       }
 
@@ -1692,6 +1721,11 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.init = function () {
+
+      if ($routeParams.undispatch) {
+        $scope.undispatch = true;
+      }
+
       if ($routeParams.storeId) {
         $this.showLoadingModal('We are loading Store Instance ' + $routeParams.storeId + '.');
         $this.getStoreInstance();
@@ -1701,6 +1735,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         $this.showLoadingModal('Hang tight, we are loading some data for you.');
         $this.getActiveCompanyPreferences();
       }
+
     };
 
     this.init();
