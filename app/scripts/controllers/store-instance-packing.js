@@ -13,10 +13,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     var $this = this;
 
+    $scope.undispatch = false;
     $scope.areWizardStepsInitialized = false;
     $scope.pickListOrder = [];
-    $scope.undispatch = false;
-
     // jshint ignore: start
     // jscs:disable
 
