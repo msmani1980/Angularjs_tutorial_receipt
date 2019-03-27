@@ -494,9 +494,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var newPickListItems = angular.copy($scope.newPickListItems);
 
       var mergedItems = pickListItems.concat(newPickListItems);
-      mergedItems.map(function (item) {
-        console.log(item.salesCategoryName);
-      });
 
       return $filter('orderBy')(mergedItems, $scope.getPicklistOrder()).map(function (item) {
         item.sortOrder = nextSort;
