@@ -1,5 +1,5 @@
 'use strict';
-/*jshint maxcomplexity:7 */
+/*jshint maxcomplexity:9 */
 /**
  * @ngdoc function
  * @name ts5App.controller:StoreInstancePackingCtrl
@@ -9,11 +9,24 @@
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
   function($scope, storeInstancePackingFactory, $routeParams, lodash, storeInstanceWizardConfig,
-           $location, $q, dateUtility, socketIO, $localStorage) {
+           $location, $q, dateUtility, socketIO, $filter, $localStorage) {
 
     var $this = this;
 
     $scope.areWizardStepsInitialized = false;
+    $scope.pickListOrder = [];
+
+    // jshint ignore: start
+    // jscs:disable
+
+    $scope.packingListSortOrderTypes = {
+      sales_category: ['salesCategoryName', 'itemName'],
+      item_name: ['itemName'],
+      menu_items: ['menuVersionId', 'sortOrder']
+    };
+
+    // jshint ignore: end
+    // jscs:enable
 
     this.showLoadingModal = function(text) {
       angular.element('#loading').modal('show').find('p').text(text);
@@ -61,11 +74,11 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       $this.showLoadingModal('Updating Status...');
       var statusUpdatePromiseArray = [];
-      statusUpdatePromiseArray.push(storeInstancePackingFactory.updateStoreInstanceStatus($routeParams.storeId,
-        stepObject.stepName));
+      statusUpdatePromiseArray.push(storeInstancePackingFactory.updateStoreInstanceStatus($routeParams.storeId, stepObject.stepName, $scope.itemSortOrder));
       if ($routeParams.action === 'redispatch' && $scope.storeDetails.prevStoreInstanceId) {
-        statusUpdatePromiseArray.push(storeInstancePackingFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId,
-          stepObject.storeOne.stepName));
+        statusUpdatePromiseArray.push(
+          storeInstancePackingFactory.updateStoreInstanceStatus($scope.storeDetails.prevStoreInstanceId, stepObject.storeOne.stepName)
+        );
       }
 
       $q.all(statusUpdatePromiseArray).then(function() {
@@ -122,10 +135,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           defaultInboundToEposPreference = preference.isSelected;
         } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'SLSCTGY' && preference.isSelected) {
           $scope.offLoadItemsSortOrder = '[salesCategoryName,itemName]';
-          $scope.itemSortOrder = '[salesCategoryName,itemName]';
+
+          if (!$scope.storeDetails || !$scope.storeDetails.packingListSortOrderType) {
+            $scope.itemSortOrder = 'sales_category';
+          }
         } else if (preference.featureName === 'Dispatch' && preference.choiceCode === 'ITEMNME' && preference.isSelected) {
           $scope.offLoadItemsSortOrder = 'itemName';
-          $scope.itemSortOrder = 'itemName';
+
+          if (!$scope.storeDetails || !$scope.storeDetails.packingListSortOrderType) {
+            $scope.itemSortOrder = 'item_name';
+          }
         } else if (preference.featureName === 'Inbound' && preference.optionCode === 'IWST' && preference.choiceCode === 'ACT' && preference.isSelected) {
           $scope.defaultUllageCountsToIboundCountsForWastage = true;
         }
@@ -205,6 +224,13 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     this.getStoreDetails = function() {
       return storeInstancePackingFactory.getStoreDetails($routeParams.storeId).then(function(response) {
         $scope.storeDetails = angular.copy(response);
+
+        // Load sort order used during previous packing step
+
+        if ($scope.storeDetails.packingListSortOrderType) {
+          $scope.itemSortOrder = $scope.storeDetails.packingListSortOrderType;
+        }
+
         $this.initWizardSteps($scope.storeDetails.replenishStoreInstanceId);
       }, this.errorHandler);
     };
@@ -341,6 +367,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     $scope.setItemDescription = function(item) {
       item.itemDescription = item.masterItem.itemCode + ' - ' + item.masterItem.itemName; 
+      item.itemName = item.masterItem.itemName;
+      item.salesCategoryName = $this.findSalesCategoryName(item.masterItem.versions);
     };
 
     this.addItemsToArray = function(array, itemNumber, isInOffload) {
@@ -407,7 +435,8 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       var countTypeId = $this.getIdByNameFromArray(countTypeName, $scope.countTypes);
       var payloadItem = {
         countTypeId: countTypeId,
-        quantity: parseInt(angular.copy(quantity))
+        quantity: parseInt(angular.copy(quantity)),
+        sortOrder: parseInt(item.sortOrder)
       };
       payloadItem.itemMasterId = (!item.isNewItem) ? item.itemMasterId : item.masterItem.id;
 
@@ -436,22 +465,62 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       promiseArray.push(storeInstancePackingFactory.updateStoreInstanceItems(storeId, updatePayload));
     }
 
+    $scope.getPicklistOrder = function () {
+      return ($scope.itemSortOrder) ? $scope.packingListSortOrderTypes[$scope.itemSortOrder] : $scope.packingListSortOrderTypes.itemName;
+    };
+
+    this.assignSortOrderForMenuItemsOrder = function () {
+      var nextSort = 0;
+
+      var pickListItems = $filter('orderBy')(angular.copy($scope.pickListItems), $scope.getPicklistOrder()).map(function (item) {
+        item.sortOrder = nextSort;
+        nextSort = nextSort + 1;
+        return item;
+      });
+
+      var newPickListItems = angular.copy($scope.newPickListItems).map(function (item) {
+        item.sortOrder = nextSort;
+        nextSort = nextSort + 1;
+        return item;
+      });
+
+      return pickListItems.concat(newPickListItems);
+    };
+
+    this.assignSortOrderForOtherOrders = function () {
+      var nextSort = 0;
+
+      var pickListItems = angular.copy($scope.pickListItems);
+      var newPickListItems = angular.copy($scope.newPickListItems);
+
+      var mergedItems = pickListItems.concat(newPickListItems);
+
+      return $filter('orderBy')(mergedItems, $scope.getPicklistOrder()).map(function (item) {
+        item.sortOrder = nextSort;
+        nextSort = nextSort + 1;
+        return item;
+      });
+    };
+
     this.addPickListItemsToPayload = function(promiseArray) {
-      var mergedItems = angular.copy($scope.pickListItems).concat(angular.copy($scope.newPickListItems));
+      var sortedItems = [];
+
+      if ($scope.itemSortOrder === 'menu_items') {
+        sortedItems = $this.assignSortOrderForMenuItemsOrder();
+      } else {
+        sortedItems = $this.assignSortOrderForOtherOrders();
+      }
+
       var items = [];
 
-      angular.forEach(mergedItems, function(item) {
+      angular.forEach(sortedItems, function(item) {
+        var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open');
 
-        var didQuantityChange = (angular.isDefined(item.oldPickedQuantity)) ? parseInt(item.pickedQuantity) !== item.oldPickedQuantity : true;
-        if (didQuantityChange) {
-          var payloadItem = $this.constructPayloadItem(item, item.pickedQuantity, 'Warehouse Open');
-
-          if (item.pickedId) {
-            payloadItem.id = item.pickedId;
-          }
-
-          items.push(payloadItem);
+        if (item.pickedId) {
+          payloadItem.id = item.pickedId;
         }
+
+        items.push(payloadItem);
       });
 
       saveStoreInstanceItems(promiseArray, $routeParams.storeId, items);
@@ -660,7 +729,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         isMenuItem: isFromMenu,
         isNewItem: false,
         isInOffload: ($routeParams.action === 'end-instance'),
-        salesCategoryName: itemFromAPI.salesCategoryName
+        salesCategoryName: itemFromAPI.salesCategoryName,
+        menuVersionId: itemFromAPI.menuVersionId,
+        sortOrder: itemFromAPI.sortOrder ? parseInt(itemFromAPI.sortOrder) : 0
       };
     };
 
@@ -909,8 +980,27 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     };
 
+    this.findSalesCategoryName = function (versions) {
+      var activeVersion = lodash.findLast(versions, function (version) {
+        var startDate = dateUtility.formatDateForApp(version.startDate);
+        var endDate = dateUtility.formatDateForApp(version.endDate);
+
+        return dateUtility.isAfterOrEqualDatePicker(endDate, $scope.storeDetails.scheduleDate) &&
+          dateUtility.isBeforeOrEqualDatePicker(startDate, $scope.storeDetails.scheduleDate);
+      });
+
+      if (activeVersion && activeVersion.category) {
+        return activeVersion.category.name;
+      } else {
+        return null;
+      }
+    };
+
     this.mergeAllItems = function(responseCollection) {
-      $scope.masterItemsList = angular.copy(responseCollection[0].masterItems);
+      $scope.masterItemsList = angular.copy(responseCollection[0].masterItems).map(function (item) {
+          item.salesCategoryName = $this.findSalesCategoryName(item.versions);
+          return item;
+        });
 
       $this.mergeAllowedMenuItemsForOffloadSection(responseCollection);
 

@@ -500,7 +500,8 @@ angular.module('ts5App')
           itemDescription: item.itemCode + ' -  ' + item.itemName,
           disabled: true,
           salesCategoryName: $this.getSalesCategoryName(item.itemMasterId),
-          menuQuantity: getMenuQuantity(item.itemMasterId)
+          menuQuantity: getMenuQuantity(item.itemMasterId),
+          sortOrder: item.sortOrder
         };
 
         var dispatchedItem = lodash.findWhere(rawItemList, {
@@ -553,7 +554,8 @@ angular.module('ts5App')
           itemName: item.itemName,
           itemDescription: item.itemCode + ' -  ' + item.itemName,
           salesCategoryName: $this.getSalesCategoryName(item.itemMasterId),
-          disabled: true
+          disabled: true,
+          sortOrder: item.sortOrder
         };
 
         var inboundItem = lodash.findWhere(rawItemList, {

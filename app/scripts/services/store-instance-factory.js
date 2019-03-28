@@ -157,6 +157,7 @@ angular.module('ts5App').service('storeInstanceFactory',
       storeDetails.storeId = storeInstanceAPIResponse.storeId;
       storeDetails.cateringStationId = storeInstanceAPIResponse.cateringStationId;
       storeDetails.carrierId = storeInstanceAPIResponse.carrierId;
+      storeDetails.packingListSortOrderType = storeInstanceAPIResponse.packingListSortOrderType;
 
       if (parentStoreInstanceAPIResponse) {
         storeDetails.replenishStoreInstanceId = storeInstanceAPIResponse.replenishStoreInstanceId;

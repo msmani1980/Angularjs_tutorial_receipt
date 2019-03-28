@@ -234,6 +234,10 @@ angular.module('ts5App')
       return moment(baseDate, this.getDateFormatForApp()).isSameOrAfter(moment(dateToCompare, this.getDateFormatForApp()), 'day');
     };
 
+    this.isBeforeOrEqualDatePicker = function (baseDate, dateToCompare) {
+      return moment(baseDate, this.getDateFormatForApp()).isSameOrBefore(moment(dateToCompare, this.getDateFormatForApp()), 'day');
+    };
+
     this.isAfterDatePicker = function (baseDate, dateToCompare) {
       return moment(baseDate, this.getDateFormatForApp()).isAfter(moment(dateToCompare, this.getDateFormatForApp()), 'day');
     };
