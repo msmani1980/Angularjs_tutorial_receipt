@@ -738,8 +738,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     this.isMasterItemInfoUnTouched = function() {
       return $scope.originalMasterItemData.itemCode === $scope.formData.itemCode &&
         $scope.originalMasterItemData.itemName === $scope.formData.itemName &&
-        $scope.originalMasterItemData.onBoardName === $scope.formData.onBoardName,
-        $scope.originalMasterItemData.eposDisplaySortOrder === $scope.formData.eposDisplaySortOrder;
+        $scope.originalMasterItemData.onBoardName === $scope.formData.onBoardName;
     };
 
     this.setDiscountList = function(dataFromAPI) {
