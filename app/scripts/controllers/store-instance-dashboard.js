@@ -297,7 +297,11 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       showLoadingModal('Undispatching store instance ' + id + '...');
       storeInstanceDashboardFactory.updateStoreInstanceStatusUndispatch(id, undispatchStatusId, true).then(function () {
         hideLoadingModal();
-        $location.path(undispatchRoute);
+        if (isReplenishment) {
+          $location.path(undispatchRoute);
+        } else {
+          $location.path(undispatchRoute).search({ undispatch: 'true' });
+        }
       }, showErrors);
     };
 
