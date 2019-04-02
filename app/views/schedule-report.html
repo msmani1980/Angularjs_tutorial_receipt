@@ -133,20 +133,24 @@
        	<label class="col-sm-4 control-label">{{option.prompt}}: <span ng-if="!option.optional" style="color:red">*</span></label>
       </div>
 	  <span ng-switch-when="ID" ng-controller="OptionSelectionSelectCtrl" class="col-sm-6 input-group" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
-        <ui-select ng-if="option.multiValue" name="{{option.code}}" multiple ng-model="selection.options[option.code]">
+        <ui-select ng-if="option.multiValue && option.choiceLookup" name="{{option.code}}" multiple ng-model="selection.options[option.code]">
           <ui-select-match placeholder="Select value...">{{$item.code}}</ui-select-match>
           <ui-select-choices repeat="choice in choices | filter: $select.search track by choice.id"
                              refresh="refreshChoiceValues($select.search)" refresh-delay="10" >
             <div ><span ng-bind-html="choice.code | highlight: $select.search"/><span ng-if="choice.description !== undefined"> (<span ng-bind-html="choice.description | highlight: $select.search"/>)</span></div>
           </ui-select-choices>
         </ui-select>
-        <ui-select ng-if="!option.multiValue" ng-model="selection.options[option.code]">
+        <ui-select ng-if="!option.multiValue && option.choiceLookup" ng-model="selection.options[option.code]">
           <ui-select-match placeholder="Select value...">{{$select.selected.code}}</ui-select-match>
           <ui-select-choices repeat="choice in choices | filter: $select.search track by choice.id"
                              refresh="refreshChoiceValues($select.search)" refresh-delay="10" >
               <div ><span ng-bind-html="choice.code | highlight: $select.search"/><span ng-if="choice.description !== undefined"> (<span ng-bind-html="choice.description | highlight: $select.search"/>)</span></div>
           </ui-select-choices>
         </ui-select>
+        <span ng-if="!option.multiValue && !option.choiceLookup" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
+          <input type="number" name="{{option.code}}" class="form-control" ng-model="selection.options[option.code]" ng-trim="true" placeholder="{{option.code}}" />
+          <div ><span ng-bind-html="choice.code | highlight: $select.search"/><span ng-if="choice.description !== undefined"> (<span ng-bind-html="choice.description | highlight: $select.search"/>)</span></div>
+        </span>
       </span>
       <span ng-switch-when="STRING">
         <span ng-if="option.multiValue && !option.choiceValues" class="col-sm-6 input-group" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
