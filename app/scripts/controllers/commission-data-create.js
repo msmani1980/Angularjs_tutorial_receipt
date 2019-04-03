@@ -307,7 +307,13 @@ angular.module('ts5App')
       }
 
       var isPayTypeId = $this.validateNewDataField(record, 'commissionPayableTypeId', 'Commission Payable On');
-      var isFieldValidateCommissionPercent = $this.validatePercentField(record, 'commissionPercentage', 'Commission Percent');
+      var isFieldValidateCommissionPercent = null;
+      if (record.commissionPercentage === null && $scope.commissionPercentDisabled) {
+        isFieldValidateCommissionPercent = true;
+      } else {
+        isFieldValidateCommissionPercent = $this.validatePercentField(record, 'commissionPercentage', 'Commission Percent');
+      }
+
       var isManualTypeId = $this.validateNewDataField(record, 'manualBarsCommissionValueTypeId', 'Manual Bars Commission Type');
       var isFieldValidateManualCommissionPercent = true;
       if ($scope.commissionData.manualBarsCommissionValueTypeId === 1) {
