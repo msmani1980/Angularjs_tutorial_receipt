@@ -203,6 +203,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $scope.cateringStationList = angular.copy(dataFromAPI.response);
       if ($scope.cateringStationList.length === 1) {
         $scope.formData.cateringStationId = $scope.cateringStationList[0].id;
+        $this.getMenuCatererList();
       }
     };
 
@@ -299,7 +300,12 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.getMenuCatererList = function () {
       var payload = $this.createGetMenuCatererListPayload();
 
-      return menuCatererStationsService.getRelationshipList(payload).then($this.setMenuCatererList);
+      if (payload.catererStationId) {
+        return menuCatererStationsService.getRelationshipList(payload).then($this.setMenuCatererList);  
+      } else {
+        return null;
+      }
+
     };
 
     this.setMenuMasterList = function (dataFromAPI) {
