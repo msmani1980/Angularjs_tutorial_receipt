@@ -24,6 +24,7 @@ angular.module('ts5App')
     $scope.commissionValueCharLimit = 10;
     $scope.crewBaseList = [];
     $scope.minDate = dateUtility.dateNumDaysAfterTodayFormattedDatePicker(1);
+    $scope.commissionPercentRequired = true;
 
     this.showToast = function(className, type, message) {
       messageService.display(className, message, type);
