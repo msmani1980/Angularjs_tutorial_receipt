@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
   function($scope, storeInstancePackingFactory, $routeParams, lodash, storeInstanceWizardConfig,
-           $location, $q, dateUtility, socketIO, $localStorage, $filter) {
+           $location, $q, dateUtility, socketIO, $filter, $localStorage) {
 
     var $this = this;
 
