@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
   function($scope, storeInstancePackingFactory, $routeParams, lodash, storeInstanceWizardConfig,
-           $location, $q, dateUtility, socketIO, $filter, $localStorage) {
+           $location, $q, dateUtility, socketIO, $localStorage, $filter) {
 
     var $this = this;
 
@@ -250,12 +250,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return false;
       }
 
-      var requiredQuantity = parseInt(angular.copy(item.menuQuantity)) || 1;
+      var requiredQuantity = parseInt(angular.copy(item.menuQuantity)) || 0;
       var dispatchedQuantity = parseInt(angular.copy(item.pickedQuantity)) || 0;
 
       var threshold;
       threshold = ((dispatchedQuantity / requiredQuantity) - 1) * 100;
-      item.exceedsVariance = (threshold > $scope.variance);
+
+      if (threshold === Infinity || threshold === -Infinity || threshold === undefined) {
+        item.exceedsVariance = true;
+      } else {
+        item.exceedsVariance = (threshold > $scope.variance);
+      }
+
     };
 
     this.checkVarianceOnAllItems = function() {
