@@ -349,6 +349,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       $this.formatStoresList();
 
       $scope.storeNumberValid = true;
+      var action = $this.isActionState('replenish');
+      console.log ('action', action);
       if ($this.isActionState('replenish')) {
         $this.validateReplenishStoreNumber();
       }
@@ -360,11 +362,19 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       var scheduleDate = dateUtility.isDateValidForApp($scope.formData.scheduleDate) ? $scope.formData.scheduleDate : dateUtility.formatDateForApp($scope.formData.scheduleDate);      
       var loadStore = lodash.findWhere($scope.storesList, { storeNumber: $scope.formData.storeNumber });
       $scope.displayError = false;
+      console.log ('loadStore', loadStore);
+      console.log ('scheduleDate', scheduleDate);
       if (angular.isDefined(loadStore) && angular.isDefined(scheduleDate)) {
         var startDate = dateUtility.isDateValidForApp(loadStore.startDate) ? loadStore.startDate : dateUtility.formatDateForApp(loadStore.startDate);
         var endDate = dateUtility.isDateValidForApp(loadStore.endDate) ? loadStore.endDate : dateUtility.formatDateForApp(loadStore.endDate);
         var isAfter = dateUtility.isAfterOrEqual(scheduleDate, startDate);
         var isBefore = dateUtility.isBeforeOrEqual(scheduleDate, endDate);
+        
+        console.log ('startDate', startDate);
+        console.log ('endDate', endDate);
+        console.log ('isAfter', isAfter);
+        console.log ('isBefore', isBefore);
+
         if (!isAfter || !isBefore) {
           $scope.displayError = true;
           $scope.storeNumberValid = false;
@@ -1547,6 +1557,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           if (!(oldDate === '' && newDate === dateUtility.nowFormattedDatePicker())) {
             $this.updateInstanceDependencies();
           }
+        }
+
+        if ($this.isActionState('replenish')) {
+          $this.validateReplenishStoreNumber();
         }
       });
 
