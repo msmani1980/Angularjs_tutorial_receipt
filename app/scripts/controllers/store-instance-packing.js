@@ -250,18 +250,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
         return false;
       }
 
-      var requiredQuantity = parseInt(angular.copy(item.menuQuantity)) || 0;
+      var requiredQuantity = parseInt(angular.copy(item.menuQuantity)) || 1;
       var dispatchedQuantity = parseInt(angular.copy(item.pickedQuantity)) || 0;
 
       var threshold;
       threshold = ((dispatchedQuantity / requiredQuantity) - 1) * 100;
-
-      if (threshold === Infinity || threshold === -Infinity || threshold === undefined) {
-        item.exceedsVariance = true;
-      } else {
-        item.exceedsVariance = (threshold > $scope.variance);
-      }
-
+      item.exceedsVariance = (threshold > $scope.variance);
     };
 
     this.checkVarianceOnAllItems = function() {
