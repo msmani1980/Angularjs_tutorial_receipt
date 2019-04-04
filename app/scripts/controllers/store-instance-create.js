@@ -27,6 +27,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     $scope.scheduleDateOption = 0;
     $scope.redispatchOrReplenishNew = false;
     $scope.undispatch = false;
+    $scope.storeNumberValid = true;
     var $this = this;
 
     this.isActionState = function (action) {
@@ -357,6 +358,33 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
 
       $this.formatStoresList();
+
+      $scope.storeNumberValid = true;
+      if ($this.isActionState('replenish')) {
+        $this.validateReplenishStoreNumber();
+      }
+
+    };
+
+    this.validateReplenishStoreNumber = function () {
+      $scope.storeNumberValid = true;
+      var scheduleDate = dateUtility.isDateValidForApp($scope.formData.scheduleDate) ? $scope.formData.scheduleDate : dateUtility.formatDateForApp($scope.formData.scheduleDate);      
+      var loadStore = lodash.findWhere($scope.storesList, { storeNumber: $scope.formData.storeNumber });
+      $scope.displayError = false;
+      if (angular.isDefined(loadStore) && angular.isDefined(scheduleDate)) {
+        var startDate = dateUtility.isDateValidForApp(loadStore.startDate) ? loadStore.startDate : dateUtility.formatDateForApp(loadStore.startDate);
+        var endDate = dateUtility.isDateValidForApp(loadStore.endDate) ? loadStore.endDate : dateUtility.formatDateForApp(loadStore.endDate);
+        var isAfter = dateUtility.isAfterOrEqual(scheduleDate, startDate);
+        var isBefore = dateUtility.isBeforeOrEqual(scheduleDate, endDate);
+        if (!isAfter || !isBefore) {
+          $scope.displayError = true;
+          $scope.storeNumberValid = false;
+          $scope.errorCustom = [{
+            field: 'Store Number',
+            value: 'Not valid for selected schedule date'
+          }];
+        }
+      }
     };
 
     this.getStoresList = function () {
@@ -978,7 +1006,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         return $this.showWarningModal();
       }
 
-      if ($scope.createStoreInstance.$valid && $scope.formData.menus.length > 0) {
+      if ($scope.createStoreInstance.$valid && $scope.formData.menus.length > 0 && $scope.storeNumberValid) {
         return true;
       }
 
@@ -1459,6 +1487,14 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         );
       }
 
+      if ($this.isActionState('replenish')) {
+        if ($scope.storesList.length === 0) {
+          updatePromises.push($this.getStoresList());
+        } else {
+          $this.validateReplenishStoreNumber();
+        }
+      }
+
       if ($this.isActionState('dispatch')) {
         if (!$scope.undispatch) {
           $scope.formData.storeNumber = '';
@@ -1725,6 +1761,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($routeParams.undispatch) {
         $scope.undispatch = true;
       }
+
+      $scope.storeNumberValid = true;
 
       if ($routeParams.storeId) {
         $this.showLoadingModal('We are loading Store Instance ' + $routeParams.storeId + '.');
