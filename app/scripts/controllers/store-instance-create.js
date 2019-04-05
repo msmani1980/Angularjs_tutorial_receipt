@@ -1,5 +1,5 @@
 'use strict';
-/*jshint maxcomplexity:7 */
+/*jshint maxcomplexity:8*/
 /**
  * @ngdoc function
  * @name ts5App.controller:StoreInstanceCreateCtrl
@@ -364,33 +364,47 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       }
 
       $this.formatStoresList();
+      $this.validateStoreNumber();
+    };
 
+    this.validateStoreNumber = function () {
       $scope.storeNumberValid = true;
-      if ($this.isActionState('replenish')) {
-        $this.validateReplenishStoreNumber();
+      $scope.displayError = false;
+      $scope.errorCustom = [];
+            
+      $this.validateStoreNumberByScheduleDates();
+
+      if (!$scope.storeNumberValid) {
+        $this.addStoreNumberCustomError();
       }
 
     };
 
-    this.validateReplenishStoreNumber = function () {
-      $scope.storeNumberValid = true;
-      var scheduleDate = dateUtility.isDateValidForApp($scope.formData.scheduleDate) ? $scope.formData.scheduleDate : dateUtility.formatDateForApp($scope.formData.scheduleDate);      
-      var loadStore = lodash.findWhere($scope.storesList, { storeNumber: $scope.formData.storeNumber });
-      $scope.displayError = false;
-      if (angular.isDefined(loadStore) && angular.isDefined(scheduleDate)) {
-        var startDate = dateUtility.isDateValidForApp(loadStore.startDate) ? loadStore.startDate : dateUtility.formatDateForApp(loadStore.startDate);
-        var endDate = dateUtility.isDateValidForApp(loadStore.endDate) ? loadStore.endDate : dateUtility.formatDateForApp(loadStore.endDate);
-        var isAfter = dateUtility.isAfterOrEqual(scheduleDate, startDate);
-        var isBefore = dateUtility.isBeforeOrEqual(scheduleDate, endDate);
-        if (!isAfter || !isBefore) {
-          $scope.displayError = true;
+    this.validateStoreNumberByScheduleDates = function () {
+      if (angular.isDefined($scope.formData.scheduleDate) && angular.isDefined($scope.formData.storeNumber)) {
+        var scheduleDate = dateUtility.isDateValidForApp($scope.formData.scheduleDate) ? $scope.formData.scheduleDate : dateUtility.formatDateForApp($scope.formData.scheduleDate);
+        var loadStore = lodash.findWhere($scope.storesList, { storeNumber: $scope.formData.storeNumber });
+        if (!angular.isDefined(loadStore)) {
           $scope.storeNumberValid = false;
-          $scope.errorCustom = [{
-            field: 'Store Number',
-            value: 'Not valid for selected schedule date'
-          }];
+        } else {
+          var startDate = dateUtility.isDateValidForApp(loadStore.startDate) ? loadStore.startDate : dateUtility.formatDateForApp(loadStore.startDate);
+          var endDate = dateUtility.isDateValidForApp(loadStore.endDate) ? loadStore.endDate : dateUtility.formatDateForApp(loadStore.endDate);
+          var isAfter = dateUtility.isAfterOrEqual(scheduleDate, startDate);
+          var isBefore = dateUtility.isBeforeOrEqual(scheduleDate, endDate);
+
+          if (!isAfter || !isBefore) {
+            $scope.storeNumberValid = false;
+          }
         }
       }
+    };
+
+    this.addStoreNumberCustomError = function () {
+      $scope.displayError = true;
+      $scope.errorCustom = [{
+        field: 'Store Number',
+        value: 'Not valid for selected schedule date'
+      }];
     };
 
     this.getStoresList = function () {
@@ -554,15 +568,13 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
           $this.formatEndInstancePayload(payload);
           break;
         default:
+          $scope.errorCustom = [];	
           var loadStore = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber });
           if (angular.isDefined(loadStore)) {
             payload.storeId = lodash.findWhere($scope.storesList, { storeNumber: payload.storeNumber }).id;
           } else {
             payload.storeId = null;
-            $scope.errorCustom = [{
-              field: 'Store Number',
-              value: 'Not valid for selected schedule date'
-            }];
+            this.addStoreNumberCustomError();
           }
 
           $this.formatDispatchPayload(payload);
@@ -1432,14 +1444,18 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($scope.formData.scheduleNumber) {
         $scope.formData.scheduleNumber = lodash.findWhere($scope.scheduleNumbers,
           { scheduleNumber: $scope.formData.scheduleNumber.scheduleNumber });
-        $scope.formData.scheduleId = lodash.findWhere($scope.scheduleNumbers,
-          { id: $scope.formData.scheduleNumber.id });
-        $scope.routesList = [];
-        angular.forEach($scope.routesListCopy, function (route) {
-          if (route.scheduleNumber === $scope.formData.scheduleNumber.scheduleNumber) {
-            $scope.routesList.push(route);
-          }
-        });
+        if (angular.isDefined($scope.formData.scheduleNumber)) {
+          $scope.formData.scheduleId = lodash.findWhere($scope.scheduleNumbers,
+            { id: $scope.formData.scheduleNumber.id });
+          $scope.routesList = [];
+          angular.forEach($scope.routesListCopy, function (route) {
+            if (route.scheduleNumber === $scope.formData.scheduleNumber.scheduleNumber) {
+              $scope.routesList.push(route);
+            }
+          });
+        } else {
+          $scope.routesList = [];
+        }
       }
     };
 
@@ -1496,9 +1512,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
       if ($this.isActionState('replenish')) {
         if ($scope.storesList.length === 0) {
           updatePromises.push($this.getStoresList());
-        } else {
-          $this.validateReplenishStoreNumber();
-        }
+        } 
       }
 
       if ($this.isActionState('dispatch')) {
@@ -1565,6 +1579,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
             $this.updateInstanceDependencies();
           }
         }
+
+        $this.validateStoreNumber();
       });
 
       $scope.$watch('formData.scheduleNumber.scheduleNumber', function (newId, oldId) {
