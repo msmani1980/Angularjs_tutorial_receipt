@@ -106,8 +106,8 @@
           </div>
 
           <div class="col-xs-12 col-sm-6">
-            <div class="form-group" ng-class="{ 'has-error' : (!commissionData.commissionPercentage || isPercentInvalid(commissionData.commissionPercentage)) && displayError, 'has-success' : commissionData.commissionPercentage}">
-            <label>Commission Percent *</label>
+            <div class="form-group" ng-class="{ 'has-error' : (commissionPercentRequired && (!commissionData.commissionPercentage || isPercentInvalid(commissionData.commissionPercentage))) && displayError, 'has-success' : commissionData.commissionPercentage}">
+            <label>Commission Percent <span ng-if="commissionPercentRequired">*</span></label>
             <input ng-model="commissionData.commissionPercentage"
                    name="commissionPercent"
                    type="text"
