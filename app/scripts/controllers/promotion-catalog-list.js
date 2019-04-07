@@ -60,7 +60,6 @@ angular.module('ts5App')
     $scope.redirectRecordToAction = function (action, recordId, isConjunction) {
       var path = isConjunction ? 'promotion-catalog-conjunction/' : 'promotion-catalog/';
       $location.path(path + action + '/' + recordId);
-      $window.location.reload();
     };
 
     $scope.copyPromotionCatalog = function(catalog) {
