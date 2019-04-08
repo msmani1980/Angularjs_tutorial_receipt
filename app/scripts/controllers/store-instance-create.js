@@ -381,8 +381,10 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     };
 
     this.validateStoreNumberByScheduleDates = function () {
-      if (angular.isDefined($scope.formData.scheduleDate) && angular.isDefined($scope.formData.storeNumber)) {
-        var scheduleDate = dateUtility.isDateValidForApp($scope.formData.scheduleDate) ? $scope.formData.scheduleDate : dateUtility.formatDateForApp($scope.formData.scheduleDate);
+      var isScheduleDateValid = angular.isDefined($scope.formData.scheduleDate) && dateUtility.isDateValidForApp($scope.formData.scheduleDate);
+      var isStoreNumberValid = angular.isDefined($scope.formData.storeNumber) && ($scope.formData.storeNumber !== null)  && ($scope.formData.storeNumber !== '');
+      if (isScheduleDateValid && isStoreNumberValid) {
+        var scheduleDate = $scope.formData.scheduleDate;
         var loadStore = lodash.findWhere($scope.storesList, { storeNumber: $scope.formData.storeNumber });
         if (!angular.isDefined(loadStore)) {
           $scope.storeNumberValid = false;
