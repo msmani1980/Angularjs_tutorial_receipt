@@ -70,7 +70,7 @@
         <div class="form-group">
           <ui-select name="scheduleNumber" required ng-model="formData.scheduleNumber" theme="bootstrap" id="scheduleNumber" ng-disabled="isActionState('end-instance')">
             <ui-select-match placeholder="Select a schedule">{{ $select.selected.scheduleNumber }}</ui-select-match>
-            <ui-select-choices repeat="schedule in scheduleNumbers | filter: {scheduleNumber:$select.search} | orderBy:'scheduleNumber' track by schedule.id" ui-lock-choice="isDisabled()">
+            <ui-select-choices repeat="schedule in scheduleNumbers | filter: {scheduleNumber:$select.search} | limitTo:150 | orderBy:'scheduleNumber' track by schedule.id" ui-lock-choice="isDisabled()">
               <div ng-bind-html="schedule.scheduleNumber | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
@@ -148,7 +148,7 @@
           <ui-select ng-if="uiSelectTemplateReady" name="menus" required multiple ng-model="formData.menus" theme="bootstrap" ng-disabled="isActionState('end-instance') || isActionState('replenish')" style="min-height:34px;">
             <ui-select-match placeholder="{{ menuPlaceholderText() }}">{{ $item.menuName }}
             </ui-select-match>
-            <ui-select-choices repeat="menu in filteredMenuList | filter:omitSelectedMenus | filter: $select.search | orderBy:'menuName' track by menu.id">
+            <ui-select-choices repeat="menu in filteredMenuList | filter:omitSelectedMenus | filter: $select.search | limitTo:150 | orderBy:'menuName' track by menu.id">
               <div ng-bind-html="menu.menuName | highlight: $select.search "></div>
             </ui-select-choices>
           </ui-select>
