@@ -148,7 +148,7 @@
           </ui-select-choices>
         </ui-select>
         <span ng-if="!option.multiValue && !option.choiceLookup" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
-          <input type="number" name="{{option.code}}" class="form-control" ng-model="selection.options[option.code]" ng-trim="true" placeholder="{{option.code}}" />
+          <input type="number" name="{{option.code}}" min="1" pattern="{{ regexp.number }}" class="form-control" ng-model="selection.options[option.code]" ng-trim="true" placeholder="{{option.code}}" />
           <div ><span ng-bind-html="choice.code | highlight: $select.search"/><span ng-if="choice.description !== undefined"> (<span ng-bind-html="choice.description | highlight: $select.search"/>)</span></div>
         </span>
       </span>
