@@ -23,6 +23,8 @@ angular.module('ts5App')
     
     $scope.emailMe = {};
     
+    $scope.errMessageDatePicker = '';
+    
     var convertOptionValue = function (value, type, multiValue, isChoiceLookup) {
       if (multiValue && Array.isArray(value)) {
         var retValues = [];
@@ -61,6 +63,12 @@ angular.module('ts5App')
 
     $scope.run = function () {
       var params = getSelectedOptions();
+      if (params.options && params.options.effDate && params.options.endDate) {
+        if (new Date(params.options.effDate) > new Date(params.options.endDate)) {
+          $scope.errMessageDatePicker = 'End Date should be greater than Start Date.';
+          return false;
+        }
+      }
       
       jobService.run($scope.template.id, params).then(function () {
         $modalInstance.close();
