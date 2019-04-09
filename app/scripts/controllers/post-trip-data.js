@@ -31,6 +31,10 @@ angular.module('ts5App')
     };
 
     this.createInit = function() {
+      if ($routeParams.newTripId) {
+        $location.path('post-trip-data/create').search({ newTripId: null });
+      }
+
       $scope.readOnly = false;
       $scope.viewName = 'Create Post Trip Data';
     };
