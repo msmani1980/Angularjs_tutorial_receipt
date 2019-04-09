@@ -21,7 +21,8 @@ angular.module('ts5App')
       $scope.user = {
         daysOfWeek: []
       };
-
+      $scope.errRecurrenceDatePicker = '';
+      
       if (scheduledReportId !== '') {
 
         $scope.scheduleReport = [];
@@ -125,7 +126,14 @@ angular.module('ts5App')
         var endDatevalue = $scope.scheduleReport.recurrenceEndDate;
         payLoad.recurrenceStartDate = $filter('date')(startDatevalue, 'yyyy-MM-dd');
         payLoad.recurrenceEndDate = $filter('date')(endDatevalue, 'yyyy-MM-dd');
-
+        
+        if (payLoad.recurrenceStartDate && payLoad.recurrenceEndDate) {
+          if (new Date(payLoad.recurrenceStartDate) > new Date(payLoad.recurrenceEndDate)) {
+            $scope.errRecurrenceDatePicker = 'End Date should be greater than Start Date.';
+            return false;
+          }
+        }
+        
         payLoad.recurrenceTime = $filter('date')($scope.scheduleReport.recurrenceTime, 'HH:mm');
 
         $scope.checkBoxDaysOfWeekArray = [];

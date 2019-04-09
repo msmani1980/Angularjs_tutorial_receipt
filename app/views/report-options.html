@@ -13,7 +13,7 @@
          <p ng-show="reportOptions.name.$error.required">Name is required.</p>
       </div>
     </div>
-    <div class="form-group" ng-if="errMessageDatePicker">
+    <div class="reportErrorMessage" ng-if="errMessageDatePicker">
       	<span> {{ errMessageDatePicker }} </span>
     </div>
     <div ng-repeat="option in template.options" class="form-group" ng-switch on="option.type">
