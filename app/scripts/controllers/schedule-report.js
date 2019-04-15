@@ -1,4 +1,5 @@
 'use strict';
+/*jshint maxcomplexity:6*/
 
 /**
  * @ngdoc function
@@ -21,7 +22,8 @@ angular.module('ts5App')
       $scope.user = {
         daysOfWeek: []
       };
-
+      $scope.errRecurrenceDatePicker = '';
+      
       if (scheduledReportId !== '') {
 
         $scope.scheduleReport = [];
@@ -66,17 +68,17 @@ angular.module('ts5App')
 
       $scope.dateRange = [{ name: 'Previous Day', value: 'Previous Day' }, { name: 'Previous 7 days', value: 'Previous 7 days' }, { name: 'Previous Month', value: 'Previous Month' }];
 
-      var convertOptionValue = function (value, type, multiValue) {
+      var convertOptionValue = function (value, type, multiValue, choiceLookup) {
         if (multiValue && Array.isArray(value)) {
           var retValues = [];
           for (var i = 0; i < value.length; i++) {
-            retValues.push(convertOptionValue(value[i], type, false));
+            retValues.push(convertOptionValue(value[i], type, false, choiceLookup));
           }
 
           return retValues;
         } else if (type === 'DATE') {
           return $filter('date')(value, 'yyyy-MM-dd');
-        } else if (type === 'ID') {
+        } else if (type === 'ID' && choiceLookup) {
           return value.id;
         } else {
           return value;
@@ -95,7 +97,8 @@ angular.module('ts5App')
             returnDetails.options[$scope.template.options[i].code] =
               convertOptionValue($scope.selection.options[$scope.template.options[i].code],
                 $scope.template.options[i].type,
-                $scope.template.options[i].multiValue);
+                $scope.template.options[i].multiValue,
+                $scope.template.options[i].choiceLookup);
           }
         }
 
@@ -124,7 +127,14 @@ angular.module('ts5App')
         var endDatevalue = $scope.scheduleReport.recurrenceEndDate;
         payLoad.recurrenceStartDate = $filter('date')(startDatevalue, 'yyyy-MM-dd');
         payLoad.recurrenceEndDate = $filter('date')(endDatevalue, 'yyyy-MM-dd');
-
+        
+        if (payLoad.recurrenceStartDate && payLoad.recurrenceEndDate) {
+          if (new Date(payLoad.recurrenceStartDate) > new Date(payLoad.recurrenceEndDate)) {
+            $scope.errRecurrenceDatePicker = 'End Date should be greater than Start Date.';
+            return false;
+          }
+        }
+        
         payLoad.recurrenceTime = $filter('date')($scope.scheduleReport.recurrenceTime, 'HH:mm');
 
         $scope.checkBoxDaysOfWeekArray = [];

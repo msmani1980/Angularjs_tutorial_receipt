@@ -23,17 +23,19 @@ angular.module('ts5App')
     
     $scope.emailMe = {};
     
-    var convertOptionValue = function (value, type, multiValue) {
+    $scope.errMessageDatePicker = '';
+    
+    var convertOptionValue = function (value, type, multiValue, isChoiceLookup) {
       if (multiValue && Array.isArray(value)) {
         var retValues = [];
         for (var i = 0; i < value.length; i++) {
-          retValues.push(convertOptionValue(value[i], type, false));
+          retValues.push(convertOptionValue(value[i], type, false, isChoiceLookup));
         }
 
         return retValues;
       } else if (type === 'DATE') {
         return $filter('date')(value, 'yyyy-MM-dd');
-      } else if (type === 'ID') {
+      } else if (type === 'ID' && isChoiceLookup) {
         return value.id;
       }
 
@@ -52,7 +54,7 @@ angular.module('ts5App')
           returnDetails.options[$scope.template.options[i].code] =
             convertOptionValue($scope.selection.options[$scope.template.options[i].code],
               $scope.template.options[i].type,
-              $scope.template.options[i].multiValue);
+              $scope.template.options[i].multiValue, $scope.template.options[i].choiceLookup);
         }
       }
 
@@ -61,6 +63,12 @@ angular.module('ts5App')
 
     $scope.run = function () {
       var params = getSelectedOptions();
+      if (params.options && params.options.effDate && params.options.endDate) {
+        if (new Date(params.options.effDate) > new Date(params.options.endDate)) {
+          $scope.errMessageDatePicker = 'End Date should be greater than Start Date.';
+          return false;
+        }
+      }
       
       jobService.run($scope.template.id, params).then(function () {
         $modalInstance.close();

@@ -46,11 +46,9 @@
       </span>
     </div>
     
-   
-    
     <div class="form-group">
      <label class="col-sm-4 control-label">Recurrence Start Date:	<span style="color:red">*</span></label>
-     <span class="col-sm-6 input-group" ng-class="{'has-error': scheduleReport.name.$invalid}"  ng-controller="OptionSelectionDateCtrl" class="col-sm-6 input-group" ng-class="{'has-error': scheduleReport[option.code].$invalid && scheduleReport[option.code].$dirty}">
+     <span class="col-sm-6 input-group" ng-controller="OptionSelectionDateCtrl" class="col-sm-6 input-group" ng-class="{'has-error': errRecurrenceDatePicker || scheduleReport[option.code].$invalid && scheduleReport[option.code].$dirty}">
        <input type="text" class="form-control" name="" ng-model="scheduleReport.recurrenceStartDate" ng-required="true"  
                datepicker-popup="{{format}}" min-date="today"
                datepicker-options="dateOptions" ng-required="true" close-text="Close" is-open="status.opened"  /> <!-- -->
@@ -61,12 +59,14 @@
       <div ng-if="scheduleReport.name.$error && scheduleReport.name.$dirty">
          <p ng-show="scheduleReport.name.$error.required">Date is required.</p>
       </div>
+      <div class="reportErrorMessage" ng-if="errRecurrenceDatePicker">
+      	<span> {{ errRecurrenceDatePicker }} </span>
       </div>
-   
+      </div>   
     
      <div class="form-group">
       <label class="col-sm-4 control-label">Recurrence End Date:	 <span style="color:red">*</span></label>
-        <span class="col-sm-6 input-group" ng-class="{'has-error': scheduleReport.name.$invalid}"  ng-controller="OptionSelectionDateCtrl" class="col-sm-6 input-group" ng-class="{'has-error': scheduleReport[option.code].$invalid && scheduleReport[option.code].$dirty}">
+        <span class="col-sm-6 input-group" ng-controller="OptionSelectionDateCtrl" class="col-sm-6 input-group" ng-class="{'has-error': errRecurrenceDatePicker || scheduleReport[option.code].$invalid && scheduleReport[option.code].$dirty}">
        <input type="text" class="form-control" name="" ng-model="scheduleReport.recurrenceEndDate" ng-required="true" 
        		   datepicker-popup="{{format}}" min-date="today"
                datepicker-options="dateOptions" ng-required="true" close-text="Close" is-open="status.opened"/> <!-- -->
@@ -133,20 +133,24 @@
        	<label class="col-sm-4 control-label">{{option.prompt}}: <span ng-if="!option.optional" style="color:red">*</span></label>
       </div>
 	  <span ng-switch-when="ID" ng-controller="OptionSelectionSelectCtrl" class="col-sm-6 input-group" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
-        <ui-select ng-if="option.multiValue" name="{{option.code}}" multiple ng-model="selection.options[option.code]">
+        <ui-select ng-if="option.multiValue && option.choiceLookup" name="{{option.code}}" multiple ng-model="selection.options[option.code]">
           <ui-select-match placeholder="Select value...">{{$item.code}}</ui-select-match>
           <ui-select-choices repeat="choice in choices | filter: $select.search track by choice.id"
                              refresh="refreshChoiceValues($select.search)" refresh-delay="10" >
             <div ><span ng-bind-html="choice.code | highlight: $select.search"/><span ng-if="choice.description !== undefined"> (<span ng-bind-html="choice.description | highlight: $select.search"/>)</span></div>
           </ui-select-choices>
         </ui-select>
-        <ui-select ng-if="!option.multiValue" ng-model="selection.options[option.code]">
+        <ui-select ng-if="!option.multiValue && option.choiceLookup" ng-model="selection.options[option.code]">
           <ui-select-match placeholder="Select value...">{{$select.selected.code}}</ui-select-match>
           <ui-select-choices repeat="choice in choices | filter: $select.search track by choice.id"
                              refresh="refreshChoiceValues($select.search)" refresh-delay="10" >
               <div ><span ng-bind-html="choice.code | highlight: $select.search"/><span ng-if="choice.description !== undefined"> (<span ng-bind-html="choice.description | highlight: $select.search"/>)</span></div>
           </ui-select-choices>
         </ui-select>
+        <span ng-if="!option.multiValue && !option.choiceLookup" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
+          <input type="number" name="{{option.code}}" min="1" oninput="if(value.length>16)value=value.slice(0,16)" ng-pattern="regexp.positiveNumber" class="form-control" ng-model="selection.options[option.code]" ng-trim="true" />
+          <div ><span ng-bind-html="choice.code | highlight: $select.search"/><span ng-if="choice.description !== undefined"> (<span ng-bind-html="choice.description | highlight: $select.search"/>)</span></div>
+        </span>
       </span>
       <span ng-switch-when="STRING">
         <span ng-if="option.multiValue && !option.choiceValues" class="col-sm-6 input-group" ng-class="{'has-error': reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
