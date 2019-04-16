@@ -63,13 +63,10 @@ angular.module('ts5App')
 
     $scope.run = function () {
       var params = getSelectedOptions();
-      if (params.options && params.options.effDate && params.options.endDate) {
-        if (new Date(params.options.effDate) > new Date(params.options.endDate)) {
-          $scope.errMessageDatePicker = 'End Date should be greater than Start Date.';
-          return false;
-        }
+      if (!validateFromToDate(params)) {
+        return false;
       }
-      
+
       jobService.run($scope.template.id, params).then(function () {
         $modalInstance.close();
         window.location.href = '#/reports/queue';
@@ -79,4 +76,23 @@ angular.module('ts5App')
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
+    
+    function validateFromToDate (parameters) { 
+      if (parameters.options && parameters.options.effDate && parameters.options.endDate) {
+        if (new Date(parameters.options.effDate) > new Date(parameters.options.endDate)) {
+          $scope.errMessageDatePicker = 'End Date should be greater than Start Date.';
+          return false;
+        }
+      }
+
+      if (parameters.options && parameters.options.verifyEffDate && parameters.options.verifyEndDate) {
+        if (new Date(parameters.options.verifyEffDate) > new Date(parameters.options.verifyEndDate)) {
+          $scope.errMessageDatePicker = 'End Date should be greater than Start Date.';
+          return false;
+        }
+      }
+
+      return true;
+    }
+    
   });

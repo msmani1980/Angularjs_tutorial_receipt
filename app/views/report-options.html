@@ -18,7 +18,7 @@
     </div>
     <div ng-repeat="option in template.options" class="form-group" ng-switch on="option.type">
       <label class="col-sm-4 control-label">{{option.prompt}}: <span ng-if="!option.optional" style="color:red">*</span></label>
-      <span ng-switch-when="DATE" ng-controller="OptionSelectionDateCtrl" class="col-sm-6 input-group" ng-class="{'has-error': errMessageDatePicker || reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
+      <span ng-switch-when="DATE" ng-controller="OptionSelectionDateCtrl" class="col-sm-6 input-group" ng-class="{'has-error': (!option.optional && errMessageDatePicker) || reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
         <input type="text" class="form-control" name="{{option.code}}" ng-model="selection.options[option.code]" datepicker-popup="{{format}}"
                datepicker-options="dateOptions" ng-required="!option.optional" close-text="Close" is-open="status.opened"/> <!-- -->
         <span class="input-group-btn">
