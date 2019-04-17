@@ -963,6 +963,19 @@ angular.module('ts5App')
       if (formData && $this.validateForm() && $scope.errorCustom.length === 0) {
         var itemData = angular.copy(formData);
         var payload = $this.formatPayload(itemData);
+        angular.forEach(payload.companyDiscount.restrictedCategories, function(restrictedCategorie) {
+          if (restrictedCategorie.salesCategoryId === 0) {
+            payload.companyDiscount.restrictedCategories = [];
+            angular.forEach($scope.salesCategoriesList, function(category) { 
+              if (category.id === 0) { return; }
+
+              payload.companyDiscount.restrictedCategories.push({
+                salesCategoryId: category.id
+              });
+            });
+          }
+        });
+
         var action = $scope.editingDiscount ? 'updateItem' : 'createItem';
         $this[action](payload);
       }
@@ -1065,4 +1078,5 @@ angular.module('ts5App')
     $scope.isCurrentEffectiveDate = function (discountData) {
       return (dateUtility.isTodayOrEarlierDatePicker(discountData.startDate) && dateUtility.isAfterTodayDatePicker(discountData.endDate));
     };
+    
   });
