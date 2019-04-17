@@ -361,9 +361,8 @@ angular.module('ts5App').controller('StoreInstanceDashboardCtrl',
       'Inbound Seals') ? 'On Floor' : storeInstance.statusName;
       storeInstance.scheduleDateApi = angular.copy(storeInstance.scheduleDate);
       storeInstance.scheduleDate = dateUtility.formatDateForApp(storeInstance.scheduleDate);
-      storeInstance.updatedOnDisplay = storeInstance.updatedOn ? dateUtility.formatTimestampForApp(storeInstance.statusUpdatedOn) : '';
+      storeInstance.updatedOnDisplay = storeInstance.statusUpdatedOn ? dateUtility.formatTimestampForApp(storeInstance.statusUpdatedOn) : dateUtility.formatTimestampForApp(storeInstance.updatedOn);
       storeInstance.inboundedOnDisplay = storeInstance.inboundedOn ? dateUtility.formatTimestampForApp(storeInstance.inboundedOn) : '';
-
       setStoreInstanceTime(storeInstance);
       setStoreInstanceActionButtons(storeInstance);
       setFlightDocsConditions(storeInstance);
