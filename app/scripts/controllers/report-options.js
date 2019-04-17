@@ -24,6 +24,7 @@ angular.module('ts5App')
     $scope.emailMe = {};
     
     $scope.errMessageDatePicker = '';
+    $scope.errMessageCBDatePicker = '';
     
     var convertOptionValue = function (value, type, multiValue, isChoiceLookup) {
       if (multiValue && Array.isArray(value)) {
@@ -81,13 +82,15 @@ angular.module('ts5App')
       if (parameters.options && parameters.options.effDate && parameters.options.endDate) {
         if (new Date(parameters.options.effDate) > new Date(parameters.options.endDate)) {
           $scope.errMessageDatePicker = 'End Date should be greater than Start Date.';
+          $scope.errMessageCBDatePicker = '';
           return false;
         }
       }
 
       if (parameters.options && parameters.options.verifyEffDate && parameters.options.verifyEndDate) {
         if (new Date(parameters.options.verifyEffDate) > new Date(parameters.options.verifyEndDate)) {
-          $scope.errMessageDatePicker = 'End Date should be greater than Start Date.';
+          $scope.errMessageCBDatePicker = 'Cash Bag Verify End Date should be greater than Start Date.';
+          $scope.errMessageDatePicker = '';
           return false;
         }
       }
