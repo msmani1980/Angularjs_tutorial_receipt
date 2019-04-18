@@ -1579,6 +1579,8 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
         if (newDate && newDate !== oldDate) {
           if (!(oldDate === '' && newDate === dateUtility.nowFormattedDatePicker())) {
             $this.updateInstanceDependencies();
+          } else if ($scope.storesList.length === 0) {
+            $this.getStoresList();
           }
         }
 
