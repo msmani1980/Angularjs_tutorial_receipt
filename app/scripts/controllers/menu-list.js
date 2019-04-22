@@ -151,9 +151,21 @@ angular.module('ts5App')
       showToast('success', 'Menu Management', 'successfully deleted menu!');
     }
 
+    function handleDeleteError() {
+      $scope.showInternalServerErrors = false;
+      $scope.errorRespnose = [];
+
+      $scope.errorCustom = [{
+        field: 'Menu',
+        value: 'is in use and can\'t be deleted'
+      }];
+
+      showErrors();
+    }
+
     $scope.deleteMenu = function() {
       angular.element('.delete-warning-modal').modal('hide');
-      menuService.deleteMenu($scope.menuToDelete.id).then(successDeleteHandler, showErrors);
+      menuService.deleteMenu($scope.menuToDelete.id).then(successDeleteHandler, handleDeleteError);
     };
 
     $scope.showExcelDownload = function() {
