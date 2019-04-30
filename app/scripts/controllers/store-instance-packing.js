@@ -942,10 +942,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           var newItem = $this.createFreshItem(item, true);
           newItem.isInOffload = true;
           newItem.salesCategoryName = item.salesCategoryName;
-          if (!ePosItem) {
-            $scope.offloadListItems.push(newItem);
-          }
-
+          $scope.offloadListItems.push(newItem);
           itemMatch = newItem;
         } else if (offloadListMatch) {
           itemMatch = offloadListMatch;
