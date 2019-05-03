@@ -185,90 +185,99 @@
           </div>
         </div>
 
-        <div class="well" ng-repeat="item in deliveryNote.items | filter:filterInput track by $index" ng-show="shouldShowItemOnReview(item)">
-          <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-4">
-              <div class="form-group">
-                <label>Item</label>
-                <input ng-value="item.itemCode + ' - ' + item.itemName"
-                       type="text"
-                       class="form-control"
-                       ng-hide="canEditItem(item)"
-                       name="itemCode[{{item.masterItemId}}]"
-                       readonly>
-                <ui-select name="item[{{item.masterItemId}}]" ng-model="item" theme="bootstrap" on-select="changeItem($select.selected, $index)" ng-show="canEditItem(item)">
-                  <ui-select-match placeholder="Select an Item">{{ $select.selected.itemCode }} - {{ $select.selected.itemName}}</ui-select-match>
-                  <ui-select-choices repeat="masterItem in masterItemsAllowedInSelect | filter: $select.search">
-                    {{ masterItem.itemCode }} - {{ masterItem.itemName }}
-                  </ui-select-choices>
-                </ui-select>
+        <div ng-repeat="item in deliveryNote.items | filter:filterInput track by $index">
+          <div class="well" ng-if="shouldShowCategoryHeader(item)">
+            <div class="row">
+              <div class="col-xs-12 col-md-12">
+                <strong>{{ item.categoryName }}</strong>
               </div>
             </div>
-
-            <div class="col-xs-6 col-sm-3 col-md-1">
-              <div class="form-group">
-                <label>Expected</label>
-                <input ng-model="item.expectedQuantity" type="number" min="0" step="1" class="form-control"
-                       id="expected-qty-{{ item.masterItemId }}"
-                       onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                       ng-readonly="readOnly">
+          </div>
+          <div class="well" ng-show="shouldShowItemOnReview(item)">
+            <div class="row">
+              <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="form-group">
+                  <label>Item</label>
+                  <input ng-value="item.itemCode + ' - ' + item.itemName"
+                         type="text"
+                         class="form-control"
+                         ng-hide="canEditItem(item)"
+                         name="itemCode[{{item.masterItemId}}]"
+                         readonly>
+                  <ui-select name="item[{{item.masterItemId}}]" ng-model="item" theme="bootstrap" on-select="changeItem($select.selected, $index)" ng-show="canEditItem(item)">
+                    <ui-select-match placeholder="Select an Item">{{ $select.selected.itemCode }} - {{ $select.selected.itemName}}</ui-select-match>
+                    <ui-select-choices repeat="masterItem in masterItemsAllowedInSelect | filter: $select.search">
+                      {{ masterItem.itemCode }} - {{ masterItem.itemName }}
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
               </div>
-            </div>
 
-            <div class="col-xs-6 col-sm-3 col-md-1">
-              <div class="form-group"  ng-class="{ 'has-error' : !isNumberGreaterThanOrEqualToZero(item.deliveredQuantity) && (isNumberGreaterThanZero(item.expectedQuantity) || isNumberGreaterThanZero(item.ullageQuantity))&& displayError, 'has-success' : isNumberGreaterThanOrEqualToZero(item.deliveredQuantity)}">
-                <label>Delivered*</label>
-                <input ng-model="item.deliveredQuantity" type="number" min="0" step="1" class="form-control"
-                       id="delivered-qty-{{ item.masterItemId }}"
-                       ng-readonly="readOnly" 
-                       onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                       ng-required="isNumberGreaterThanZero(item.expectedQuantity) || isNumberGreaterThanZero(item.ullageQuantity)"
-                       name="Delivered ( {{ item.itemCode }} - {{ item.itemName }} )">
+              <div class="col-xs-6 col-sm-3 col-md-1">
+                <div class="form-group">
+                  <label>Expected</label>
+                  <input ng-model="item.expectedQuantity" type="number" min="0" step="1" class="form-control"
+                         id="expected-qty-{{ item.masterItemId }}"
+                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                         ng-readonly="readOnly">
+                </div>
               </div>
-            </div>
 
-            <div class="col-xs-6 col-sm-3 col-md-1">
-              <div class="form-group">
-                <label>Ullage</label>
-                <input ng-model="item.ullageQuantity" type="number" min="0" step="1" class="form-control"
-                       id="ullage-qty-{{ item.masterItemId }}" ng-readonly="readOnly"
-                       onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                       ng-disabled="!item.deliveredQuantity"
-                       ng-change="ullageQuantityChanged(item)">
+              <div class="col-xs-6 col-sm-3 col-md-1">
+                <div class="form-group"  ng-class="{ 'has-error' : !isNumberGreaterThanOrEqualToZero(item.deliveredQuantity) && (isNumberGreaterThanZero(item.expectedQuantity) || isNumberGreaterThanZero(item.ullageQuantity))&& displayError, 'has-success' : isNumberGreaterThanOrEqualToZero(item.deliveredQuantity)}">
+                  <label>Delivered*</label>
+                  <input ng-model="item.deliveredQuantity" type="number" min="0" step="1" class="form-control"
+                         id="delivered-qty-{{ item.masterItemId }}"
+                         ng-readonly="readOnly"
+                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                         ng-required="isNumberGreaterThanZero(item.expectedQuantity) || isNumberGreaterThanZero(item.ullageQuantity)"
+                         name="Delivered ( {{ item.itemCode }} - {{ item.itemName }} )">
+                </div>
               </div>
-            </div>
 
-            <div class="col-xs-12 col-sm-6 col-md-3">
-              <div class="form-group" ng-class="{ 'has-error' : !item.ullageReason && item.ullageQuantity && displayError, 'has-success' : item.ullageReason}">
-                <label>Ullage Reason <span ng-show="item.ullageQuantity">*</span></label>
-                <select class="form-control"
-                        ng-model="item.ullageReason"
-                        name="Ullage Reason ( {{ item.itemCode }} - {{ item.itemName }} )"
-                        id="ullage-reason-{{ item.masterItemId }}"
-                        ng-disabled="ullageReasonDisabled(item)"
-                        ng-required="ullageReasonRequired(item)"
-                        ng-options="ullageReason.id as ullageReason.companyReasonCodeName for ullageReason in ullageReasons">
-                  <option selected="selected" disabled value>Select an Ullage Reason</option>
-                </select>
+              <div class="col-xs-6 col-sm-3 col-md-1">
+                <div class="form-group">
+                  <label>Ullage</label>
+                  <input ng-model="item.ullageQuantity" type="number" min="0" step="1" class="form-control"
+                         id="ullage-qty-{{ item.masterItemId }}" ng-readonly="readOnly"
+                         onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                         ng-disabled="!item.deliveredQuantity"
+                         ng-change="ullageQuantityChanged(item)">
+                </div>
               </div>
-            </div>
 
-            <div class="col-xs-6 col-sm-3 col-md-1">
-              <div class="form-group">
-                <label>Booked</label>
-                <input ng-value="calculateBooked(item)"
-                       type="number" class="form-control"
-                       id="booked-qty-{{ item.masterItemId }}"
-                       readonly>
+              <div class="col-xs-12 col-sm-6 col-md-3">
+                <div class="form-group" ng-class="{ 'has-error' : !item.ullageReason && item.ullageQuantity && displayError, 'has-success' : item.ullageReason}">
+                  <label>Ullage Reason <span ng-show="item.ullageQuantity">*</span></label>
+                  <select class="form-control"
+                          ng-model="item.ullageReason"
+                          name="Ullage Reason ( {{ item.itemCode }} - {{ item.itemName }} )"
+                          id="ullage-reason-{{ item.masterItemId }}"
+                          ng-disabled="ullageReasonDisabled(item)"
+                          ng-required="ullageReasonRequired(item)"
+                          ng-options="ullageReason.id as ullageReason.companyReasonCodeName for ullageReason in ullageReasons">
+                    <option selected="selected" disabled value>Select an Ullage Reason</option>
+                  </select>
+                </div>
               </div>
-            </div>
 
-            <div class="col-xs-12 col-sm-2 col-md-1 text-right" ng-show="canRemoveItem(item)">
-              <button type="button" class="btn btn-sm btn-danger" ng-click="removeItemByIndex($index, item)">
-                <i class="fa fa-close"></i>
-              </button>
-            </div>
+              <div class="col-xs-6 col-sm-3 col-md-1">
+                <div class="form-group">
+                  <label>Booked</label>
+                  <input ng-value="calculateBooked(item)"
+                         type="number" class="form-control"
+                         id="booked-qty-{{ item.masterItemId }}"
+                         readonly>
+                </div>
+              </div>
 
+              <div class="col-xs-12 col-sm-2 col-md-1 text-right" ng-show="canRemoveItem(item)">
+                <button type="button" class="btn btn-sm btn-danger" ng-click="removeItemByIndex($index, item)">
+                  <i class="fa fa-close"></i>
+                </button>
+              </div>
+
+            </div>
           </div>
         </div>
 
