@@ -10,7 +10,9 @@
  */
 angular.module('ts5App')
   .controller('LmpDeliveryNoteCtrl', function($scope, $routeParams, $location, $q, $filter, deliveryNoteFactory,
-    dateUtility, messageService, lodash) {
+    dateUtility, messageService, lodash, categoryFactory) {
+
+    var $this = this;
 
     // static scope vars
     $scope.viewName = 'Delivery note';
@@ -210,12 +212,26 @@ angular.module('ts5App')
       return uniqueMenuItems;
     }
 
+    function appendCategoryInformationToMasterItem(masterItem) {
+      var lastCategoryId = lodash.findLast(masterItem.versions).categoryId;
+      var category = $scope.categoryDictionary[lastCategoryId];
+
+      masterItem.salesCategoryId = category.id;
+      masterItem.orderBy = category.orderBy;
+      masterItem.categoryName = category.name;
+    }
+
     function formatItemForDeliveryNoteList (masterItem) {
+      appendCategoryInformationToMasterItem(masterItem);
+
       var newItem = {
         itemName: masterItem.itemName,
         itemCode: masterItem.itemCode,
         itemMasterId: masterItem.id,
-        ullageQuantity: 0
+        ullageQuantity: 0,
+        salesCategoryId: masterItem.salesCategoryId,
+        orderBy: masterItem.orderBy,
+        categoryName: masterItem.categoryName
       };
 
       return newItem;
@@ -248,10 +264,27 @@ angular.module('ts5App')
 
       addNewDeliveryNoteItemsFromArray(catererStationItems);
       addNewDeliveryNoteItemsFromArray(menuItems);
-
-      $scope.deliveryNote.items = lodash.sortBy($scope.deliveryNote.items, 'itemName');
+      sortItemsByCategory();
 
       hideLoadingModal();
+    }
+
+    function sortItemsByCategory() {
+      // Sort by category
+      var lastCategoryId = null;
+      $scope.deliveryNote.items = $filter('orderBy')($scope.deliveryNote.items, ['orderBy', 'itemName']).map(function (item) {
+        var category = $scope.categoryDictionary[item.salesCategoryId];
+
+        if (lastCategoryId !== category.id) {
+          item.showCategoryHeader = true;
+        } else {
+          item.showCategoryHeader = false;
+        }
+
+        lastCategoryId = category.id;
+
+        return item;
+      });
     }
 
     function getStationItemPromises (catererStationId) {
@@ -623,12 +656,16 @@ angular.module('ts5App')
         return;
       }
 
+      appendCategoryInformationToMasterItem(newItem);
+
       $scope.clearFilter();
       newItem.canEdit = true;
       newItem.itemMasterId = newItem.id;
       $scope.deliveryNote.items.push(newItem);
       setAllowedMasterItems();
       $scope.removeNewItemRow(index, newItem);
+
+      sortItemsByCategory();
     };
 
     $scope.removeNewItemRow = function($index) {
@@ -692,6 +729,21 @@ angular.module('ts5App')
       return false;
     };
 
+    $scope.shouldShowCategoryHeader = function (item) {
+      if ($scope.state !== 'review' && item.showCategoryHeader) {
+        return true;
+      } else if ($scope.state === 'review') {
+        var itemsWithinCategory = lodash.filter($scope.deliveryNote.items, { salesCategoryId: item.salesCategoryId });
+        var shouldShowCategoryHeader = lodash.filter(itemsWithinCategory, function (item) {
+          return $scope.shouldShowItemOnReview(item);
+        }).length > 0;
+
+        return shouldShowCategoryHeader && item.showCategoryHeader;
+      } else {
+        return false;
+      }
+    };
+
     function setStationIdOnCreate() {
       if ($scope.state !== 'create') {
         return;
@@ -711,8 +763,24 @@ angular.module('ts5App')
       }
     }
 
+    function appendCategoryInformationToDeliveryNoteItem(deliveryNoteItem) {
+      var masterItem = lodash.find($scope.masterItems, { id: deliveryNoteItem.masterItemId });
+
+      var lastCategoryId = lodash.findLast(masterItem.versions).categoryId;
+      var category = $scope.categoryDictionary[lastCategoryId];
+
+      deliveryNoteItem.salesCategoryId = category.id;
+      deliveryNoteItem.orderBy = category.orderBy;
+      deliveryNoteItem.categoryName = category.name;
+    }
+
     function resolveAndCompleteLastInit(responseFromAPI) {
       $scope.masterItems = $filter('orderBy')(responseFromAPI.masterItems, 'itemName');
+
+      $scope.deliveryNote.items.forEach(function (deliveryNoteItem) {
+        appendCategoryInformationToDeliveryNoteItem(deliveryNoteItem);
+      });
+
       setWatchers();
       setStationIdOnCreate();
       $scope.deliveryNote.deliveryDate = $scope.deliveryDateStore; 
@@ -759,7 +827,10 @@ angular.module('ts5App')
 
     function setDeliveryNoteFromResponse(response) {
       $scope.deliveryNote = angular.copy(response);
-      $scope.deliveryNote.items = $filter('orderBy')($scope.deliveryNote.items, 'itemName');
+
+      console.log($scope.deliveryNote.items)
+
+      $scope.deliveryNote.items = $scope.deliveryNote.items;
       $scope.deliveryNote.deliveryDate = dateUtility.formatDateForApp($scope.deliveryNote.deliveryDate);
       $scope.deliveryDateStore = $scope.deliveryNote.deliveryDate;
       $scope.deliveryNote.createdOn = dateUtility.formatTimestampForApp($scope.deliveryNote.createdOn);
@@ -770,14 +841,41 @@ angular.module('ts5App')
       }
     }
 
+    this.setCategoryList = function (dataFromAPI) {
+      $scope.categories = [];
+      $scope.categoryDictionary = [];
+
+      // Flat out category list
+      dataFromAPI.salesCategories.forEach(function (category) {
+        $this.flatCategoryList(category, $scope.categories);
+      });
+
+      // Assign order for flatten category list and create helper dictionary
+      var count = 1;
+      $scope.categories.forEach(function (category) {
+        category.orderBy = count++;
+        $scope.categoryDictionary[category.id] = category;
+      });
+    };
+
+    this.flatCategoryList = function (category, categories) {
+      categories.push(category);
+
+      category.children.forEach(function (category) {
+        $this.flatCategoryList(category, categories);
+      });
+    };
+
     function resolveInitPromises(responseCollection) {
       $scope.regularItemType = lodash.findWhere(angular.copy(responseCollection[0]), { name: 'Regular' });
       $scope.inventoryCharacteristicType = lodash.findWhere(angular.copy(responseCollection[1]), { name: 'Inventory' });
       $scope.ullageReasons = lodash.filter(responseCollection[2].companyReasonCodes, { reasonTypeName: _reasonCodeTypeUllage });
       $scope.menuList = angular.copy(responseCollection[3].menus);
 
-      if (responseCollection[4]) {
-        setDeliveryNoteFromResponse(responseCollection[4]);
+      $this.setCategoryList(responseCollection[4]);
+
+      if (responseCollection[5]) {
+        setDeliveryNoteFromResponse(responseCollection[5]);
       }
 
       completeInitCalls();
@@ -791,6 +889,13 @@ angular.module('ts5App')
 
       var payloadForMenu = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
       initPromises.push(deliveryNoteFactory.getMenuList(payloadForMenu));
+
+      initPromises.push(categoryFactory.getCategoryList({
+        expand: true,
+        sortBy: 'ASC',
+        sortOn: 'orderBy',
+        parentId: 0
+      }));
 
       if ($scope.state === 'edit' || $scope.state === 'view') {
         initPromises.push(deliveryNoteFactory.getDeliveryNote($routeParams.id));
