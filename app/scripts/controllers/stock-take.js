@@ -108,7 +108,7 @@ angular.module('ts5App')
       }
 
       $scope.cateringStationItems = items;
-      console.log('sort')
+      
       sortItemsByCategory();
       filterAvailableItems();
     }
