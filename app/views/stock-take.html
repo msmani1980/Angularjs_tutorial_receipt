@@ -138,38 +138,53 @@
     </error-dialog>
 
     <ng-form name="form" class="form edit-form delivery-note-form">
-
-      <div class="well" ng-repeat="item in cateringStationItems | filter:filterInput track by item.masterItemId" ng-hide="shouldHideItem(item)">
-        <div class="row">
-
-          <div class="col-xs-12 col-sm-4">
-            <div class="form-group">
-              <label for="item-code-{{ $index }}">Item Code</label>
-              <input ng-model="item.itemCode" type="text" class="form-control" name="item-code-{{ $index }}" readonly disabled>
+      <div ng-repeat="item in cateringStationItems | filter:filterInput track by item.masterItemId">
+        <div class="well" ng-if="shouldShowCategoryHeader(item)">
+          <div class="row">
+            <div class="col-xs-12 col-md-12">
+              <strong>{{ item.categoryName }}</strong>
             </div>
           </div>
-
-          <div class="col-xs-12 col-sm-5">
-            <div class="form-group">
-              <label for="item-name-{{ $index }}">Item Name</label>
-               <input ng-model="item.itemName" type="text" class="form-control" name="item-name-{{ $index }}" readonly disabled>
+        </div>
+        <div class="well"  ng-hide="shouldHideItem(item)">
+          <div class="row">
+            <div class="col-xs-12 text-right" ng-show="canRemoveItem(item)">
+            <span class="btn btn-sm btn-danger" ng-click="removeAddedItem(cateringStationItems, item.index)">
+              <i class="fa fa-close"></i>
+            </span>
             </div>
           </div>
+          <div class="row">
 
-          <div class="col-xs-12 col-sm-3">
-            <div class="form-group">
-              <label for="item-quantity-{{ $index }}">Quantity</label>
-              <input ng-model="itemQuantities[item.masterItemId]" type="text" class="form-control" name="item-quantity-{{ $index }}" ng-disabled="quantityDisabled(item)">
+            <div class="col-xs-12 col-sm-4">
+              <div class="form-group">
+                <label for="item-code-{{ $index }}">Item Code</label>
+                <input ng-model="item.itemCode" type="text" class="form-control" name="item-code-{{ $index }}" readonly disabled>
+              </div>
             </div>
-          </div>
 
+            <div class="col-xs-12 col-sm-5">
+              <div class="form-group">
+                <label for="item-name-{{ $index }}">Item Name</label>
+                 <input ng-model="item.itemName" type="text" class="form-control" name="item-name-{{ $index }}" readonly disabled>
+              </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-3">
+              <div class="form-group">
+                <label for="item-quantity-{{ $index }}">Quantity</label>
+                <input ng-model="itemQuantities[item.masterItemId]" type="text" class="form-control" name="item-quantity-{{ $index }}" ng-disabled="quantityDisabled(item)">
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
 
       <div class="well" ng-repeat="item in addedItems | index track by $index" ng-show="showAddedItem(item, state) && uiSelectReady">
         <div class="row">
           <div class="col-xs-12 text-right" ng-hide="state === 'review'">
-            <span class="btn btn-sm btn-danger" ng-click="removeAddedItem(item.index)">
+            <span class="btn btn-sm btn-danger" ng-click="removeAddedItem(addedItems, item.index)">
               <i class="fa fa-close"></i>
             </span>
           </div>
@@ -191,7 +206,8 @@
                          class="new-item-{{ $index }}"
                          ng-model="item.itemObject"
                          ng-disabled="readOnly || addedItems.length < 0 || state === 'view'"
-                         reset-search-input="false">
+                         reset-search-input="false"
+                         on-select="addItem($select.selected, $index)">>
 
                 <ui-select-match placeholder="Select New Item..." allow-clear>{{$select.selected.itemName}}</ui-select-match>
                 <ui-select-choices repeat="filteredItem in filteredItems | filter:omitSelectedItems | filter: $select.search | orderBy:'itemName' track by $index">
