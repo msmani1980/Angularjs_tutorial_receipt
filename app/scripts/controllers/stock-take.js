@@ -8,7 +8,9 @@
  */
 angular.module('ts5App')
   .controller('StockTakeCtrl', function($scope, $routeParams, $location, $q, $filter, stockTakeFactory, dateUtility,
-    messageService, lodash) {
+    messageService, lodash, categoryFactory) {
+
+    var $this = this;
 
     $scope.viewName = 'Stock Take';
     $scope.itemQuantities = [];
@@ -85,6 +87,10 @@ angular.module('ts5App')
     }
 
     function setCateringStationItems(items) {
+      items.forEach(function (item) {
+        appendCategoryInformationToCateringItems(item);
+      });
+
       if (angular.isUndefined(_cateringStationItems[$scope.stockTake.catererStationId])) {
         _cateringStationItems[$scope.stockTake.catererStationId] = items;
       }
@@ -102,8 +108,59 @@ angular.module('ts5App')
       }
 
       $scope.cateringStationItems = items;
+
+      sortItemsByCategory();
       filterAvailableItems();
     }
+
+    function appendCategoryInformationToCateringItems(item) {
+      var category = $scope.categoryDictionary[item.salesCategoryId];
+
+      item.orderBy = category.orderBy;
+      item.categoryName = category.name;
+    }
+
+    function appendCategoryInformationToMasterItem(masterItem) {
+      var lastCategoryId = lodash.findLast(masterItem.versions).categoryId;
+      var category = $scope.categoryDictionary[lastCategoryId];
+
+      masterItem.salesCategoryId = category.id;
+      masterItem.orderBy = category.orderBy;
+      masterItem.categoryName = category.name;
+    }
+
+    function sortItemsByCategory() {
+      // Sort by category
+      var lastCategoryId = null;
+      $scope.cateringStationItems = $filter('orderBy')($scope.cateringStationItems, ['orderBy', 'itemName']).map(function (item) {
+        var category = $scope.categoryDictionary[item.salesCategoryId];
+
+        if (lastCategoryId !== category.id) {
+          item.showCategoryHeader = true;
+        } else {
+          item.showCategoryHeader = false;
+        }
+
+        lastCategoryId = category.id;
+
+        return item;
+      });
+    }
+
+    $scope.shouldShowCategoryHeader = function (item) {
+      if (($scope.state === 'create' || $scope.state === 'edit') && item.showCategoryHeader) {
+        return true;
+      } else if ($scope.state === 'review' || $scope.state === 'view') {
+        var itemsWithinCategory = lodash.filter($scope.cateringStationItems, { salesCategoryId: item.salesCategoryId });
+        var shouldShowCategoryHeader = lodash.filter(itemsWithinCategory, function (item) {
+          return !$scope.shouldHideItem(item);
+        }).length > 0;
+
+        return shouldShowCategoryHeader && item.showCategoryHeader;
+      } else {
+        return false;
+      }
+    };
 
     function diffItems(itemList) {
       var items = [];
@@ -291,6 +348,39 @@ angular.module('ts5App')
 
       return false;
     }
+
+    $scope.addItem = function(newItem, index) {
+      if (!newItem) {
+        return;
+      }
+
+      var inArray = $scope.cateringStationItems.filter(function(item) {
+        return (item.masterItemId === newItem.id);
+      });
+
+      if (inArray.length) {
+        return;
+      }
+
+      appendCategoryInformationToMasterItem(newItem);
+
+      $scope.clearFilter();
+      newItem.canEdit = true;
+      newItem.masterItemId = newItem.id;
+      $scope.cateringStationItems.push(newItem);
+
+      $scope.removeNewItemRow(index, newItem);
+
+      sortItemsByCategory();
+    };
+
+    $scope.removeNewItemRow = function($index) {
+      $scope.addedItems.splice($index, true);
+    };
+
+    $scope.canRemoveItem = function(item) {
+      return item.canEdit && !$scope.readOnly;
+    };
 
     function checkItemQuantities() {
       var items = [];
@@ -546,8 +636,8 @@ angular.module('ts5App')
       }
     };
 
-    $scope.removeAddedItem = function(key) {
-      $scope.addedItems.splice(key, 1);
+    $scope.removeAddedItem = function(items, key) {
+      items.splice(key, 1);
     };
 
     $scope.showAddedItem = function(item, state) {
@@ -572,6 +662,40 @@ angular.module('ts5App')
       return (selectedItem.length === 0);
     };
 
+    this.setCategoryList = function (dataFromAPI) {
+      $scope.categories = [];
+      $scope.categoryDictionary = [];
+
+      // Flat out category list
+      dataFromAPI.salesCategories.forEach(function (category) {
+        $this.flatCategoryList(category, $scope.categories);
+      });
+
+      // Assign order for flatten category list and create helper dictionary
+      var count = 1;
+      $scope.categories.forEach(function (category) {
+        category.orderBy = count++;
+        $scope.categoryDictionary[category.id] = category;
+      });
+    };
+
+    this.flatCategoryList = function (category, categories) {
+      categories.push(category);
+
+      category.children.forEach(function (category) {
+        $this.flatCategoryList(category, categories);
+      });
+    };
+
+    function getCategoryList() {
+      categoryFactory.getCategoryList({
+        expand: true,
+        sortBy: 'ASC',
+        sortOn: 'orderBy',
+        parentId: 0
+      }).then($this.setCategoryList);
+    }
+
     // create state actions
     stateActions.createInit = function() {
       $scope.readOnly = false;
@@ -583,8 +707,10 @@ angular.module('ts5App')
       $scope.$watch('addedItems', itemQuantitiesWatcher, true);
 
       _initPromises.push(
-        getCatererStationList()
+        getCatererStationList(),
+        getCategoryList()
       );
+
       resolveInitPromises();
     };
 
@@ -603,7 +729,8 @@ angular.module('ts5App')
 
       _initPromises.push(
         getCatererStationList(),
-        getStockTake()
+        getStockTake(),
+        getCategoryList()
       );
 
       resolveInitPromises();
@@ -628,8 +755,10 @@ angular.module('ts5App')
 
       _initPromises.push(
         getCatererStationList(),
-        getStockTake()
+        getStockTake(),
+        getCategoryList()
       );
+
       resolveInitPromises();
     };
 
