@@ -164,6 +164,11 @@ angular.module('ts5App')
       return ($scope.hideReview) ? isNumberGreaterThanOrEqualTo0(item.deliveredQuantity) : true;
     };
 
+    $scope.shouldHideItem = function (item) {
+      var isInvalidNumber = !isNumberGreaterThanOrEqualTo0(item.deliveredQuantity);
+      return isInvalidNumber && ($scope.state === 'review' || $scope.state === 'view');
+    };
+
     function removeNullDeliveredItems() {
       $scope.deliveryNote.items = $scope.deliveryNote.items.filter(function(item) {
         return isNumberGreaterThanOrEqualTo0(item.deliveredQuantity);
@@ -270,6 +275,7 @@ angular.module('ts5App')
     }
 
     $scope.sortItemsByCategory = function() {
+      console.log('sorting')
       // Sort by category
       var lastCategoryId = null;
 
@@ -739,7 +745,7 @@ angular.module('ts5App')
     };
 
     $scope.shouldShowCategoryHeader = function (item) {
-      if ($scope.state !== 'review' && item.showCategoryHeader) {
+      if (($scope.state === 'create' || $scope.state === 'edit' || $scope.state === 'view') && item.showCategoryHeader) {
         return true;
       } else if ($scope.state === 'review') {
         var itemsWithinCategory = lodash.filter($scope.deliveryNote.items, { salesCategoryId: item.salesCategoryId });
@@ -792,7 +798,8 @@ angular.module('ts5App')
 
       setWatchers();
       setStationIdOnCreate();
-      $scope.deliveryNote.deliveryDate = $scope.deliveryDateStore; 
+      $scope.deliveryNote.deliveryDate = $scope.deliveryDateStore;
+      $scope.sortItemsByCategory();
       hideLoadingModal();
     }
 
