@@ -264,28 +264,36 @@ angular.module('ts5App')
 
       addNewDeliveryNoteItemsFromArray(catererStationItems);
       addNewDeliveryNoteItemsFromArray(menuItems);
-      sortItemsByCategory();
+      $scope.sortItemsByCategory();
 
       hideLoadingModal();
     }
 
-    function sortItemsByCategory() {
+    $scope.sortItemsByCategory = function() {
       // Sort by category
       var lastCategoryId = null;
-      $scope.deliveryNote.items = $filter('orderBy')($scope.deliveryNote.items, ['orderBy', 'itemName']).map(function (item) {
+
+      $scope.deliveryNote.items = $filter('orderBy')($scope.deliveryNote.items, ['orderBy', 'itemName']);
+
+      var shouldShowCategoryHeader = [];
+      $filter('filter')($scope.deliveryNote.items, $scope.filterInput).forEach(function (item) {
         var category = $scope.categoryDictionary[item.salesCategoryId];
 
         if (lastCategoryId !== category.id) {
+          shouldShowCategoryHeader[item.itemMasterId] = true;
+        }
+
+        lastCategoryId = category.id;
+      });
+
+      $scope.deliveryNote.items.map(function (item) {
+        if (shouldShowCategoryHeader[item.itemMasterId] === true) {
           item.showCategoryHeader = true;
         } else {
           item.showCategoryHeader = false;
         }
-
-        lastCategoryId = category.id;
-
-        return item;
-      });
-    }
+      })
+    };
 
     function getStationItemPromises (catererStationId) {
       var menuPayload = {
@@ -537,6 +545,7 @@ angular.module('ts5App')
         delete $scope.filterInput.itemName;
       }
 
+      $scope.sortItemsByCategory()
     };
 
     $scope.calculateBooked = function(item) {
@@ -665,7 +674,7 @@ angular.module('ts5App')
       setAllowedMasterItems();
       $scope.removeNewItemRow(index, newItem);
 
-      sortItemsByCategory();
+      $scope.sortItemsByCategory();
     };
 
     $scope.removeNewItemRow = function($index) {
