@@ -275,7 +275,7 @@ angular.module('ts5App')
     }
 
     $scope.sortItemsByCategory = function() {
-      console.log('sorting')
+
       // Sort by category
       var lastCategoryId = null;
 
