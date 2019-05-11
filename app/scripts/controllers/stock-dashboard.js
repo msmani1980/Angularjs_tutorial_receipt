@@ -62,7 +62,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
         } else {
           item.showCategoryHeader = false;
         }
-      })
+      });
     };
 
     this.getStockDashboardItemsSuccessHandler = function(dataFromAPI) {

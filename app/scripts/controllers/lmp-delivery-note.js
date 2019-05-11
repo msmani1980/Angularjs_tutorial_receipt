@@ -292,7 +292,7 @@ angular.module('ts5App')
         } else {
           item.showCategoryHeader = false;
         }
-      })
+      });
     };
 
     function getStationItemPromises (catererStationId) {
@@ -545,7 +545,7 @@ angular.module('ts5App')
         delete $scope.filterInput.itemName;
       }
 
-      $scope.sortItemsByCategory()
+      $scope.sortItemsByCategory();
     };
 
     $scope.calculateBooked = function(item) {

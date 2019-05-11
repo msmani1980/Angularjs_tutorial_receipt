@@ -152,7 +152,7 @@ angular.module('ts5App')
         } else {
           item.showCategoryHeader = false;
         }
-      })
+      });
     };
 
     $scope.shouldShowCategoryHeader = function (item) {
@@ -589,7 +589,7 @@ angular.module('ts5App')
         delete $scope.filterInput.itemName;
       }
 
-      $scope.sortItemsByCategory()
+      $scope.sortItemsByCategory();
     };
 
     $scope.cancel = function() {
