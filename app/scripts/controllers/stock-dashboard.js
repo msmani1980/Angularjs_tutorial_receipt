@@ -39,9 +39,34 @@ angular.module('ts5App').controller('StockDashboardCtrl',
 
     var loadingProgress = false;
 
+    $scope.sortItemsByCategory = function() {
+      // Sort by category
+      var lastCategoryId = null;
+
+      $scope.stockDashboardItemsList = $filter('orderBy')($scope.stockDashboardItemsList, ['orderBy', 'itemName']);
+
+      var shouldShowCategoryHeader = [];
+      $filter('filter')($scope.stockDashboardItemsList, $scope.search).forEach(function (item) {
+        var category = $scope.categoryDictionary[item.salesCategoryId];
+
+        if (lastCategoryId !== category.id) {
+          shouldShowCategoryHeader[item.itemMasterId] = true;
+        }
+
+        lastCategoryId = category.id;
+      });
+
+      $scope.stockDashboardItemsList.map(function (item) {
+        if (shouldShowCategoryHeader[item.itemMasterId] === true) {
+          item.showCategoryHeader = true;
+        } else {
+          item.showCategoryHeader = false;
+        }
+      })
+    };
+
     this.getStockDashboardItemsSuccessHandler = function(dataFromAPI) {
-      // Assign category information
-      var stockDashboardItemsList = angular.copy(dataFromAPI.response).map(function (item) {
+      $scope.stockDashboardItemsList = angular.copy(dataFromAPI.response).map(function (item) {
         var category = $scope.categoryDictionary[item.salesCategoryId];
 
         item.orderBy = category.orderBy;
@@ -50,21 +75,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
         return item;
       });
 
-      // Sort by category
-      var lastCategoryId = null;
-      $scope.stockDashboardItemsList = $filter('orderBy')(stockDashboardItemsList, ['orderBy', 'itemName']).map(function (item) {
-        var category = $scope.categoryDictionary[item.salesCategoryId];
-
-        if (lastCategoryId !== category.id) {
-          item.showCategoryHeader = true;
-        } else {
-          item.showCategoryHeader = false;
-        }
-
-        lastCategoryId = category.id;
-
-        return item;
-      });
+      $scope.sortItemsByCategory();
 
       loadingProgress = false;
       hideLoadingBar();
