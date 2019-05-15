@@ -109,7 +109,6 @@ angular.module('ts5App')
 
       $scope.cateringStationItems = items;
 
-      $scope.sortItemsByCategory();
       filterAvailableItems();
     }
 
@@ -129,46 +128,41 @@ angular.module('ts5App')
       masterItem.categoryName = category.name;
     }
 
-    $scope.sortItemsByCategory = function() {
-      // Sort by category
-      var lastCategoryId = null;
+    function appendCategoryInformationToStockTakeItem(stockTake) {
+      var masterItemMatch = lodash.findWhere($scope.masterItemsList, { id: stockTake.masterItemId });
 
-      $scope.cateringStationItems = $filter('orderBy')($scope.cateringStationItems, ['orderBy', 'itemName']);
+      var lastCategoryId = lodash.findLast(masterItemMatch.versions).categoryId;
+      var category = $scope.categoryDictionary[lastCategoryId];
 
-      var shouldShowCategoryHeader = [];
-      $filter('filter')($scope.cateringStationItems, $scope.filterInput).forEach(function (item) {
-        var category = $scope.categoryDictionary[item.salesCategoryId];
+      stockTake.salesCategoryId = category.id;
+      stockTake.orderBy = category.orderBy;
+      stockTake.categoryName = category.name;
+    }
 
-        if (lastCategoryId !== category.id) {
-          shouldShowCategoryHeader[item.masterItemId] = true;
-        }
-
-        lastCategoryId = category.id;
-      });
-
-      $scope.cateringStationItems.map(function (item) {
-        if (shouldShowCategoryHeader[item.masterItemId] === true) {
-          item.showCategoryHeader = true;
-        } else {
-          item.showCategoryHeader = false;
-        }
-      });
+    $scope.clearDisplayedCategories = function() {
+      displayedCategories = [];
     };
 
+    var displayedCategories = [];
     $scope.shouldShowCategoryHeader = function (item) {
-      if (($scope.state === 'create' || $scope.state === 'edit') && item.showCategoryHeader) {
-        return true;
-      } else if ($scope.state === 'review' || $scope.state === 'view') {
-        var itemsWithinCategory = lodash.filter($scope.cateringStationItems, { salesCategoryId: item.salesCategoryId });
-        var shouldShowCategoryHeader = lodash.filter(itemsWithinCategory, function (item) {
-          return !$scope.shouldHideItem(item);
-        }).length > 0;
-
-        return shouldShowCategoryHeader && item.showCategoryHeader;
-      } else {
+      if (!hasDisplayableItemsInSameCategory(item)) {
         return false;
       }
+
+      if (displayedCategories[item.salesCategoryId] === undefined) {
+        displayedCategories[item.salesCategoryId] = item.masterItemId;
+      }
+
+      return displayedCategories[item.salesCategoryId] === item.masterItemId;
     };
+
+    function hasDisplayableItemsInSameCategory(item) {
+      var filteredItems = $filter('filter')($scope.cateringStationItems, $scope.filterInput)
+
+      return lodash.filter(filteredItems, function (filteredItem) {
+        return filteredItem.salesCategoryId === item.salesCategoryId && !$scope.shouldHideItem(item)
+      }).length > 0;
+    }
 
     function diffItems(itemList) {
       var items = [];
@@ -215,9 +209,10 @@ angular.module('ts5App')
         itemCode: masterItemMatch.itemCode
       };
 
+      appendCategoryInformationToStockTakeItem(newItem);
+
       $scope.cateringStationItems.push(newItem);
       $scope.cateringStationItems = $filter('unique')($scope.cateringStationItems, 'masterItemId');
-      $scope.cateringStationItems = $filter('orderBy')($scope.cateringStationItems, 'itemName');
     }
 
     function addSelectedItemsToMasterList() {
@@ -379,7 +374,7 @@ angular.module('ts5App')
 
       $scope.removeNewItemRow(index, newItem);
 
-      $scope.sortItemsByCategory();
+      $scope.clearDisplayedCategories();
     };
 
     $scope.removeNewItemRow = function($index) {
@@ -589,7 +584,7 @@ angular.module('ts5App')
         delete $scope.filterInput.itemName;
       }
 
-      $scope.sortItemsByCategory();
+      $scope.clearDisplayedCategories();
     };
 
     $scope.cancel = function() {
@@ -602,6 +597,8 @@ angular.module('ts5App')
     };
 
     $scope.toggleReview = function() {
+      $scope.clearDisplayedCategories();
+
       if (!$scope.prevState) {
         $scope.clearFilter();
         $scope.prevState = $scope.state;
@@ -698,7 +695,7 @@ angular.module('ts5App')
     };
 
     function getCategoryList() {
-      categoryFactory.getCategoryList({
+      return categoryFactory.getCategoryList({
         expand: true,
         sortBy: 'ASC',
         sortOn: 'orderBy',
@@ -716,12 +713,13 @@ angular.module('ts5App')
       $scope.$watch('itemQuantities', itemQuantitiesWatcher, true);
       $scope.$watch('addedItems', itemQuantitiesWatcher, true);
 
-      _initPromises.push(
-        getCatererStationList(),
-        getCategoryList()
-      );
+      getCategoryList().then(function () {
+        _initPromises.push(
+          getCatererStationList()
+        );
 
-      resolveInitPromises();
+        resolveInitPromises();
+      });
     };
 
     stateActions.createInitPromisesResolved = function() {
@@ -737,13 +735,14 @@ angular.module('ts5App')
       $scope.$watch('itemQuantities', itemQuantitiesWatcher, true);
       $scope.$watch('addedItems', itemQuantitiesWatcher, true);
 
-      _initPromises.push(
-        getCatererStationList(),
-        getStockTake(),
-        getCategoryList()
-      );
+      getCategoryList().then(function () {
+        _initPromises.push(
+          getCatererStationList(),
+          getStockTake()
+        );
 
-      resolveInitPromises();
+        resolveInitPromises();
+      });
     };
 
     stateActions.editInitPromisesResolved = function() {
@@ -763,13 +762,14 @@ angular.module('ts5App')
 
       $scope.$watch('stockTake.catererStationId', catererStationIdWatcher);
 
-      _initPromises.push(
-        getCatererStationList(),
-        getStockTake(),
-        getCategoryList()
-      );
+      getCategoryList().then(function () {
+        _initPromises.push(
+          getCatererStationList(),
+          getStockTake()
+        );
 
-      resolveInitPromises();
+        resolveInitPromises();
+      });
     };
 
     stateActions.viewInitPromisesResolved = function() {
