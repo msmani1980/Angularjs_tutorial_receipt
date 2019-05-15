@@ -157,10 +157,10 @@ angular.module('ts5App')
     };
 
     function hasDisplayableItemsInSameCategory(item) {
-      var filteredItems = $filter('filter')($scope.cateringStationItems, $scope.filterInput)
+      var filteredItems = $filter('filter')($scope.cateringStationItems, $scope.filterInput);
 
       return lodash.filter(filteredItems, function (filteredItem) {
-        return filteredItem.salesCategoryId === item.salesCategoryId && !$scope.shouldHideItem(item)
+        return filteredItem.salesCategoryId === item.salesCategoryId && !$scope.shouldHideItem(item);
       }).length > 0;
     }
 

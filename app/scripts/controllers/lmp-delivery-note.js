@@ -289,7 +289,7 @@ angular.module('ts5App')
       var filteredItems = $filter('filter')($scope.deliveryNote.items, $scope.filterInput);
 
       return lodash.filter(filteredItems, function (filteredItem) {
-        return filteredItem.salesCategoryId === item.salesCategoryId && !$scope.shouldHideItem(item)
+        return filteredItem.salesCategoryId === item.salesCategoryId && !$scope.shouldHideItem(item);
       }).length > 0;
     }
 
@@ -762,10 +762,10 @@ angular.module('ts5App')
     }
 
     function appendCategoryInformationToDeliveryNoteItem(deliveryNoteItem) {
-        var category = $scope.categoryDictionary[deliveryNoteItem.salesCategoryId];
+      var category = $scope.categoryDictionary[deliveryNoteItem.salesCategoryId];
 
-        deliveryNoteItem.orderBy = category.orderBy;
-        deliveryNoteItem.categoryName = category.name;
+      deliveryNoteItem.orderBy = category.orderBy;
+      deliveryNoteItem.categoryName = category.name;
     }
 
     function resolveAndCompleteLastInit(responseFromAPI) {
