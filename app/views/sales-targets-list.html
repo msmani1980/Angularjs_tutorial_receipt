@@ -1,0 +1,101 @@
+<div class="module-container">
+  <div class="row item-list-row">
+    <div class="col-xs-6">
+      <h2 class="view-name">{{ viewName }}</h2>
+    </div>
+    <div class="col-xs-6 text-right">
+      <a href="#/sales-targets/create" ng-show="isCRUD" class="btn btn-primary">+ <span class="hidden-xs">Create Sales Target</span></a>
+      <button class="btn btn-default" data-toggle="collapse" data-target="#search-collapse"
+              aria-expanded="false"
+              aria-controls="search-collapse" id="filterButton">
+        <span class="fa fa-search" aria-hidden="true"></span>
+        <span class="hidden-xs">Filter</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="sales-target-data-list">
+
+    <div class="panel panel-default no-transition" id="search-collapse">
+      <form name="salesTargetSearchForm" ng-submit="searchSalesTargetData()">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="salesTargetName">Sales Target Name</label>
+                <input ng-model="search.name" type="text" class="form-control" id="salesTargetName" placeholder="Sales Target Name">
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-8">
+              <date-picker
+                class="form-group"
+                element-class="col-xs-6"
+                start-date-model="search.startDate"
+                end-date-model="search.endDate"
+                label-from="Effective Start Date"
+                label-to="Effective End Date"
+                is-search-field="true">
+              </date-picker>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer text-right">
+          <button type="button" class="btn btn-default" ng-click="clearSearchForm()" id="clearSalesTargetSearch">Clear</button>
+          <button type="submit" class="btn btn-primary" id="searchSalesTarget">Search</button>
+        </div>
+      </form>
+    </div>
+    <br>
+    <div class="table-responsive">
+      <table infinite-scroll="loadSalesTargetList()" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Value</th>
+          <th>Updated Date/Time</th>
+          <th>Updated User</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="ng-scope" ng-repeat="salesTarget in salesTargetList">
+          <td>{{ salesTarget.name }}</td>
+          <td>{{ salesTarget.description}}</td>
+          <td>{{ salesTarget.category}}</td>
+          <td>{{ salesTarget.value}}</td>
+          <td>{{ loadUpdatedOn(salesTarget) }}</td>
+          <td>{{ loadUpdatedBy(salesTarget) }}</td>
+          <td>
+            <button class="btn btn-info btn-xs" ng-click="redirectToSalesTarget(salesTarget.id, 'view')" tabindex="0">
+              <i class="fa fa-file"></i>
+            </button>
+            <button class="btn btn-primary btn-xs" ng-click="redirectToSalesTarget(salesTarget.id, 'edit')" ng-show="isCRUD && isSalesTargetEditable(salesTarget)" tabindex="0">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <button class="btn btn-danger btn-xs"
+                    ng-click="deleteRecordDialog(salesTargetList[$index], ['name', 'startDate', 'endDate'])"
+                    tabindex="0"
+                    ng-show="isCRUD && showDeleteButton(salesTarget)">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <alert ng-show="!loadingBarVisible && salesTargetList.length == 0" type="info">
+      <span class="fa fa-flag"></span> Your search returned no results.
+    </alert>
+    <p ng-if="salesTargetList.length > 0" class="record-count small text-center">Showing {{salesTargetList.length}} records</p>
+    <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
+  </div>
+</div>
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<delete-record-dialog></delete-record-dialog>
+
+<dynamic-left-nav></dynamic-left-nav>
