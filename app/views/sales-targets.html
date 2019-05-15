@@ -1,0 +1,107 @@
+<div class="module-container">
+  <div class="edit-controls">
+    <div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+
+      <div class="col-xs-6 text-right">
+        <a class="btn btn-default" ng-href="#/sales-targets" class="btn" ng-show="readOnly">Back</a>
+      </div>
+    </div>
+  </div>
+  <error-dialog form-object="salesTargetDataForm" error-response="errorResponse" display="displayError"></error-dialog>
+  <!-- Data Input Section -->
+  <form name="salesTargetDataForm" class="edit-form" novalidate>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Name')">
+            <div class="form-group">
+              <label for="salesTargetName">Name *</label>
+              <input
+                ng-model="salesTarget.name"
+                type="text"
+                name="Name"
+                required
+                class="form-control"
+                id="salesTargetName"
+                placeholder="Name"
+                maxlength="50"
+                ng-disabled="isDisabled()">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-4" ng-class="validation.calendarCssClass(salesTargetDataForm, salesTarget.startDate)">
+            <div class="form-group">
+              <label for="salesTargetCategory">Category *</label>
+              <ui-select theme="bootstrap" ng-model="salesTarget.category" ng-disabled="readOnly" id="salesTargetCategory">
+                <ui-select-match placeholder="Category" allow-clear>{{ $select.selected.name }}</ui-select-match>
+                <ui-select-choices repeat="category in salesTargetCategoryList | filter: {name:$select.search} | orderBy: 'name'">
+                  <div ng-bind-html="category.name | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Value')">
+            <div class="form-group">
+              <label for="salesTargetName">Value *</label>
+              <input
+                ng-model="salesTarget.value"
+                type="text"
+                name="Value"
+                required
+                class="form-control"
+                id="salesTargetValue"
+                placeholder="Value"
+                ng-disabled="isDisabled()">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 col-sm-12">
+            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Description')">
+              <label for="salesTargetDescription">Description *</label>
+              <textarea
+                ng-model="salesTarget.description"
+                type="text"
+                name="Description"
+                maxlength="250"
+                required
+                class="form-control"
+                id="salesTargetDescription"
+                placeholder="Description"
+                ng-disabled="isDisabled()">
+              </textarea>
+            </div>
+          </div>
+        </div>
+
+        <h3><strong>Restrictions</strong></h3>
+        <h3>Restrictions</h3>
+
+        <div class="row">
+          <div class="col-xs-12 col-sm-12">
+
+          </div>
+        </div>
+
+        <div class="panel-footer text-right" ng-hide="readOnly">
+          <a href="#/sales-targets" class="btn btn-default">Cancel</a>
+          <button class="btn btn-primary" ng-click="formSave()">
+            <span class="fa fa-check-square-o" aria-hidden="true"></span> <span class="hidden-xs">Save</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Sales Target "></dynamic-left-nav>
