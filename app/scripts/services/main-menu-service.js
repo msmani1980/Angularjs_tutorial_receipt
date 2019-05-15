@@ -832,6 +832,31 @@ angular.module('ts5App')
               permissionCodes: ['R']
             }]
           }]
+      }, {
+        title: 'Sales Targets',
+        menuItems: [{
+          name: 'Manage Sales Target Categories',
+          route: '/#/sales-targets/categories',
+          icon: 'icon-manage-discount',
+          className: 'dashboard-company-receipts-config',
+          package: 'SALESTARGETS',
+          role: 'SALESTARGETS',
+          permissions: [{
+            apiName: '/api/sales-targets',
+            permissionCodes: ['R']
+          }]
+        }, {
+          name: 'Manage Sales Targets',
+          route: '/#/sales-targets',
+          icon: 'icon-manage-discount',
+          className: 'dashboard-company-receipts-config',
+          package: 'SALESTARGETS',
+          role: 'SALESTARGETS',
+          permissions: [{
+            apiName: '/api/sales-targets',
+            permissionCodes: ['R']
+          }]
+        }]
       }];
     };
 
