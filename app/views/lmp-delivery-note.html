@@ -177,7 +177,7 @@
                 class="form-control"
                 id="filter-item-code"
                 placeholder="Search"
-                ng-change="sortItemsByCategory()">
+                ng-change="clearDisplayedCategories()">
             </div>
           </div>
           <div class="col-xs-6 col-sm-4 col-md-2">
@@ -190,7 +190,7 @@
                 class="form-control"
                 id="filter-item-name"
                 placeholder="Search"
-                ng-change="sortItemsByCategory()">
+                ng-change="clearDisplayedCategories()">
             </div>
           </div>
           <div class="col-xs-1">
@@ -199,7 +199,7 @@
           </div>
         </div>
 
-        <div ng-repeat="item in deliveryNote.items | filter:filterInput track by $index">
+        <div ng-repeat="item in deliveryNote.items | filter:filterInput | orderBy: ['orderBy', 'itemName'] track by $index">
           <div class="well" ng-if="shouldShowCategoryHeader(item)">
             <div class="row">
               <div class="col-xs-12 col-md-12">
