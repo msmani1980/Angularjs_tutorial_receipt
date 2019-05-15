@@ -164,11 +164,6 @@ angular.module('ts5App')
       return ($scope.hideReview) ? isNumberGreaterThanOrEqualTo0(item.deliveredQuantity) : true;
     };
 
-    $scope.shouldHideItem = function (item) {
-      var isInvalidNumber = !isNumberGreaterThanOrEqualTo0(item.deliveredQuantity);
-      return isInvalidNumber && ($scope.state === 'review' || $scope.state === 'view');
-    };
-
     function removeNullDeliveredItems() {
       $scope.deliveryNote.items = $scope.deliveryNote.items.filter(function(item) {
         return isNumberGreaterThanOrEqualTo0(item.deliveredQuantity);
@@ -269,37 +264,34 @@ angular.module('ts5App')
 
       addNewDeliveryNoteItemsFromArray(catererStationItems);
       addNewDeliveryNoteItemsFromArray(menuItems);
-      $scope.sortItemsByCategory();
 
       hideLoadingModal();
     }
 
-    $scope.sortItemsByCategory = function() {
-
-      // Sort by category
-      var lastCategoryId = null;
-
-      $scope.deliveryNote.items = $filter('orderBy')($scope.deliveryNote.items, ['orderBy', 'itemName']);
-
-      var shouldShowCategoryHeader = [];
-      $filter('filter')($scope.deliveryNote.items, $scope.filterInput).forEach(function (item) {
-        var category = $scope.categoryDictionary[item.salesCategoryId];
-
-        if (lastCategoryId !== category.id) {
-          shouldShowCategoryHeader[item.itemMasterId] = true;
-        }
-
-        lastCategoryId = category.id;
-      });
-
-      $scope.deliveryNote.items.map(function (item) {
-        if (shouldShowCategoryHeader[item.itemMasterId] === true) {
-          item.showCategoryHeader = true;
-        } else {
-          item.showCategoryHeader = false;
-        }
-      });
+    $scope.clearDisplayedCategories = function() {
+      displayedCategories = [];
     };
+
+    var displayedCategories = [];
+    $scope.shouldShowCategoryHeader = function (item) {
+      if (!hasDisplayableItemsInSameCategory(item)) {
+        return false;
+      }
+
+      if (displayedCategories[item.salesCategoryId] === undefined) {
+        displayedCategories[item.salesCategoryId] = item.masterItemId || item.itemMasterId;
+      }
+
+      return displayedCategories[item.salesCategoryId] === (item.masterItemId || item.itemMasterId);
+    };
+
+    function hasDisplayableItemsInSameCategory(item) {
+      var filteredItems = $filter('filter')($scope.deliveryNote.items, $scope.filterInput);
+
+      return lodash.filter(filteredItems, function (filteredItem) {
+        return filteredItem.salesCategoryId === item.salesCategoryId && !$scope.shouldHideItem(item);
+      }).length > 0;
+    }
 
     function getStationItemPromises (catererStationId) {
       var menuPayload = {
@@ -476,6 +468,7 @@ angular.module('ts5App')
 
     /*jshint maxcomplexity:7 */
     $scope.toggleReview = function() {
+      $scope.clearDisplayedCategories();
       $scope.clearFilter();
 
       savedCatererStationList = $scope.catererStationList;
@@ -551,7 +544,7 @@ angular.module('ts5App')
         delete $scope.filterInput.itemName;
       }
 
-      $scope.sortItemsByCategory();
+      $scope.clearDisplayedCategories();
     };
 
     $scope.calculateBooked = function(item) {
@@ -680,7 +673,7 @@ angular.module('ts5App')
       setAllowedMasterItems();
       $scope.removeNewItemRow(index, newItem);
 
-      $scope.sortItemsByCategory();
+      $scope.clearDisplayedCategories();
     };
 
     $scope.removeNewItemRow = function($index) {
@@ -744,19 +737,9 @@ angular.module('ts5App')
       return false;
     };
 
-    $scope.shouldShowCategoryHeader = function (item) {
-      if (($scope.state === 'create' || $scope.state === 'edit' || $scope.state === 'view') && item.showCategoryHeader) {
-        return true;
-      } else if ($scope.state === 'review') {
-        var itemsWithinCategory = lodash.filter($scope.deliveryNote.items, { salesCategoryId: item.salesCategoryId });
-        var shouldShowCategoryHeader = lodash.filter(itemsWithinCategory, function (item) {
-          return $scope.shouldShowItemOnReview(item);
-        }).length > 0;
-
-        return shouldShowCategoryHeader && item.showCategoryHeader;
-      } else {
-        return false;
-      }
+    $scope.shouldHideItem = function (item) {
+      var isInvalidNumber = !isNumberGreaterThanOrEqualTo0(item.deliveredQuantity);
+      return isInvalidNumber && ($scope.state === 'review' || $scope.state === 'view');
     };
 
     function setStationIdOnCreate() {
@@ -779,12 +762,8 @@ angular.module('ts5App')
     }
 
     function appendCategoryInformationToDeliveryNoteItem(deliveryNoteItem) {
-      var masterItem = lodash.find($scope.masterItems, { id: deliveryNoteItem.masterItemId });
+      var category = $scope.categoryDictionary[deliveryNoteItem.salesCategoryId];
 
-      var lastCategoryId = lodash.findLast(masterItem.versions).categoryId;
-      var category = $scope.categoryDictionary[lastCategoryId];
-
-      deliveryNoteItem.salesCategoryId = category.id;
       deliveryNoteItem.orderBy = category.orderBy;
       deliveryNoteItem.categoryName = category.name;
     }
@@ -792,14 +771,9 @@ angular.module('ts5App')
     function resolveAndCompleteLastInit(responseFromAPI) {
       $scope.masterItems = $filter('orderBy')(responseFromAPI.masterItems, 'itemName');
 
-      $scope.deliveryNote.items.forEach(function (deliveryNoteItem) {
-        appendCategoryInformationToDeliveryNoteItem(deliveryNoteItem);
-      });
-
       setWatchers();
       setStationIdOnCreate();
       $scope.deliveryNote.deliveryDate = $scope.deliveryDateStore;
-      $scope.sortItemsByCategory();
       hideLoadingModal();
     }
 
@@ -849,6 +823,10 @@ angular.module('ts5App')
       $scope.deliveryDateStore = $scope.deliveryNote.deliveryDate;
       $scope.deliveryNote.createdOn = dateUtility.formatTimestampForApp($scope.deliveryNote.createdOn);
       $scope.deliveryNote.updatedOn = dateUtility.formatTimestampForApp($scope.deliveryNote.updatedOn);
+
+      $scope.deliveryNote.items.forEach(function (item) {
+        appendCategoryInformationToDeliveryNoteItem(item);
+      });
 
       if ($scope.deliveryNote.isAccepted) {
         $location.path(_path + 'view/' + $scope.deliveryNote.id);
