@@ -280,8 +280,8 @@ angular.module('ts5App')
       });
 
       if (itemsInSameCategory.length > 0) {
-        var masterItemIdInCategories = itemsInSameCategory[0].masterItemId || itemsInSameCategory[0].itemMasterId
-        var masterItemIdForItem = item.masterItemId || item.itemMasterId
+        var masterItemIdInCategories = itemsInSameCategory[0].masterItemId || itemsInSameCategory[0].itemMasterId;
+        var masterItemIdForItem = item.masterItemId || item.itemMasterId;
 
         return masterItemIdInCategories === masterItemIdForItem;
       } else {
