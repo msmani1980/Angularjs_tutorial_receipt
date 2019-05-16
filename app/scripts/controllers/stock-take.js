@@ -139,29 +139,18 @@ angular.module('ts5App')
       stockTake.categoryName = category.name;
     }
 
-    $scope.clearDisplayedCategories = function() {
-      displayedCategories = [];
-    };
-
-    var displayedCategories = [];
     $scope.shouldShowCategoryHeader = function (item) {
-      if (!hasDisplayableItemsInSameCategory(item)) {
-        return false;
-      }
-
-      if (displayedCategories[item.salesCategoryId] === undefined) {
-        displayedCategories[item.salesCategoryId] = item.masterItemId;
-      }
-
-      return displayedCategories[item.salesCategoryId] === item.masterItemId;
+      return hasDisplayableItemsInSameCategory(item);
     };
 
     function hasDisplayableItemsInSameCategory(item) {
       var filteredItems = $filter('filter')($scope.cateringStationItems, $scope.filterInput);
 
-      return lodash.filter(filteredItems, function (filteredItem) {
+      var itemsInSameCategory = lodash.filter(filteredItems, function (filteredItem) {
         return filteredItem.salesCategoryId === item.salesCategoryId && !$scope.shouldHideItem(item);
-      }).length > 0;
+      });
+
+      return itemsInSameCategory.length > 0 && (itemsInSameCategory[0].masterItemId === item.masterItemId);
     }
 
     function diffItems(itemList) {
@@ -373,8 +362,6 @@ angular.module('ts5App')
       $scope.cateringStationItems.push(newItem);
 
       $scope.removeNewItemRow(index, newItem);
-
-      $scope.clearDisplayedCategories();
     };
 
     $scope.removeNewItemRow = function($index) {
@@ -583,8 +570,6 @@ angular.module('ts5App')
       if (angular.isDefined($scope.filterInput.itemName)) {
         delete $scope.filterInput.itemName;
       }
-
-      $scope.clearDisplayedCategories();
     };
 
     $scope.cancel = function() {
@@ -597,8 +582,6 @@ angular.module('ts5App')
     };
 
     $scope.toggleReview = function() {
-      $scope.clearDisplayedCategories();
-
       if (!$scope.prevState) {
         $scope.clearFilter();
         $scope.prevState = $scope.state;
