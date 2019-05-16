@@ -268,29 +268,25 @@ angular.module('ts5App')
       hideLoadingModal();
     }
 
-    $scope.clearDisplayedCategories = function() {
-      displayedCategories = [];
-    };
-
-    var displayedCategories = [];
     $scope.shouldShowCategoryHeader = function (item) {
-      if (!hasDisplayableItemsInSameCategory(item)) {
-        return false;
-      }
-
-      if (displayedCategories[item.salesCategoryId] === undefined) {
-        displayedCategories[item.salesCategoryId] = item.masterItemId || item.itemMasterId;
-      }
-
-      return displayedCategories[item.salesCategoryId] === (item.masterItemId || item.itemMasterId);
+      return hasDisplayableItemsInSameCategory(item);
     };
 
     function hasDisplayableItemsInSameCategory(item) {
       var filteredItems = $filter('filter')($scope.deliveryNote.items, $scope.filterInput);
 
-      return lodash.filter(filteredItems, function (filteredItem) {
+      var itemsInSameCategory = lodash.filter(filteredItems, function (filteredItem) {
         return filteredItem.salesCategoryId === item.salesCategoryId && !$scope.shouldHideItem(item);
-      }).length > 0;
+      });
+
+      if (itemsInSameCategory.length > 0) {
+        var masterItemIdInCategories = itemsInSameCategory[0].masterItemId || itemsInSameCategory[0].itemMasterId;
+        var masterItemIdForItem = item.masterItemId || item.itemMasterId;
+
+        return masterItemIdInCategories === masterItemIdForItem;
+      } else {
+        return false;
+      }
     }
 
     function getStationItemPromises (catererStationId) {
@@ -468,7 +464,6 @@ angular.module('ts5App')
 
     /*jshint maxcomplexity:7 */
     $scope.toggleReview = function() {
-      $scope.clearDisplayedCategories();
       $scope.clearFilter();
 
       savedCatererStationList = $scope.catererStationList;
@@ -543,8 +538,6 @@ angular.module('ts5App')
       if (angular.isDefined($scope.filterInput.itemName)) {
         delete $scope.filterInput.itemName;
       }
-
-      $scope.clearDisplayedCategories();
     };
 
     $scope.calculateBooked = function(item) {
@@ -672,8 +665,6 @@ angular.module('ts5App')
       $scope.deliveryNote.items.push(newItem);
       setAllowedMasterItems();
       $scope.removeNewItemRow(index, newItem);
-
-      $scope.clearDisplayedCategories();
     };
 
     $scope.removeNewItemRow = function($index) {
