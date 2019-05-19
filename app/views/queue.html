@@ -68,9 +68,11 @@
                Download <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
              </a>
            </span>
-           <a ng-click="delete(job.id)" class="btn btn-xs btn-danger">
-            Cancel <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-           </a>
+           <span ng-if="job.status === 'STARTED' || job.status === 'QUEUED'">
+	           <a ng-click="delete(job.id)" class="btn btn-xs btn-danger">
+	            Cancel <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+	           </a>
+           </span>
          </th>
        </tr>
      </tbody>
