@@ -31,7 +31,31 @@
                 ng-disabled="isDisabled()">
             </div>
           </div>
-          <div class="col-xs-12 col-sm-4" ng-class="validation.calendarCssClass(salesTargetDataForm, salesTarget.startDate)">
+          <div class="col-xs-12 col-sm-2" ng-class="validation.calendarCssClass(salesTargetDataForm, salesTarget.startDate)">
+            <date-picker-field
+              form="salesTargetDataForm"
+              name="EffectiveStartDate"
+              label="Effective Start Date"
+              disable="isDisabled()"
+              required="true"
+              disable-past="true"
+              ng-model="salesTarget.startDate">
+            </date-picker-field>
+          </div>
+          <div class="col-xs-12 col-sm-2" ng-class="validation.calendarCssClass(salesTargetDataForm, salesTarget.endDate)">
+            <date-picker-field
+              form="salesTargetDataForm"
+              name="EffectiveEndDate"
+              label="Effective End Date"
+              disable="readOnly || shouldDisableEndDate"
+              ng-model="salesTarget.endDate"
+              end-current-effective="!viewEditItem"
+              custom-effective="true"
+              custom-date="salesTarget.endDate"
+              required="true">
+            </date-picker-field>
+          </div>
+          <div class="col-xs-12 col-sm-2" ng-class="validation.calendarCssClass(salesTargetDataForm, salesTarget.startDate)">
             <div class="form-group">
               <label for="salesTargetCategory">Category *</label>
               <ui-select theme="bootstrap" ng-model="salesTarget.category" ng-disabled="readOnly" id="salesTargetCategory">
@@ -42,7 +66,7 @@
               </ui-select>
             </div>
           </div>
-          <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Value')">
+          <div class="col-xs-12 col-sm-2" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Value')">
             <div class="form-group">
               <label for="salesTargetName">Value *</label>
               <input
@@ -77,11 +101,96 @@
         </div>
 
         <h3><strong>Restrictions</strong></h3>
-        <h3>Restrictions</h3>
 
+        <h3>Schedules</h3>
         <div class="row">
           <div class="col-xs-12 col-sm-12">
+            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'schedules')">
+              <ui-select name="schedules" id="schedules" multiple ng-disabled="isDisabled()" ng-model="salesTarget.schedules" theme="bootstrap">
+                <ui-select-match placeholder="Select Schedules">{{ $item.scheduleNumber }}</ui-select-match>
+                <ui-select-choices repeat="schedule in scheduleList | filter: $select.search | orderBy:'scheduleNumber' | limitTo: 100">
+                  <div ng-bind-html="schedule.scheduleNumber | highlight: $select.search "></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+        </div>
 
+        <h3>Barset Numbers</h3>
+        <div class="row">
+          <div class="col-xs-12 col-sm-12">
+            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'stores')">
+              <ui-select name="stores" id="stores" multiple ng-disabled="isDisabled()" ng-model="salesTarget.stores" theme="bootstrap">
+                <ui-select-match placeholder="Select Barsets">{{ $item.storeNumber }}</ui-select-match>
+                <ui-select-choices repeat="store in storeList | filter: $select.search | orderBy:'storeNumber' | limitTo: 100">
+                  <div ng-bind-html="store.storeNumber | highlight: $select.search "></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+        </div>
+
+        <h3>Crew</h3>
+        <div class="row">
+          <div class="col-xs-12 col-sm-12">
+            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'employees')">
+              <ui-select name="employees" id="employees" multiple ng-disabled="isDisabled()" ng-model="salesTarget.employees" theme="bootstrap">
+                <ui-select-match placeholder="Select Crew">{{ $item.id }}</ui-select-match>
+                <ui-select-choices repeat="employee in employeeList | filter: $select.search | orderBy:'lastName' | limitTo: 100">
+                  <div ng-bind-html="employee.firstName + ' ' + employee.lastName | highlight: $select.search "></div>
+                </ui-select-choices>
+              </ui-select>
+            </div>
+          </div>
+        </div>
+
+        <h3>Stations</h3>
+        <div class="row">
+          <div class="col-xs-12 col-sm-12">
+            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Schedules')">
+
+
+            </div>
+          </div>
+        </div>
+
+        <h3>Departure Times</h3>
+        <div class="row">
+          <div class="col-xs-12 col-sm-12">
+            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Schedules')">
+
+
+            </div>
+          </div>
+        </div>
+
+        <h3>Departure Dates</h3>
+        <div class="row">
+          <div class="col-xs-12 col-sm-12">
+            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Schedules')">
+
+
+            </div>
+          </div>
+        </div>
+
+        <h3>Item Categories</h3>
+        <div class="row">
+          <div class="col-xs-12 col-sm-12">
+            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Schedules')">
+
+
+            </div>
+          </div>
+        </div>
+
+        <h3>Items</h3>
+        <div class="row">
+          <div class="col-xs-12 col-sm-12">
+            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Schedules')">
+
+
+            </div>
           </div>
         </div>
 

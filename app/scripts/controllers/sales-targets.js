@@ -8,7 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('SalesTargetsCtrl', function ($scope, $q, $location, dateUtility, $routeParams, salesTargetFactory, salesTargetCategoryFactory, messageService, lodash, formValidationUtility) {
+  .controller('SalesTargetsCtrl', function ($scope, $q, $location, dateUtility, $routeParams, salesTargetFactory, salesTargetCategoryFactory, messageService,
+                                            lodash, formValidationUtility, schedulesService, globalMenuService, companyStoresService, employeeFactory) {
 
     var $this = this;
 
@@ -79,7 +80,7 @@ angular.module('ts5App')
         $this.showToastMessage('success', 'Edit Sales Target', 'Success');
       }
 
-      $location.path('sales-target-categories');
+      $location.path('sales-targets');
     };
 
     this.saveFormFailure = function(dataFromAPI) {
@@ -92,9 +93,12 @@ angular.module('ts5App')
       $this.showLoadingModal('Creating Sales Target');
       var payload = {
         name: $scope.salesTarget.name,
+        companyId: globalMenuService.company.get(),
         description: $scope.salesTarget.description,
         startDate: dateUtility.formatDateForAPI($scope.salesTarget.startDate),
-        endDate: dateUtility.formatDateForAPI($scope.salesTarget.endDate)
+        endDate: dateUtility.formatDateForAPI($scope.salesTarget.endDate),
+        targetValue: $scope.salesTarget.value,
+        targetCategoryId: $scope.salesTarget.category.id
       };
 
       salesTargetFactory.createSalesTarget(payload).then(
@@ -145,9 +149,44 @@ angular.module('ts5App')
 
     };
 
-    this.initDependenciesSuccess = function(responseCollection) {
-      $scope.salesTargetCategoryList = responseCollection[0].salesTargetCategories;
+    this.getSalesTargetCategories = function () {
+      return salesTargetCategoryFactory.getSalesTargetCategoryList().then($this.setSalesTargetCategories);
+    };
 
+    this.setSalesTargetCategories = function (dataFromAPI) {
+      $scope.salesTargetCategoryList = angular.copy(dataFromAPI.salesTargetCategories);
+    };
+
+    this.getSchedules = function () {
+      var companyId = globalMenuService.company.get();
+      return schedulesService.getSchedules(companyId).then($this.setSchedules);
+    };
+
+    this.setSchedules = function (dataFromAPI) {
+      $scope.scheduleList = angular.copy(dataFromAPI.distinctSchedules);
+    };
+
+    this.getStores = function () {
+      return companyStoresService.getStoreList().then($this.setStores);
+    };
+
+    this.setStores = function (dataFromAPI) {
+      $scope.storeList = angular.copy(dataFromAPI.response);
+    };
+
+    this.getEmployees = function () {
+      var payload = {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
+      };
+
+      return employeeFactory.getEmployees(payload).then($this.setEmployees);
+    };
+
+    this.setEmployees = function (dataFromAPI) {
+      $scope.employeeList = angular.copy(dataFromAPI.companyEmployees);
+    };
+
+    this.initDependenciesSuccess = function(responseCollection) {
       if ($routeParams.id) {
         salesTargetFactory.getSalesTargetById($routeParams.id).then($this.salesTargetSuccess);
       }
@@ -163,7 +202,10 @@ angular.module('ts5App')
 
     this.makeInitPromises = function() {
       var promises = [
-        salesTargetCategoryFactory.getSalesTargetCategoryList()
+        $this.getSalesTargetCategories(),
+        $this.getSchedules(),
+        $this.getStores(),
+        $this.getEmployees(),
       ];
 
       return promises;

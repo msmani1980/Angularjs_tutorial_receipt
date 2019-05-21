@@ -52,8 +52,6 @@
         <tr>
           <th>Name</th>
           <th>Description</th>
-          <th>Category</th>
-          <th>Value</th>
           <th>Updated Date/Time</th>
           <th>Updated User</th>
           <th>Actions</th>
@@ -63,8 +61,6 @@
         <tr class="ng-scope" ng-repeat="salesTarget in salesTargetList">
           <td>{{ salesTarget.name }}</td>
           <td>{{ salesTarget.description}}</td>
-          <td>{{ salesTarget.category}}</td>
-          <td>{{ salesTarget.value}}</td>
           <td>{{ loadUpdatedOn(salesTarget) }}</td>
           <td>{{ loadUpdatedBy(salesTarget) }}</td>
           <td>
