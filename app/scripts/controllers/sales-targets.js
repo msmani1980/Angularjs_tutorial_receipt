@@ -9,7 +9,8 @@
  */
 angular.module('ts5App')
   .controller('SalesTargetsCtrl', function ($scope, $q, $location, dateUtility, $routeParams, salesTargetFactory, salesTargetCategoryFactory, messageService,
-                                            lodash, formValidationUtility, schedulesService, globalMenuService, companyStoresService, employeeFactory) {
+                                            lodash, formValidationUtility, schedulesService, globalMenuService, companyStoresService, employeeFactory,
+                                            stationsFactory, categoryFactory, itemsFactory) {
 
     var $this = this;
 
@@ -18,11 +19,12 @@ angular.module('ts5App')
     $scope.menuMasterList = [];
     $scope.itemMasterList = [];
     $scope.validation = formValidationUtility;
-    $scope.plan = {
-      startDate: '',
-      endDate: '',
-      packingPlanMenu: [],
-      packingPlanObject: []
+    $scope.salesTarget = {
+      stations: [],
+      departureTimes: [],
+      departureDates: [],
+      itemCategories: [],
+      items: []
     };
 
     this.showLoadingModal = function(message) {
@@ -132,8 +134,56 @@ angular.module('ts5App')
       }
     };
 
+    $scope.addStation = function() {
+      $scope.salesTarget.stations.push({
+        departure: {},
+        arrival: {}
+      })
+    };
+
+    $scope.removeStation = function(index) {
+      $scope.salesTarget.stations.splice(index, 1);
+    };
+
+    $scope.addDepartureTime = function() {
+      $scope.salesTarget.departureTimes.push({
+        from: '',
+        to: ''
+      })
+    };
+
+    $scope.removeDepartureTime = function(index) {
+      $scope.salesTarget.departureTimes.splice(index, 1);
+    };
+
+    $scope.addDepartureDate = function() {
+      $scope.salesTarget.departureDates.push({
+        from: '',
+        to: ''
+      })
+    };
+
+    $scope.removeDepartureDate = function(index) {
+      $scope.salesTarget.departureDates.splice(index, 1);
+    };
+
+    $scope.addItemCategory = function() {
+      $scope.salesTarget.itemCategories.push({ })
+    };
+
+    $scope.removeItemCategory = function(index) {
+      $scope.salesTarget.itemCategories.splice(index, 1);
+    };
+
+    $scope.addItem = function() {
+      $scope.salesTarget.items.push({ })
+    };
+
+    $scope.removeItem = function(index) {
+      $scope.salesTarget.items.splice(index, 1);
+    };
+
     this.salesTargetSuccess = function(response) {
-      console.log(response)
       $scope.viewStartDate = dateUtility.formatDateForApp(response.startDate);
       $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
       $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker($scope.viewStartDate);
@@ -186,6 +236,58 @@ angular.module('ts5App')
       $scope.employeeList = angular.copy(dataFromAPI.companyEmployees);
     };
 
+    this.getStations = function () {
+      return stationsFactory.getStationList(0).then($this.setStations);
+    };
+
+    this.setStations = function (dataFromAPI) {
+      $scope.stationList = angular.copy(dataFromAPI.response);
+    };
+
+    this.setItemCategories = function (dataFromAPI) {
+      $scope.itemCategoryList = [];
+
+      // Flat out category list
+      dataFromAPI.salesCategories.forEach(function (category) {
+        $this.flatCategoryList(category, $scope.itemCategoryList);
+      });
+
+      // Assign order for flatten category list and create helper dictionary
+      var count = 1;
+      $scope.itemCategoryList.forEach(function (category) {
+        category.orderBy = count++;
+      });
+    };
+
+    this.flatCategoryList = function (category, categories) {
+      categories.push(category);
+
+      category.children.forEach(function (category) {
+        $this.flatCategoryList(category, categories);
+      });
+    };
+
+    this.getItemCategories = function () {
+      return categoryFactory.getCategoryList({
+        expand: true,
+        sortBy: 'ASC',
+        sortOn: 'orderBy',
+        parentId: 0
+      }).then($this.setItemCategories);
+    };
+
+    this.getItems = function () {
+      var payload = {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
+      };
+
+      return itemsFactory.getItemsList(payload, true).then($this.setItems);
+    };
+
+    this.setItems = function (dataFromAPI) {
+      $scope.itemList = angular.copy(dataFromAPI.masterItems);
+    };
+
     this.initDependenciesSuccess = function(responseCollection) {
       if ($routeParams.id) {
         salesTargetFactory.getSalesTargetById($routeParams.id).then($this.salesTargetSuccess);
@@ -206,6 +308,9 @@ angular.module('ts5App')
         $this.getSchedules(),
         $this.getStores(),
         $this.getEmployees(),
+        $this.getStations(),
+        $this.getItemCategories(),
+        $this.getItems(),
       ];
 
       return promises;
