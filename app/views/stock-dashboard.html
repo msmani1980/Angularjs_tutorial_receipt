@@ -71,7 +71,7 @@
         <div class="form-group">
           <label>Item Code</label>
           <input ng-model="search.itemCode" type="text" class="form-control" id="filter-item-code" placeholder="Search"
-                 ng-readonly="readOnly"/>
+                 ng-readonly="readOnly" ng-change="sortItemsByCategory()" />
         </div>
       </div>
 
@@ -79,7 +79,7 @@
         <div class="form-group">
           <label>Item Name</label>
           <input ng-model="search.itemName" type="text" class="form-control" id="filter-item-name" placeholder="Search"
-                 ng-readonly="readOnly"/>
+                 ng-readonly="readOnly" ng-change="sortItemsByCategory()"/>
         </div>
       </div>
 
@@ -103,35 +103,35 @@
         <th>Ullage Count</th>
       </tr>
       </thead>
-      <tbody>
-
-      <tr
-        ng-repeat="stockItem in stockDashboardItemsList | index | filter: search as searchResults"
-        ng-class="{'bg-success':isRecordUpdatedToday(stockItem)}">
-        <td>{{stockItem.itemCode}}</td>
-        <td>{{stockItem.itemName}}</td>
-        <td>
-          <input type="text" class="form-control text-right" value="{{stockItem.openingQuantity}}" disabled name="stock-open-quantity-{{$index}}"/>
-        </td>
-        <td>
-          <input type="text" class="form-control text-right" value="{{stockItem.receivedQuantity}}" disabled name="stock-receive-quantity-{{$index}}"/>
-        </td>
-        <td>
-          <input type="text" class="form-control text-right" value="{{stockItem.dispatchQuantity}}"
-                 disabled name="stock-dispatch-quantity-{{$index}}"/>
-        </td>
-        <td>
-          <input type="text" class="form-control text-right" value="{{stockItem.inboundQuantity}}" disabled name="stock-inbound-quantity-{{$index}}"/>
-        </td>
-        <td id="currentCountQuantity-{{id}}" ng-click="isEditStock && stockTakeReasonOpen(stockItem, 'Count')">
-          <input type="text" class="showAsActive form-control text-right" value="{{stockItem.currentQuantity}}"
-                 ng-readonly="true"/>
-        </td>
-        <td  id="currentUllageQuantity-{{id}}" ng-click="isEditStock && stockTakeReasonOpen(stockItem, 'Ullage')">
-          <input type="text" class="showAsActive form-control text-right" value="{{stockItem.ullageQuantity}}"
-                ng-readonly="true"/>
-        </td>
-      </tr>
+      <tbody ng-repeat="stockItem in stockDashboardItemsList | index | filter: search as searchResults">
+        <tr ng-if="stockItem.showCategoryHeader">
+          <td colspan="8" style="background-color:#f1f1f1"><strong>{{ stockItem.categoryName }}</strong></td>
+        </tr>
+        <tr ng-class="{'bg-success':isRecordUpdatedToday(stockItem)}">
+          <td>{{stockItem.itemCode}}</td>
+          <td>{{stockItem.itemName}}</td>
+          <td>
+            <input type="text" class="form-control text-right" value="{{stockItem.openingQuantity}}" disabled name="stock-open-quantity-{{$index}}"/>
+          </td>
+          <td>
+            <input type="text" class="form-control text-right" value="{{stockItem.receivedQuantity}}" disabled name="stock-receive-quantity-{{$index}}"/>
+          </td>
+          <td>
+            <input type="text" class="form-control text-right" value="{{stockItem.dispatchQuantity}}"
+                   disabled name="stock-dispatch-quantity-{{$index}}"/>
+          </td>
+          <td>
+            <input type="text" class="form-control text-right" value="{{stockItem.inboundQuantity}}" disabled name="stock-inbound-quantity-{{$index}}"/>
+          </td>
+          <td id="currentCountQuantity-{{id}}" ng-click="isEditStock && stockTakeReasonOpen(stockItem, 'Count')">
+            <input type="text" class="showAsActive form-control text-right" value="{{stockItem.currentQuantity}}"
+                   ng-readonly="true"/>
+          </td>
+          <td  id="currentUllageQuantity-{{id}}" ng-click="isEditStock && stockTakeReasonOpen(stockItem, 'Ullage')">
+            <input type="text" class="showAsActive form-control text-right" value="{{stockItem.ullageQuantity}}"
+                  ng-readonly="true"/>
+          </td>
+        </tr>
 
       </tbody>
     </table>

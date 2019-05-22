@@ -10,7 +10,9 @@
  */
 angular.module('ts5App')
   .controller('LmpDeliveryNoteCtrl', function($scope, $routeParams, $location, $q, $filter, deliveryNoteFactory,
-    dateUtility, messageService, lodash) {
+    dateUtility, messageService, lodash, categoryFactory) {
+
+    var $this = this;
 
     // static scope vars
     $scope.viewName = 'Delivery note';
@@ -210,12 +212,26 @@ angular.module('ts5App')
       return uniqueMenuItems;
     }
 
+    function appendCategoryInformationToMasterItem(masterItem) {
+      var lastCategoryId = lodash.findLast(masterItem.versions).categoryId;
+      var category = $scope.categoryDictionary[lastCategoryId];
+
+      masterItem.salesCategoryId = category.id;
+      masterItem.orderBy = category.orderBy;
+      masterItem.categoryName = category.name;
+    }
+
     function formatItemForDeliveryNoteList (masterItem) {
+      appendCategoryInformationToMasterItem(masterItem);
+
       var newItem = {
         itemName: masterItem.itemName,
         itemCode: masterItem.itemCode,
         itemMasterId: masterItem.id,
-        ullageQuantity: 0
+        ullageQuantity: 0,
+        salesCategoryId: masterItem.salesCategoryId,
+        orderBy: masterItem.orderBy,
+        categoryName: masterItem.categoryName
       };
 
       return newItem;
@@ -249,9 +265,28 @@ angular.module('ts5App')
       addNewDeliveryNoteItemsFromArray(catererStationItems);
       addNewDeliveryNoteItemsFromArray(menuItems);
 
-      $scope.deliveryNote.items = lodash.sortBy($scope.deliveryNote.items, 'itemName');
-
       hideLoadingModal();
+    }
+
+    $scope.shouldShowCategoryHeader = function (item) {
+      return hasDisplayableItemsInSameCategory(item);
+    };
+
+    function hasDisplayableItemsInSameCategory(item) {
+      var filteredItems = $filter('filter')($scope.deliveryNote.items, $scope.filterInput);
+
+      var itemsInSameCategory = lodash.filter(filteredItems, function (filteredItem) {
+        return filteredItem.salesCategoryId === item.salesCategoryId && !$scope.shouldHideItem(item);
+      });
+
+      if (itemsInSameCategory.length > 0) {
+        var masterItemIdInCategories = itemsInSameCategory[0].masterItemId || itemsInSameCategory[0].itemMasterId;
+        var masterItemIdForItem = item.masterItemId || item.itemMasterId;
+
+        return masterItemIdInCategories === masterItemIdForItem;
+      } else {
+        return false;
+      }
     }
 
     function getStationItemPromises (catererStationId) {
@@ -503,7 +538,6 @@ angular.module('ts5App')
       if (angular.isDefined($scope.filterInput.itemName)) {
         delete $scope.filterInput.itemName;
       }
-
     };
 
     $scope.calculateBooked = function(item) {
@@ -623,6 +657,8 @@ angular.module('ts5App')
         return;
       }
 
+      appendCategoryInformationToMasterItem(newItem);
+
       $scope.clearFilter();
       newItem.canEdit = true;
       newItem.itemMasterId = newItem.id;
@@ -692,6 +728,11 @@ angular.module('ts5App')
       return false;
     };
 
+    $scope.shouldHideItem = function (item) {
+      var isInvalidNumber = !isNumberGreaterThanOrEqualTo0(item.deliveredQuantity);
+      return isInvalidNumber && ($scope.state === 'review' || $scope.state === 'view');
+    };
+
     function setStationIdOnCreate() {
       if ($scope.state !== 'create') {
         return;
@@ -711,11 +752,19 @@ angular.module('ts5App')
       }
     }
 
+    function appendCategoryInformationToDeliveryNoteItem(deliveryNoteItem) {
+      var category = $scope.categoryDictionary[deliveryNoteItem.salesCategoryId];
+
+      deliveryNoteItem.orderBy = category.orderBy;
+      deliveryNoteItem.categoryName = category.name;
+    }
+
     function resolveAndCompleteLastInit(responseFromAPI) {
       $scope.masterItems = $filter('orderBy')(responseFromAPI.masterItems, 'itemName');
+
       setWatchers();
       setStationIdOnCreate();
-      $scope.deliveryNote.deliveryDate = $scope.deliveryDateStore; 
+      $scope.deliveryNote.deliveryDate = $scope.deliveryDateStore;
       hideLoadingModal();
     }
 
@@ -759,16 +808,46 @@ angular.module('ts5App')
 
     function setDeliveryNoteFromResponse(response) {
       $scope.deliveryNote = angular.copy(response);
-      $scope.deliveryNote.items = $filter('orderBy')($scope.deliveryNote.items, 'itemName');
+
+      $scope.deliveryNote.items = $scope.deliveryNote.items;
       $scope.deliveryNote.deliveryDate = dateUtility.formatDateForApp($scope.deliveryNote.deliveryDate);
       $scope.deliveryDateStore = $scope.deliveryNote.deliveryDate;
       $scope.deliveryNote.createdOn = dateUtility.formatTimestampForApp($scope.deliveryNote.createdOn);
       $scope.deliveryNote.updatedOn = dateUtility.formatTimestampForApp($scope.deliveryNote.updatedOn);
 
+      $scope.deliveryNote.items.forEach(function (item) {
+        appendCategoryInformationToDeliveryNoteItem(item);
+      });
+
       if ($scope.deliveryNote.isAccepted) {
         $location.path(_path + 'view/' + $scope.deliveryNote.id);
       }
     }
+
+    this.setCategoryList = function (dataFromAPI) {
+      $scope.categories = [];
+      $scope.categoryDictionary = [];
+
+      // Flat out category list
+      dataFromAPI.salesCategories.forEach(function (category) {
+        $this.flatCategoryList(category, $scope.categories);
+      });
+
+      // Assign order for flatten category list and create helper dictionary
+      var count = 1;
+      $scope.categories.forEach(function (category) {
+        category.orderBy = count++;
+        $scope.categoryDictionary[category.id] = category;
+      });
+    };
+
+    this.flatCategoryList = function (category, categories) {
+      categories.push(category);
+
+      category.children.forEach(function (category) {
+        $this.flatCategoryList(category, categories);
+      });
+    };
 
     function resolveInitPromises(responseCollection) {
       $scope.regularItemType = lodash.findWhere(angular.copy(responseCollection[0]), { name: 'Regular' });
@@ -776,8 +855,10 @@ angular.module('ts5App')
       $scope.ullageReasons = lodash.filter(responseCollection[2].companyReasonCodes, { reasonTypeName: _reasonCodeTypeUllage });
       $scope.menuList = angular.copy(responseCollection[3].menus);
 
-      if (responseCollection[4]) {
-        setDeliveryNoteFromResponse(responseCollection[4]);
+      $this.setCategoryList(responseCollection[4]);
+
+      if (responseCollection[5]) {
+        setDeliveryNoteFromResponse(responseCollection[5]);
       }
 
       completeInitCalls();
@@ -791,6 +872,13 @@ angular.module('ts5App')
 
       var payloadForMenu = { startDate: dateUtility.formatDateForAPI(dateUtility.nowFormatted()) };
       initPromises.push(deliveryNoteFactory.getMenuList(payloadForMenu));
+
+      initPromises.push(categoryFactory.getCategoryList({
+        expand: true,
+        sortBy: 'ASC',
+        sortOn: 'orderBy',
+        parentId: 0
+      }));
 
       if ($scope.state === 'edit' || $scope.state === 'view') {
         initPromises.push(deliveryNoteFactory.getDeliveryNote($routeParams.id));

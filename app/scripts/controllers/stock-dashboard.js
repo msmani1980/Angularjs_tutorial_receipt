@@ -10,7 +10,7 @@
 
 angular.module('ts5App').controller('StockDashboardCtrl',
   function($scope, $http, globalMenuService, stockManagementStationItemsService, catererStationService,
-    companyReasonCodesService, dateUtility, $filter, ENV, stockTakeFactory, identityAccessFactory, accessService) {
+    companyReasonCodesService, dateUtility, $filter, ENV, stockTakeFactory, identityAccessFactory, accessService, categoryFactory) {
 
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};
@@ -39,8 +39,44 @@ angular.module('ts5App').controller('StockDashboardCtrl',
 
     var loadingProgress = false;
 
+    $scope.sortItemsByCategory = function() {
+      // Sort by category
+      var lastCategoryId = null;
+
+      $scope.stockDashboardItemsList = $filter('orderBy')($scope.stockDashboardItemsList, ['orderBy', 'itemName']);
+
+      var shouldShowCategoryHeader = [];
+      $filter('filter')($scope.stockDashboardItemsList, $scope.search).forEach(function (item) {
+        var category = $scope.categoryDictionary[item.salesCategoryId];
+
+        if (lastCategoryId !== category.id) {
+          shouldShowCategoryHeader[item.itemMasterId] = true;
+        }
+
+        lastCategoryId = category.id;
+      });
+
+      $scope.stockDashboardItemsList.map(function (item) {
+        if (shouldShowCategoryHeader[item.itemMasterId] === true) {
+          item.showCategoryHeader = true;
+        } else {
+          item.showCategoryHeader = false;
+        }
+      });
+    };
+
     this.getStockDashboardItemsSuccessHandler = function(dataFromAPI) {
-      $scope.stockDashboardItemsList = angular.copy(dataFromAPI.response);
+      $scope.stockDashboardItemsList = angular.copy(dataFromAPI.response).map(function (item) {
+        var category = $scope.categoryDictionary[item.salesCategoryId];
+
+        item.orderBy = category.orderBy;
+        item.categoryName = category.name;
+
+        return item;
+      });
+
+      $scope.sortItemsByCategory();
+
       loadingProgress = false;
       hideLoadingBar();
     };
@@ -76,13 +112,49 @@ angular.module('ts5App').controller('StockDashboardCtrl',
         $this.getStockDashboardItemsSuccessHandler);
     };
 
+    this.setCategoryList = function (dataFromAPI) {
+      $scope.categories = [];
+      $scope.categoryDictionary = [];
+
+      // Flat out category list
+      dataFromAPI.salesCategories.forEach(function (category) {
+        $this.flatCategoryList(category, $scope.categories);
+      });
+
+      // Assign order for flatten category list and create helper dictionary
+      var count = 1;
+      $scope.categories.forEach(function (category) {
+        category.orderBy = count++;
+        $scope.categoryDictionary[category.id] = category;
+      });
+
+      // Proceed
+      catererStationService.getCatererStationList().then($this.getCatererStationListSuccessHandler);
+    };
+
+    this.flatCategoryList = function (category, categories) {
+      categories.push(category);
+
+      category.children.forEach(function (category) {
+        $this.flatCategoryList(category, categories);
+      });
+    };
+
     this.init = function() {
       hideLoadingBar();
       $scope.isStockTake = accessService.crudAccessGranted('STOCKMANAGER', 'STOCKREPORT', 'CRUDSTR');
       $scope.isEditStock = accessService.crudAccessGranted('STOCKMANAGER', 'STOCKDASHBOARD', 'ESTCKDBRD');
       $scope.companyId = globalMenuService.company.get();
-      catererStationService.getCatererStationList().then(this.getCatererStationListSuccessHandler);
+
+      categoryFactory.getCategoryList({
+        expand: true,
+        sortBy: 'ASC',
+        sortOn: 'orderBy',
+        parentId: 0
+      }).then($this.setCategoryList);
+
       companyReasonCodesService.getAll().then($this.getUllageReasonsFromResponse);
+
       $scope.$watch('selectedCateringStation', function(newData) {
         if (newData) {
           $scope.stockDashboardItemsList = [];
