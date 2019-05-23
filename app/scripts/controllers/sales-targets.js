@@ -115,7 +115,12 @@ angular.module('ts5App')
         name: $scope.salesTarget.name,
         description: $scope.salesTarget.description,
         startDate: dateUtility.formatDateForAPI($scope.salesTarget.startDate),
-        endDate: dateUtility.formatDateForAPI($scope.salesTarget.endDate)
+        endDate: dateUtility.formatDateForAPI($scope.salesTarget.endDate),
+        stations: [],
+        departureTimes: [],
+        departureDates: [],
+        itemCategories: [],
+        items: []
       };
 
       salesTargetFactory.updateSalesTarget(payload).then(
@@ -188,20 +193,34 @@ angular.module('ts5App')
       $scope.salesTarget.items.splice(index, 1);
     };
 
-    this.salesTargetSuccess = function(response) {
-      $scope.viewStartDate = dateUtility.formatDateForApp(response.startDate);
-      $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
-      $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker($scope.viewStartDate);
-      $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker($scope.viewEndDate);
+    this.salesTargetSuccess = function(dataFromAPI) {
+      var response = angular.copy(dataFromAPI);
+
+      var startDate = dateUtility.formatDateForApp(response.startDate);
+      var endDate = dateUtility.formatDateForApp(response.endDate);
+      $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker(startDate);
+      $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(endDate);
 
       $scope.salesTarget = {
         id: response.id,
         name: response.name,
         description: response.description,
-        startDate: $scope.viewStartDate,
-        endDate: $scope.viewEndDate
+        startDate: startDate,
+        endDate: endDate,
+        category: $this.findSalesTargetCategoryById(response.targetCategoryId),
+        value: response.targetValue,
+        stations: [],
+        departureTimes: [],
+        departureDates: [],
+        itemCategories: [],
+        items: []
       };
 
+      $scope.isLoadingCompleted = true;
+    };
+
+    this.findSalesTargetCategoryById = function (categoryId) {
+      return lodash.find($scope.salesTargetCategoryList, { id: categoryId });
     };
 
     this.getSalesTargetCategories = function () {

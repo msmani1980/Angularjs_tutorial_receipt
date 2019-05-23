@@ -33,6 +33,7 @@
           </div>
           <div class="col-xs-12 col-sm-2" ng-class="validation.calendarCssClass(salesTargetDataForm, salesTarget.startDate)">
             <date-picker-field
+              ng-if="isLoadingCompleted"
               form="salesTargetDataForm"
               name="EffectiveStartDate"
               label="Effective Start Date"
@@ -44,6 +45,7 @@
           </div>
           <div class="col-xs-12 col-sm-2" ng-class="validation.calendarCssClass(salesTargetDataForm, salesTarget.endDate)">
             <date-picker-field
+              ng-if="isLoadingCompleted"
               form="salesTargetDataForm"
               name="EffectiveEndDate"
               label="Effective End Date"
@@ -55,10 +57,10 @@
               required="true">
             </date-picker-field>
           </div>
-          <div class="col-xs-12 col-sm-2" ng-class="validation.calendarCssClass(salesTargetDataForm, salesTarget.startDate)">
+          <div class="col-xs-12 col-sm-2" ng-class="validation.fieldCssClass(salesTargetDataForm, 'salesTargetCategory')">
             <div class="form-group">
               <label for="salesTargetCategory">Category *</label>
-              <ui-select theme="bootstrap" ng-model="salesTarget.category" ng-disabled="readOnly" id="salesTargetCategory">
+              <ui-select theme="bootstrap" ng-model="salesTarget.category" ng-disabled="isDisabled()" name="salesTargetCategory" id="salesTargetCategory">
                 <ui-select-match placeholder="Category" allow-clear>{{ $select.selected.name }}</ui-select-match>
                 <ui-select-choices repeat="category in salesTargetCategoryList | filter: {name:$select.search} | orderBy: 'name'">
                   <div ng-bind-html="category.name | highlight: $select.search"></div>
@@ -146,7 +148,7 @@
 
         <h3>
           Stations
-          <button type="button" ng-disabled="isDisabled()" class="btn btn-sm btn-primary pull-right" ng-click="addStation()">
+          <button type="button" ng-hide="isDisabled()" class="btn btn-sm btn-primary pull-right" ng-click="addStation()">
             <i class="fa fa-plus"></i> Add
           </button>
         </h3>
@@ -196,7 +198,7 @@
 
         <h3>
           Departure Times
-          <button type="button" ng-disabled="isDisabled()" class="btn btn-sm btn-primary pull-right" ng-click="addDepartureTime()">
+          <button type="button" ng-hide="isDisabled()" class="btn btn-sm btn-primary pull-right" ng-click="addDepartureTime()">
             <i class="fa fa-plus"></i> Add
           </button>
         </h3>
@@ -249,7 +251,7 @@
 
         <h3>
           Departure Dates
-          <button type="button" ng-disabled="isDisabled()" class="btn btn-sm btn-primary pull-right" ng-click="addDepartureDate()">
+          <button type="button" ng-hide="isDisabled()" class="btn btn-sm btn-primary pull-right" ng-click="addDepartureDate()">
             <i class="fa fa-plus"></i> Add
           </button>
         </h3>
@@ -302,7 +304,7 @@
 
         <h3>
           Item Categories
-          <button type="button" ng-disabled="isDisabled()" class="btn btn-sm btn-primary pull-right" ng-click="addItemCategory()">
+          <button type="button" ng-hide="isDisabled()" class="btn btn-sm btn-primary pull-right" ng-click="addItemCategory()">
             <i class="fa fa-plus"></i> Add
           </button>
         </h3>
@@ -344,7 +346,7 @@
 
         <h3>
           Items
-          <button type="button" ng-disabled="isDisabled()" class="btn btn-sm btn-primary pull-right" ng-click="addItem()">
+          <button type="button" ng-hide="isDisabled()" class="btn btn-sm btn-primary pull-right" ng-click="addItem()">
             <i class="fa fa-plus"></i> Add
           </button>
         </h3>
