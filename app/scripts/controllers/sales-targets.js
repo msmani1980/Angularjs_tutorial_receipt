@@ -136,8 +136,8 @@ angular.module('ts5App')
 
     $scope.addStation = function() {
       $scope.salesTarget.stations.push({
-        departure: {},
-        arrival: {}
+        departure: null,
+        arrival: null
       })
     };
 
@@ -168,7 +168,9 @@ angular.module('ts5App')
     };
 
     $scope.addItemCategory = function() {
-      $scope.salesTarget.itemCategories.push({ })
+      $scope.salesTarget.itemCategories.push({
+        value: null
+      })
     };
 
     $scope.removeItemCategory = function(index) {
@@ -176,10 +178,13 @@ angular.module('ts5App')
     };
 
     $scope.addItem = function() {
-      $scope.salesTarget.items.push({ })
+      $scope.salesTarget.items.push({
+        value: null
+      })
     };
 
     $scope.removeItem = function(index) {
+      console.log(index)
       $scope.salesTarget.items.splice(index, 1);
     };
 

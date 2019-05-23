@@ -155,7 +155,7 @@
             <div ng-if="salesTarget.stations.length === 0">
               No station restrictions added.
             </div>
-            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Stations')" ng-if="salesTarget.stations.length > 0">
+            <div class="form-group" ng-if="salesTarget.stations.length > 0">
               <table class="table">
                 <thead>
                   <tr>
@@ -166,7 +166,7 @@
                 </thead>
                 <tbody>
                   <tr ng-repeat="station in salesTarget.stations track by $index">
-                    <td>
+                    <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'departureStation[$index]')">
                       <ui-select name="departureStation[$index]" id="departureStation[$index]" ng-disabled="isDisabled()" ng-model="station.departure" theme="bootstrap">
                         <ui-select-match placeholder="Select Departure Station">{{ $select.selected.code }}</ui-select-match>
                         <ui-select-choices repeat="departureStation in stationList | filter: $select.search | orderBy:'code' | limitTo: 100">
@@ -174,7 +174,7 @@
                         </ui-select-choices>
                       </ui-select>
                     </td>
-                    <td>
+                    <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'arrivalStation[$index]')">
                       <ui-select name="arrivalStation[$index]" id="arrivalStation[$index]" ng-disabled="isDisabled()" ng-model="station.arrival" theme="bootstrap">
                         <ui-select-match placeholder="Select Arrival Station">{{ $select.selected.code }}</ui-select-match>
                         <ui-select-choices repeat="arrivalStation in stationList | filter: $select.search | orderBy:'code' | limitTo: 100">
@@ -205,7 +205,7 @@
             <div ng-if="salesTarget.departureTimes.length === 0">
               No departure time restrictions added.
             </div>
-            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'DepartureTimes')" ng-if="salesTarget.departureTimes.length > 0">
+            <div class="form-group" ng-if="salesTarget.departureTimes.length > 0">
               <table class="table">
                 <thead>
                   <tr>
@@ -216,11 +216,23 @@
                 </thead>
                 <tbody>
                   <tr ng-repeat="departureTime in salesTarget.departureTimes track by $index">
-                    <td>
-                      <input ng-model="departureTime.from" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control" id="departureTimeFrom[$index]">
+                    <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'departureTimeFrom[$index]')">
+                      <input
+                        ng-model="departureTime.from"
+                        maxlength="4"
+                        oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                        class="form-control"
+                        name="departureTimeFrom[$index]"
+                        id="departureTimeFrom[$index]">
                     </td>
-                    <td>
-                      <input ng-model="departureTime.to" maxlength="4" oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="form-control" id="departureTimeTo[$index]">
+                    <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'departureTimeTo[$index]')">
+                      <input
+                        ng-model="departureTime.to"
+                        maxlength="4"
+                        oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                        class="form-control"
+                        name="departureTimeTo[$index]"
+                        id="departureTimeTo[$index]">
                     </td>
                     <td ng-if="!isDisabled()" style="text-align: center">
                       <button class="btn btn-danger btn-xs" ng-click="removeDepartureTime($index)">
@@ -246,7 +258,7 @@
             <div ng-if="salesTarget.departureDates.length === 0">
               No departure date restrictions added.
             </div>
-            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'DepartureDates')" ng-if="salesTarget.departureDates.length > 0">
+            <div class="form-group"  ng-if="salesTarget.departureDates.length > 0">
               <table class="table">
                 <thead>
                   <tr>
@@ -257,7 +269,7 @@
                 </thead>
                 <tbody>
                   <tr ng-repeat="departureDate in salesTarget.departureDates track by $index">
-                    <td>
+                    <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'departureDateFrom[$index]')">
                       <date-picker-field
                         form="salesTargetDataForm"
                         name="departureDateFrom[$index]"
@@ -266,7 +278,7 @@
                         ng-model="departureDate.from">
                       </date-picker-field>
                     </td>
-                    <td>
+                    <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'departureDateTo[$index]')">
                       <date-picker-field
                         form="salesTargetDataTo"
                         name="departureDateTo[$index]"
@@ -299,7 +311,7 @@
             <div ng-if="salesTarget.itemCategories.length === 0">
               No item category restrictions added.
             </div>
-            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'ItemCategories')" ng-if="salesTarget.itemCategories.length > 0">
+            <div class="form-group" ng-if="salesTarget.itemCategories.length > 0">
               <table class="table">
                 <thead>
                   <tr>
@@ -309,15 +321,14 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="itemCategory in salesTarget.itemCategories track by $index">
-                  <td>
-                    <ui-select name="itemCategory[$index]" id="itemCategory[$index]" ng-disabled="isDisabled()" ng-model="itemCategory" theme="bootstrap">
+                  <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'itemCategory[$index]')">
+                    <ui-select name="itemCategory[$index]" id="itemCategory[$index]" ng-disabled="isDisabled()" ng-model="itemCategory.value" theme="bootstrap">
                       <ui-select-match placeholder="Select Item Category">{{ $select.selected.name }}</ui-select-match>
                       <ui-select-choices repeat="category in itemCategoryList | filter: $select.search | orderBy:'orderBy' | limitTo: 100">
                         <div ng-bind-html="category.name | highlight: $select.search "></div>
                       </ui-select-choices>
                     </ui-select>
-
-                  </td>
+                  </td >
                   <td ng-if="!isDisabled()" style="text-align: center">
                     <button class="btn btn-danger btn-xs" ng-click="removeItemCategory($index)">
                       <i class="fa fa-trash"></i>
@@ -342,24 +353,23 @@
             <div ng-if="salesTarget.items.length === 0">
               No item restrictions added.
             </div>
-            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Items')" ng-if="salesTarget.items.length > 0">
+            <div class="form-group" ng-if="salesTarget.items.length > 0">
               <table class="table">
                 <thead>
-                <tr>
-                  <th style="width:80%">Item</th>
-                  <th style="text-align: center">Actions</th>
-                </tr>
+                  <tr>
+                    <th style="width:80%">Item</th>
+                    <th style="text-align: center">Actions</th>
+                  </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="item in salesTarget.items track by $index">
-                  <td>
-                    <ui-select name="item[$index]" id="item[$index]" ng-disabled="isDisabled()" ng-model="item" theme="bootstrap">
+                  <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'item[$index]')">
+                    <ui-select name="item[$index]" id="item[$index]" ng-disabled="isDisabled()" ng-model="item.value" theme="bootstrap">
                       <ui-select-match placeholder="Select Item">{{ $select.selected.itemName }}</ui-select-match>
                       <ui-select-choices repeat="i in itemList | filter: $select.search | orderBy:'name' | limitTo: 100">
                         <div ng-bind-html="i.itemName | highlight: $select.search "></div>
                       </ui-select-choices>
                     </ui-select>
-
                   </td>
                   <td ng-if="!isDisabled()" style="text-align: center">
                     <button class="btn btn-danger btn-xs" ng-click="removeItem($index)">
@@ -372,6 +382,9 @@
 
             </div>
           </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 form-group"></div>
         </div>
 
         <div class="panel-footer text-right" ng-hide="readOnly">
