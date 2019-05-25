@@ -20,6 +20,9 @@ angular.module('ts5App')
     $scope.itemMasterList = [];
     $scope.validation = formValidationUtility;
     $scope.salesTarget = {
+      schedules:[],
+      stores: [],
+      employees: [],
       stations: [],
       departureTimes: [],
       departureDates: [],
@@ -93,6 +96,7 @@ angular.module('ts5App')
 
     this.createSalesTarget = function() {
       $this.showLoadingModal('Creating Sales Target');
+
       var payload = {
         name: $scope.salesTarget.name,
         companyId: globalMenuService.company.get(),
@@ -100,12 +104,87 @@ angular.module('ts5App')
         startDate: dateUtility.formatDateForAPI($scope.salesTarget.startDate),
         endDate: dateUtility.formatDateForAPI($scope.salesTarget.endDate),
         targetValue: $scope.salesTarget.value,
-        targetCategoryId: $scope.salesTarget.category.id
+        targetCategoryId: $scope.salesTarget.category.id,
+        schedules: $this.mapCreateSchedulePayload(),
+        stores: $this.mapCreateStoresPayload(),
+        crews: $this.mapCreateCrewsPayload(),
+        stations: $this.mapCreateStationsPayload(),
+        departureTimes: $this.mapCreateDepartureTimesPayload(),
+        departureDates: $this.mapCreateDepartureDatesPayload(),
+        categories: $this.mapCreateCategoriesPayload(),
+        items: $this.mapCreateItemsPayload()
       };
 
       salesTargetFactory.createSalesTarget(payload).then(
         $this.saveFormSuccess, $this.saveFormFailure
       );
+    };
+
+    this.mapCreateSchedulePayload = function () {
+      return $scope.salesTarget.schedules.map(function (schedule) {
+        return {
+          scheduleNumber: schedule.scheduleNumber
+        };
+      });
+    };
+
+    this.mapCreateStoresPayload = function () {
+      return $scope.salesTarget.stores.map(function (store) {
+        return {
+          storeId: store.id
+        };
+      });
+    };
+
+    this.mapCreateCrewsPayload = function () {
+      return $scope.salesTarget.employees.map(function (employee) {
+        return {
+          crewId: employee.id
+        };
+      });
+    };
+
+    this.mapCreateStationsPayload = function () {
+      return $scope.salesTarget.stations.map(function (station) {
+        return {
+          departureStationId: (station.departure) ? station.departure.stationId : null,
+          arrivalStationId: (station.arrival) ? station.arrival.stationId : null
+        };
+      });
+    };
+
+    this.mapCreateDepartureTimesPayload = function () {
+      return $scope.salesTarget.departureTimes.map(function (departureTime) {
+        return {
+          timeFrom: departureTime.from,
+          timeTo: departureTime.to
+        };
+      });
+    };
+
+    this.mapCreateDepartureDatesPayload = function () {
+      return $scope.salesTarget.departureDates.map(function (departureDate) {
+        return {
+          dateFrom: (departureDate.from) ? dateUtility.formatDateForAPI(departureDate.from) : null,
+          dateTo: (departureDate.to) ? dateUtility.formatDateForAPI(departureDate.to) : null
+        };
+      });
+    };
+
+    this.mapCreateCategoriesPayload = function () {
+      return $scope.salesTarget.itemCategories.map(function (itemCategory) {
+        return {
+          categoryId: (itemCategory && itemCategory.value) ? itemCategory.value.id : null
+        };
+      });
+    };
+
+    this.mapCreateItemsPayload = function () {
+      return $scope.salesTarget.items.map(function (item) {
+        return {
+          itemId: (item && item.value) ? item.value.id : null
+        };
+      });
     };
 
     this.editSalesTarget = function() {
@@ -116,10 +195,12 @@ angular.module('ts5App')
         description: $scope.salesTarget.description,
         startDate: dateUtility.formatDateForAPI($scope.salesTarget.startDate),
         endDate: dateUtility.formatDateForAPI($scope.salesTarget.endDate),
+        targetValue: $scope.salesTarget.value,
+        targetCategoryId: $scope.salesTarget.category.id,
         stations: [],
         departureTimes: [],
         departureDates: [],
-        itemCategories: [],
+        categories: [],
         items: []
       };
 
@@ -189,7 +270,6 @@ angular.module('ts5App')
     };
 
     $scope.removeItem = function(index) {
-      console.log(index)
       $scope.salesTarget.items.splice(index, 1);
     };
 
@@ -312,9 +392,11 @@ angular.module('ts5App')
       $scope.itemList = angular.copy(dataFromAPI.masterItems);
     };
 
-    this.initDependenciesSuccess = function(responseCollection) {
+    this.initDependenciesSuccess = function() {
       if ($routeParams.id) {
         salesTargetFactory.getSalesTargetById($routeParams.id).then($this.salesTargetSuccess);
+      } else {
+        $scope.isLoadingCompleted = true;
       }
 
       $this.hideLoadingModal();
