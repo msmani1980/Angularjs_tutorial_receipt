@@ -165,7 +165,7 @@
                   <tr>
                     <th style="width:40%">Departure</th>
                     <th style="width:40%">Arrival</th>
-                    <th style="text-align: center">Actions</th>
+                    <th style="text-align: center" ng-if="!isDisabled()">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -215,13 +215,14 @@
                   <tr>
                     <th style="width:40%">From</th>
                     <th style="width:40%">To</th>
-                    <th style="text-align: center">Actions</th>
+                    <th style="text-align: center" ng-if="!isDisabled()">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr ng-repeat="departureTime in salesTarget.departureTimes track by $index">
                     <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'departureTimeFrom[' + $index + ']')">
                       <input
+                        ng-disabled="isDisabled()"
                         maxlength="5"
                         ng-model="departureTime.from"
                         oninput="this.value=this.value.replace(/[^0-9:]/g,'');"
@@ -232,6 +233,7 @@
                     </td>
                     <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'departureTimeTo[' + $index + ']')">
                       <input
+                        ng-disabled="isDisabled()"
                         maxlength="5"
                         ng-model="departureTime.to"
                         oninput="this.value=this.value.replace(/[^0-9:]/g,'');"
@@ -270,7 +272,7 @@
                   <tr>
                     <th style="width:40%">From</th>
                     <th style="width:40%">To</th>
-                    <th style="text-align: center">Actions</th>
+                    <th style="text-align: center" ng-if="!isDisabled()">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -322,7 +324,7 @@
                 <thead>
                   <tr>
                     <th style="width:80%">Category</th>
-                    <th style="text-align: center">Actions</th>
+                    <th style="text-align: center" ng-if="!isDisabled()">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -364,7 +366,7 @@
                 <thead>
                   <tr>
                     <th style="width:80%">Item</th>
-                    <th style="text-align: center">Actions</th>
+                    <th style="text-align: center" ng-if="!isDisabled()">Actions</th>
                   </tr>
                 </thead>
                 <tbody>

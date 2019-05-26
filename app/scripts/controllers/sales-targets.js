@@ -145,16 +145,24 @@ angular.module('ts5App')
     };
 
     this.mapCreateStationsPayload = function () {
-      return $scope.salesTarget.stations.map(function (station) {
-        return {
-          departureStationId: (station.departure) ? station.departure.stationId : null,
-          arrivalStationId: (station.arrival) ? station.arrival.stationId : null
-        };
+      return $scope.salesTarget.stations
+        .filter(function (station) {
+          return station.departure || station.arrival;
+        })
+        .map(function (station) {
+          return {
+            departureStationId: (station.departure) ? station.departure.stationId : null,
+            arrivalStationId: (station.arrival) ? station.arrival.stationId : null
+          };
       });
     };
 
     this.mapCreateDepartureTimesPayload = function () {
-      return $scope.salesTarget.departureTimes.map(function (departureTime) {
+      return $scope.salesTarget.departureTimes
+        .filter(function (departureTime) {
+          return departureTime.from || departureTime.to;
+        })
+        .map(function (departureTime) {
         return {
           timeFrom: departureTime.from,
           timeTo: departureTime.to
@@ -163,27 +171,39 @@ angular.module('ts5App')
     };
 
     this.mapCreateDepartureDatesPayload = function () {
-      return $scope.salesTarget.departureDates.map(function (departureDate) {
-        return {
-          dateFrom: (departureDate.from) ? dateUtility.formatDateForAPI(departureDate.from) : null,
-          dateTo: (departureDate.to) ? dateUtility.formatDateForAPI(departureDate.to) : null
-        };
+      return $scope.salesTarget.departureDates
+        .filter(function (departureDate) {
+          return departureDate.from || departureDate.to;
+        })
+        .map(function (departureDate) {
+          return {
+            dateFrom: (departureDate.from) ? dateUtility.formatDateForAPI(departureDate.from) : null,
+            dateTo: (departureDate.to) ? dateUtility.formatDateForAPI(departureDate.to) : null
+          };
       });
     };
 
     this.mapCreateCategoriesPayload = function () {
-      return $scope.salesTarget.itemCategories.map(function (itemCategory) {
-        return {
-          categoryId: (itemCategory && itemCategory.value) ? itemCategory.value.id : null
-        };
+      return $scope.salesTarget.itemCategories
+        .filter(function (itemCategory) {
+          return itemCategory.value;
+        })
+        .map(function (itemCategory) {
+          return {
+            categoryId: itemCategory.value.id
+          };
       });
     };
 
     this.mapCreateItemsPayload = function () {
-      return $scope.salesTarget.items.map(function (item) {
-        return {
-          itemId: (item && item.value) ? item.value.id : null
-        };
+      return $scope.salesTarget.items
+        .filter(function (item) {
+          return item.value;
+        })
+        .map(function (item) {
+          return {
+            itemId: item.value.id
+          };
       });
     };
 
@@ -281,26 +301,90 @@ angular.module('ts5App')
       $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker(startDate);
       $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(endDate);
 
+      $scope.persistedSalesTarget = response;
+
       $scope.salesTarget = {
         id: response.id,
         name: response.name,
         description: response.description,
         startDate: startDate,
         endDate: endDate,
-        category: $this.findSalesTargetCategoryById(response.targetCategoryId),
+        category: $this.findItemById($scope.salesTargetCategoryList, response.targetCategoryId),
         value: response.targetValue,
-        stations: [],
-        departureTimes: [],
-        departureDates: [],
-        itemCategories: [],
-        items: []
+        schedules: response.schedules.map(function (item) { return $this.mapScheduleFromResponse(item) }),
+        stores: response.stores.map(function (item) { return $this.mapStoreFromResponse(item) }),
+        employees: response.crews.map(function (item) { return $this.mapEmployeeFromResponse(item) }),
+        stations: response.stations.map(function (item) { return $this.mapStationFromResponse(item) }),
+        departureTimes: response.departureTimes.map(function (item) { return $this.mapDepartureTimeFromResponse(item) }),
+        departureDates: response.departureDates.map(function (item) { return $this.mapDepartureDateFromResponse(item) }),
+        itemCategories: response.categories.map(function (item) { return $this.mapItemCategoryFromResponse(item) }),
+        items: response.items.map(function (item) { return $this.mapItemFromResponse(item) })
       };
 
       $scope.isLoadingCompleted = true;
     };
 
-    this.findSalesTargetCategoryById = function (categoryId) {
-      return lodash.find($scope.salesTargetCategoryList, { id: categoryId });
+    this.findItemById = function (array, id) {
+      return lodash.find(array, { id: id });
+    };
+
+    this.mapScheduleFromResponse = function (schedule) {
+      var item = lodash.find($scope.scheduleList, { scheduleNumber: schedule.scheduleNumber });
+      item.entityId = schedule.id;
+
+      return item;
+    };
+
+    this.mapStoreFromResponse = function (store) {
+      var item = lodash.find($scope.storeList, { id: store.storeId });
+      item.entityId = store.id;
+
+      return item;
+    };
+
+    this.mapEmployeeFromResponse = function (employee) {
+      var item = lodash.find($scope.employeeList, { id: employee.crewId });
+      item.entityId = employee.id;
+
+      return item;
+    };
+
+    this.mapStationFromResponse = function (station) {
+      return {
+        entityId: station.id,
+        departure: lodash.find($scope.stationList, { stationId: station.departureStationId }),
+        arrival: lodash.find($scope.stationList, { stationId: station.arrivalStationId })
+      };
+    };
+
+    this.mapDepartureTimeFromResponse = function (departureTime) {
+      return {
+        entityId: departureTime.id,
+        from: departureTime.timeFrom,
+        to: departureTime.timeTo
+      };
+    };
+
+    this.mapDepartureDateFromResponse = function (departureDate) {
+      return {
+        entityId: departureDate.id,
+        from: departureDate.dateFrom,
+        to: departureDate.dateTo
+      };
+    };
+
+    this.mapItemCategoryFromResponse = function (itemCategory) {
+      return {
+        entityId: itemCategory.id,
+        value: lodash.find($scope.itemCategoryList, { id: itemCategory.categoryId })
+      };
+    };
+
+    this.mapItemFromResponse = function (item) {
+      return {
+        entityId: item.id,
+        value: lodash.find($scope.itemList, { id: item.itemId })
+      };
     };
 
     this.getSalesTargetCategories = function () {
