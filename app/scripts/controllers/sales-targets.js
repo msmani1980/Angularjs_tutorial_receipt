@@ -105,14 +105,14 @@ angular.module('ts5App')
         endDate: dateUtility.formatDateForAPI($scope.salesTarget.endDate),
         targetValue: $scope.salesTarget.value,
         targetCategoryId: $scope.salesTarget.category.id,
-        schedules: $this.mapCreateSchedulePayload(),
-        stores: $this.mapCreateStoresPayload(),
-        crews: $this.mapCreateCrewsPayload(),
-        stations: $this.mapCreateStationsPayload(),
-        departureTimes: $this.mapCreateDepartureTimesPayload(),
-        departureDates: $this.mapCreateDepartureDatesPayload(),
-        categories: $this.mapCreateCategoriesPayload(),
-        items: $this.mapCreateItemsPayload()
+        schedules: $this.mapSchedulePayload(),
+        stores: $this.mapStoresPayload(),
+        crews: $this.mapCrewsPayload(),
+        stations: $this.mapStationsPayload(),
+        departureTimes: $this.mapDepartureTimesPayload(),
+        departureDates: $this.mapDepartureDatesPayload(),
+        categories: $this.mapCategoriesPayload(),
+        items: $this.mapItemsPayload()
       };
 
       salesTargetFactory.createSalesTarget(payload).then(
@@ -120,95 +120,9 @@ angular.module('ts5App')
       );
     };
 
-    this.mapCreateSchedulePayload = function () {
-      return $scope.salesTarget.schedules.map(function (schedule) {
-        return {
-          scheduleNumber: schedule.scheduleNumber
-        };
-      });
-    };
-
-    this.mapCreateStoresPayload = function () {
-      return $scope.salesTarget.stores.map(function (store) {
-        return {
-          storeId: store.id
-        };
-      });
-    };
-
-    this.mapCreateCrewsPayload = function () {
-      return $scope.salesTarget.employees.map(function (employee) {
-        return {
-          crewId: employee.id
-        };
-      });
-    };
-
-    this.mapCreateStationsPayload = function () {
-      return $scope.salesTarget.stations
-        .filter(function (station) {
-          return station.departure || station.arrival;
-        })
-        .map(function (station) {
-          return {
-            departureStationId: (station.departure) ? station.departure.stationId : null,
-            arrivalStationId: (station.arrival) ? station.arrival.stationId : null
-          };
-      });
-    };
-
-    this.mapCreateDepartureTimesPayload = function () {
-      return $scope.salesTarget.departureTimes
-        .filter(function (departureTime) {
-          return departureTime.from || departureTime.to;
-        })
-        .map(function (departureTime) {
-        return {
-          timeFrom: departureTime.from,
-          timeTo: departureTime.to
-        };
-      });
-    };
-
-    this.mapCreateDepartureDatesPayload = function () {
-      return $scope.salesTarget.departureDates
-        .filter(function (departureDate) {
-          return departureDate.from || departureDate.to;
-        })
-        .map(function (departureDate) {
-          return {
-            dateFrom: (departureDate.from) ? dateUtility.formatDateForAPI(departureDate.from) : null,
-            dateTo: (departureDate.to) ? dateUtility.formatDateForAPI(departureDate.to) : null
-          };
-      });
-    };
-
-    this.mapCreateCategoriesPayload = function () {
-      return $scope.salesTarget.itemCategories
-        .filter(function (itemCategory) {
-          return itemCategory.value;
-        })
-        .map(function (itemCategory) {
-          return {
-            categoryId: itemCategory.value.id
-          };
-      });
-    };
-
-    this.mapCreateItemsPayload = function () {
-      return $scope.salesTarget.items
-        .filter(function (item) {
-          return item.value;
-        })
-        .map(function (item) {
-          return {
-            itemId: item.value.id
-          };
-      });
-    };
-
     this.editSalesTarget = function() {
       $this.showLoadingModal('Saving Sales Target');
+
       var payload = {
         id: $routeParams.id,
         name: $scope.salesTarget.name,
@@ -217,16 +131,114 @@ angular.module('ts5App')
         endDate: dateUtility.formatDateForAPI($scope.salesTarget.endDate),
         targetValue: $scope.salesTarget.value,
         targetCategoryId: $scope.salesTarget.category.id,
-        stations: [],
-        departureTimes: [],
-        departureDates: [],
-        categories: [],
-        items: []
+        schedules: $this.mapSchedulePayload(),
+        stores: $this.mapStoresPayload(),
+        crews: $this.mapCrewsPayload(),
+        stations: $this.mapStationsPayload(),
+        departureTimes: $this.mapDepartureTimesPayload(),
+        departureDates: $this.mapDepartureDatesPayload(),
+        categories: $this.mapCategoriesPayload(),
+        items: $this.mapItemsPayload()
       };
 
       salesTargetFactory.updateSalesTarget(payload).then(
         $this.saveFormSuccess, $this.saveFormFailure
       );
+    };
+
+    this.mapSchedulePayload = function () {
+      return $scope.salesTarget.schedules.map(function (schedule) {
+        return {
+          id: schedule.entityId,
+          scheduleNumber: schedule.scheduleNumber
+        };
+      });
+    };
+
+    this.mapStoresPayload = function () {
+      return $scope.salesTarget.stores.map(function (store) {
+        return {
+          id: store.entityId,
+          storeId: store.id
+        };
+      });
+    };
+
+    this.mapCrewsPayload = function () {
+      return $scope.salesTarget.employees.map(function (employee) {
+        return {
+          id: employee.entityId,
+          crewId: employee.id
+        };
+      });
+    };
+
+    this.mapStationsPayload = function () {
+      return $scope.salesTarget.stations
+        .filter(function (station) {
+          return station.departure || station.arrival;
+        })
+        .map(function (station) {
+          return {
+            id: station.entityId,
+            departureStationId: (station.departure) ? station.departure.stationId : null,
+            arrivalStationId: (station.arrival) ? station.arrival.stationId : null
+          };
+        });
+    };
+
+    this.mapDepartureTimesPayload = function () {
+      return $scope.salesTarget.departureTimes
+        .filter(function (departureTime) {
+          return departureTime.from || departureTime.to;
+        })
+        .map(function (departureTime) {
+          return {
+            id: departureTime.entityId,
+            timeFrom: departureTime.from,
+            timeTo: departureTime.to
+          };
+        });
+    };
+
+    this.mapDepartureDatesPayload = function () {
+      return $scope.salesTarget.departureDates
+        .filter(function (departureDate) {
+          return departureDate.from || departureDate.to;
+        })
+        .map(function (departureDate) {
+          return {
+            id: departureDate.entityId,
+            dateFrom: (departureDate.from) ? dateUtility.formatDateForAPI(departureDate.from) : null,
+            dateTo: (departureDate.to) ? dateUtility.formatDateForAPI(departureDate.to) : null
+          };
+        });
+    };
+
+    this.mapCategoriesPayload = function () {
+      return $scope.salesTarget.itemCategories
+        .filter(function (itemCategory) {
+          return itemCategory.value;
+        })
+        .map(function (itemCategory) {
+          return {
+            id: itemCategory.entityId,
+            categoryId: itemCategory.value.id
+          };
+        });
+    };
+
+    this.mapItemsPayload = function () {
+      return $scope.salesTarget.items
+        .filter(function (item) {
+          return item.value;
+        })
+        .map(function (item) {
+          return {
+            id: item.entityId,
+            itemId: item.value.id
+          };
+        });
     };
 
     $scope.formSave = function() {
@@ -301,8 +313,6 @@ angular.module('ts5App')
       $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker(startDate);
       $scope.shouldDisableEndDate = dateUtility.isYesterdayOrEarlierDatePicker(endDate);
 
-      $scope.persistedSalesTarget = response;
-
       $scope.salesTarget = {
         id: response.id,
         name: response.name,
@@ -368,8 +378,8 @@ angular.module('ts5App')
     this.mapDepartureDateFromResponse = function (departureDate) {
       return {
         entityId: departureDate.id,
-        from: departureDate.dateFrom,
-        to: departureDate.dateTo
+        from: (departureDate.dateFrom) ? dateUtility.formatDateForApp(departureDate.dateFrom) : null,
+        to: (departureDate.dateTo) ? dateUtility.formatDateForApp(departureDate.dateTo) : null
       };
     };
 

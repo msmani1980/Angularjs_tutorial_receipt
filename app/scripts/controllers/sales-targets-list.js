@@ -62,7 +62,9 @@ angular.module('ts5App')
       showLoadingBar();
       var payload = lodash.assign(angular.copy($scope.search), {
         limit: $this.meta.limit,
-        offset: $this.meta.offset
+        offset: $this.meta.offset,
+        sortOn: 'name,startDate',
+        sortBy: 'ASC'
       });
 
       payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
@@ -76,7 +78,9 @@ angular.module('ts5App')
       $this.meta = {
         count: undefined,
         limit: 100,
-        offset: 0
+        offset: 0,
+        sortOn: 'name,startDate',
+        sortBy: 'ASC'
       };
 
       $scope.isSearch = true;
@@ -138,13 +142,13 @@ angular.module('ts5App')
     };
 
     $scope.removeRecord = function (salesTarget) {
-      $this.displayLoadingModal('Removing Packing Plan Record');
-      salesTargetFactory.deleteSalesTargetCategory(salesTarget.id).then(
+      $this.displayLoadingModal('Removing Sales Target Record');
+      salesTargetFactory.deleteSalesTarget(salesTarget.id).then(
         $this.deleteSuccess, $this.deleteFailure
       );
     };
 
-    this.initSuccessHandler = function(responseCollection) {
+    this.initSuccessHandler = function() {
       angular.element('#search-collapse').addClass('collapse');
     };
 
