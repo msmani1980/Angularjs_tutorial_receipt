@@ -332,7 +332,7 @@
                   <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'itemCategory[' + $index + ']')">
                     <ui-select name="itemCategory[$index]" id="itemCategory[$index]" ng-disabled="isDisabled()" ng-model="itemCategory.value" theme="bootstrap">
                       <ui-select-match placeholder="Select Item Category">{{ $select.selected.name }}</ui-select-match>
-                      <ui-select-choices repeat="category in itemCategoryList | filter: $select.search | orderBy:'orderBy' | limitTo: 100">
+                      <ui-select-choices repeat="category in itemCategoryList | filter: $select.search | filter: isItemCategoryNotInUse | orderBy:'orderBy' | limitTo: 100">
                         <div ng-bind-html="category.name | highlight: $select.search "></div>
                       </ui-select-choices>
                     </ui-select>
@@ -374,7 +374,7 @@
                   <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'item[' + $index + ']')">
                     <ui-select name="item[$index]" id="item[$index]" ng-disabled="isDisabled()" ng-model="item.value" theme="bootstrap">
                       <ui-select-match placeholder="Select Item">{{ $select.selected.itemName }}</ui-select-match>
-                      <ui-select-choices repeat="i in itemList | filter: $select.search | orderBy:'name' | limitTo: 100">
+                      <ui-select-choices repeat="i in itemList | filter: $select.search | filter: isItemNotInUse | orderBy:'name' | limitTo: 100">
                         <div ng-bind-html="i.itemName | highlight: $select.search "></div>
                       </ui-select-choices>
                     </ui-select>

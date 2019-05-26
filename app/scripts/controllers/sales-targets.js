@@ -78,6 +78,8 @@ angular.module('ts5App')
     };
 
     this.saveFormSuccess = function() {
+
+
       $this.hideLoadingModal();
       if ($routeParams.action === 'create') {
         $this.showToastMessage('success', 'Create Sales Target', 'Success');
@@ -303,6 +305,18 @@ angular.module('ts5App')
 
     $scope.removeItem = function(index) {
       $scope.salesTarget.items.splice(index, 1);
+    };
+
+    $scope.isItemCategoryNotInUse = function(itemCategory) {
+      return !lodash.find($scope.salesTarget.itemCategories, function (categoryFromList) {
+          return categoryFromList.value && categoryFromList.value.id === itemCategory.id
+      });
+    };
+
+    $scope.isItemNotInUse = function(item) {
+      return !lodash.find($scope.salesTarget.items, function (itemFromList) {
+          return itemFromList.value && itemFromList.value.id === item.id
+      });
     };
 
     this.salesTargetSuccess = function(dataFromAPI) {
