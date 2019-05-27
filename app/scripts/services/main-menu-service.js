@@ -835,27 +835,26 @@ angular.module('ts5App')
       }, {
         title: 'Sales Targets',
         menuItems: [{
-          name: 'Manage Sales Target Categories',
-          route: '/#/sales-targets/categories',
-          icon: 'icon-manage-discount',
-          className: 'dashboard-company-receipts-config',
-          package: 'SALESTARGETS',
-          role: 'SALESTARGETS',
-          permissions: [{
-            apiName: '/api/sales-targets',
-            permissionCodes: ['R']
-          }]
-        }, {
           name: 'Manage Sales Targets',
           route: '/#/sales-targets',
-          icon: 'icon-manage-discount',
-          className: 'dashboard-company-receipts-config',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageSalesTargets',
           package: 'SALESTARGETS',
-          role: 'SALESTARGETS',
-          permissions: [{
-            apiName: '/api/sales-targets',
-            permissionCodes: ['R']
-          }]
+          role: 'SALESTARGETS'
+        }, {
+          name: 'Create Sales Target',
+          route: '/#/sales-targets/create',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageSalesTargets',
+          package: 'SALESTARGETS',
+          role: 'SALESTARGETS'
+        }, {
+          name: 'Manage Sales Target Categories',
+          route: '/#/sales-target-categories',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageSalesTargets',
+          package: 'SALESTARGETS',
+          role: 'SALESTARGETS'
         }]
       }];
     };

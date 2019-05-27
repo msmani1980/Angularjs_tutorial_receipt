@@ -64,7 +64,65 @@ angular.module('ts5App')
     this.validateForm = function() {
       $this.resetErrors();
 
+      if ($this.stationsHasDuplicates()) {
+        $this.showCantHaveDuplicatesError('Stations');
+        return false;
+      }
+
+      if ($this.departureTimesHasDuplicates()) {
+        $this.showCantHaveDuplicatesError('Departure Times');
+        return false;
+      }
+
+      if ($this.departureDatesHasDuplicates()) {
+        $this.showCantHaveDuplicatesError('Departure Dates');
+        return false;
+      }
+
       return $scope.salesTargetDataForm.$valid;
+    };
+
+    this.stationsHasDuplicates = function() {
+      var ids = $scope.salesTarget.stations.map(function (station) {
+        var departureId = (station.departure) ? station.departure.id : null;
+        var arrivalId =  (station.arrival) ? station.arrival.id : null;
+
+        return departureId + '-' + arrivalId;
+      });
+
+      return lodash.uniq(ids).length !== ids.length;
+    };
+
+    this.departureTimesHasDuplicates = function() {
+      var ids = $scope.salesTarget.departureTimes.map(function (departureTime) {
+        return $this.safeString(departureTime.from) + '-' + $this.safeString(departureTime.to);
+      });
+
+      return lodash.uniq(ids).length !== ids.length;
+    };
+
+    this.departureDatesHasDuplicates = function() {
+      var ids = $scope.salesTarget.departureDates.map(function (departureDate) {
+        return $this.safeString(departureDate.from) + '-' + $this.safeString(departureDate.to);
+      });
+
+      return lodash.uniq(ids).length !== ids.length;
+    };
+
+    this.showCantHaveDuplicatesError = function (field) {
+      $scope.errorCustom = [{
+        field: field,
+        value: 'Can\'t have duplicates'
+      }];
+      $scope.displayError = true;
+    };
+
+    this.safeString = function (value) {
+      if (!value) {
+        return '';
+      }
+
+      return value;
     };
 
     this.resetErrors = function() {
@@ -78,8 +136,6 @@ angular.module('ts5App')
     };
 
     this.saveFormSuccess = function() {
-
-
       $this.hideLoadingModal();
       if ($routeParams.action === 'create') {
         $this.showToastMessage('success', 'Create Sales Target', 'Success');
@@ -150,8 +206,10 @@ angular.module('ts5App')
 
     this.mapSchedulePayload = function () {
       return $scope.salesTarget.schedules.map(function (schedule) {
+        var persistedSchedule = lodash.find($scope.persistedSalesTarget.schedules, { scheduleNumber: schedule.scheduleNumber });
+
         return {
-          id: schedule.entityId,
+          id: (persistedSchedule) ? persistedSchedule.id : null,
           scheduleNumber: schedule.scheduleNumber
         };
       });
@@ -159,8 +217,10 @@ angular.module('ts5App')
 
     this.mapStoresPayload = function () {
       return $scope.salesTarget.stores.map(function (store) {
+        var persistedStore = lodash.find($scope.persistedSalesTarget.stores, { storeId: store.id });
+
         return {
-          id: store.entityId,
+          id: (persistedStore) ? persistedStore.id : null,
           storeId: store.id
         };
       });
@@ -168,8 +228,10 @@ angular.module('ts5App')
 
     this.mapCrewsPayload = function () {
       return $scope.salesTarget.employees.map(function (employee) {
+        var persistedEmployee = lodash.find($scope.persistedSalesTarget.crews, { crewId: employee.id });
+
         return {
-          id: employee.entityId,
+          id: (persistedEmployee) ? persistedEmployee.id : null,
           crewId: employee.id
         };
       });
@@ -223,8 +285,10 @@ angular.module('ts5App')
           return itemCategory.value;
         })
         .map(function (itemCategory) {
+          var persistedItemCategory = lodash.find($scope.persistedSalesTarget.categories, { categoryId: itemCategory.value.id });
+
           return {
-            id: itemCategory.entityId,
+            id: (persistedItemCategory) ? persistedItemCategory.id : null,
             categoryId: itemCategory.value.id
           };
         });
@@ -236,8 +300,10 @@ angular.module('ts5App')
           return item.value;
         })
         .map(function (item) {
+          var persistedItem = lodash.find($scope.persistedSalesTarget.items, { itemId: item.value.id });
+
           return {
-            id: item.entityId,
+            id: (persistedItem) ? persistedItem.id : null,
             itemId: item.value.id
           };
         });
@@ -322,6 +388,8 @@ angular.module('ts5App')
     this.salesTargetSuccess = function(dataFromAPI) {
       var response = angular.copy(dataFromAPI);
 
+      $scope.persistedSalesTarget = response;
+
       var startDate = dateUtility.formatDateForApp(response.startDate);
       var endDate = dateUtility.formatDateForApp(response.endDate);
       $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker(startDate);
@@ -353,24 +421,15 @@ angular.module('ts5App')
     };
 
     this.mapScheduleFromResponse = function (schedule) {
-      var item = lodash.find($scope.scheduleList, { scheduleNumber: schedule.scheduleNumber });
-      item.entityId = schedule.id;
-
-      return item;
+      return lodash.find($scope.scheduleList, { scheduleNumber: schedule.scheduleNumber });
     };
 
     this.mapStoreFromResponse = function (store) {
-      var item = lodash.find($scope.storeList, { id: store.storeId });
-      item.entityId = store.id;
-
-      return item;
+      return lodash.find($scope.storeList, { id: store.storeId });
     };
 
     this.mapEmployeeFromResponse = function (employee) {
-      var item = lodash.find($scope.employeeList, { id: employee.crewId });
-      item.entityId = employee.id;
-
-      return item;
+      return lodash.find($scope.employeeList, { id: employee.crewId });
     };
 
     this.mapStationFromResponse = function (station) {
@@ -524,7 +583,7 @@ angular.module('ts5App')
         $this.getEmployees(),
         $this.getStations(),
         $this.getItemCategories(),
-        $this.getItems(),
+        $this.getItems()
       ];
 
       return promises;

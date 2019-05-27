@@ -168,8 +168,7 @@ angular.module('ts5App')
 
     this.init = function() {
       var initDependencies = $this.makeInitPromises();
-      $scope.isCRUD = accessService.crudAccessGranted('SalesTarget', 'SalesTarget', 'CRUDPP'); // TODO: fix
-      $scope.isCRUD = true;
+      $scope.isCRUD = accessService.crudAccessGranted('SALESTARGETS', 'SALESTARGETS', 'CRUDST');
       $q.all(initDependencies).then($this.initSuccessHandler);
     };
 
