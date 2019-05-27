@@ -403,14 +403,14 @@ angular.module('ts5App')
         endDate: endDate,
         category: $this.findItemById($scope.salesTargetCategoryList, response.targetCategoryId),
         value: response.targetValue,
-        schedules: response.schedules.map(function (item) { return $this.mapScheduleFromResponse(item); }),
-        stores: response.stores.map(function (item) { return $this.mapStoreFromResponse(item); }),
-        employees: response.crews.map(function (item) { return $this.mapEmployeeFromResponse(item); }),
-        stations: response.stations.map(function (item) { return $this.mapStationFromResponse(item); }),
-        departureTimes: response.departureTimes.map(function (item) { return $this.mapDepartureTimeFromResponse(item); }),
-        departureDates: response.departureDates.map(function (item) { return $this.mapDepartureDateFromResponse(item); }),
-        itemCategories: response.categories.map(function (item) { return $this.mapItemCategoryFromResponse(item); }),
-        items: response.items.map(function (item) { return $this.mapItemFromResponse(item); })
+        schedules: response.schedules.map($this.mapScheduleFromResponse),
+        stores: response.stores.map($this.mapStoreFromResponse),
+        employees: response.crews.map($this.mapEmployeeFromResponse),
+        stations: response.stations.map($this.mapStationFromResponse),
+        departureTimes: response.departureTimes.map($this.mapDepartureTimeFromResponse),
+        departureDates: response.departureDates.map($this.mapDepartureDateFromResponse),
+        itemCategories: response.categories.map($this.mapItemCategoryFromResponse),
+        items: response.items.map($this.mapItemFromResponse)
       };
 
       $scope.isLoadingCompleted = true;
