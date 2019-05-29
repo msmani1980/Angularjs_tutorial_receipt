@@ -832,6 +832,30 @@ angular.module('ts5App')
               permissionCodes: ['R']
             }]
           }]
+      }, {
+        title: 'Sales Targets',
+        menuItems: [{
+          name: 'Manage Sales Targets',
+          route: '/#/sales-targets',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageSalesTargets',
+          package: 'SALESTARGETS',
+          role: 'SALESTARGETS'
+        }, {
+          name: 'Create Sales Target',
+          route: '/#/sales-targets/create',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageSalesTargets',
+          package: 'SALESTARGETS',
+          role: 'SALESTARGETS'
+        }, {
+          name: 'Manage Sales Target Categories',
+          route: '/#/sales-target-categories',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-manageSalesTargets',
+          package: 'SALESTARGETS',
+          role: 'SALESTARGETS'
+        }]
       }];
     };
 
