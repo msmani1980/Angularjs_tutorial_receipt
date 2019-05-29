@@ -97,8 +97,7 @@ angular.module('ts5App')
 
     $scope.redirectToSalesTargetCategory = function(id, state) {
       $location.search({});
-      console.log(id)
-      console.log(state)
+
       $location.path('sales-target-categories/' + state + '/' + id).search();
     };
 
@@ -146,7 +145,7 @@ angular.module('ts5App')
       );
     };
 
-    this.initSuccessHandler = function(responseCollection) {
+    this.initSuccessHandler = function() {
       angular.element('#search-collapse').addClass('collapse');
     };
 

@@ -324,7 +324,7 @@ angular.module('ts5App')
       $scope.salesTarget.stations.push({
         departure: null,
         arrival: null
-      })
+      });
     };
 
     $scope.removeStation = function(index) {
@@ -335,7 +335,7 @@ angular.module('ts5App')
       $scope.salesTarget.departureTimes.push({
         from: '',
         to: ''
-      })
+      });
     };
 
     $scope.removeDepartureTime = function(index) {
@@ -346,7 +346,7 @@ angular.module('ts5App')
       $scope.salesTarget.departureDates.push({
         from: '',
         to: ''
-      })
+      });
     };
 
     $scope.removeDepartureDate = function(index) {
@@ -356,7 +356,7 @@ angular.module('ts5App')
     $scope.addItemCategory = function() {
       $scope.salesTarget.itemCategories.push({
         value: null
-      })
+      });
     };
 
     $scope.removeItemCategory = function(index) {
@@ -366,7 +366,7 @@ angular.module('ts5App')
     $scope.addItem = function() {
       $scope.salesTarget.items.push({
         value: null
-      })
+      });
     };
 
     $scope.removeItem = function(index) {
@@ -375,13 +375,13 @@ angular.module('ts5App')
 
     $scope.isItemCategoryNotInUse = function(itemCategory) {
       return !lodash.find($scope.salesTarget.itemCategories, function (categoryFromList) {
-          return categoryFromList.value && categoryFromList.value.id === itemCategory.id
+        return categoryFromList.value && categoryFromList.value.id === itemCategory.id;
       });
     };
 
     $scope.isItemNotInUse = function(item) {
       return !lodash.find($scope.salesTarget.items, function (itemFromList) {
-          return itemFromList.value && itemFromList.value.id === item.id
+        return itemFromList.value && itemFromList.value.id === item.id;
       });
     };
 

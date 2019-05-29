@@ -65,5 +65,5 @@ angular.module('ts5App')
       createSalesTarget: createSalesTarget,
       updateSalesTarget: updateSalesTarget,
       deleteSalesTarget: deleteSalesTarget
-    }
+    };
   });

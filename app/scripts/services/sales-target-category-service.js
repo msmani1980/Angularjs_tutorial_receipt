@@ -65,5 +65,5 @@ angular.module('ts5App')
       createSalesTargetCategory: createSalesTargetCategory,
       updateSalesTargetCategory: updateSalesTargetCategory,
       deleteSalesTargetCategory: deleteSalesTargetCategory
-    }
+    };
   });

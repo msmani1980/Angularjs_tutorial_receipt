@@ -129,7 +129,6 @@ angular.module('ts5App')
     };
 
     this.salesTargetCategorySuccess = function(response) {
-      console.log(response)
       $scope.viewStartDate = dateUtility.formatDateForApp(response.startDate);
       $scope.viewEndDate = dateUtility.formatDateForApp(response.endDate);
       $scope.disablePastDate = dateUtility.isTodayOrEarlierDatePicker($scope.viewStartDate);
@@ -145,7 +144,7 @@ angular.module('ts5App')
 
     };
 
-    this.initDependenciesSuccess = function(responseCollection) {
+    this.initDependenciesSuccess = function() {
       if ($routeParams.id) {
         salesTargetCategoryFactory.getSalesTargetCategoryById($routeParams.id).then($this.salesTargetCategorySuccess);
       }
