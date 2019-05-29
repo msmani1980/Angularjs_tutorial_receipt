@@ -1,0 +1,87 @@
+<div class="module-container">
+  <div class="edit-controls">
+    <div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+
+      <div class="col-xs-6 text-right">
+        <a class="btn btn-default" ng-href="#/sales-target-categories" class="btn" ng-show="readOnly">Back</a>
+      </div>
+    </div>
+  </div>
+  <error-dialog form-object="salesTargetCategoryDataForm" error-response="errorResponse" display="displayError"></error-dialog>
+  <!-- Data Input Section -->
+  <form name="salesTargetCategoryDataForm" novalidate>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(salesTargetCategoryDataForm, 'Name')">
+            <div class="form-group">
+              <label for="salesTargetCategoryName">Name *</label>
+              <input
+                ng-model="salesTargetCategory.name"
+                type="text"
+                name="Name"
+                required
+                class="form-control"
+                id="salesTargetCategoryName"
+                placeholder="Name"
+                maxlength="50"
+                ng-disabled="isDisabled()">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-4" ng-class="validation.calendarCssClass(salesTargetCategoryDataForm, salesTargetCategory.startDate)">
+            <date-picker-field
+              form="salesTargetCategoryDataForm"
+              name="EffectiveStartDate"
+              label="Effective Start Date"
+              disable="isDisabled()"
+              required="true"
+              disable-past="true"
+              ng-model="salesTargetCategory.startDate">
+            </date-picker-field>
+          </div>
+          <div class="col-xs-12 col-sm-4" ng-class="validation.calendarCssClass(salesTargetCategoryDataForm, salesTargetCategory.endDate)">
+            <date-picker-field
+              form="salesTargetCategoryDataForm"
+              name="EffectiveEndDate"
+              label="Effective End Date"
+              disable="readOnly || shouldDisableEndDate"
+              ng-model="salesTargetCategory.endDate"
+              end-current-effective="!viewEditItem"
+              custom-effective="true"
+              custom-date="salesTargetCategory.endDate"
+              required="true">
+            </date-picker-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12 col-sm-12">
+            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetCategoryDataForm, 'Description')">
+              <label for="salesTargetCategoryDescription">Description *</label>
+              <input ng-model="salesTargetCategory.description" type="text" name="Description" maxlength="250" required class="form-control" id="salesTargetCategoryDescription" placeholder="Description" ng-disabled="isDisabled()">
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-footer text-right" ng-hide="readOnly">
+          <a href="#/sales-target-categories" class="btn btn-default">Cancel</a>
+          <button class="btn btn-primary" ng-click="formSave()">
+            <span class="fa fa-check-square-o" aria-hidden="true"></span> <span class="hidden-xs">Save</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Sales Target Category"></dynamic-left-nav>

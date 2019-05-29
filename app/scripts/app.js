@@ -523,6 +523,22 @@ angular.module('ts5App', [
   }).when('/user-view/:user', {
     templateUrl: 'views/user-create.html',
     controller: 'UserCreateCtrl'
+  }).when('/sales-targets', {
+    templateUrl: 'views/sales-targets-list.html',
+    controller: 'SalesTargetsListCtrl',
+    controllerAs: 'salesTargetsList'
+  }).when('/sales-target-categories', {
+    templateUrl: 'views/sales-targets-categories-list.html',
+    controller: 'SalesTargetsCategoriesListCtrl',
+    controllerAs: 'salesTargetsCategoriesList'
+  }).when('/sales-target-categories/:action/:id?', {
+    templateUrl: 'views/sales-targets-categories.html',
+    controller: 'SalesTargetsCategoriesCtrl',
+    controllerAs: 'salesTargetsCategories'
+  }).when('/sales-targets/:action/:id?', {
+    templateUrl: 'views/sales-targets.html',
+    controller: 'SalesTargetsCtrl',
+    controllerAs: 'salesTargets'
   }).otherwise({
     redirectTo: '/'
   });
