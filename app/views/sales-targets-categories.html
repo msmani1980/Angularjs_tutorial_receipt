@@ -33,6 +33,7 @@
           </div>
           <div class="col-xs-12 col-sm-4" ng-class="validation.calendarCssClass(salesTargetCategoryDataForm, salesTargetCategory.startDate)">
             <date-picker-field
+              ng-if="isLoadingCompleted"
               form="salesTargetCategoryDataForm"
               name="EffectiveStartDate"
               label="Effective Start Date"
@@ -44,6 +45,7 @@
           </div>
           <div class="col-xs-12 col-sm-4" ng-class="validation.calendarCssClass(salesTargetCategoryDataForm, salesTargetCategory.endDate)">
             <date-picker-field
+              ng-if="isLoadingCompleted"
               form="salesTargetCategoryDataForm"
               name="EffectiveEndDate"
               label="Effective End Date"
@@ -84,4 +86,4 @@
 
 <leave-view-modal></leave-view-modal>
 
-<dynamic-left-nav title="Sales Target Category"></dynamic-left-nav>
+<dynamic-left-nav title="Sales Targets"></dynamic-left-nav>
