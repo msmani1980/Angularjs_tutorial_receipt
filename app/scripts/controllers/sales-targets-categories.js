@@ -142,11 +142,14 @@ angular.module('ts5App')
         endDate: $scope.viewEndDate
       };
 
+      $scope.isLoadingCompleted = true;
     };
 
     this.initDependenciesSuccess = function() {
       if ($routeParams.id) {
         salesTargetCategoryFactory.getSalesTargetCategoryById($routeParams.id).then($this.salesTargetCategorySuccess);
+      } else {
+        $scope.isLoadingCompleted = true;
       }
 
       $this.hideLoadingModal();
