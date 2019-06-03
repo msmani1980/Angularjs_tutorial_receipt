@@ -472,7 +472,12 @@ angular.module('ts5App')
     };
 
     this.getSalesTargetCategories = function () {
-      return salesTargetCategoryFactory.getSalesTargetCategoryList().then($this.setSalesTargetCategories);
+      var payload = {
+        startDate: ($scope.salesTarget.startDate) ? dateUtility.formatDateForAPI($scope.salesTarget.startDate) : dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
+        endDate: ($scope.salesTarget.endDate) ? dateUtility.formatDateForAPI($scope.salesTarget.endDate) : dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
+      };
+
+      return salesTargetCategoryFactory.getSalesTargetCategoryList(payload).then($this.setSalesTargetCategories);
     };
 
     this.setSalesTargetCategories = function (dataFromAPI) {
@@ -577,6 +582,7 @@ angular.module('ts5App')
     $scope.$watchGroup(['salesTarget.startDate', 'salesTarget.endDate'], function () {
       if ($scope.salesTarget && $scope.salesTarget.startDate && $scope.salesTarget.endDate && !$scope.isDisabled()) {
         $this.getItems();
+        $this.getSalesTargetCategories();
       }
     });
 
