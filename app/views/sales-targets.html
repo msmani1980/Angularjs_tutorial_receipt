@@ -60,7 +60,7 @@
           <div class="col-xs-12 col-sm-2" ng-class="validation.fieldCssClass(salesTargetDataForm, 'salesTargetCategory')">
             <div class="form-group">
               <label for="salesTargetCategory">Category *</label>
-              <ui-select theme="bootstrap" required ng-model="salesTarget.category" ng-disabled="isDisabled()" name="salesTargetCategory" id="salesTargetCategory">
+              <ui-select theme="bootstrap" required ng-model="salesTarget.category" ng-disabled="isDisabled() || !areEffectiveDatesSet()" name="salesTargetCategory" id="salesTargetCategory">
                 <ui-select-match placeholder="Category">{{ $select.selected.name }}</ui-select-match>
                 <ui-select-choices repeat="category in salesTargetCategoryList | filter: {name:$select.search} | orderBy: 'name'">
                   <div ng-bind-html="category.name | highlight: $select.search"></div>
