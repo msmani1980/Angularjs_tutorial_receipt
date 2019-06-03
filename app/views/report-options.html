@@ -10,7 +10,7 @@
         <input type="checkbox" ng-model="emailMe" id=""/> Send email when reports completes
       </span>
       <div ng-if="reportOptions.name.$error && reportOptions.name.$dirty">
-         <p ng-show="reportOptions.name.$error.required">Name is required.</p>
+         <p ng-show="reportOptions.name.$error.required" class="reportErrorMessage">Name is required.</p>
       </div>
     </div>
     <div class="reportErrorMessage" ng-if="errMessageDatePicker || errMessageCBDatePicker">
