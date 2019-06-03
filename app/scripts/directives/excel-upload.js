@@ -1,5 +1,5 @@
 'use strict';
-/*jshint maxcomplexity:6 */
+/*jshint maxcomplexity:7 */
 /**
  * @ngdoc directive
  * @name ts5App.directive:excelUpload
@@ -103,7 +103,9 @@ angular.module('ts5App')
       setTemplateName();
       setDownloadTemplateUrl();
       try {
-        $this.service = $injector.get($scope.type + 'Factory');
+        if ($scope.type !== 'reportexchange') {
+          $this.service = $injector.get($scope.type + 'Factory');
+        }
       } catch (error) {
         console.log(error);
       } finally {
