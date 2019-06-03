@@ -480,7 +480,12 @@ angular.module('ts5App')
 
     this.getSchedules = function () {
       var companyId = globalMenuService.company.get();
-      return schedulesService.getSchedules(companyId).then($this.setSchedules);
+
+      var payload = {
+        minEffectiveStart: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
+      };
+
+      return schedulesService.getSchedules(companyId, payload).then($this.setSchedules);
     };
 
     this.setSchedules = function (dataFromAPI) {
@@ -488,7 +493,11 @@ angular.module('ts5App')
     };
 
     this.getStores = function () {
-      return companyStoresService.getStoreList().then($this.setStores);
+      var payload = {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
+      };
+
+      return companyStoresService.getStoreList(payload).then($this.setStores);
     };
 
     this.setStores = function (dataFromAPI) {
@@ -549,7 +558,8 @@ angular.module('ts5App')
 
     this.getItems = function () {
       var payload = {
-        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
+        startDate: ($scope.salesTarget.startDate) ? dateUtility.formatDateForAPI($scope.salesTarget.startDate) : dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
+        endDate: ($scope.salesTarget.endDate) ? dateUtility.formatDateForAPI($scope.salesTarget.endDate) : dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
       };
 
       return itemsFactory.getItemsList(payload, true).then($this.setItems);
@@ -558,6 +568,16 @@ angular.module('ts5App')
     this.setItems = function (dataFromAPI) {
       $scope.itemList = angular.copy(dataFromAPI.masterItems);
     };
+
+    $scope.areEffectiveDatesSet = function () {
+      return $scope.salesTarget && $scope.salesTarget.startDate && $scope.salesTarget.endDate;
+    };
+
+    $scope.$watchGroup(['salesTarget.startDate', 'salesTarget.endDate'], function () {
+      if ($scope.salesTarget && $scope.salesTarget.startDate && $scope.salesTarget.endDate && !$scope.isDisabled()) {
+        $this.getItems();
+      }
+    });
 
     this.initDependenciesSuccess = function() {
       if ($routeParams.id) {
