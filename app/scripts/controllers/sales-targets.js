@@ -29,6 +29,7 @@ angular.module('ts5App')
       itemCategories: [],
       items: []
     };
+    $scope.persistedSalesTarget = angular.copy($scope.salesTarget);
 
     this.showLoadingModal = function(message) {
       angular.element('#loading').modal('show').find('p').text(message);
