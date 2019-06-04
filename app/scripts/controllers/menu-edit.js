@@ -427,15 +427,17 @@ angular.module('ts5App')
     };
 
     $scope.populateAllSelectedItems = function() {
+      
       angular.forEach($scope.masterItemList, function(masterItem) {
         if (masterItem.selectedItem) {
           $scope.setMasterItem(masterItem);
+          $scope.menuItemList = $this.filterMenuItemsByItemId();
           var nextIndex = $scope.menuItemList.length;
-          $scope.menuItemList.push({ menuIndex: nextIndex });
+          $scope.menuItemList.push({ menuIndex: nextIndex, sortOrderIndex: nextIndex });
           $scope.selectedIndex = nextIndex;
         }
       });
-
+      
       $scope.menuItemList = $this.filterMenuItemsByItemId();
     };
 
@@ -443,7 +445,7 @@ angular.module('ts5App')
       var id = masterItem.id;
       var itemName = masterItem.itemName;
 
-      if ($scope.menuItemList[$scope.selectedIndex].itemId) {
+      if ($scope.menuItemList[$scope.selectedIndex] !== undefined && $scope.menuItemList[$scope.selectedIndex].itemId !== undefined) {
         $this.setDisableMasterItem($scope.menuItemList[$scope.selectedIndex].itemId, false);
       }
 
