@@ -43,10 +43,12 @@ angular.module('ts5App')
     var dailySchedulesRequestResource = $resource(schedulesRequestURL + '/daily', null, schedulesActions);
     var schedulesRequestResource = $resource(schedulesRequestURL, null, schedulesActions);
 
-    var getSchedules = function(companyId, payload) {
-      angular.extend(payload, {
+    var getSchedules = function(companyId, aditionalPayload) {
+      var payload = {
         id: companyId
-      });
+      };
+
+      angular.extend(payload, aditionalPayload);
 
       schedulesActions.getSchedules.headers.companyId = companyId;
       return distinctSchedulesRequestResource.getSchedules(payload).$promise;
