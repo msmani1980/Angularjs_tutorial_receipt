@@ -1,5 +1,5 @@
 'use strict';
-/*jshint maxcomplexity:6*/
+/*jshint maxcomplexity:7*/
 
 /**
  * @ngdoc function
@@ -23,6 +23,7 @@ angular.module('ts5App')
         daysOfWeek: []
       };
       $scope.errRecurrenceDatePicker = '';
+      $scope.errMessage = '';
       
       if (scheduledReportId !== '') {
 
@@ -142,8 +143,12 @@ angular.module('ts5App')
         payLoad.daysOfWeek = null;
         payLoad.dayOfWeek = null;
         payLoad.dayOfMonth = null;
-
+       
         getSelectedRecurrencePattern(payLoad);
+        if ($scope.scheduleReport.recurrencePattern === 'Daily' && payLoad.daysOfWeek === 'not selected') {
+          $scope.errMessage = 'Please Select DaysOfWeek.';
+          return false;
+        }
 
         if ($scope.scheduleReport.dayOfMonth === 'Last Day') {
           payLoad.dayOfMonth = -1;
