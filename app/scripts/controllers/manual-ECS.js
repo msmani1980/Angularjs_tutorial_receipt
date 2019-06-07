@@ -20,7 +20,8 @@ angular.module('ts5App')
     $scope.isCreateSearch = false;
     $scope.isViewSearch = false;
     $scope.isSearchInInProgress = false;
-
+    $scope.isLoading = false;
+    
     function showLoadingModal(text) {
       angular.element('#loading').modal('show').find('p').text(text);
     }
@@ -169,8 +170,10 @@ angular.module('ts5App')
 
     function getStoreInstances(payload) {
       showLoadingModal('Retrieving Portal Store Instanes');
+      $scope.isLoading = true;
       manualECSFactory.getStoreInstanceList(payload).then(getStoreInstancesSuccess, showErrors);
       $this.meta.offset += $this.meta.limit;
+      $scope.isLoading = false;
     }
 
     function getAllIdsInAGroup(instanceGroup) {
@@ -596,11 +599,16 @@ angular.module('ts5App')
       getUnTiedCarrierInstances(searchPayload);
     };
 
-    $scope.loadPortalInstances = function() {
-      if ($this.meta.offset >= $this.meta.count || !$scope.isCreateSearch) {
+    $scope.loadPortalInstances = function(isScrolling) {
+
+      if ($this.meta.offset >= $this.meta.count || !$scope.isCreateSearch || $scope.isLoading || $this.meta.offset === undefined) {
         return;
       }
-
+      
+      if ($this.meta.count === undefined && $scope.isCreateSearch && isScrolling) {
+        return;
+      }
+      
       var searchPayload = formatPortalSearchPayload();
       getStoreInstances(searchPayload);
     };
@@ -616,7 +624,7 @@ angular.module('ts5App')
         offset: 0
       };
 
-      $scope.loadPortalInstances();
+      $scope.loadPortalInstances(false);
     };
 
     function formatStationDescription() {
