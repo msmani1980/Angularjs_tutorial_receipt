@@ -1015,10 +1015,13 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
     $scope.formScroll = function(id, activeBtn) {
       $scope.activeBtn = id;
       var elm = angular.element('#' + id);
-      var body = angular.element('body');
+      var body = angular.element('html, body');
       var navBar = angular.element('.navbar-header').height();
       var topBar = angular.element('.top-header').height();
-
+      if (navBar === undefined || Number.isNaN(navBar)) {
+        navBar = 0;
+      }
+      
       body.animate({
         scrollTop: elm.offset().top - (navBar + topBar + 100)
       }, 'slow');
