@@ -447,12 +447,6 @@ angular.module('ts5App')
       var id = masterItem.id;
       var itemName = masterItem.itemName;
      
-      /*if($scope.menuItemList.length === undefined || $scope.menuItemList.length === 0){
-    	  $scope.menuItemList = $this.filterMenuItemsByItemId();
-    	  $scope.selectedIndex = 0;
-    	  $scope.menuItemList.push({ menuIndex: 0, sortOrderIndex: 0 });
-      }*/
-      
       if ($scope.menuItemList[$scope.selectedIndex] !== undefined && $scope.menuItemList[$scope.selectedIndex].itemId !== undefined) {
         $this.setDisableMasterItem($scope.menuItemList[$scope.selectedIndex].itemId, false);
       }
