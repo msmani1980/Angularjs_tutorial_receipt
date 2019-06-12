@@ -230,7 +230,6 @@ angular.module('ts5App')
       $this.displayLoadingModal('Saving Station');
 
       var payload = this.generatePayload();
-      console.log(payload)
 
       stationsFactory.updateStation($routeParams.id, payload).then($this.saveFormSuccess, $this.saveFormFailure).finally($this.hideLoadingModal);
     };
