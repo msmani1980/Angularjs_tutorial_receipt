@@ -55,7 +55,7 @@
 							* {{itemPrice.code}}
 						</div>
 
-						<input ng-disabled="!itemPrice.code || $parent.isDisabled()" ng-model="itemPrice.amount" type="text" class="form-control"/>
+						<input ng-disabled="!itemPrice.code || $parent.isDisabled()" name="Cost Price" ng-model="itemPrice.amount" type="text" class="form-control" ng-required="true" />
 
 					</div>
 
