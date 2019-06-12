@@ -427,11 +427,9 @@ angular.module('ts5App')
     };
 
     $scope.populateAllSelectedItems = function() {
-      
       angular.forEach($scope.masterItemList, function(masterItem) {
-        if (masterItem.selectedItem) {
+        if (masterItem.selectedItem) {          
           $scope.setMasterItem(masterItem);
-          $scope.menuItemList = $this.filterMenuItemsByItemId();
           var nextIndex = $scope.menuItemList.length;
           $scope.menuItemList.push({ menuIndex: nextIndex, sortOrderIndex: nextIndex });
           $scope.selectedIndex = nextIndex;
@@ -439,12 +437,16 @@ angular.module('ts5App')
       });
       
       $scope.menuItemList = $this.filterMenuItemsByItemId();
+      angular.forEach($scope.menuItemList, function (menuItem, index) {
+        menuItem.menuIndex = index;
+        menuItem.sortOrderIndex = index;
+      });
     };
 
     $scope.setMasterItem = function (masterItem) {
       var id = masterItem.id;
       var itemName = masterItem.itemName;
-
+     
       if ($scope.menuItemList[$scope.selectedIndex] !== undefined && $scope.menuItemList[$scope.selectedIndex].itemId !== undefined) {
         $this.setDisableMasterItem($scope.menuItemList[$scope.selectedIndex].itemId, false);
       }
