@@ -140,6 +140,13 @@
           start-date="minEndDate">
         </date-picker-field>
       </div>
+
+      <div class="col-xs-12 col-sm-6">
+        <div class="form-group">
+          <label class="control-label">VAT Number</label>
+          <input ng-disabled="isDisabled()" name="vatNumber" class="form-control" type="text" ng-model="formData.vatNumber" max-length="64" />
+        </div>
+      </div>
     </div>
 
     <div class="panel panel-default" ng-class="{'has-error' : !formData.isCaterer && displayError , 'has-success' : formData.isCaterer}">
