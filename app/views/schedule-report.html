@@ -143,7 +143,7 @@
             <div ><span ng-bind-html="choice.code | highlight: $select.search"/><span ng-if="choice.description !== undefined"> (<span ng-bind-html="choice.description | highlight: $select.search"/>)</span></div>
           </ui-select-choices>
         </ui-select>
-       <ui-select ng-if="!option.multiValue && option.choiceLookup" name="{{option.code}}" ng-model="selection.options[option.code]" ng-class="{'has-success': reportOptions.$submitted && !option.optional && reportOptions[option.code].length > 0 && reportOptions[option.code].$valid, 'has-error': reportOptions.$submitted && (reportOptions[option.code].$invalid || reportOptions[option.code].$pristine)}" >
+       <ui-select ng-if="!option.multiValue && option.choiceLookup" name="{{option.code}}" ng-model="selection.options[option.code]" ng-class="{'has-success': reportOptions.$submitted && !option.optional && reportOptions[option.code].length > 0 && reportOptions[option.code].$valid, 'has-error': reportOptions.$submitted && !option.optional && (reportOptions[option.code].$invalid || reportOptions[option.code].$pristine)}" >
           <ui-select-match placeholder="Select value...">{{$select.selected.code}}</ui-select-match>
           <ui-select-choices repeat="choice in choices | filter: $select.search track by choice.id"
                              refresh="refreshChoiceValues($select.search)" refresh-delay="10" >
