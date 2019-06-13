@@ -1,5 +1,5 @@
 'use strict';
-
+/*jshint maxcomplexity:7*/
 /**
  * @ngdoc function
  * @name ts5App.controller:ReportOptionsCtrl
@@ -90,6 +90,14 @@ angular.module('ts5App')
       if (parameters.options && parameters.options.verifyEffDate && parameters.options.verifyEndDate) {
         if (new Date(parameters.options.verifyEffDate) > new Date(parameters.options.verifyEndDate)) {
           $scope.errMessageCBDatePicker = 'Cash Bag Verify End Date should be greater than Start Date.';
+          $scope.errMessageDatePicker = '';
+          return false;
+        }
+      }
+      
+      if (parameters.options && parameters.options.priceEffDate && parameters.options.priceEndDate) {
+        if (new Date(parameters.options.priceEffDate) > new Date(parameters.options.priceEndDate)) {
+          $scope.errMessageCBDatePicker = 'Price Effective End Date should be greater than Start Date.';
           $scope.errMessageDatePicker = '';
           return false;
         }
