@@ -1,5 +1,5 @@
 'use strict';
-/*jshint maxcomplexity:7*/
+/*jshint maxcomplexity:8*/
 
 /**
  * @ngdoc function
@@ -159,7 +159,11 @@ angular.module('ts5App')
         }
         
         var params = getSelectedOptions();
-
+        
+        if (isMandatoryFieldMissing()) {
+          return;
+        }
+        
         payLoad.options = params.options;
         scheduleReportService.saveReport(payLoad);
         $modalInstance.close();
@@ -168,5 +172,16 @@ angular.module('ts5App')
       $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
       };
+      
+      var isMandatoryFieldMissing = function () {
+        var requiredFlag = false;
+        for (var i = 0; i < $scope.template.options.length; i++) {
+          if ($scope.template.options[i].type !== 'DATE' && $scope.template.options[i].optional === false && $scope.selection.options[$scope.template.options[i].code] === undefined) {
+            requiredFlag = true;
+          }
+        }
 
+        return requiredFlag;
+      };
+      
     });

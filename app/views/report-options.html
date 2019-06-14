@@ -20,7 +20,7 @@
       <label class="col-sm-4 control-label">{{option.prompt}}: <span ng-if="!option.optional" style="color:red">*</span></label>
       <span ng-switch-when="DATE" ng-controller="OptionSelectionDateCtrl" class="col-sm-6 input-group" ng-class="{'has-error': (!option.optional ? errMessageDatePicker : errMessageCBDatePicker) || reportOptions[option.code].$invalid && reportOptions[option.code].$dirty}">
         <input type="text" class="form-control" name="{{option.code}}" ng-model="selection.options[option.code]" datepicker-popup="{{format}}"
-               datepicker-options="dateOptions" ng-required="!option.optional" close-text="Close" is-open="status.opened"/> <!-- -->
+               datepicker-options="dateOptions" ng-required="!option.optional" close-text="Close" is-open="status.opened"/>
         <span class="input-group-btn">
           <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
         </span>
@@ -33,7 +33,7 @@
             <div ><span ng-bind-html="choice.code | highlight: $select.search"/><span ng-if="choice.description !== undefined"> (<span ng-bind-html="choice.description | highlight: $select.search"/>)</span></div>
           </ui-select-choices>
         </ui-select>
-        <ui-select ng-if="!option.multiValue && option.choiceLookup" name="{{option.code}}" ng-model="selection.options[option.code]" ng-class="{'has-success': reportOptions.$submitted && !option.optional && reportOptions[option.code].length > 0 && reportOptions[option.code].$valid, 'has-error': reportOptions.$submitted && (reportOptions[option.code].$invalid || reportOptions[option.code].$pristine)}" >
+        <ui-select ng-if="!option.multiValue && option.choiceLookup" name="{{option.code}}" ng-model="selection.options[option.code]" ng-class="{'has-success': reportOptions.$submitted && !option.optional && reportOptions[option.code].length > 0 && reportOptions[option.code].$valid, 'has-error': reportOptions.$submitted && !option.optional && (reportOptions[option.code].$invalid || reportOptions[option.code].$pristine)}" >
           <ui-select-match placeholder="Select value...">{{$select.selected.code}}</ui-select-match>
           <ui-select-choices repeat="choice in choices | filter: $select.search track by choice.id"
                              refresh="refreshChoiceValues($select.search)" refresh-delay="10" >
@@ -53,7 +53,7 @@
           <input type="text" name="{{option.code}}" class="form-control" ng-model="selection.options[option.code]"/>
         </span>
         <span ng-if="!option.multiValue && option.choiceValues" class="col-sm-6 input-group" ng-class="{'has-error': (!option.optional && reportOptions.$submitted) && (reportOptions[option.code].$invalid || reportOptions[option.code].$pristine)}">
-          <select name="{{option.code}}" class="form-control" ng-model="selection.options[option.code]" ng-required="!option.optional">
+          <select name="{{option.code}}" class="form-control" ng-model="selection.options[option.code]" required="!option.optional">
             <option ng-if="option.optional" value="">All</option>
             <option ng-repeat="choiceValue in option.choiceValues" value="{{choiceValue}}">{{choiceValue}}</option>
           </select>
