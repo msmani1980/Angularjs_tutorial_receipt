@@ -291,7 +291,7 @@
 						</div>
 
             <div ng-if="isVirtualSelected" class="row">
-              <div class="form-group col-md-12" ng-class="{ 'has-error' : !formData.supplierCompanyId && displayError , 'has-success' : formData.supplierCompanyId }">
+              <div class="form-group col-md-12" ng-class="{ 'has-error' : formData.$submitted && !formData.supplierCompanyId && displayError , 'has-success' : formData.supplierCompanyId }">
                 <label>Supplier</label>
                 <select name="supplierCompanyId" ng-model="formData.supplierCompanyId" convert-to-number class="form-control col-xs-2" ng-change="onSupplierCompanyChange()" ng-init="onSupplierCompanyChange()" >
                   <option ng-repeat="supplier in supplierCompanies | orderBy:'relativeCompany'" value="{{supplier.relativeCompanyId}}">
