@@ -266,7 +266,7 @@
         <!-- Switch for startDate -->
         <td class="animate-switch col-xs-1" ng-switch-when="read">{{ taxRate.startDate }}</td>
         <td class="animate-switch tax-rates-dates col-xs-1" ng-switch-when="edit" ng-class="{ 'has-error' : isDateValueInvalid(taxRate.startDate, taxRate) && displayError, 'has-success' : !isDateValueInvalid(taxRate.startDate, taxRate) }">
-          <date-picker-field disable-past="true" ng-model="taxRate.startDate" disable="isDisabled(taxRate)" min-date="determineMinDate(taxRate.startDate)" orientation="determineDatePickerOrientation(taxRate)"></date-picker-field>
+          <date-picker-field disable-past="true" ng-model="taxRate.startDate" disable="isDisabled(taxRate) && taxRate.startDate" min-date="determineMinDate(taxRate.startDate)" orientation="determineDatePickerOrientation(taxRate)"></date-picker-field>
         </td>
         <td class="animate-switch tax-rates-dates col-xs-1" ng-switch-when="create" ng-class="{ 'has-error' : isDateValueInvalid(taxRate.startDate, taxRate) && displayError, 'has-success' : !isDateValueInvalid(taxRate.startDate, taxRate) }">
           <date-picker-field disable-past="true" ng-model="taxRate.startDate" min-date="determineMinDate()"></date-picker-field>
@@ -278,7 +278,6 @@
            min-date="minDate"
            custom-effective="true"
            custom-date="taxRate.endDate"
-           disable="isDisabledEndDateForm(taxRate)"
            ng-model="taxRate.endDate"
            orientation="determineDatePickerOrientation(taxRate)" ></date-picker-field>
         </td>
