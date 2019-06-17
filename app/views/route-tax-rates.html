@@ -339,7 +339,7 @@
         <td class="animate-switch" ng-switch-when="read">{{ taxRate.startDate }}</td>
         <td class="animate-switch tax-rates-dates" ng-switch-when="edit">
           <div class="height-20"></div>
-          <date-picker-field disable-past="true" ng-model="taxRate.startDate" disable="isDisabled(taxRate)" min-date="determineMinDate(taxRate.startDate)" orientation="determineDatePickerOrientation(taxRate)"></date-picker-field>
+          <date-picker-field disable-past="true" ng-model="taxRate.startDate" disable="isDisabled(taxRate) && taxRate.startDate" min-date="determineMinDate(taxRate.startDate)" orientation="determineDatePickerOrientation(taxRate)"></date-picker-field>
         </td>
         <td class="animate-switch tax-rates-dates" ng-switch-when="create">
           <div class="height-20"></div>
@@ -353,7 +353,6 @@
             min-date="minDate"
             custom-effective="true"
             custom-date="taxRate.endDate"
-            disable="isDisabledEndDateForm(taxRate)"
             ng-model="taxRate.endDate"
             orientation="determineDatePickerOrientation(taxRate)" ></date-picker-field>
         </td>
