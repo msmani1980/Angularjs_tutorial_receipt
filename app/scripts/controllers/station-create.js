@@ -97,7 +97,8 @@ angular.module('ts5App')
         },
         startDate: startDate,
         endDate: endDate,
-        isCaterer: lodash.find($scope.isCatererDropdownOptions, { value: station.isCaterer })
+        isCaterer: lodash.find($scope.isCatererDropdownOptions, { value: station.isCaterer }),
+        vatNumber: station.vatNumber
       };
 
       $scope.shouldDisableStartDate = dateUtility.isTodayDatePicker(startDate) || !(dateUtility.isAfterTodayDatePicker(startDate));
@@ -207,7 +208,8 @@ angular.module('ts5App')
         countryId: $scope.formData.country.id,
         startDate: dateUtility.formatDateForAPI($scope.formData.startDate),
         endDate: dateUtility.formatDateForAPI($scope.formData.endDate),
-        isCaterer: $scope.formData.isCaterer.value
+        isCaterer: $scope.formData.isCaterer.value,
+        vatNumber: $scope.formData.vatNumber
       };
     };
 
