@@ -130,7 +130,11 @@ angular.module('ts5App')
       if ($scope.menu.menuId && !$scope.cloningItem) {
         payload.menuId = $scope.menu.menuId;
       }
-
+      
+      angular.forEach(payload.menuItems, function (menuItem, index) {
+        menuItem.sortOrder = index;
+      });
+      
       return payload;
     };
 
