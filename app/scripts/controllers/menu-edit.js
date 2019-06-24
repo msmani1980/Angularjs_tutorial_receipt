@@ -130,7 +130,11 @@ angular.module('ts5App')
       if ($scope.menu.menuId && !$scope.cloningItem) {
         payload.menuId = $scope.menu.menuId;
       }
-
+      
+      angular.forEach(payload.menuItems, function (menuItem, index) {
+        menuItem.sortOrder = index;
+      });
+      
       return payload;
     };
 
@@ -428,22 +432,26 @@ angular.module('ts5App')
 
     $scope.populateAllSelectedItems = function() {
       angular.forEach($scope.masterItemList, function(masterItem) {
-        if (masterItem.selectedItem) {
+        if (masterItem.selectedItem) {          
           $scope.setMasterItem(masterItem);
           var nextIndex = $scope.menuItemList.length;
-          $scope.menuItemList.push({ menuIndex: nextIndex });
+          $scope.menuItemList.push({ menuIndex: nextIndex, sortOrderIndex: nextIndex });
           $scope.selectedIndex = nextIndex;
         }
       });
-
+      
       $scope.menuItemList = $this.filterMenuItemsByItemId();
+      angular.forEach($scope.menuItemList, function (menuItem, index) {
+        menuItem.menuIndex = index;
+        menuItem.sortOrderIndex = index;
+      });
     };
 
     $scope.setMasterItem = function (masterItem) {
       var id = masterItem.id;
       var itemName = masterItem.itemName;
-
-      if ($scope.menuItemList[$scope.selectedIndex].itemId) {
+     
+      if ($scope.menuItemList[$scope.selectedIndex] !== undefined && $scope.menuItemList[$scope.selectedIndex].itemId !== undefined) {
         $this.setDisableMasterItem($scope.menuItemList[$scope.selectedIndex].itemId, false);
       }
 
