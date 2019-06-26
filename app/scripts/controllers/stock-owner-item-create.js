@@ -539,7 +539,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       $scope.formData = itemData;
 
       if ($scope.formData.vatCountryId) {
-        $scope.formData.vatCountry = lodash.find($scope.countries, {id: $scope.formData.vatCountryId});
+        $scope.formData.vatCountry = lodash.find($scope.countries, { id: $scope.formData.vatCountryId });
       }
 
       this.assignItemCharacteristicsRelatedFields();

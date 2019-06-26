@@ -593,7 +593,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.formData = angular.copy(itemData);
 
       if ($scope.formData.vatCountryId) {
-        $scope.formData.vatCountry = lodash.find($scope.countries, {id: $scope.formData.vatCountryId});
+        $scope.formData.vatCountry = lodash.find($scope.countries, { id: $scope.formData.vatCountryId });
       }
 
       $scope.voucherDurationId = itemData.voucherDurationId;
