@@ -8,7 +8,7 @@
  */
 angular.module('ts5App').controller('ItemCreateCtrl',
   function($scope, $document, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory, companyRelationshipFactory,
-    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _, languagesService, recordsService) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _, languagesService, recordsService, countriesService) {
 
     var $this = this;
     $scope.formData = {
@@ -592,6 +592,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       this.formatPriceDates(itemData);
       $scope.formData = angular.copy(itemData);
 
+      if ($scope.formData.vatCountryId) {
+        $scope.formData.vatCountry = lodash.find($scope.countries, {id: $scope.formData.vatCountryId});
+      }
+
       $scope.voucherDurationId = itemData.voucherDurationId;
 
       $scope.originalMasterItemData = {
@@ -647,7 +651,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         companiesFactory.getCompany(companyId),
         itemsFactory.getVoucherDurationsList(),
         itemsFactory.getEposDisplayOrder(),
-        recordsService.getAllergenTags()
+        recordsService.getAllergenTags(),
+        countriesService.getCountriesList()
       ];
     };
 
@@ -885,6 +890,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setVoucherDurations(response[12]);
       $this.setEposDisplayOrderList(response[13]);
       $this.setAllergenTagList(response[14]);
+      $this.setCountryList(response[15]);
       if ($scope.editingItem || $scope.cloningItem || $scope.viewOnly) {
         $this.getItem($routeParams.id);
       } else {
@@ -911,6 +917,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.setAllergenTagList = function(data) {
       $scope.allergenTags = data;
+    };
+
+    this.setCountryList = function(data) {
+      $scope.countries = data.countries;
     };
 
     this.setItemTypes = function(data) {
@@ -1577,6 +1587,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
 
       itemData.supplierCompanyId = parseInt(itemData.supplierCompanyId);
+      itemData.vatCountryId = (itemData.vatCountry) ? parseInt(itemData.vatCountry.id) : null;
+      itemData.vatRate = (itemData.vatRate) ? parseFloat(itemData.vatRate) : null;
 
       return itemData;
     };

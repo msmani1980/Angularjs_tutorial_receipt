@@ -9,7 +9,7 @@
  */
 angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
   function($scope, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory,
-    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, lodash, _, companyRelationshipFactory, recordsService) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, lodash, _, companyRelationshipFactory, recordsService, countriesService) {
 
     var $this = this;
     $scope.formData = {
@@ -537,6 +537,11 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       this.formatImageDates(itemData);
       this.formatCostDates(itemData);
       $scope.formData = itemData;
+
+      if ($scope.formData.vatCountryId) {
+        $scope.formData.vatCountry = lodash.find($scope.countries, {id: $scope.formData.vatCountryId});
+      }
+
       this.assignItemCharacteristicsRelatedFields();
     };
 
@@ -593,7 +598,8 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
         itemsFactory.getWeightList(),
         itemsFactory.getItemsList({}),
         companiesFactory.getCompany(companyId),
-        recordsService.getAllergenTags()
+        recordsService.getAllergenTags(),
+        countriesService.getCountriesList()
       ];
     };
 
@@ -670,6 +676,7 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       $this.setItemList(response[10].retailItems);
       $this.setBaseCurrencyId(response[11]);
       $this.setAllergenTagList(response[12]);
+      $this.setCountryList(response[13]);
       if ($scope.editingItem || $scope.viewOnly) {
         this.getItem($routeParams.id);
       } else {
@@ -687,6 +694,10 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
 
     this.setAllergenTagList = function(data) {
       $scope.allergenTags = data;
+    };
+
+    this.setCountryList = function(data) {
+      $scope.countries = data.countries;
     };
 
     this.setItemTypes = function(data) {
@@ -978,6 +989,9 @@ angular.module('ts5App').controller('StockOwnerItemCreateCtrl',
       this.cleanUpPayload(itemData);
 
       itemData.supplierCompanyId = parseInt(itemData.supplierCompanyId);
+
+      itemData.vatCountryId = (itemData.vatCountry) ? parseInt(itemData.vatCountry.id) : null;
+      itemData.vatRate = (itemData.vatRate) ? parseFloat(itemData.vatRate) : null;
 
       return itemData;
     };
