@@ -65,12 +65,17 @@
          <th>
            <span ng-if="job.file">
              <a ng-click="download(job.file.id)" class="btn btn-xs btn-success">
-               Download <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+               <span class="glyphicon glyphicon-save" aria-hidden="true" title="download"></span>
              </a>
+           </span>
+           <span ng-if="job.status != 'FAILED'">
+            <a ng-click="reRunTemplate(job)" class="btn btn-xs btn-warning">
+              <span class="glyphicon glyphicon-repeat" aria-hidden="true" title="re-request"></span>
+            </a>
            </span>
            <span ng-if="job.status === 'STARTED' || job.status === 'QUEUED'">
 	           <a ng-click="delete(job.id)" class="btn btn-xs btn-danger">
-	            Cancel <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+	            <span class="glyphicon glyphicon-remove" aria-hidden="true" title="cancel"></span>
 	           </a>
            </span>
          </th>
