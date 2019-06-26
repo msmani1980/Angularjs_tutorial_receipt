@@ -21,6 +21,10 @@ angular.module('ts5App')
         resolve: {
           templateId: function () {
             return template.id;
+          },
+
+          reRunExistingJobReport: function () {
+            return '';
           }
         }
       });

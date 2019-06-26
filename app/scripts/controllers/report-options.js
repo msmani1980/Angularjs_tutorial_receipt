@@ -8,14 +8,19 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReportOptionsCtrl', function ($scope, $modalInstance, $filter, templateService, jobService, templateId) {
+  .controller('ReportOptionsCtrl', function ($scope, $modalInstance, $filter, templateService, jobService, templateId, reRunExistingJobReport) {
 
     $scope.templateId = templateId;
     
     templateService.get({ templateId: templateId }).$promise.then(function (rtn) {
-        $scope.template = rtn;
-        $scope.selection.name = rtn.name;
-      });
+      $scope.template = rtn;
+      $scope.selection.name = rtn.name;
+      if (reRunExistingJobReport !== null && reRunExistingJobReport.optionValues !== null) {
+        angular.forEach(reRunExistingJobReport.optionValues, function(optionVal) {
+          $scope.selection.options[optionVal.code] = optionVal.value;
+        });
+      }
+    });
 
     $scope.selection = {};
 
@@ -105,5 +110,5 @@ angular.module('ts5App')
 
       return true;
     }
-    
+        
   });
