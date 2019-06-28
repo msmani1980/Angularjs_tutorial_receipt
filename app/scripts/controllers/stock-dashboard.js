@@ -10,13 +10,14 @@
 
 angular.module('ts5App').controller('StockDashboardCtrl',
   function($scope, $http, globalMenuService, stockManagementStationItemsService, catererStationService,
-    companyReasonCodesService, dateUtility, $filter, ENV, stockTakeFactory, identityAccessFactory, accessService, categoryFactory) {
+    companyReasonCodesService, dateUtility, $filter, ENV, stockTakeFactory, identityAccessFactory, accessService, categoryFactory, companyPreferencesService) {
 
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};
     $scope.todaysDate = dateUtility.nowFormatted();
     $scope.stockTakeList = [];
     $scope.stockDashboardItemsList = [];
+    $scope.showWastageCount = false;
 
     var $this = this;
 
@@ -140,6 +141,15 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       });
     };
 
+    this.setCompanyPreferences = function (companyPreferencesFromAPI) {
+      var companyPreferences = angular.copy(companyPreferencesFromAPI.preferences);
+      angular.forEach(companyPreferences, function (preference) {
+        if (preference.featureName === 'Inbound' && preference.optionCode === 'FFW' && preference.choiceCode === 'ACT' && preference.isSelected) {
+          $scope.showWastageCount = true;
+        }
+      });
+    };
+
     this.init = function() {
       hideLoadingBar();
       $scope.isStockTake = accessService.crudAccessGranted('STOCKMANAGER', 'STOCKREPORT', 'CRUDSTR');
@@ -154,6 +164,10 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       }).then($this.setCategoryList);
 
       companyReasonCodesService.getAll().then($this.getUllageReasonsFromResponse);
+      var payload = {
+        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
+      };
+      companyPreferencesService.getCompanyPreferences(payload).then($this.setCompanyPreferences);
 
       $scope.$watch('selectedCateringStation', function(newData) {
         if (newData) {

@@ -99,6 +99,7 @@
         <th>Goods Received</th>
         <th>Dispatched Count</th>
         <th>Inbound/Offload Count</th>
+        <th ng-if="showWastageCount">Wastage Count</th>
         <th>Current Count</th>
         <th>Ullage Count</th>
       </tr>
@@ -122,6 +123,9 @@
           </td>
           <td>
             <input type="text" class="form-control text-right" value="{{stockItem.inboundQuantity}}" disabled name="stock-inbound-quantity-{{$index}}"/>
+          </td>
+          <td ng-if="showWastageCount">
+            <input type="text" class="form-control text-right" value="{{stockItem.wastageQuantity}}" disabled name="stock-wastage-quantity-{{$index}}"/>
           </td>
           <td id="currentCountQuantity-{{id}}" ng-click="isEditStock && stockTakeReasonOpen(stockItem, 'Count')">
             <input type="text" class="showAsActive form-control text-right" value="{{stockItem.currentQuantity}}"
