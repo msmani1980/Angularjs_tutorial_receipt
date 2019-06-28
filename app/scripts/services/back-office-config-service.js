@@ -171,6 +171,16 @@ angular.module('ts5App')
         inputType: 'RADIO_BUTTON',
         id: 'defaultUllageCountsToInboundCountsForWastageStock',
         values: angular.copy($this.radioButtonValues)
+      },
+      {
+        name: 'Fresh Food \'Wastage\' Config',
+        featureCode: 'INB',
+        optionCode: 'FFW',
+        choiceCode: 'ACT',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'resetCurrentCountsForFreshFoodWastage',
+        values: angular.copy($this.radioButtonValues)
       }
     ];
 
