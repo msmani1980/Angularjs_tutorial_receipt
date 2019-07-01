@@ -8,18 +8,13 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReportOptionsCtrl', function ($scope, $modalInstance, $filter, templateService, jobService, templateId, reRunExistingJobReport) {
+  .controller('ReportOptionsCtrl', function ($scope, $modalInstance, $filter, templateService, jobService, templateId, reRunExistingJobReport, lodash, $timeout) {
 
     $scope.templateId = templateId;
     
     templateService.get({ templateId: templateId }).$promise.then(function (rtn) {
       $scope.template = rtn;
       $scope.selection.name = rtn.name;
-      if (reRunExistingJobReport !== null && reRunExistingJobReport.optionValues !== null) {
-        angular.forEach(reRunExistingJobReport.optionValues, function(optionVal) {
-          $scope.selection.options[optionVal.code] = optionVal.value;
-        });
-      }
     });
 
     $scope.selection = {};
@@ -111,4 +106,29 @@ angular.module('ts5App')
       return true;
     }
         
+    $timeout(function () {
+      if (reRunExistingJobReport !== null) {
+
+        var groups = reRunExistingJobReport.optionValues.reduce(function(obj, item) {
+          obj[item.code] = obj[item.code] || [];
+          obj[item.code].push(item.value);
+          return obj;
+        }, {});
+        
+        var myArray = Object.keys(groups).map(function(key) {
+          return { code: key, value: groups[key] };
+        });
+        
+        angular.forEach(myArray, function(option) {
+          var isOptionID = lodash.findWhere(reRunExistingJobReport.template.options, { code: option.code });
+          if (isOptionID !== undefined && (isOptionID.choiceLookup || isOptionID.choiceValues) && (isOptionID.type === 'ID' || isOptionID.type === 'STRING')) {
+            $scope.selection.options[option.code] = option.value;
+          } else if (isOptionID !== undefined && !isOptionID.choiceLookup && isOptionID.type === 'ID') {
+            $scope.selection.options[option.code] = parseInt(option.value.toString());
+          } else {
+            $scope.selection.options[option.code] = option.value.toString();
+          }
+        });
+      }
+    }, 1000);
   });
