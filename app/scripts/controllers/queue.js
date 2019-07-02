@@ -29,7 +29,6 @@ angular.module('ts5App')
     };
     
     $scope.reRunTemplate = function (existingJob) {
-      console.log(existingJob);
       $scope.template = existingJob.template;
       $modal.open({
           templateUrl: 'views/report-options.html',
