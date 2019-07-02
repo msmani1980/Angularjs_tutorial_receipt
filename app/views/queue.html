@@ -63,14 +63,19 @@
          <th>{{job.jobRunTimeMillis | timeinterval}}</th>
          <th><span ng-if="job.file">{{job.file.size | filesize}}</span></th>
          <th>
-           <span ng-if="job.file">
+           <span ng-if="job.file" title="Download">
              <a ng-click="download(job.file.id)" class="btn btn-xs btn-success">
-               Download <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+               <span class="glyphicon glyphicon-save" aria-hidden="true" title="Download"></span>
              </a>
            </span>
-           <span ng-if="job.status === 'STARTED' || job.status === 'QUEUED'">
+           <span ng-if="job.status === 'FAILED' || job.status === 'FINISHED'" title="Re-request">
+            <a ng-click="reRunTemplate(job)" class="btn btn-xs btn-warning">
+              <span class="glyphicon glyphicon-repeat" aria-hidden="true" title="Re-request"></span>
+            </a>
+           </span>
+           <span ng-if="job.status === 'STARTED' || job.status === 'QUEUED'" title="Cancel">
 	           <a ng-click="delete(job.id)" class="btn btn-xs btn-danger">
-	            Cancel <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+	            <span class="glyphicon glyphicon-remove" aria-hidden="true" title="Cancel"></span>
 	           </a>
            </span>
          </th>
