@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReportOptionsCtrl', function ($scope, $modalInstance, $filter, templateService, jobService, templateId, reRunExistingJobReport, lodash, $timeout, templateOptionService) {
+  .controller('ReportOptionsCtrl', function ($scope, $modalInstance, $filter, templateService, jobService, templateId, reRunExistingJobReport, lodash, $timeout, templateOptionService, $location) {
 
     $scope.templateId = templateId;
     
@@ -71,7 +71,11 @@ angular.module('ts5App')
 
       jobService.run($scope.template.id, params).then(function () {
         $modalInstance.close();
-        window.location.href = '#/reports/queue';
+        if ($location.path() === '/reports/queue') {
+          window.location.reload();
+        } else {
+          window.location.href = '#/reports/queue';
+        }
       });
     };
 
