@@ -132,18 +132,19 @@ angular.module('ts5App')
             if (isOptionID.choiceLookup !== undefined) {
               var promise = getSelectedChoiceValues(isOptionID.choiceLookup, '');
               promise.then(function(response) {
-                  optionResponse = response.data;
-                  angular.forEach(option.value, function(selectedId) {
-                    var optionMatch = $filter('filter')(optionResponse, function(item) {
-                      return (parseInt(item.id) === selectedId);
-                    })[0];
+                optionResponse = response.data;
+                angular.forEach(option.value, function(selectedId) {
+                  var optionMatch = $filter('filter')(optionResponse, function(item) {
+                    return (parseInt(item.id) === selectedId);
+                  })[0];
 
-                    choiceSelectedVal.push(optionMatch);
-                  });
-
-                  $scope.selection.options[option.code] = choiceSelectedVal;
+                  choiceSelectedVal.push(optionMatch);
                 });
 
+                if (choiceSelectedVal.length > 0) {
+                  $scope.selection.options[option.code] = isOptionID.multiValue ? choiceSelectedVal : choiceSelectedVal[0];
+                }
+              });
             } else if (isOptionID.choiceLookup === undefined && isOptionID.type === 'STRING' && !isOptionID.multiValue) {
               $scope.selection.options[option.code] = option.value.toString();
             } else {
