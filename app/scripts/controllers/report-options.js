@@ -134,7 +134,7 @@ angular.module('ts5App')
               promise.then(function(response) {
                   optionResponse = response.data;
                   angular.forEach(option.value, function(selectedId) {
-                    var optionMatch = $filter('filter')(optionResponse, { id: selectedId })[0];
+                    var optionMatch = $filter('filter')(optionResponse, { id: selectedId }, true)[0];
                     choiceSelectedVal.push(optionMatch);
                   });
 
