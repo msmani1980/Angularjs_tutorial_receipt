@@ -144,6 +144,8 @@ angular.module('ts5App')
                   $scope.selection.options[option.code] = choiceSelectedVal;
                 });
 
+            } else if (isOptionID.choiceLookup === undefined && isOptionID.type === 'STRING' && !isOptionID.multiValue) {
+              $scope.selection.options[option.code] = option.value.toString();
             } else {
               $scope.selection.options[option.code] = option.value;
             }
