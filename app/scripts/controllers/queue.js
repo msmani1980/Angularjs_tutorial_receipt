@@ -23,9 +23,9 @@ angular.module('ts5App')
       $interval.cancel(queueWatcher);
     });
 
-    $scope.download = function (fileId) {
+    $scope.download = function (fileId, jobId) {
       var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
-      window.open(ENV.apiUrl + '/report-api/reports/' + fileId + '?sessionToken=' + sessionToken);
+      window.open(ENV.apiUrl + '/report-api/reports/' + fileId + '?jobId='+jobId+'&sessionToken=' + sessionToken);
     };
     
     $scope.reRunTemplate = function (existingJob) {
