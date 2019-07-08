@@ -25,7 +25,7 @@ angular.module('ts5App')
 
     $scope.download = function (fileId, jobId) {
       var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
-      window.open(ENV.apiUrl + '/report-api/reports/' + fileId + '?jobId='+jobId+'&sessionToken=' + sessionToken);
+      window.open(ENV.apiUrl + '/report-api/reports/' + fileId + '?jobId=' + jobId + '&sessionToken=' + sessionToken);
     };
     
     $scope.reRunTemplate = function (existingJob) {
