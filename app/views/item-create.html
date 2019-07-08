@@ -200,6 +200,44 @@
               </div>
 
               <input-textarea ng-if="isVirtualSelected" label="Notes" name="notes" placeholder="Notes for Virtual" max-length="255" class="vertical-resize-only"></input-textarea>
+
+              <div class="row" ng-if="isVirtualSelected">
+                <div class="col-xs-6 col-sm-6">
+                  <div class="form-group">
+                    <label>VAT Country</label>
+                    <ui-select
+                      name="vatCountry"
+                      ng-model="formData.vatCountry"
+                      theme="bootstrap"
+                      id="vatCountry"
+                      ng-required="formData.vatRate"
+                      style="min-height: 34px;"
+                      ng-class="{ 'has-error' : !formData.vatCountry && displayError , 'has-success' : formData.vatCountry }">
+                      <ui-select-match placeholder="VAT Country" allow-clear>{{ $select.selected.countryName }}</ui-select-match>
+                      <ui-select-choices
+                        repeat="country in countries | filter: $select.search | orderBy:'countryName'">
+                        <div ng-bind-html="country.countryName | highlight: $select.search"></div>
+                      </ui-select-choices>
+                    </ui-select>
+                  </div>
+                </div>
+                <div class="col-xs-6 col-sm-6">
+                  <div class="form-group">
+                    <label>VAT Rate</label>
+                    <input
+                      ng-class="{ 'has-error' : !formData.vatRate && displayError , 'has-success' : formData.vatRate }"
+                      ng-model="formData.vatRate"
+                      type="text"
+                      class="form-control"
+                      placeholder="10.00"
+                      name="VAT Rate"
+                      ng-pattern="regexp.numberWithTwoDecimal"
+                      maxlength="6"
+                      ng-required="formData.vatCountry">
+                  </div>
+                </div>
+              </div>
+
             </fieldset>
             <fieldset>
               <div ng-if="isVoucherSelected">
