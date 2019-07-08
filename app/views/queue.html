@@ -64,7 +64,7 @@
          <th><span ng-if="job.file">{{job.file.size | filesize}}</span></th>
          <th>
            <span ng-if="job.file" title="Download">
-             <a ng-click="download(job.file.id)" class="btn btn-xs btn-success">
+             <a ng-click="download(job.file.id, job.id)" class="btn btn-xs btn-success">
                <span class="glyphicon glyphicon-save" aria-hidden="true" title="Download"></span>
              </a>
            </span>
