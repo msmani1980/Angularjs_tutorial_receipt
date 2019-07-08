@@ -1,5 +1,5 @@
 'use strict';
-/*jshint maxcomplexity:7*/
+/*jshint maxcomplexity:8*/
 /**
  * @ngdoc function
  * @name ts5App.controller:ReportOptionsCtrl
@@ -153,6 +153,8 @@ angular.module('ts5App')
             
           } else if (isOptionID !== undefined && !isOptionID.choiceLookup && isOptionID.type === 'ID') {
             $scope.selection.options[option.code] = parseInt(option.value.toString());
+          } else if (isOptionID !== undefined && !isOptionID.choiceLookup && isOptionID.type === 'STRING') {
+            $scope.selection.options[option.code] = option.value;
           } else {
             $scope.selection.options[option.code] = option.value.toString();
           }
