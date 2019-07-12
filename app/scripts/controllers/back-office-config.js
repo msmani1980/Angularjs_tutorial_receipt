@@ -1,5 +1,5 @@
 'use strict';
-
+/*jshint maxcomplexity:8*/
 /**
  * @ngdoc function
  * @name ts5App.controller:BackOfficeConfigCtrl
@@ -35,6 +35,10 @@ angular.module('ts5App')
       {
         name: 'User Configuration',
         title: 'User Configuration'
+      },
+      {
+        name: 'Item Configuration',
+        title: 'Item  Configuration'
       }
     ];
 
@@ -125,6 +129,8 @@ angular.module('ts5App')
         $scope.configOptions = angular.copy($scope.configOptionDefinition.cashBagConfigOptions);
       } else if ($scope.selectedFeature && $scope.selectedFeature.name === 'StationOps Configuration') {
         $scope.configOptions = angular.copy($scope.configOptionDefinition.stationOpsConfigOptions);
+      } else if ($scope.selectedFeature && $scope.selectedFeature.name === 'Item Configuration') {
+        $scope.configOptions = angular.copy($scope.configOptionDefinition.itemConfigOptions);
       }
     };
 

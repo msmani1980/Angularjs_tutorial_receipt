@@ -318,6 +318,35 @@
                 </small>
               </div>
 
+              <div class="row" ng-show="showSATFields">
+                <div class="col-xs-6 col-sm-6">
+                  <div class="form-group">
+                    <label>SAT Product </label>
+                    <input
+                      ng-class="{ 'has-error' : !formData.satProductOrServiceCode && displayError , 'has-success' : formData.satProductOrServiceCode }"
+                      ng-model="formData.satProductOrServiceCode"
+                      type="text"
+                      class="form-control"
+                      name="satProductOrServiceCode"
+                      ng-pattern="regexp.alphaWithSpecialCharMenuItem"
+                      maxlength="8">
+                  </div>
+                </div>
+                <div class="col-xs-6 col-sm-6">
+                  <div class="form-group">
+                    <label>SAT Units Code</label>
+                    <input
+                      ng-class="{ 'has-error' : !formData.satUnitsCode && displayError , 'has-success' : formData.satUnitsCode }"
+                      ng-model="formData.satUnitsCode"
+                      type="text"
+                      class="form-control"
+                      name="satUnitsCode"
+                      ng-pattern="regexp.alphaWithSpecialCharMenuItem"
+                      maxlength="3">
+                  </div>
+                </div>
+              </div>
+
             </fieldset>
 
           </div>
