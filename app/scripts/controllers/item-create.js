@@ -8,7 +8,8 @@
  */
 angular.module('ts5App').controller('ItemCreateCtrl',
   function($scope, $document, $compile, ENV, $resource, $location, $anchorScroll, itemsFactory, companiesFactory, companyRelationshipFactory,
-    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _, languagesService, recordsService, countriesService) {
+    currencyFactory, $routeParams, globalMenuService, $q, dateUtility, $filter, lodash, _, languagesService, recordsService, countriesService,
+    companyPreferencesService) {
 
     var $this = this;
     $scope.formData = {
@@ -652,7 +653,12 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         itemsFactory.getVoucherDurationsList(),
         itemsFactory.getEposDisplayOrder(),
         recordsService.getAllergenTags(),
-        countriesService.getCountriesList()
+        countriesService.getCountriesList(),
+        companyPreferencesService.getCompanyPreferences({
+          startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
+          optionCode: 'SAT',
+          featureCode: 'ITM'
+        })
       ];
     };
 
@@ -891,6 +897,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $this.setEposDisplayOrderList(response[13]);
       $this.setAllergenTagList(response[14]);
       $this.setCountryList(response[15]);
+      $this.setSATFields(response[16]);
       if ($scope.editingItem || $scope.cloningItem || $scope.viewOnly) {
         $this.getItem($routeParams.id);
       } else {
@@ -921,6 +928,10 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.setCountryList = function(data) {
       $scope.countries = data.countries;
+    };
+
+    this.setSATFields = function(data) {
+      $scope.showSATFields = lodash.find(data.preferences, { isSelected: true });
     };
 
     this.setItemTypes = function(data) {
