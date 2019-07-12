@@ -5,7 +5,7 @@
  * @description # QueueCtrl Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('QueueCtrl', function ($localStorage, $rootScope, $scope, jobService, $interval, ENV, lodash, identityAccessFactory, globalMenuService) {
+  .controller('QueueCtrl', function ($localStorage, $rootScope, $scope, jobService, $interval, ENV, lodash, identityAccessFactory, globalMenuService, $modal) {
 
     $scope.jobs = [];
 
@@ -23,9 +23,28 @@ angular.module('ts5App')
       $interval.cancel(queueWatcher);
     });
 
-    $scope.download = function (fileId) {
+    $scope.download = function (fileId, jobId) {
       var sessionToken = identityAccessFactory.getSessionObject().sessionToken;
-      window.open(ENV.apiUrl + '/report-api/reports/' + fileId + '?sessionToken=' + sessionToken);
+      window.open(ENV.apiUrl + '/report-api/reports/' + fileId + '?jobId=' + jobId + '&sessionToken=' + sessionToken);
+    };
+    
+    $scope.reRunTemplate = function (existingJob) {
+      $scope.template = existingJob.template;
+      $modal.open({
+          templateUrl: 'views/report-options.html',
+          controller: 'ReportOptionsCtrl',
+          backdrop: 'static',
+          resolve: {
+            templateId: function () {
+              return existingJob.template.id;
+            },
+            
+            reRunExistingJobReport: function () {
+              return existingJob;
+            }
+            
+          }
+        });
     };
 
     $scope.delete = function (jobId) {
