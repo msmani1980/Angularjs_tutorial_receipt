@@ -108,9 +108,7 @@ $(function () {
 	
 	var transactionIds = [];
     
-	if (getParameterByName("transactionId") !== null && getParameterByName("transactionId") !== ''){
-		transactionIds[0] = getParameterByName("transactionId");
-	} else if (localStorage.getItem('receiptTxnIds') !== null) {
+	if (localStorage.getItem('receiptTxnIds') !== null && localStorage.getItem('receiptTxnIds') !== '') {
 		transactionIds = localStorage.getItem('receiptTxnIds').split(",");
 	} else {
 		return;
@@ -124,8 +122,8 @@ $(function () {
 												  +'<p>Copyright &copy; eGate Solutions</p></div></section>'
 												  +'<section><div id=signature-section-'+transactionId+ ' style=\"display:none; margin:20px; width: 580px;\"><p>SIGNATURE</p>'
 												  +'<div id=signature-'+transactionId+ ' style=\"border:1px; border-style:solid; width: 570px;\"></div></div></section>');
-		$("#receipt-template-"+transactionId).load("/rsvr-email/caa/template/"+transactionId, function(data1, callbackouter){
-			$.getJSON("/rsvr-email/caa/data/"+transactionId, function (data, callbackinner) {
+		$("#receipt-template-"+transactionId).load("https://u2-ts5-dev.egatesoln.com/rsvr-email/caa/template/"+transactionId, function(data1, callbackouter){
+			$.getJSON("https://u2-ts5-dev.egatesoln.com/rsvr-email/caa/data/"+transactionId, function (data, callbackinner) {
 				var cart = {};
 				cart = data;
 				var paymentByType = {cash: [], credit: [], coupon: [], voucher: []};
