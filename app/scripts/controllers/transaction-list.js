@@ -9,9 +9,9 @@
  */
 angular.module('ts5App')
   .controller('TransactionListCtrl', function ($scope, $q, $filter, transactionFactory, recordsService, currencyFactory,
-                                               stationsService, globalMenuService, dateUtility, payloadUtility) {
+                                               stationsService, globalMenuService, dateUtility, payloadUtility, messageService) {
     var $this = this;
-    var windowRef = null;
+    $scope.windowRef = null;
     $scope.viewName = 'Transactions';
     $scope.transactions = [];
     $scope.transactionTypes = ['SALE', 'REFUND', 'EmployeePurchase'];
@@ -54,6 +54,7 @@ angular.module('ts5App')
     $scope.search.transactionStartDate = dateUtility.yesterdayFormattedDatePicker();
     $scope.search.transactionEndDate = dateUtility.tomorrowFormattedDatePicker();
     $scope.isSearch = false;
+    $scope.isAllChecked = false;
 
     $scope.printStoreNumber = function (transaction) {
       if (transaction.storeNumber) {
@@ -272,8 +273,8 @@ angular.module('ts5App')
     };
     
     $scope.showSelectedTransactionDetails = function () {
-      if (windowRef !== null) {
-        windowRef.close();
+      if ($scope.windowRef !== null) {
+        $scope.windowRef.close();
       }
         
       var data = '';
@@ -284,12 +285,15 @@ angular.module('ts5App')
       }
 
       data = data.replace(/,\s*$/, '');
-      if (data.length > 0) {
-        localStorage.removeItem('receiptTxnIds');
-        localStorage.setItem('receiptTxnIds', data);
+      if (data.length === 0) {
+        showMessage('Please Select at least one ePOS Receipts...', 'info');
+        return;
       }
       
-      windowRef = window.open('/transactions/index.html?ePosReceipt=true');
+      localStorage.removeItem('receiptTxnIds');
+      localStorage.setItem('receiptTxnIds', data);
+      
+      $scope.windowRef = window.open('/transactions/index.html?ePosReceipt=true');
     };
     
     $scope.checkUncheckHeader = function () {
@@ -309,6 +313,10 @@ angular.module('ts5App')
         $scope.transactions[i].selected = $scope.isAllChecked;
       }
     };
+    
+    function showMessage(message, messageType) {
+      messageService.display(messageType, '<strong>EPOS Receipts</strong>: ' + message);
+    }
     
     function sanitizeSearchPayload(payload) {
       payloadUtility.sanitize(payload);
