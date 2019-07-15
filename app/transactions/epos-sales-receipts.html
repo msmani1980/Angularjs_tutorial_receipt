@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, width=device-height">
+<title>ePOS Sales Receipts</title>
+<link rel="stylesheet" href="bootstrap-331.min.css">
+<script src="jquery-2.1.1.min.js"></script>
+<script src="bootstrap-331.js"></script>
+<script src="knockout-2.2.1.js"></script>
+<script src="moment-with-locales-2-10-6.js"></script>
+<script src="jquery-barcode.min.js"></script>
+<script src="flashcanvas.js"></script>
+<script src="jSignature.min.js"></script>
+<script src="jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+<!-- <button id="pdfButton" type="button" onclick="generatePDF()" class="btn btn-warning" style="float: right;" disabled>PDF</button> -->     
+<div id="dynamicReceipt"></div>
+
+<script type="text/javascript">
+String.prototype.format = function () {
+	var args = arguments;
+	return this.replace(/{(\d+)}/g, function (match, number) {
+	return typeof args[number] !== 'undefined' ? args[number] : match;
+});
+};
+Number.prototype.format = function (c, d, t) {
+	var n = this,
+	c = isNaN(c = Math.abs(c)) ? 2 : c,
+	d = d === undefined ? "." : d,
+	t = t === undefined ? "," : t,
+	s = n < 0 ? "-" : "",
+	i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+	j = (j = i.length) > 3 ? j % 3 : 0;
+	return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
+
+function getParameterByName(name) {
+	var name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]"),
+	regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+	results = regex.exec(location.search);
+	return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function GenerateBarCodes(shoppingCart) {
+	var idx = 0;
+	$('.couponBarcodeImage').each(function (index, item) {
+		var coupon = shoppingCart.couponsIssued[idx];
+		if (coupon !== null && coupon.Barcode !== null && coupon.Barcode.length > 0) {$(item).barcode(coupon.Barcode, 'code39');}
+		idx++;
+	});
+	
+	idx = 0;
+	var voucher;
+	$('.voucherBarcodeImage').each(function (index, item) {
+		voucher = shoppingCart.voucherIssuedItems[idx];
+		if (voucher.dynamicBarcode) {if (voucher.dynamicBarcode.length > 0) {$(item).barcode(voucher.dynamicBarcode, 'code39');}}
+		else {
+			if (voucher.barcode && voucher.barcode.Value.length) {
+				var barcodeType = voucher.barcode.Type.replace(/\s+/g, '-').toLowerCase();
+				if (
+				barcodeType === 'ean8' ||
+				barcodeType === 'ean13' ||
+				barcodeType === 'upc' ||
+				barcodeType === 'int25' || // interleaved 2 of 5
+				barcodeType === 'std25' || // standard 2 of 5 (industrial)
+				barcodeType === 'code39' ||
+				barcodeType === 'code11' ||
+				barcodeType === 'code93' ||
+				barcodeType === 'code128' ||
+				barcodeType === 'codabar' ||
+				barcodeType === 'msi' ||
+				barcodeType === 'datamatrix') {
+					$(item).barcode(voucher.barcode.Value, barcodeType);
+				}
+				else {$(item).barcode(voucher.barcode.Value, 'code39');}
+			}
+		}
+		idx++;
+	});
+	
+	idx = 0;
+	$('.barcodeImage').each(function (index, item) {
+		var vp = shoppingCart.virtualProducts[idx];
+		if (!(vp.barcode === undefined) && vp.barcode!=null && vp.barcode.Value.length > 0) {
+			var barcodeType = vp.barcode.Type.replace(/\s+/g, '-').toLowerCase();
+			if (
+			barcodeType === 'ean8' ||
+			barcodeType === 'ean13' ||
+			barcodeType === 'upc' ||
+			barcodeType === 'int25' || // interleaved 2 of 5
+			barcodeType === 'std25' || // standard 2 of 5 (industrial)
+			barcodeType === 'code39' ||
+			barcodeType === 'code11' ||
+			barcodeType === 'code93' ||
+			barcodeType === 'code128' ||
+			barcodeType === 'codabar' ||
+			barcodeType === 'msi' ||
+			barcodeType === 'datamatrix') {
+				$(item).barcode(vp.barcode.Value, barcodeType);
+			}else {$(item).barcode(vp.barcode.Value, 'code39');}
+		}
+		idx++;
+	});
+}
+
+$(function () {
+	
+	var transactionIds = [];
+    
+	if (getParameterByName("transactionId") !== null && getParameterByName("transactionId") !== ''){
+		transactionIds[0] = getParameterByName("transactionId");
+	} else if (localStorage.getItem('receiptTxnIds') !== null) {
+		transactionIds = localStorage.getItem('receiptTxnIds').split(",");
+	} else {
+		return;
+	}
+	if(transactionIds.length == 0){ return;}
+	
+	ko.utils.arrayForEach(transactionIds, function (transactionId) {
+		 $("#dynamicReceipt").append('<section id=receipt-template-'+transactionId+'></section>'
+												  +'<div class=\"text-center\" style=\"padding-top:20px\">'
+												  +'<section id=copyright-section-'+transactionId+' class=text-center>'
+												  +'<p>Copyright &copy; eGate Solutions</p></div></section>'
+												  +'<section><div id=signature-section-'+transactionId+ ' style=\"display:none; margin:20px; width: 580px;\"><p>SIGNATURE</p>'
+												  +'<div id=signature-'+transactionId+ ' style=\"border:1px; border-style:solid; width: 570px;\"></div></div></section>');
+		$("#receipt-template-"+transactionId).load("/rsvr-email/caa/template/"+transactionId, function(data1, callbackouter){
+			$.getJSON("/rsvr-email/caa/data/"+transactionId, function (data, callbackinner) {
+				var cart = {};
+				cart = data;
+				var paymentByType = {cash: [], credit: [], coupon: [], voucher: []};
+				ko.utils.arrayForEach(cart.payments, function (payment) {
+					switch (payment.paymentType) {
+						case 1:
+						case 3:
+						paymentByType.coupon.push(payment);    // FFCard, Discount
+						break;
+						case 4:
+						paymentByType.cash.push(payment);      // Cash
+						break;
+						case 5:
+						paymentByType.credit.push(payment);    // Credit
+						break;
+						case 6:
+						paymentByType.voucher.push(payment);   // Voucher
+						break;
+					}
+					sign = payment.signature;
+					if(!(sign === undefined) && sign!=null && sign.length>1){
+						$("#signature-section-"+cart.shoppingCartId).show();
+						$("#signature-"+cart.shoppingCartId).jSignature();
+						$("#signature-"+cart.shoppingCartId).jSignature("setData", "data:" + sign[0]+","+sign[1]);
+						var over = '<div id=over-'+cart.shoppingCartId+' style="position:absolute; width: 100%; height: 100%; top:100%; bottom:0; left:0; right: 0;"></div>';
+						var $over = $(over); 
+						//over.attr("id", "overid")
+						$("#signature").append($over);
+					}
+				});
+				cart.paymentByType = paymentByType;
+				ko.applyBindings(cart, document.getElementById("receipt-template-"+cart.shoppingCartId));
+				GenerateBarCodes(cart)
+			});
+		});
+	});
+});
+
+$(window).on('load', function() {
+	 console.log('All assets are loaded');
+	// $('#pdfButton').attr('disabled',false);
+})
+
+
+function generatePDF(){
+	//window.print();
+}
+</script>
+</body>
+</html>

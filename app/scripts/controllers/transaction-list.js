@@ -268,7 +268,6 @@ angular.module('ts5App')
     };
 
     $scope.showTransactionDetails = function (transaction) {
-      localStorage.removeItem('receiptTxnIds');
       window.open('/transactions/index.html?transactionId=' + transaction.transactionId);
     };
     
@@ -293,7 +292,7 @@ angular.module('ts5App')
       localStorage.removeItem('receiptTxnIds');
       localStorage.setItem('receiptTxnIds', data);
       
-      $scope.windowRef = window.open('/transactions/index.html?ePosReceipt=true');
+      $scope.windowRef = window.open('/transactions/epos-sales-receipts.html?ePosReceipt=true');
     };
     
     $scope.checkUncheckHeader = function () {
