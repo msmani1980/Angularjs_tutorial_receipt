@@ -13,6 +13,7 @@
 <script src="jSignature.min.js"></script>
 </head>
 <body>
+<div id="dynamicReceipt"></div>
 <section id="receipt-template"></section>
 <section id="copyright-section" class="text-center">
 <div class="text-center" style="padding-top:20px">
@@ -49,7 +50,7 @@ function GenerateBarCodes(shoppingCart) {
 var idx = 0;
 $('.couponBarcodeImage').each(function (index, item) {
 var coupon = shoppingCart.couponsIssued[idx];
-if (coupon.Barcode.length > 0) {$(item).barcode(coupon.Barcode, 'code39');}
+if (coupon.Barcode !== undefined && coupon.Barcode.length > 0) {$(item).barcode(coupon.Barcode, 'code39');}
 idx++;
 });
 
@@ -107,44 +108,63 @@ idx++;
 });
 }
 $(function () {
-if(getParameterByName("transactionId")==''){return;}
-$("#receipt-template").load("/rsvr-email/caa/template/" + getParameterByName("transactionId"), onTemplateLoaded);
-function onTemplateLoaded() {
-$.getJSON("/rsvr-email/caa/data/" + getParameterByName("transactionId"), function (data) {
-var cart = data;
-var paymentByType = {cash: [], credit: [], coupon: [], voucher: []};
-ko.utils.arrayForEach(cart.payments, function (payment) {
-switch (payment.paymentType) {
-case 1:
-case 3:
-paymentByType.coupon.push(payment);    // FFCard, Discount
-break;
-case 4:
-paymentByType.cash.push(payment);      // Cash
-break;
-case 5:
-paymentByType.credit.push(payment);    // Credit
-break;
-case 6:
-paymentByType.voucher.push(payment);   // Voucher
-break;
-}
-sign = payment.signature;
-if(!(sign === undefined) && sign!=null && sign.length>1){
-$("#signature-section").show();
-$("#signature").jSignature();
-$("#signature").jSignature("setData", "data:" + sign[0]+","+sign[1]);
-var over = '<div id="over" style="position:absolute; width: 100%; height: 100%; top:100%; bottom:0; left:0; right: 0;"></div>';
-var $over = $(over); 
-//over.attr("id", "overid")
-$("#signature").append($over);
-}
-});
-cart.paymentByType = paymentByType;
-ko.applyBindings(cart, document.getElementById("receipt-template"));
-GenerateBarCodes(cart)
-});
-};
+	
+	var transactionIds = [];
+    
+	if (getParameterByName("transactionId") !== null && getParameterByName("transactionId") !== ''){
+		transactionIds[0] = getParameterByName("transactionId");
+	} else if (localStorage.getItem('receiptTxnIds') !== null) {
+		transactionIds = localStorage.getItem('receiptTxnIds').split(",");
+	} else {
+		return;
+	}
+	if(transactionIds.length == 0){ return;}
+	
+	ko.utils.arrayForEach(transactionIds, function (transactionId) {
+		 $("#dynamicReceipt").append('<section id=receipt-template-'+transactionId+'></section>'
+												  +'<div class=\"text-center\" style=\"padding-top:20px\">'
+												  +'<section id=copyright-section-'+transactionId+' class=text-center>'
+												  +'<p>Copyright &copy; eGate Solutions</p></div></section>'
+												  +'<section><div id=signature-section-'+transactionId+ ' style=\"display:none; margin:20px; width: 580px;\"><p>SIGNATURE</p>'
+												  +'<div id=signature-'+transactionId+ ' style=\"border:1px; border-style:solid; width: 570px;\"></div></div></section>');
+		$("#receipt-template-"+transactionId).load("https://u2-ts5-dev.egatesoln.com/rsvr-email/caa/template/"+transactionId, function(data1, callbackouter){
+			$.getJSON("https://u2-ts5-dev.egatesoln.com/rsvr-email/caa/data/"+transactionId, function (data, callbackinner) {
+				var cart = {};
+				cart = data;
+				var paymentByType = {cash: [], credit: [], coupon: [], voucher: []};
+				ko.utils.arrayForEach(cart.payments, function (payment) {
+					switch (payment.paymentType) {
+						case 1:
+						case 3:
+						paymentByType.coupon.push(payment);    // FFCard, Discount
+						break;
+						case 4:
+						paymentByType.cash.push(payment);      // Cash
+						break;
+						case 5:
+						paymentByType.credit.push(payment);    // Credit
+						break;
+						case 6:
+						paymentByType.voucher.push(payment);   // Voucher
+						break;
+					}
+					sign = payment.signature;
+					if(!(sign === undefined) && sign!=null && sign.length>1){
+						$("#signature-section-"+cart.shoppingCartId).show();
+						$("#signature-"+cart.shoppingCartId).jSignature();
+						$("#signature-"+cart.shoppingCartId).jSignature("setData", "data:" + sign[0]+","+sign[1]);
+						var over = '<div id=over-'+cart.shoppingCartId+' style="position:absolute; width: 100%; height: 100%; top:100%; bottom:0; left:0; right: 0;"></div>';
+						var $over = $(over); 
+						//over.attr("id", "overid")
+						$("#signature").append($over);
+					}
+				});
+				cart.paymentByType = paymentByType;
+				ko.applyBindings(cart, document.getElementById("receipt-template-"+cart.shoppingCartId));
+				GenerateBarCodes(cart)
+			});
+		});
+	});
 });
 </script>
 </body>

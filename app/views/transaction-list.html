@@ -247,6 +247,8 @@
           </div>
         </div>
         <div class="panel-footer text-right">
+         <button type="button" class="btn btn-default" ng-click="showSelectedTransactionDetails()">View All Receipts
+       	 </button>
           <button type="button" class="btn btn-default" ng-click="clearSearch()">Clear</button>
           <button type="submit" class="btn btn-primary">Search</button>
         </div>
@@ -261,6 +263,9 @@
     <table infinite-scroll="getTransactions()" class="table table-bordered table-hover">
     <thead>
     <tr>
+      <th>
+       <input type="checkbox" ng-model="isAllChecked" ng-change="checkUncheckAll()">
+      </th>
       <th>Transaction Date</th>
       <th ng-show="displayColumns.paymentId">Transaction ID</th>
       <th ng-show="displayColumns.transactionId">Shopping Cart ID</th> 
@@ -285,6 +290,7 @@
     </thead>
     <tbody>
     <tr ng-repeat="transaction in transactions">
+      <td><input name="checkboxtxn" ng-model="transaction.selected" id="{{transaction.transactionId}}" type="checkbox" value="{{transaction.transactionId}}" ng-change="checkUncheckHeader()"></td>
       <td nowrap>{{ transaction.transactionDate }}</td>
       <td ng-show="displayColumns.paymentId">{{ transaction.id }}</td>
       <td ng-show="displayColumns.transactionId">{{ transaction.transactionId }}</td>
