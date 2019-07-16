@@ -1,5 +1,5 @@
 'use strict';
-
+/*jshint maxcomplexity:10*/
 /**
  * @ngdoc function
  * @name ts5App.controller:TransactionListCtrl
@@ -296,7 +296,29 @@ angular.module('ts5App')
       localStorage.removeItem('receiptTxnIds');
       localStorage.setItem('receiptTxnIds', data);
       
-      $scope.windowRef = window.open('/transactions/epos-sales-receipts.html?ePosReceipt=true');
+      var requestParam = 'startDate=' + generateGetTransactionsPayload().transactionStartDate + '&endDate=' + generateGetTransactionsPayload().transactionEndDate;
+
+      if (generateGetTransactionsPayload().transactionId) {
+        requestParam += '&transactionId=' + generateGetTransactionsPayload().transactionId;
+      }
+      
+      if (generateGetTransactionsPayload().paymentId) {
+        requestParam += '&paymentId=' + generateGetTransactionsPayload().paymentId;
+      }
+      
+      if (generateGetTransactionsPayload().scheduleNumber) {
+        requestParam += '&scheduleNumber=' + generateGetTransactionsPayload().scheduleNumber;
+      }
+      
+      if (generateGetTransactionsPayload().storeInstanceId) {
+        requestParam += '&storeInstanceId=' + generateGetTransactionsPayload().storeInstanceId;
+      }
+      
+      if (generateGetTransactionsPayload().storeNumber) {
+        requestParam += '&storeNumber=' + generateGetTransactionsPayload().storeNumber;
+      }
+      
+      $scope.windowRef = window.open('/transactions/epos-sales-receipts.html?' + requestParam);
     };
     
     $scope.checkUncheckHeader = function () {
@@ -354,7 +376,6 @@ angular.module('ts5App')
       payload.transactionEndDate = payloadUtility.serializeDate(payload.transactionEndDate ? payload.transactionEndDate : dateUtility.tomorrowFormattedDatePicker());
 
       sanitizeSearchPayload(payload);
-
       return payload;
     }
 
