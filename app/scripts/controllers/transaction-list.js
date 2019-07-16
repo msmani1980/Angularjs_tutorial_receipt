@@ -252,6 +252,7 @@ angular.module('ts5App')
       $scope.search = {};
       $scope.isSearch = false;
       $scope.transactions = [];
+      $scope.isSearchLoading = false;
       $scope.isAllChecked = false;
     };
 
