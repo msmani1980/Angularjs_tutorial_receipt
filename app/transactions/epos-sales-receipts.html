@@ -14,11 +14,29 @@
 </head>
 <style>
 .center {
-  padding: 70px 0;
+  padding: 20px 0;
   text-align: center;
   font: 18em;
   font-weight: bold;
   color: orange;
+}
+.centerTable {
+  padding: 70px 0;
+  text-align: center;
+  font: 18em;
+  font-weight: bold;
+}
+table, th, td {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+thead, th {
+	text-align: center;
+}
+tfoot {
+    background-color: #333;
+    color: #fff;
 }
 </style>
 <body>
@@ -26,6 +44,11 @@
 <button id="pdfButton" type="button" onclick="generatePDF()" class="btn btn-warning" style="float: right;margin-top:10px; margin-right: 30px" disabled>Print Receipts</button><br>
 <div id="pageLoading" class="center"> <p>Page Loading... Please wait!</p> </div><br>
 </div>
+<br>
+<br>
+<div id="receipt-header">
+</div>
+
 <div id="dynamicReceipt"></div>
 
 <script type="text/javascript">
@@ -50,7 +73,7 @@ function getParameterByName(name) {
 	var name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]"),
 	regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
 	results = regex.exec(location.search);
-	return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	return (typeof results === "undefined" || results === undefined || results === null)? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
 function GenerateBarCodes(shoppingCart) {
@@ -116,6 +139,18 @@ function GenerateBarCodes(shoppingCart) {
 }
 
 $(function () {
+     
+	  var tableOfContent =  '<table align="center"><thead><tr><th colspan="2">Report   Receipts</th></tr></thead><tbody>';
+		  tableOfContent += '<tr><td>For Date Range &nbsp&nbsp </td><td> From&nbsp&nbsp'+getParameterByName("startDate")+' To&nbsp&nbsp '+getParameterByName("endDate")+'</td></tr>';
+		  tableOfContent += '<tr><td>For Transaction ID &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("transactionId") === '' ? '' : getParameterByName("transactionId"))+'</td></tr>';
+		  tableOfContent += '<tr><td>For Payment ID &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("paymentId") === '' ? '' : getParameterByName("paymentId"))+'</td></tr>';
+		  tableOfContent += '<tr><td>For Flight Number &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("scheduleNumber") === '' ? '' : getParameterByName("scheduleNumber"))+'</td></tr>';
+		  tableOfContent += '<tr><td>For Barset Number &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("storeInstanceId") === '' ? '' : getParameterByName("storeInstanceId"))+'</td></tr>';
+		  tableOfContent += '<tr><td>For Store Number &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("storeNumber") === '' ? '' : getParameterByName("storeNumber"))+'</td></tr>';
+		  tableOfContent += '</tbody></table>';
+	
+    $("#receipt-header").append(tableOfContent);
+    
 	var transactionIds = [];
     
 	if (localStorage.getItem('receiptTxnIds') !== null && localStorage.getItem('receiptTxnIds') !== '') {
@@ -132,8 +167,8 @@ $(function () {
 												  +'<p>Copyright &copy; eGate Solutions</p></div></section>'
 												  +'<section><div id=signature-section-'+transactionId+ ' style=\"display:none; margin:20px; width: 580px;\"><p>SIGNATURE</p>'
 												  +'<div id=signature-'+transactionId+ ' style=\"border:1px; border-style:solid; width: 570px;\"></div></div></section><br>');
-		$("#receipt-template-"+transactionId).load("/rsvr-email/caa/template/"+transactionId, function(data1, callbackouter){
-			$.getJSON("/rsvr-email/caa/data/"+transactionId, function (data, callbackinner) {
+		$("#receipt-template-"+transactionId).load("https://u2-ts5-dev.egatesoln.com/rsvr-email/caa/template/"+transactionId, function(data1, callbackouter){
+			$.getJSON("https://u2-ts5-dev.egatesoln.com/rsvr-email/caa/data/"+transactionId, function (data, callbackinner) {
 				var cart = {};
 				cart = data;
 				var paymentByType = {cash: [], credit: [], coupon: [], voucher: []};
