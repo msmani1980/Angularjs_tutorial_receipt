@@ -254,6 +254,7 @@ angular.module('ts5App')
       $scope.isSearch = false;
       $scope.transactions = [];
       $scope.isSearchLoading = false;
+      $scope.isAllChecked = false;
     };
 
     $scope.searchTransactions = function () {
@@ -426,6 +427,7 @@ angular.module('ts5App')
 
     function clearTransactions() {
       $scope.transactions = [];
+      $scope.isAllChecked = false;
     }
 
     function setCompanyCurrencies(dataFromAPI) {
