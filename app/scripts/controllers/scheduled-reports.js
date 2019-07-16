@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ScheduledReportsCtrl', function ($localStorage, $rootScope, $scope, $modal, scheduledReportsService, lodash, identityAccessFactory, globalMenuService) {
+  .controller('ScheduledReportsCtrl', function ($localStorage, $rootScope, $scope, $modal, scheduledReportsService, lodash, identityAccessFactory, globalMenuService, $route) {
 
     $scope.scheduledReports = [];
 
@@ -40,7 +40,9 @@ angular.module('ts5App')
 
     $scope.disableScheduled = function (scheduledReport) {
       scheduledReportsService.disableScheduled(scheduledReport.id).then(function (res) {
-        return res;
+        if (res.data !== undefined) {
+          $route.reload();
+        }
       });
       
     };

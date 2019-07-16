@@ -1,5 +1,5 @@
 'use strict';
-/*jshint maxcomplexity:7*/
+/*jshint maxcomplexity:8*/
 /**
  * @ngdoc function
  * @name ts5App.controller:ReportOptionsCtrl
@@ -8,14 +8,15 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('ReportOptionsCtrl', function ($scope, $modalInstance, $filter, templateService, jobService, templateId) {
+  .controller('ReportOptionsCtrl', function ($scope, $modalInstance, $filter, templateService, jobService, templateId, reRunExistingJobReport, lodash, $timeout, templateOptionService, $location, $route) {
 
     $scope.templateId = templateId;
     
     templateService.get({ templateId: templateId }).$promise.then(function (rtn) {
-        $scope.template = rtn;
-        $scope.selection.name = rtn.name;
-      });
+      $scope.template = rtn;
+      $scope.selection.name = rtn.name;
+      loadExistingReportParams();
+    });
 
     $scope.selection = {};
 
@@ -70,7 +71,11 @@ angular.module('ts5App')
 
       jobService.run($scope.template.id, params).then(function () {
         $modalInstance.close();
-        window.location.href = '#/reports/queue';
+        if ($location.path() === '/reports/queue') {
+          $route.reload();
+        } else {
+          window.location.href = '#/reports/queue';
+        }
       });
     };
 
@@ -106,4 +111,58 @@ angular.module('ts5App')
       return true;
     }
     
+    function loadExistingReportParams() {
+      if (reRunExistingJobReport !== null && reRunExistingJobReport.optionValues !== undefined) {
+        $scope.selection.name = reRunExistingJobReport.name;
+        var groups = reRunExistingJobReport.optionValues.reduce(function(obj, item) {
+          obj[item.code] = obj[item.code] || [];
+          obj[item.code].push(item.value);
+          return obj;
+        }, {});
+        
+        var myArray = Object.keys(groups).map(function(key) {
+          return { code: key, value: groups[key] };
+        });
+        
+        angular.forEach(myArray, function(option) {
+          var choiceSelectedVal = [];
+          var optionResponse = [];
+          var isOptionID = lodash.findWhere(reRunExistingJobReport.template.options, { code: option.code });
+          if (isOptionID !== undefined && (isOptionID.choiceLookup || isOptionID.choiceValues) && (isOptionID.type === 'ID' || isOptionID.type === 'STRING')) {
+            if (isOptionID.choiceLookup !== undefined) {
+              var promise = getSelectedChoiceValues(isOptionID.choiceLookup, '');
+              promise.then(function(response) {
+                optionResponse = response.data;
+                angular.forEach(option.value, function(selectedId) {
+                  var optionMatch = $filter('filter')(optionResponse, function(item) {
+                    return (parseInt(item.id) === selectedId);
+                  })[0];
+
+                  choiceSelectedVal.push(optionMatch);
+                });
+
+                if (choiceSelectedVal.length > 0) {
+                  $scope.selection.options[option.code] = isOptionID.multiValue ? choiceSelectedVal : choiceSelectedVal[0];
+                }
+              });
+            } else if (isOptionID.choiceLookup === undefined && isOptionID.type === 'STRING' && !isOptionID.multiValue) {
+              $scope.selection.options[option.code] = option.value.toString();
+            } else {
+              $scope.selection.options[option.code] = option.value;
+            }
+            
+          } else if (isOptionID !== undefined && !isOptionID.choiceLookup && isOptionID.type === 'ID') {
+            $scope.selection.options[option.code] = parseInt(option.value.toString());
+          } else if (isOptionID !== undefined && !isOptionID.choiceLookup && isOptionID.type === 'STRING') {
+            $scope.selection.options[option.code] = option.value;
+          } else {
+            $scope.selection.options[option.code] = option.value.toString();
+          }
+        });
+      }
+    }
+    
+    function  getSelectedChoiceValues (choiceLookup, filter) {
+      return templateOptionService.getChoiceValues(choiceLookup, filter);
+    }
   });
