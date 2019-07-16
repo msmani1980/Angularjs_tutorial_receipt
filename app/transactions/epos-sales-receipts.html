@@ -11,10 +11,21 @@
 <script src="jquery-barcode.min.js"></script>
 <script src="flashcanvas.js"></script>
 <script src="jSignature.min.js"></script>
-<script src="jspdf.plugin.autotable.min.js"></script>
 </head>
+<style>
+.center {
+  padding: 70px 0;
+  text-align: center;
+  font: 18em;
+  font-weight: bold;
+  color: orange;
+}
+</style>
 <body>
-<!-- <button id="pdfButton" type="button" onclick="generatePDF()" class="btn btn-warning" style="float: right;" disabled>PDF</button> -->     
+<div>
+<button id="pdfButton" type="button" onclick="generatePDF()" class="btn btn-warning" style="float: right;margin-top:10px; margin-right: 30px" disabled>Print Receipts</button><br>
+<div id="pageLoading" class="center"> <p>Page Loading... Please wait!</p> </div><br>
+</div>
 <div id="dynamicReceipt"></div>
 
 <script type="text/javascript">
@@ -46,7 +57,7 @@ function GenerateBarCodes(shoppingCart) {
 	var idx = 0;
 	$('.couponBarcodeImage').each(function (index, item) {
 		var coupon = shoppingCart.couponsIssued[idx];
-		if (coupon !== null && coupon.Barcode !== null && coupon.Barcode.length > 0) {$(item).barcode(coupon.Barcode, 'code39');}
+		if (typeof coupon !== "undefined" && coupon !== null && typeof coupon.Barcode !== "undefined" && coupon.Barcode !== null && coupon.Barcode.length > 0) {$(item).barcode(coupon.Barcode, 'code39');}
 		idx++;
 	});
 	
@@ -54,9 +65,9 @@ function GenerateBarCodes(shoppingCart) {
 	var voucher;
 	$('.voucherBarcodeImage').each(function (index, item) {
 		voucher = shoppingCart.voucherIssuedItems[idx];
-		if (voucher.dynamicBarcode) {if (voucher.dynamicBarcode.length > 0) {$(item).barcode(voucher.dynamicBarcode, 'code39');}}
+		if (typeof voucher !== "undefined" && voucher.dynamicBarcode) {if (voucher.dynamicBarcode.length > 0) {$(item).barcode(voucher.dynamicBarcode, 'code39');}}
 		else {
-			if (voucher.barcode && voucher.barcode.Value.length) {
+			if (typeof voucher !== "undefined" && typeof voucher.barcode !== "undefined" && voucher.barcode && voucher.barcode.Value.length) {
 				var barcodeType = voucher.barcode.Type.replace(/\s+/g, '-').toLowerCase();
 				if (
 				barcodeType === 'ean8' ||
@@ -82,7 +93,7 @@ function GenerateBarCodes(shoppingCart) {
 	idx = 0;
 	$('.barcodeImage').each(function (index, item) {
 		var vp = shoppingCart.virtualProducts[idx];
-		if (!(vp.barcode === undefined) && vp.barcode!=null && vp.barcode.Value.length > 0) {
+		if (typeof vp !== "undefined" && !(vp.barcode === undefined) && vp.barcode!=null && vp.barcode.Value.length > 0) {
 			var barcodeType = vp.barcode.Type.replace(/\s+/g, '-').toLowerCase();
 			if (
 			barcodeType === 'ean8' ||
@@ -105,7 +116,6 @@ function GenerateBarCodes(shoppingCart) {
 }
 
 $(function () {
-	
 	var transactionIds = [];
     
 	if (localStorage.getItem('receiptTxnIds') !== null && localStorage.getItem('receiptTxnIds') !== '') {
@@ -121,7 +131,7 @@ $(function () {
 												  +'<section id=copyright-section-'+transactionId+' class=text-center>'
 												  +'<p>Copyright &copy; eGate Solutions</p></div></section>'
 												  +'<section><div id=signature-section-'+transactionId+ ' style=\"display:none; margin:20px; width: 580px;\"><p>SIGNATURE</p>'
-												  +'<div id=signature-'+transactionId+ ' style=\"border:1px; border-style:solid; width: 570px;\"></div></div></section>');
+												  +'<div id=signature-'+transactionId+ ' style=\"border:1px; border-style:solid; width: 570px;\"></div></div></section><br>');
 		$("#receipt-template-"+transactionId).load("/rsvr-email/caa/template/"+transactionId, function(data1, callbackouter){
 			$.getJSON("/rsvr-email/caa/data/"+transactionId, function (data, callbackinner) {
 				var cart = {};
@@ -162,15 +172,28 @@ $(function () {
 	});
 });
 
-$(window).on('load', function() {
-	 console.log('All assets are loaded');
-	// $('#pdfButton').attr('disabled',false);
-})
+var onPageCompelete = setInterval(function(){ onPageStatus() }, 3000);
 
+function onPageStatus(){
+	
+	if (document.readyState == 'loading') {
+	    console.log('loading -->'+document.readyState);
+	} else if(document.readyState == 'interactive'){
+		console.log('interactive -->'+document.readyState);
+	} else if(document.readyState == 'complete') {
+		console.log('interactive -->'+document.readyState);
+		clearInterval(onPageCompelete);
+		setTimeout(function(){ $('#pageLoading').hide(); document.getElementById("pdfButton").disabled = false; }, 3000);
+		//generatePDF();
+	}
+		
+}
 
 function generatePDF(){
-	//window.print();
+	$('#pdfButton').hide();
+	setTimeout(function(){ window.print(); }, 2000);
 }
+
 </script>
 </body>
 </html>
