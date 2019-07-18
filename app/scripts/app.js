@@ -539,10 +539,14 @@ angular.module('ts5App', [
     templateUrl: 'views/sales-targets.html',
     controller: 'SalesTargetsCtrl',
     controllerAs: 'salesTargets'
-  }).when('/pre-orders', {
+  }).when('/pre-orders/:action/:id?', {
     templateUrl: 'views/pre-order.html',
     controller: 'PreOrderCtrl',
     controllerAs: 'preOrder'
+  }).when('/pre-orders', {
+    templateUrl: 'views/pre-order-list.html',
+    controller: 'PreOrderListCtrl',
+    controllerAs: 'preOrderList'
   }).otherwise({
     redirectTo: '/'
   });

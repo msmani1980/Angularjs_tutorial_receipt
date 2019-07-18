@@ -16,7 +16,22 @@
     <div class="panel panel-default">
       <div class="panel-body">
         <div class="row">
-          <div class="col-xs-12 col-sm-4" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Name')">
+          <div class="col-xs-12 col-sm-2" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Name')">
+            <div class="form-group">
+              <label for="salesTargetName">Name *</label>
+              <input
+                ng-model="salesTarget.name"
+                type="text"
+                name="Name"
+                required
+                class="form-control"
+                id="salesTargetName"
+                placeholder="Name"
+                maxlength="50"
+                ng-disabled="isDisabled()">
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-2" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Name')">
             <div class="form-group">
               <label for="salesTargetName">Name *</label>
               <input
