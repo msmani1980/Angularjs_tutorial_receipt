@@ -18,7 +18,7 @@ angular.module('ts5App')
 
     $scope.viewName = 'Sales Targets';
     $scope.search = {};
-    $scope.salesTargetList = [];
+    $scope.preOrderList = [];
     $scope.loadingBarVisible = false;
     $scope.isSearch = false;
 
@@ -36,12 +36,12 @@ angular.module('ts5App')
     $scope.clearSearchForm = function() {
       $scope.isSearch = false;
       $scope.search = {};
-      $scope.salesTargetList = [];
+      $scope.preOrderList = [];
     };
 
     this.getSalesTargetListSuccess = function(response) {
       $this.meta.count = $this.meta.count || response.meta.count;
-      $scope.salesTargetList = $scope.salesTargetList.concat(response.salesTargets.map(function (salesTarget) {
+      $scope.preOrderList = $scope.preOrderList.concat(response.salesTargets.map(function (salesTarget) {
         salesTarget.startDate = dateUtility.formatDateForApp(salesTarget.startDate);
         salesTarget.endDate = dateUtility.formatDateForApp(salesTarget.endDate);
         return salesTarget;
@@ -74,7 +74,7 @@ angular.module('ts5App')
     };
 
     $scope.searchSalesTargetData = function() {
-      $scope.salesTargetList = [];
+      $scope.preOrderList = [];
       $this.meta = {
         count: undefined,
         limit: 100,
@@ -107,7 +107,7 @@ angular.module('ts5App')
     this.deleteSuccess = function() {
       $this.hideLoadingModal();
       $this.showToastMessage('success', 'Sales Targets', 'Sales Target successfully deleted');
-      $scope.salesTargetList = [];
+      $scope.preOrderList = [];
       $this.meta = {
         count: undefined,
         limit: 100,
