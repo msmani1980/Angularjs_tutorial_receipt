@@ -78,7 +78,7 @@
               <div class="form-group">
                 <label for="departureStation">Departure Station</label>
                 <ui-select name="departureStation" id="departureStation"  ng-model="search.departureStation" theme="bootstrap">
-                  <ui-select-match placeholder="Select Departure Station">{{ $select.selected.code }}</ui-select-match>
+                  <ui-select-match placeholder="Departure Station">{{ $select.selected.code }}</ui-select-match>
                   <ui-select-choices repeat="departureStation in stationList | filter: $select.search | orderBy:'code' | limitTo: 100">
                     <div ng-bind-html="departureStation.code | highlight: $select.search "></div>
                   </ui-select-choices>
@@ -89,7 +89,7 @@
               <div class="form-group">
                 <label for="arrivalStation">Arrival Station</label>
                 <ui-select name="arrivalStation" id="arrivalStation"  ng-model="search.arrivalStation" theme="bootstrap">
-                  <ui-select-match placeholder="Select Arrival Station">{{ $select.selected.code }}</ui-select-match>
+                  <ui-select-match placeholder="Arrival Station">{{ $select.selected.code }}</ui-select-match>
                   <ui-select-choices repeat="arrivalStation in stationList | filter: $select.search | orderBy:'code' | limitTo: 100">
                     <div ng-bind-html="arrivalStation.code | highlight: $select.search "></div>
                   </ui-select-choices>
@@ -100,7 +100,7 @@
               <div class="form-group">
                 <label for="currency">Currency</label>
                 <ui-select name="currency" id="currency"  ng-model="search.currency" theme="bootstrap">
-                  <ui-select-match placeholder="Select Currency">{{ $select.selected.code }}</ui-select-match>
+                  <ui-select-match placeholder="Currency">{{ $select.selected.code }}</ui-select-match>
                   <ui-select-choices repeat="currency in currencyList | filter: $select.search | orderBy:'code' | limitTo: 100">
                     <div ng-bind-html="currency.code | highlight: $select.search "></div>
                   </ui-select-choices>
@@ -113,7 +113,7 @@
               <div class="form-group">
                 <label for="itemCategory">Category</label>
                 <ui-select name="itemCategory" id="itemCategory" ng-model="search.itemCategory" theme="bootstrap">
-                  <ui-select-match placeholder="Select Category">{{ $select.selected.name }}</ui-select-match>
+                  <ui-select-match placeholder="Category">{{ $select.selected.name }}</ui-select-match>
                   <ui-select-choices repeat="category in itemCategoryList | filter: $select.search | orderBy:'orderBy' | limitTo: 100">
                     <div ng-bind-html="category.name | highlight: $select.search "></div>
                   </ui-select-choices>
@@ -124,7 +124,7 @@
               <div class="form-group">
                 <label for="item">Product</label>
                 <ui-select name="item" id="item" ng-model="search.item" theme="bootstrap">
-                  <ui-select-match placeholder="Select Item">{{ $select.selected.itemName }}</ui-select-match>
+                  <ui-select-match placeholder="Item">{{ $select.selected.itemName }}</ui-select-match>
                   <ui-select-choices repeat="item in itemList | filter: $select.search | orderBy:'name' | limitTo: 100">
                     <div ng-bind-html="item.itemName | highlight: $select.search "></div>
                   </ui-select-choices>
@@ -167,7 +167,7 @@
     </div>
     <br>
     <div class="table-responsive">
-      <table infinite-scroll="loadSalesTargetList()" class="table table-bordered table-hover">
+      <table infinite-scroll="loadPreOrderList()" class="table table-bordered table-hover">
         <thead>
         <tr>
           <th>Order Number</th>
@@ -182,15 +182,15 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="ng-scope" ng-repeat="salesTarget in preOrderList">
-          <td>{{ salesTarget.name }}</td>
-          <td>{{ salesTarget.description}}</td>
-          <td>{{ salesTarget.startDate}}</td>
-          <td>{{ salesTarget.endDate}}</td>
-          <td>{{ loadUpdatedOn(salesTarget) }}</td>
-          <td>{{ loadUpdatedBy(salesTarget) }}</td>
-          <td>{{ loadUpdatedBy(salesTarget) }}</td>
-          <td>{{ loadUpdatedBy(salesTarget) }}</td>
+        <tr class="ng-scope" ng-repeat="preOrder in preOrders">
+          <td>{{ preOrder.preOrderNumber }}</td>
+          <td>{{ preOrder.orderDate }}</td>
+          <td>{{ preOrder.paxFirstName }}</td>
+          <td>{{ preOrder.paxLastName }}</td>
+          <td>{{ preOrder.pnrNumber }}</td>
+          <td>{{  }}</td>
+          <td>{{ preOrder.orderStatus }}</td>
+          <td>{{ preOrder.totalAmount }} {{ preOrder.totalAmountCurrency }}</td>
           <td>
             <button class="btn btn-info btn-xs" ng-click="redirectToSalesTarget(salesTarget.id, 'view')" tabindex="0">
               <i class="fa fa-file"></i>

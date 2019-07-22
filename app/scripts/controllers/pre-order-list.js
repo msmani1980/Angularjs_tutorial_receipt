@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PreOrderListCtrl', function ($scope, $q, $location, dateUtility, lodash, messageService, accessService,) {
+  .controller('PreOrderListCtrl', function ($scope, $q, $location, dateUtility, lodash, messageService, accessService, preOrdersFactory) {
     var $this = this;
     this.meta = {
       count: undefined,
@@ -18,7 +18,7 @@ angular.module('ts5App')
 
     $scope.viewName = 'Pre-Orders';
     $scope.search = {};
-    $scope.preOrderList = [];
+    $scope.preOrders = [];
     $scope.loadingBarVisible = false;
     $scope.isSearch = false;
 
@@ -36,14 +36,13 @@ angular.module('ts5App')
     $scope.clearSearchForm = function() {
       $scope.isSearch = false;
       $scope.search = {};
-      $scope.preOrderList = [];
+      $scope.preOrders = [];
     };
 
     this.getPreOrderListSuccess = function(response) {
       $this.meta.count = $this.meta.count || response.meta.count;
-      $scope.preOrderList = $scope.preOrderList.concat(response.preOrders.map(function (preOrder) {
-        preOrder.startDate = dateUtility.formatDateForApp(preOrder.startDate);
-        preOrder.endDate = dateUtility.formatDateForApp(preOrder.endDate);
+      $scope.preOrders = $scope.preOrders.concat(response.preOrders.map(function (preOrder) {
+        preOrder.orderDate = dateUtility.formatDateForApp(preOrder.orderDate);
         return preOrder;
       }));
 
@@ -63,24 +62,24 @@ angular.module('ts5App')
       var payload = lodash.assign(angular.copy($scope.search), {
         limit: $this.meta.limit,
         offset: $this.meta.offset,
-        sortOn: 'name,startDate',
-        sortBy: 'ASC'
+        /*sortOn: 'name,startDate',
+        sortBy: 'ASC'*/
       });
 
       payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
       payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
-      preOrderFactory.getPreOrderList(payload).then($this.getPreOrderListSuccess);
+      preOrdersFactory.getPreOrderList(payload).then($this.getPreOrderListSuccess);
       $this.meta.offset += $this.meta.limit;
     };
 
     $scope.searchPreOrderData = function() {
-      $scope.preOrderList = [];
+      $scope.preOrders = [];
       $this.meta = {
         count: undefined,
         limit: 100,
         offset: 0,
-        sortOn: 'name,startDate',
-        sortBy: 'ASC'
+        /*sortOn: 'name,startDate',
+        sortBy: 'ASC'*/
       };
 
       $scope.isSearch = true;
@@ -122,14 +121,6 @@ angular.module('ts5App')
 
     this.initSuccessHandler = function() {
       angular.element('#search-collapse').addClass('collapse');
-    };
-
-    $scope.loadUpdatedOn = function (preOrder) {
-      return preOrder.updatedOn ? dateUtility.formatTimestampForApp(preOrder.updatedOn) : dateUtility.formatTimestampForApp(preOrder.createdOn);
-    };
-
-    $scope.loadUpdatedBy = function (preOrder) {
-      return preOrder.updatedByPerson ? preOrder.updatedByPerson.userName : preOrder.createdByPerson.userName;
     };
 
     this.makeInitPromises = function() {
