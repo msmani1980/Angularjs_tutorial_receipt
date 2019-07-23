@@ -8,7 +8,8 @@
  * Controller of the ts5App
  */
 angular.module('ts5App')
-  .controller('PreOrderListCtrl', function ($scope, $q, $location, dateUtility, lodash, messageService, accessService, preOrdersFactory) {
+  .controller('PreOrderListCtrl', function ($scope, $q, $location, dateUtility, lodash, messageService, accessService, preOrdersFactory,
+                                            stationsFactory, categoryFactory, currencyFactory) {
     var $this = this;
     this.meta = {
       count: undefined,
@@ -62,12 +63,18 @@ angular.module('ts5App')
       var payload = lodash.assign(angular.copy($scope.search), {
         limit: $this.meta.limit,
         offset: $this.meta.offset,
-        /*sortOn: 'name,startDate',
-        sortBy: 'ASC'*/
+        sortBy: 'ASC'
       });
 
-      payload.startDate = (payload.startDate) ? dateUtility.formatDateForAPI(payload.startDate) : $this.constructStartDate();
-      payload.endDate = (payload.endDate) ? dateUtility.formatDateForAPI(payload.endDate) : null;
+      payload.orderDateFrom = (payload.orderDateFrom) ? dateUtility.formatDateForAPI(payload.orderDateFrom) : null;
+      payload.orderDateTo = (payload.orderDateTo) ? dateUtility.formatDateForAPI(payload.orderDateTo) : null;
+      payload.flightDateFrom = (payload.flightDateFrom) ? dateUtility.formatDateForAPI(payload.flightDateFrom) : null;
+      payload.flightDateTo = (payload.flightDateTo) ? dateUtility.formatDateForAPI(payload.flightDateTo) : null;
+      payload.departureStation = (payload.departureStation) ? payload.departureStation.code : null;
+      payload.arrivalStation = (payload.arrivalStation) ? payload.arrivalStation.code : null;
+      payload.itemCategory = (payload.itemCategory) ? payload.itemCategory.name : null;
+      payload.paymentCurency = (payload.paymentCurency) ? payload.paymentCurency.currencyCode : null;
+
       preOrdersFactory.getPreOrderList(payload).then($this.getPreOrderListSuccess);
       $this.meta.offset += $this.meta.limit;
     };
@@ -78,8 +85,7 @@ angular.module('ts5App')
         count: undefined,
         limit: 100,
         offset: 0,
-        /*sortOn: 'name,startDate',
-        sortBy: 'ASC'*/
+        sortBy: 'ASC'
       };
 
       $scope.isSearch = true;
@@ -119,12 +125,63 @@ angular.module('ts5App')
       return dateUtility.isAfterOrEqualDatePicker(preOrder.endDate, dateUtility.nowFormattedDatePicker());
     };
 
+    this.getStations = function () {
+      return stationsFactory.getStationList(0).then($this.setStations);
+    };
+
+    this.setStations = function (dataFromAPI) {
+      $scope.stationList = angular.copy(dataFromAPI.response);
+    };
+
+    this.getItemCategories = function () {
+      return categoryFactory.getCategoryList({
+        expand: true,
+        sortBy: 'ASC',
+        sortOn: 'orderBy',
+        parentId: 0
+      }).then($this.setItemCategories);
+    };
+
+    this.setItemCategories = function (dataFromAPI) {
+      $scope.itemCategoryList = [];
+
+      // Flat out category list
+      dataFromAPI.salesCategories.forEach(function (category) {
+        $this.flatCategoryList(category, $scope.itemCategoryList);
+      });
+
+      // Assign order for flatten category list and create helper dictionary
+      var count = 1;
+      $scope.itemCategoryList.forEach(function (category) {
+        category.orderBy = count++;
+      });
+    };
+
+    this.flatCategoryList = function (category, categories) {
+      categories.push(category);
+
+      category.children.forEach(function (category) {
+        $this.flatCategoryList(category, categories);
+      });
+    };
+
+    this.getCurrenciesList = function() {
+      return currencyFactory.getCompanyGlobalCurrencies().then($this.setCurrenciesList);
+    };
+
+    this.setCurrenciesList = function(dataFromAPI) {
+      $scope.currencyList = dataFromAPI.response;
+    };
+
     this.initSuccessHandler = function() {
       angular.element('#search-collapse').addClass('collapse');
     };
 
     this.makeInitPromises = function() {
       var promises = [
+        $this.getStations(),
+        $this.getItemCategories(),
+        $this.getCurrenciesList()
       ];
       return promises;
     };
