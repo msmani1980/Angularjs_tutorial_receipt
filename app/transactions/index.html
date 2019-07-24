@@ -38,6 +38,42 @@ j = (j = i.length) > 3 ? j % 3 : 0;
 return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
 
+//for printing receipt
+String.prototype.formatLine = function (length, justify) {
+    var blank = "                                          ";
+    var text = this;
+    var line;
+    var len;
+    var temp;
+    switch (justify) {
+        case "L":
+            temp = text + blank;
+            line = temp.substr(0, length);
+            break;
+        case "R":
+            temp = blank + text;
+            line = temp.substr(temp.length - length);
+            break;
+        case "C":
+            len = (length - text.length) / 2;
+            line = blank.substr(0, len) + text + blank;
+            line = line.substr(0, length);
+            break;
+        default:
+            throw "formatLine() Invalid justification: " + justify;
+    }
+    return line;
+};
+// for printing receipt
+String.prototype.repeatString = function repeatString(count) {
+    var text = this;
+    var ret = "";
+    for (var i = 0; i < count; i++) {
+        ret = ret + text;
+    }
+    return ret;
+};
+
 function getParameterByName(name) {
 var name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]"),
 regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
