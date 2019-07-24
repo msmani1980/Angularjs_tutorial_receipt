@@ -49,7 +49,7 @@ tfoot {
 <div id="receipt-header">
 </div>
 
-<div id="dynamicReceipt"></div>
+<div id="dynamicReceipt" style="margin-top:100px"></div> <!-- //style="margin-left:400px" -->
 
 <script type="text/javascript">
 String.prototype.format = function () {
@@ -179,7 +179,8 @@ $(function () {
      
 	  var tableOfContent =  '<table align="center"><thead><tr><th colspan="2">Report   Receipts</th></tr></thead><tbody>';
 		  tableOfContent += '<tr><td>For Date Range &nbsp&nbsp </td><td> From&nbsp&nbsp'+getParameterByName("startDate")+' To&nbsp&nbsp '+getParameterByName("endDate")+'</td></tr>';
-		  tableOfContent += '<tr><td>For Transaction ID &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("transactionId") === '' ? '' : getParameterByName("transactionId"))+'</td></tr>';
+		  tableOfContent += '<tr><td>For Transaction ID &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("paymentId") === '' ? '' : getParameterByName("paymentId"))+'</td></tr>';
+		  tableOfContent += '<tr><td>For Shopping Cart ID &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("transactionId") === '' ? '' : getParameterByName("transactionId"))+'</td></tr>';
 		  tableOfContent += '<tr><td>For Flight Number &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("scheduleNumber") === '' ? '' : getParameterByName("scheduleNumber"))+'</td></tr>';
 		  tableOfContent += '<tr><td>For Store Instance ID &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("storeInstanceId") === '' ? '' : getParameterByName("storeInstanceId"))+'</td></tr>';
 		  tableOfContent += '<tr><td>For Store Number &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("storeNumber") === '' ? '' : getParameterByName("storeNumber"))+'</td></tr>';
@@ -203,12 +204,12 @@ $(function () {
 		 $("#dynamicReceipt").append('<div id=receiptId-'+index+'-'+transactionId+'><section id=receipt-template-'+index+'-'+transactionId+'></section>'
 												  +'<div class=\"text-center\" style=\"padding-top:20px\">'
 												  +'<section id=copyright-section-'+index+'-'+transactionId+' class=text-center>'
-												  +'<p>Copyright &copy; eGate Solutions</p></div></section>'
-												  +'<section><div id=signature-section-'+index+'-'+transactionId+ ' style=\"display:none; margin:20px; width: 580px;\"><p>SIGNATURE</p>'
+												  //+'<p>Copyright &copy; eGate Solutions</p>'
+												  +'</div></section><section><div id=signature-section-'+index+'-'+transactionId+ ' style=\"display:none; margin:20px; width: 580px;\"><p>SIGNATURE</p>'
 												  +'<div id=signature-'+index+'-'+transactionId+ ' style=\"border:1px; border-style:solid; width: 570px;\"></div></div></section><br></div>');
 		    $.ajax({
 			   type: 'GET',
-			   url: '/rsvr-email/caa/template/'+transactionId,
+			   url: '/rsvr-email/caa/sales-receipt-template/'+transactionId,
 			   async: false,
 			   success: function(data){
 			      $("#receiptId-"+index+"-"+transactionId).append(data);
@@ -238,22 +239,41 @@ $(function () {
 								}
 								sign = payment.signature;
 								if(!(sign === undefined) && sign!=null && sign.length>1){
-									$("#signature-section-"+index+"-"+cart.shoppingCartId).show();
-									$("#signature-"+index+"-"+cart.shoppingCartId).jSignature();
-									$("#signature-"+index+"-"+cart.shoppingCartId).jSignature("setData", "data:" + sign[0]+","+sign[1]);
-									var over = '<div id=over-'+index+'-'+cart.shoppingCartId+' style="position:absolute; width: 100%; height: 100%; top:100%; bottom:0; left:0; right: 0;"></div>';
+									$("#signature-section-"+index+"-"+transactionId).show();
+									$("#signature-"+index+"-"+transactionId).jSignature();
+									$("#signature-"+index+"-"+transactionId).jSignature("setData", "data:" + sign[0]+","+sign[1]);
+									var over = '<div id=over-'+index+'-'+transactionId+' style="position:absolute; width: 100%; height: 100%; top:100%; bottom:0; left:0; right: 0;"></div>';
 									var $over = $(over); 
-									$("#signature-"+index+"-"+cart.shoppingCartId).append($over);
+									$("#signature-"+index+"-"+transactionId).append($over);
 								}
 							});
-							cart.paymentByType = paymentByType;
-							cart.printed = false;
-							if(document.getElementById("receiptId-"+index+"-"+cart.shoppingCartId) !== null && cart.refunds !== null && cart.refunds.length > 0){
-								ko.cleanNode(document.getElementById("receiptId-"+index+"-"+cart.shoppingCartId));								
-							} 
-							ko.applyBindings(cart, document.getElementById("receiptId-"+index+"-"+cart.shoppingCartId));
-							GenerateBarCodes(cart);
 							
+							cart.paymentByType = paymentByType;
+							
+							/* //Refund template temp fix by hardCode - starts - todo
+							cart.printed = null;
+							
+							if(cart.route){
+								cart.arrivalStation = cart.route.arrivalStation;
+								cart.departureStation = cart.route.departureStation;
+							}
+							
+							if(cart.refundDateTime !== null){
+								cart.refundDateTime = cart.currentRefund.createdOn;
+							}
+							
+							if(cart.refundId == null){
+								cart.refundId = '';
+							}
+						
+							cart.promotionAdjustment = cart.currentRefund.promotionAdjustment;
+							cart.payment = paymentByType;
+							
+							//Refund template issues has been fixed by hardCode - ends */
+							
+							ko.cleanNode(document.getElementById("receiptId-"+index+"-"+transactionId));
+							ko.applyBindings(cart, document.getElementById("receiptId-"+index+"-"+transactionId));
+							GenerateBarCodes(cart);
 					   },
 					   error: function() {
 					     console.log('error ->'+transactionId);
