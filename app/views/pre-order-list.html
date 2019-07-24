@@ -98,12 +98,7 @@
             <div class="col-xs-12 col-sm-6 col-md-2">
               <div class="form-group">
                 <label for="currency">Currency</label>
-                <ui-select name="currency" id="currency"  ng-model="search.paymentCurency" theme="bootstrap">
-                  <ui-select-match placeholder="Currency">{{ $select.selected.currencyCode }}</ui-select-match>
-                  <ui-select-choices repeat="currency in currencyList | filter: $select.search | orderBy:'currencyCode' | limitTo: 100">
-                    <div ng-bind-html="currency.currencyCode | highlight: $select.search "></div>
-                  </ui-select-choices>
-                </ui-select>
+                <input ng-model="search.paymentCurency" type="text" class="form-control" id="currency" placeholder="Currency">
               </div>
             </div>
           </div>
@@ -111,12 +106,7 @@
             <div class="col-xs-12 col-sm-6 col-md-2">
               <div class="form-group">
                 <label for="itemCategory">Category</label>
-                <ui-select name="itemCategory" id="itemCategory" ng-model="search.itemCategory" theme="bootstrap">
-                  <ui-select-match placeholder="Category">{{ $select.selected.name }}</ui-select-match>
-                  <ui-select-choices repeat="category in itemCategoryList | filter: $select.search | orderBy:'orderBy' | limitTo: 100">
-                    <div ng-bind-html="category.name | highlight: $select.search "></div>
-                  </ui-select-choices>
-                </ui-select>
+                <input ng-model="search.itemCategory" type="text" class="form-control" id="itemCategory" placeholder="Category">
               </div>
             </div>
             <div class="col-xs-12 col-sm-6 col-md-2">
@@ -143,7 +133,6 @@
           <th>Customer First Name</th>
           <th>Customer Last Name</th>
           <th>PNR Number</th>
-          <th>Cabin Class</th>
           <th>Order Status</th>
           <th>Order Total</th>
           <th>Currency</th>
@@ -156,7 +145,6 @@
           <td>{{ preOrder.paxFirstName }}</td>
           <td>{{ preOrder.paxLastName }}</td>
           <td>{{ preOrder.pnrNumber }}</td>
-          <td>{{  }}</td>
           <td>{{ preOrder.orderStatus }}</td>
           <td>{{ preOrder.totalAmount }} {{ preOrder.totalAmountCurrency }}</td>
           <td>

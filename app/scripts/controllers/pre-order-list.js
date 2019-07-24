@@ -63,6 +63,8 @@ angular.module('ts5App')
       var payload = lodash.assign(angular.copy($scope.search), {
         limit: $this.meta.limit,
         offset: $this.meta.offset,
+        orderDate: $this.constructStartDate(),
+        sortOn: 'orderDate',
         sortBy: 'ASC'
       });
 
@@ -72,8 +74,6 @@ angular.module('ts5App')
       payload.flightDateTo = (payload.flightDateTo) ? dateUtility.formatDateForAPI(payload.flightDateTo) : null;
       payload.departureStation = (payload.departureStation) ? payload.departureStation.code : null;
       payload.arrivalStation = (payload.arrivalStation) ? payload.arrivalStation.code : null;
-      payload.itemCategory = (payload.itemCategory) ? payload.itemCategory.name : null;
-      payload.paymentCurency = (payload.paymentCurency) ? payload.paymentCurency.currencyCode : null;
 
       preOrdersFactory.getPreOrderList(payload).then($this.getPreOrderListSuccess);
       $this.meta.offset += $this.meta.limit;
@@ -85,6 +85,7 @@ angular.module('ts5App')
         count: undefined,
         limit: 100,
         offset: 0,
+        sortOn: 'orderDate',
         sortBy: 'ASC'
       };
 
