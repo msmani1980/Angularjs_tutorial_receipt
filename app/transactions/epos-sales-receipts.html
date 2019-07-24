@@ -306,9 +306,8 @@ function onPageStatus(){
 
 function generatePDF(){
 	$('#pdfButton').hide();
-	//setTimeout(function(){ window.print(); }, 2000);
 	window.print();
-	$('#pdfButton').show();
+	setTimeout(function(){ $('#pdfButton').show(); }, 1000);
 }
 
 </script>
