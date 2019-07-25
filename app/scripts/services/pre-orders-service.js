@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('preOrdersService', function (ENV, $resource, globalMenuService) {
+  .service('preOrdersService', function (ENV, $resource) {
     var requestURL = ENV.apiUrl + '/rsvr/api/preorders/:id';
 
     var requestParameters = {

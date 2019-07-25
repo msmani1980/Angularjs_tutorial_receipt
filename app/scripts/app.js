@@ -539,7 +539,7 @@ angular.module('ts5App', [
     templateUrl: 'views/sales-targets.html',
     controller: 'SalesTargetsCtrl',
     controllerAs: 'salesTargets'
-  }).when('/pre-orders/:action/:id?', {
+  }).when('/pre-orders/view/:id?', {
     templateUrl: 'views/pre-order.html',
     controller: 'PreOrderCtrl',
     controllerAs: 'preOrder'

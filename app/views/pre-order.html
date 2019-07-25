@@ -2,7 +2,7 @@
   <div class="edit-controls">
     <div class="row">
       <div class="col-xs-6">
-        <h2 class="view-name">{{viewName}}</h2>
+        <h2 class="view-name">{{viewName}}: {{ preOrder.paxFirstName }} {{ preOrder.paxLastName }}</h2>
       </div>
 
       <div class="col-xs-6 text-right">
@@ -15,406 +15,146 @@
   <form name="salesTargetDataForm" class="edit-form" novalidate>
     <div class="panel panel-default">
       <div class="panel-body">
-        <div class="row">
-          <div class="col-xs-12 col-sm-2" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Name')">
-            <div class="form-group">
-              <label for="salesTargetName">Name *</label>
-              <input
-                ng-model="salesTarget.name"
-                type="text"
-                name="Name"
-                required
-                class="form-control"
-                id="salesTargetName"
-                placeholder="Name"
-                maxlength="50"
-                ng-disabled="isDisabled()">
+
+        <h3><strong>Payment</strong></h3>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                  <label>First Name</label><br />
+                  {{ preOrder.paxFirstName }}
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                  <label>Last Name</label><br />
+                  {{ preOrder.paxLastName }}
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                  <label>Frequent Flyer Number</label><br />
+                  {{ preOrder.frequentFlyerNumber }}
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="col-xs-12 col-sm-2" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Name')">
-            <div class="form-group">
-              <label for="salesTargetName">Name *</label>
-              <input
-                ng-model="salesTarget.name"
-                type="text"
-                name="Name"
-                required
-                class="form-control"
-                id="salesTargetName"
-                placeholder="Name"
-                maxlength="50"
-                ng-disabled="isDisabled()">
-            </div>
-          </div>
-          <div class="col-xs-12 col-sm-2" ng-class="validation.calendarCssClass(salesTargetDataForm, salesTarget.startDate)">
-            <date-picker-field
-              ng-if="isLoadingCompleted"
-              form="salesTargetDataForm"
-              name="EffectiveStartDate"
-              label="Effective Start Date"
-              disable="isDisabled()"
-              required="true"
-              disable-past="true"
-              ng-model="salesTarget.startDate">
-            </date-picker-field>
-          </div>
-          <div class="col-xs-12 col-sm-2" ng-class="validation.calendarCssClass(salesTargetDataForm, salesTarget.endDate)">
-            <date-picker-field
-              ng-if="isLoadingCompleted"
-              form="salesTargetDataForm"
-              name="EffectiveEndDate"
-              label="Effective End Date"
-              disable="readOnly || shouldDisableEndDate"
-              ng-model="salesTarget.endDate"
-              end-current-effective="!viewEditItem"
-              custom-effective="true"
-              custom-date="salesTarget.endDate"
-              required="true">
-            </date-picker-field>
-          </div>
-          <div class="col-xs-12 col-sm-2" ng-class="validation.fieldCssClass(salesTargetDataForm, 'salesTargetCategory')">
-            <div class="form-group">
-              <label for="salesTargetCategory">Category *</label>
-              <ui-select theme="bootstrap" required ng-model="salesTarget.category" ng-disabled="isDisabled() || !areEffectiveDatesSet()" name="salesTargetCategory" id="salesTargetCategory">
-                <ui-select-match placeholder="Category">{{ $select.selected.name }}</ui-select-match>
-                <ui-select-choices repeat="category in salesTargetCategoryList | filter: {name:$select.search} | orderBy: 'name'">
-                  <div ng-bind-html="category.name | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
-            </div>
-          </div>
-          <div class="col-xs-12 col-sm-2" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Value')">
-            <div class="form-group">
-              <label for="salesTargetName">Value *</label>
-              <input
-                ng-model="salesTarget.value"
-                type="text"
-                custom-validity
-                custom-pattern="number"
-                name="Value"
-                required
-                class="form-control"
-                id="salesTargetValue"
-                placeholder="Value"
-                ng-disabled="isDisabled()">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-12 col-sm-12">
-            <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'Description')">
-              <label for="salesTargetDescription">Description *</label>
-              <textarea
-                ng-model="salesTarget.description"
-                type="text"
-                name="Description"
-                maxlength="250"
-                required
-                class="form-control"
-                id="salesTargetDescription"
-                placeholder="Description"
-                ng-disabled="isDisabled()">
-              </textarea>
+            <div class="row">
+              <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                  <label>Payment Type</label><br />
+                  {{ preOrder.paymentMethodName }}
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                  <label>Amount Paid</label><br />
+                  {{ preOrder.paymentAmount }} {{ preOrder.paymentCurency }}
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                  <label>Card Type</label><br />
+                  {{ preOrder.ccType }}
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                  <label>Last 4 Digits</label><br />
+                  {{ preOrder.ccLast4Digit }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <h3><strong>Restrictions</strong></h3>
+        <h3><strong>Orders</strong></h3>
 
-        <div class="row" ng-hide="areEffectiveDatesSet()">
-          <div class="col-xs-12 col-sm-12">
-            <div class="form-group menu-alert-info">
-              <i class="fa fa-exclamation-triangle"></i> Please select effective date range first.
-            </div>
-          </div>
-        </div>
+        <div id="orders">
+          <div ng-repeat="order in preOrder.flightData" class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-xs-12 col-sm-2">
+                  <div class="form-group">
+                    <label>Flight ID</label><br />
+                    {{ order.preOrderId }}
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                  <div class="form-group">
+                    <label>Flight Number</label><br />
+                    {{ order.flightNumber }}
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                  <div class="form-group">
+                    <label>Flight Date</label><br />
+                    {{ order.flightDate }}
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                  <div class="form-group">
+                    <label>Departure Time</label><br />
+                    {{ order.departureTime }}
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                  <div class="form-group">
+                    <label>Departure Station</label><br />
+                    {{ order.departureStation }}
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                  <div class="form-group">
+                    <label>Arrival Station</label><br />
+                    {{ order.arrivalStation }}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12 col-sm-12">
+                  <h3><strong>Items</strong></h3>
+                  <table class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th>Code</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Price Per Item</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="ng-scope" ng-repeat="item in order.itemData">
+                        <td>{{ item.itemCode }}</td>
+                        <td><img ng-if="item.itemImage" ng-src="item.itemImage" style="max-width: 50px; max-height: 50px;"></td>
+                        <td>{{ item.itemName }}</td>
+                        <td>{{ item.itemDescription }}</td>
+                        <td>{{ item.itemCategory }}</td>
+                        <td>{{ item.itemSubCategory }}</td>
+                        <td>{{ item.itemPrice }} {{ preOrder.totalAmountCurrency }}</td>
+                        <td>{{ item.qtyOrdered }}</td>
+                        <td>{{ item.itemPrice * item.qtyOrdered }}</td>
+                      </tr>
+                      <tr>
+                        <td colspan="6"></td>
+                        <td><strong>Total:</strong></td>
+                        <td><strong>{{ order.totalItems }}</strong></td>
+                        <td><strong>{{ order.totalPrice }} {{ preOrder.totalAmountCurrency }}</strong></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
 
-        <div id="restrictions" ng-if="areEffectiveDatesSet()">
-          <h3>Schedules</h3>
-          <div class="row">
-            <div class="col-xs-12 col-sm-12">
-              <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'schedules')">
-                <ui-select name="schedules" id="schedules" multiple ng-disabled="isDisabled()" ng-model="salesTarget.schedules" theme="bootstrap">
-                  <ui-select-match placeholder="Select Schedules">{{ $item.scheduleNumber }}</ui-select-match>
-                  <ui-select-choices repeat="schedule in scheduleList | filter: $select.search | orderBy:'scheduleNumber' | limitTo: 100">
-                    <div ng-bind-html="schedule.scheduleNumber | highlight: $select.search "></div>
-                  </ui-select-choices>
-                </ui-select>
-              </div>
-            </div>
-          </div>
-
-          <h3>Barset Numbers</h3>
-          <div class="row">
-            <div class="col-xs-12 col-sm-12">
-              <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'stores')">
-                <ui-select name="stores" id="stores" multiple ng-disabled="isDisabled()" ng-model="salesTarget.stores" theme="bootstrap">
-                  <ui-select-match placeholder="Select Barsets">{{ $item.storeNumber }}</ui-select-match>
-                  <ui-select-choices repeat="store in storeList | filter: $select.search | orderBy:'storeNumber' | limitTo: 100">
-                    <div ng-bind-html="store.storeNumber | highlight: $select.search "></div>
-                  </ui-select-choices>
-                </ui-select>
-              </div>
-            </div>
-          </div>
-
-          <h3>Crew</h3>
-          <div class="row">
-            <div class="col-xs-12 col-sm-12">
-              <div class="form-group" ng-class="validation.fieldCssClass(salesTargetDataForm, 'employees')">
-                <ui-select name="employees" id="employees" multiple ng-disabled="isDisabled()" ng-model="salesTarget.employees" theme="bootstrap">
-                  <ui-select-match placeholder="Select Crew">{{ $item.firstName }} {{ $item.lastName }}</ui-select-match>
-                  <ui-select-choices repeat="employee in employeeList | filter: $select.search | orderBy:'lastName' | limitTo: 100">
-                    <div ng-bind-html="employee.firstName + ' ' + employee.lastName | highlight: $select.search "></div>
-                  </ui-select-choices>
-                </ui-select>
-              </div>
-            </div>
-          </div>
-
-          <h3>
-            Stations
-            <button type="button" ng-hide="isDisabled()" class="btn btn-sm btn-primary pull-right" ng-click="addStation()">
-              <i class="fa fa-plus"></i> Add
-            </button>
-          </h3>
-          <div class="row">
-            <div class="col-xs-12 col-sm-6">
-              <div ng-if="salesTarget.stations.length === 0">
-                No station restrictions added.
-              </div>
-              <div class="form-group" ng-if="salesTarget.stations.length > 0">
-                <table class="table">
-                  <thead>
-                  <tr>
-                    <th style="width:40%">Departure</th>
-                    <th style="width:40%">Arrival</th>
-                    <th style="text-align: center" ng-if="!isDisabled()">Actions</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr ng-repeat="station in salesTarget.stations track by $index">
-                    <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'departureStation[' + $index + ']')">
-                      <ui-select name="departureStation[$index]" id="departureStation[$index]" ng-disabled="isDisabled()" ng-model="station.departure" theme="bootstrap">
-                        <ui-select-match placeholder="Select Departure Station">{{ $select.selected.code }}</ui-select-match>
-                        <ui-select-choices repeat="departureStation in stationList | filter: $select.search | orderBy:'code' | limitTo: 100">
-                          <div ng-bind-html="departureStation.code | highlight: $select.search "></div>
-                        </ui-select-choices>
-                      </ui-select>
-                    </td>
-                    <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'arrivalStation[' + $index + ']')">
-                      <ui-select name="arrivalStation[$index]" id="arrivalStation[$index]" ng-disabled="isDisabled()" ng-model="station.arrival" theme="bootstrap">
-                        <ui-select-match placeholder="Select Arrival Station">{{ $select.selected.code }}</ui-select-match>
-                        <ui-select-choices repeat="arrivalStation in stationList | filter: $select.search | orderBy:'code' | limitTo: 100">
-                          <div ng-bind-html="arrivalStation.code | highlight: $select.search "></div>
-                        </ui-select-choices>
-                      </ui-select>
-                    </td>
-                    <td ng-if="!isDisabled()" style="text-align: center">
-                      <button class="btn btn-danger btn-xs" ng-click="removeStation($index)">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
             </div>
           </div>
 
-          <h3>
-            Departure Times
-            <button type="button" ng-hide="isDisabled()" class="btn btn-sm btn-primary pull-right" ng-click="addDepartureTime()">
-              <i class="fa fa-plus"></i> Add
-            </button>
-          </h3>
-          <div class="row">
-            <div class="col-xs-12 col-sm-6">
-              <div ng-if="salesTarget.departureTimes.length === 0">
-                No departure time restrictions added.
-              </div>
-              <div class="form-group" ng-if="salesTarget.departureTimes.length > 0">
-                <table class="table">
-                  <thead>
-                  <tr>
-                    <th style="width:40%">From</th>
-                    <th style="width:40%">To</th>
-                    <th style="text-align: center" ng-if="!isDisabled()">Actions</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr ng-repeat="departureTime in salesTarget.departureTimes track by $index">
-                    <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'departureTimeFrom[' + $index + ']')">
-                      <input
-                        ng-disabled="isDisabled()"
-                        maxlength="5"
-                        ng-model="departureTime.from"
-                        oninput="this.value=this.value.replace(/[^0-9:]/g,'');"
-                        class="form-control"
-                        name="departureTimeFrom[$index]"
-                        id="departureTimeFrom[$index]"
-                        ng-pattern="regexp.t24">
-                    </td>
-                    <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'departureTimeTo[' + $index + ']')">
-                      <input
-                        ng-disabled="isDisabled()"
-                        maxlength="5"
-                        ng-model="departureTime.to"
-                        oninput="this.value=this.value.replace(/[^0-9:]/g,'');"
-                        class="form-control"
-                        name="departureTimeTo[$index]"
-                        id="departureTimeTo[$index]"
-                        ng-pattern="regexp.t24">
-                    </td>
-                    <td ng-if="!isDisabled()" style="text-align: center">
-                      <button class="btn btn-danger btn-xs" ng-click="removeDepartureTime($index)">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-
-              </div>
-            </div>
-          </div>
-
-          <h3>
-            Departure Dates
-            <button type="button" ng-hide="isDisabled()" class="btn btn-sm btn-primary pull-right" ng-click="addDepartureDate()">
-              <i class="fa fa-plus"></i> Add
-            </button>
-          </h3>
-          <div class="row">
-            <div class="col-xs-12 col-sm-6">
-              <div ng-if="salesTarget.departureDates.length === 0">
-                No departure date restrictions added.
-              </div>
-              <div class="form-group"  ng-if="salesTarget.departureDates.length > 0">
-                <table class="table">
-                  <thead>
-                  <tr>
-                    <th style="width:40%">From</th>
-                    <th style="width:40%">To</th>
-                    <th style="text-align: center" ng-if="!isDisabled()">Actions</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr ng-repeat="departureDate in salesTarget.departureDates track by $index">
-                    <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'departureDateFrom[' + $index + ']')">
-                      <date-picker-field
-                        form="salesTargetDataForm"
-                        name="departureDateFrom[$index]"
-                        disable="isDisabled()"
-                        disable-past="true"
-                        ng-model="departureDate.from">
-                      </date-picker-field>
-                    </td>
-                    <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'departureDateTo[' + $index + ']')">
-                      <date-picker-field
-                        form="salesTargetDataTo"
-                        name="departureDateTo[$index]"
-                        disable="isDisabled()"
-                        disable-past="true"
-                        ng-model="departureDate.to">
-                      </date-picker-field>
-                    </td>
-                    <td ng-if="!isDisabled()" style="text-align: center">
-                      <button class="btn btn-danger btn-xs" ng-click="removeDepartureDate($index)">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-
-              </div>
-            </div>
-          </div>
-
-          <h3>
-            Item Categories
-            <button type="button" ng-hide="isDisabled()" class="btn btn-sm btn-primary pull-right" ng-click="addItemCategory()">
-              <i class="fa fa-plus"></i> Add
-            </button>
-          </h3>
-          <div class="row">
-            <div class="col-xs-12 col-sm-6">
-              <div ng-if="salesTarget.itemCategories.length === 0">
-                No item category restrictions added.
-              </div>
-              <div class="form-group" ng-if="salesTarget.itemCategories.length > 0">
-                <table class="table">
-                  <thead>
-                  <tr>
-                    <th style="width:80%">Category</th>
-                    <th style="text-align: center" ng-if="!isDisabled()">Actions</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr ng-repeat="itemCategory in salesTarget.itemCategories track by $index">
-                    <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'itemCategory[' + $index + ']')">
-                      <ui-select name="itemCategory[$index]" id="itemCategory[$index]" ng-disabled="isDisabled()" ng-model="itemCategory.value" theme="bootstrap">
-                        <ui-select-match placeholder="Select Item Category">{{ $select.selected.name }}</ui-select-match>
-                        <ui-select-choices repeat="category in itemCategoryList | filter: $select.search | filter: isItemCategoryNotInUse | orderBy:'orderBy' | limitTo: 100">
-                          <div ng-bind-html="category.name | highlight: $select.search "></div>
-                        </ui-select-choices>
-                      </ui-select>
-                    </td >
-                    <td ng-if="!isDisabled()" style="text-align: center">
-                      <button class="btn btn-danger btn-xs" ng-click="removeItemCategory($index)">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-
-              </div>
-            </div>
-          </div>
-
-          <h3>
-            Items
-            <button type="button" ng-hide="isDisabled()" class="btn btn-sm btn-primary pull-right" ng-click="addItem()">
-              <i class="fa fa-plus"></i> Add
-            </button>
-          </h3>
-          <div class="row">
-            <div class="col-xs-12 col-sm-6">
-              <div ng-if="salesTarget.items.length === 0">
-                No item restrictions added.
-              </div>
-              <div class="form-group" ng-if="salesTarget.items.length > 0">
-                <table class="table">
-                  <thead>
-                  <tr>
-                    <th style="width:80%">Item</th>
-                    <th style="text-align: center" ng-if="!isDisabled()">Actions</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr ng-repeat="item in salesTarget.items track by $index">
-                    <td ng-class="validation.fieldCssClass(salesTargetDataForm, 'item[' + $index + ']')">
-                      <ui-select name="item[$index]" id="item[$index]" ng-disabled="isDisabled()" ng-model="item.value" theme="bootstrap">
-                        <ui-select-match placeholder="Select Item">{{ $select.selected.itemName }}</ui-select-match>
-                        <ui-select-choices repeat="i in itemList | filter: $select.search | filter: isItemNotInUse | orderBy:'name' | limitTo: 100">
-                          <div ng-bind-html="i.itemName | highlight: $select.search "></div>
-                        </ui-select-choices>
-                      </ui-select>
-                    </td>
-                    <td ng-if="!isDisabled()" style="text-align: center">
-                      <button class="btn btn-danger btn-xs" ng-click="removeItem($index)">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-
-              </div>
-            </div>
-          </div>
           <div class="row">
             <div class="col-xs-12 col-sm-12 form-group"></div>
           </div>
