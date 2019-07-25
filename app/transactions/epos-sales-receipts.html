@@ -207,13 +207,13 @@ $(function () {
 												  +'<div id=signature-'+index+'-'+transactionId+ ' style=\"border:1px; border-style:solid; width: 570px;\"></div></div></section><br></div>');
 		    $.ajax({
 			   type: 'GET',
-			   url: '/rsvr-email/caa/sales-receipt-template/'+transactionId,
+			   url: 'https://w6-ts5-qa.egatesoln.com/rsvr-email/caa/sales-receipt-template/'+transactionId,
 			   async: false,
 			   success: function(data){
 			      $("#receiptId-"+index+"-"+transactionId).append(data);
 			      $.ajax({
 					   type: 'GET',
-					   url: '/rsvr-email/caa/data/'+transactionId,
+					   url: 'https://w6-ts5-qa.egatesoln.com/rsvr-email/caa/data/'+transactionId,
 					   async: false,
 					   success: function(data){
 						    var cart = {};
