@@ -57,6 +57,11 @@
                 <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.seatNumber">
                 Seat Number</a>
             </li>
+            <li ng-click="$event.stopPropagation();">
+              <a ng-click="toggleColumnView('deviceId')">
+                <input ng-click="$event.stopPropagation();" type="checkbox" ng-model="displayColumns.deviceId">
+                Device/MAC ID</a>
+            </li>
           </ul>
         </div>
 
@@ -198,6 +203,12 @@
                 <input ng-model="search.seatNumberLoc" custom-pattern="alphanumericSpaces" type="text" class="form-control" id="seat-number-loc" name="seatNumberloc"  placeholder="22 or 22B or B"/>
               </div>
             </div>
+            <div class="col-md-2 col-sm-6">
+              <div class="form-group">
+                <label for="device-number-loc">Device / MAC Id</label>
+                <input ng-model="search.deviceId" custom-pattern="alphanumericSpaces" type="text" class="form-control" id="device-number-loc" name="deviceIdloc"  placeholder="BCA8A68BEC73"/>
+              </div>
+            </div>
 
           </div>
           <div class="row" ng-show="isCreditCardPaymentSelected">
@@ -279,6 +290,7 @@
       <th>Host Reference Number</th>
       <th>CC Transaction ID</th>
       <th ng-show="displayColumns.seatNumber">Seat Number</th>
+      <th ng-show="displayColumns.deviceId">Device / MAC ID</th> 
       <th>Amount</th>
       <th ng-show="displayColumns.scheduleNumber">Schedule Number</th>
       <th ng-show="displayColumns.scheduleDate">Schedule Date</th>
