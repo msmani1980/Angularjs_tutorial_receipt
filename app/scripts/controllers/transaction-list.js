@@ -300,6 +300,10 @@ angular.module('ts5App')
       if (generateGetTransactionsPayload().storeNumber) {
         $scope.requestParam += '&storeNumber=' + generateGetTransactionsPayload().storeNumber;
       }
+      
+      if (generateGetTransactionsPayload().deviceId) {
+        $scope.requestParam += '&deviceId=' + generateGetTransactionsPayload().deviceId;
+      }
     }
     
     $scope.showSelectedTransactionDetails = function () {
