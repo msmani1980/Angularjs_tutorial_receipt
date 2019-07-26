@@ -182,7 +182,6 @@ $(function () {
 		  tableOfContent += '<tr><td>For Transaction ID &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("paymentId") === '' ? '' : getParameterByName("paymentId"))+'</td></tr>';
 		  tableOfContent += '<tr><td>For Flight Number &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("scheduleNumber") === '' ? '' : getParameterByName("scheduleNumber"))+'</td></tr>';
 		  tableOfContent += '<tr><td>For Store Number &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("storeNumber") === '' ? '' : getParameterByName("storeNumber"))+'</td></tr>';
-		  tableOfContent += '<tr><td>For Device / MAC ID &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("deviceId") === '' ? '' : getParameterByName("deviceId"))+'</td></tr>';
 		  tableOfContent += '</tbody></table>';
 	
     $("#receipt-header").append(tableOfContent);
