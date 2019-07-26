@@ -13,7 +13,7 @@
     </div>
   </div>
 
-  <div class="sales-target-data-list">
+  <div class="pre-orders-data-list">
 
     <div class="panel panel-default no-transition" id="search-collapse">
       <form name="preOrderSearchForm" ng-submit="searchPreOrderData()">
@@ -140,7 +140,7 @@
         </thead>
         <tbody>
         <tr class="ng-scope" ng-repeat="preOrder in preOrders">
-          <td>{{ preOrder.preOrderNumber }}</td>
+          <td><a ng-href="/#/pre-orders/view/{{ preOrder.id }}">{{ preOrder.preOrderNumber }}</a></td>
           <td>{{ preOrder.orderDate }}</td>
           <td>{{ preOrder.paxFirstName }}</td>
           <td>{{ preOrder.paxLastName }}</td>
