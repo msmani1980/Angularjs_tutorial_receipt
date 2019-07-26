@@ -9,7 +9,7 @@
  */
 angular.module('ts5App')
   .controller('TransactionListCtrl', function ($scope, $q, $filter, transactionFactory, recordsService, currencyFactory,
-                                               stationsService, globalMenuService, dateUtility, payloadUtility, messageService) {
+                                               stationsService, globalMenuService, dateUtility, payloadUtility) {
     var $this = this;
     $scope.windowRef = null;
     $scope.requestParam = null;
@@ -262,6 +262,7 @@ angular.module('ts5App')
     $scope.searchTransactions = function () {
       $scope.isSearchLoading = true;
       $scope.isSearch = true;
+      $scope.displayError = false;
       clearTransactions();
       setDefaultMetaPayload();
       salesReceiptRequestParam();
@@ -278,6 +279,11 @@ angular.module('ts5App')
     };
     
     function salesReceiptRequestParam() {
+      if (!$scope.search.transactionStartDate || !$scope.search.transactionEndDate) {
+        $scope.displayError = true;
+        $scope.errorResponse = { statusText: 'Select Date Range!' };
+        return;
+      }
 
       $scope.requestParam = 'startDate=' + generateGetTransactionsPayload().transactionStartDate + '&endDate=' + generateGetTransactionsPayload().transactionEndDate;
 
@@ -312,7 +318,8 @@ angular.module('ts5App')
       }
       
       if (!$scope.search.transactionStartDate || !$scope.search.transactionEndDate) {
-        showMessage('Please Select Date Range...', 'info');
+        $scope.displayError = true;
+        $scope.errorResponse = { statusText: 'Select Date Range!' };
         return;
       }
       
@@ -325,9 +332,12 @@ angular.module('ts5App')
 
       data = data.replace(/,\s*$/, '');
       if (data.length === 0) {
-        showMessage('Please Select at least one ePOS Receipts...', 'warnning');
+        $scope.displayError = true;
+        $scope.errorResponse = { statusText: 'Select at least one record!' };
         return;
       }
+      
+      $scope.displayError = false;
       
       localStorage.removeItem('receiptTxnIds');
       localStorage.setItem('receiptTxnIds', data);
@@ -352,10 +362,6 @@ angular.module('ts5App')
         $scope.transactions[i].selected = $scope.isAllChecked;
       }
     };
-    
-    function showMessage(message, messageType) {
-      messageService.display(messageType, '<strong>EPOS Receipts</strong>: ' + message);
-    }
     
     function sanitizeSearchPayload(payload) {
       payloadUtility.sanitize(payload);
