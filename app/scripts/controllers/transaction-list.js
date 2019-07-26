@@ -245,7 +245,7 @@ angular.module('ts5App')
       }
 
       showLoadingBar();
-
+      salesReceiptRequestParam();
       transactionFactory.getTransactionList(generateGetTransactionsPayload()).then(appendTransactions, $this.showResponseError);
       $this.meta.offset += $this.meta.limit;
     };
