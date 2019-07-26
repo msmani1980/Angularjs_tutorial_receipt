@@ -27,8 +27,8 @@ angular.module('ts5App')
 
       response.flightData.forEach(function (flightData) {
         flightData.flightDate = dateUtility.formatDateForApp(flightData.flightDate);
-        flightData.totalItems = lodash.sum(flightData.itemData.map(function (item) { return item.qtyOrdered } ))
-        flightData.totalPrice = lodash.sum(flightData.itemData.map(function (item) { return item.itemPrice } ))
+        flightData.totalItems = lodash.sum(flightData.itemData.map(function (item) { return item.qtyOrdered; } ));
+        flightData.totalPrice = lodash.sum(flightData.itemData.map(function (item) { return item.itemPrice; } ));
       });
 
       $scope.preOrder = response;
