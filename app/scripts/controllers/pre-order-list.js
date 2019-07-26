@@ -55,6 +55,7 @@ angular.module('ts5App')
     };
 
     $scope.loadPreOrderList = function() {
+      /*jshint maxcomplexity:8 */
       if ($this.meta.offset >= $this.meta.count) {
         return;
       }
