@@ -82,7 +82,8 @@ angular.module('ts5App')
       $scope.isSearch = false;
       $scope.transactions = [];
       $scope.isSearchLoading = false;
-      $scope.requestParam = false;
+      $scope.requestParam = '';
+      angular.element('.loading-no-data').hide();
     };
     
     function salesReceiptRequestParam() {
