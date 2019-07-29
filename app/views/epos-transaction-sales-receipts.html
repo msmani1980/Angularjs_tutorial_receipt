@@ -1,0 +1,67 @@
+<div class="fluid-container module-container">
+
+  <div class="list-controls">
+    <div class="row item-list-row">
+      <div class="col-xs-4">
+        <h2 class="view-name">{{viewName}}</h2>
+      </div>
+    </div>
+	<error-dialog form-object="form" error-response="errorResponse" display="displayError">
+	</error-dialog>
+    <div class="form-group">
+    
+      <form name="salesReceiptSearchForm" ng-submit="generateTransactionSalesReceipts()">
+       
+	  	 <div class="form-group">
+		  	  <date-picker
+	              element-class="col-xs-2 col-sm-2"
+	              start-date-model="search.transactionStartDate"
+	              end-date-model="search.transactionEndDate"
+	              label-from="Effective From *"
+	              label-to="Effective To *"
+	              required="true"
+	              is-search-field="true">
+	            </date-picker>
+	  	  </div>
+	  	  
+	  	  <div class="form-group">
+		      <label class="col-sm-2 control-label" for="schedule-number">Flight Number</label>
+		      <span class="col-sm-2 input-group">
+		       <input ng-model="search.scheduleNumber" type="text" class="form-control" id="schedule-number" form="salesReceiptSearchForm" />
+		      </span>
+	  	  </div>
+	  	  
+	  	   <div class="form-group">
+		      <label class="col-sm-2 control-label" for="store-number">Barset Number</label>
+		      <span class="col-sm-2 input-group">
+                <input ng-model="search.storeNumber" type="text" class="form-control" id="store-number" form="salesReceiptSearchForm" />
+		      </span>
+	  	  </div>
+	  	  
+	  	  <div class="form-group">
+		      <label class="col-sm-2 control-label" for="payment-id">Transaction ID</label>
+		      <span class="col-sm-2 input-group">
+		       <input ng-model="search.paymentId" type="text" class="form-control" id="payment-id" form="salesReceiptSearchForm" />
+		      </span>
+	  	  </div>
+	  	  
+	  	  <div class="form-group">
+		      <label class="col-sm-2 control-label" for="transaction-id">Shopping Cart Id</label>
+		      <span class="col-sm-2 input-group">
+		       <input ng-model="search.transactionId" type="text" class="form-control" id="transaction-id" form="salesReceiptSearchForm" />
+		      </span>
+	  	  </div>
+	  	  
+       <div class="panel-footer text-left">
+          <button type="button" class="btn btn-default" ng-click="clearSearch()">Clear</button>
+          <button type="submit" class="btn btn-primary" ng-disabled="isSearchLoading" >View Multiple Receipts</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+ <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading Please Wait...</p>
+ <p class="loading-no-data alert alert-info text-center" style="display: none"> No Records Found</p>
+ 
+ </div>
+<dynamic-left-nav></dynamic-left-nav>
