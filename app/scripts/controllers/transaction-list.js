@@ -9,9 +9,10 @@
  */
 angular.module('ts5App')
   .controller('TransactionListCtrl', function ($scope, $q, $filter, transactionFactory, recordsService, currencyFactory,
-                                               stationsService, globalMenuService, dateUtility, payloadUtility, messageService) {
+                                               stationsService, globalMenuService, dateUtility, payloadUtility) {
     var $this = this;
     $scope.windowRef = null;
+    $scope.requestParam = null;
     $scope.viewName = 'Transactions';
     $scope.transactions = [];
     $scope.transactionTypes = ['SALE', 'REFUND', 'EmployeePurchase'];
@@ -244,7 +245,7 @@ angular.module('ts5App')
       }
 
       showLoadingBar();
-
+      salesReceiptRequestParam();
       transactionFactory.getTransactionList(generateGetTransactionsPayload()).then(appendTransactions, $this.showResponseError);
       $this.meta.offset += $this.meta.limit;
     };
@@ -255,14 +256,16 @@ angular.module('ts5App')
       $scope.transactions = [];
       $scope.isSearchLoading = false;
       $scope.isAllChecked = false;
+      $scope.requestParam = false;
     };
 
     $scope.searchTransactions = function () {
       $scope.isSearchLoading = true;
       $scope.isSearch = true;
+      $scope.displayError = false;
       clearTransactions();
       setDefaultMetaPayload();
-
+      salesReceiptRequestParam();
       $scope.getTransactions();
     };
 
@@ -275,11 +278,51 @@ angular.module('ts5App')
       window.open('/transactions/index.html?transactionId=' + transaction.transactionId);
     };
     
-    $scope.showSelectedTransactionDetails = function () {
-      if ($scope.windowRef !== null) {
-        $scope.windowRef.close();
+    function salesReceiptRequestParam() {
+      if (!$scope.search.transactionStartDate || !$scope.search.transactionEndDate) {
+        $scope.displayError = true;
+        $scope.errorResponse = { statusText: 'Select Date Range!' };
+        return;
+      }
+
+      $scope.requestParam = 'startDate=' + generateGetTransactionsPayload().transactionStartDate + '&endDate=' + generateGetTransactionsPayload().transactionEndDate;
+
+      if (generateGetTransactionsPayload().transactionId) {
+        $scope.requestParam += '&transactionId=' + generateGetTransactionsPayload().transactionId;
       }
         
+      if (generateGetTransactionsPayload().paymentId) {
+        $scope.requestParam += '&paymentId=' + generateGetTransactionsPayload().paymentId;
+      }
+        
+      if (generateGetTransactionsPayload().scheduleNumber) {
+        $scope.requestParam += '&scheduleNumber=' + generateGetTransactionsPayload().scheduleNumber;
+      }
+        
+      if (generateGetTransactionsPayload().storeInstanceId) {
+        $scope.requestParam += '&storeInstanceId=' + generateGetTransactionsPayload().storeInstanceId;
+      }
+        
+      if (generateGetTransactionsPayload().storeNumber) {
+        $scope.requestParam += '&storeNumber=' + generateGetTransactionsPayload().storeNumber;
+      }
+      
+      if (generateGetTransactionsPayload().deviceId) {
+        $scope.requestParam += '&deviceId=' + generateGetTransactionsPayload().deviceId;
+      }
+    }
+    
+    $scope.showSelectedTransactionDetails = function () {
+      if ($scope.requestParam !== null && $scope.windowRef !== null) {
+        $scope.windowRef.close();
+      }
+      
+      if (!$scope.search.transactionStartDate || !$scope.search.transactionEndDate) {
+        $scope.displayError = true;
+        $scope.errorResponse = { statusText: 'Select Date Range!' };
+        return;
+      }
+      
       var data = '';
       for (var i = 0; i < $scope.transactions.length; i++) {
         if ($scope.transactions[i].selected) {
@@ -289,36 +332,17 @@ angular.module('ts5App')
 
       data = data.replace(/,\s*$/, '');
       if (data.length === 0) {
-        showMessage('Please Select at least one ePOS Receipts...', 'info');
+        $scope.displayError = true;
+        $scope.errorResponse = { statusText: 'Select at least one record!' };
         return;
       }
+      
+      $scope.displayError = false;
       
       localStorage.removeItem('receiptTxnIds');
       localStorage.setItem('receiptTxnIds', data);
       
-      var requestParam = 'startDate=' + generateGetTransactionsPayload().transactionStartDate + '&endDate=' + generateGetTransactionsPayload().transactionEndDate;
-
-      if (generateGetTransactionsPayload().transactionId) {
-        requestParam += '&transactionId=' + generateGetTransactionsPayload().transactionId;
-      }
-      
-      if (generateGetTransactionsPayload().paymentId) {
-        requestParam += '&paymentId=' + generateGetTransactionsPayload().paymentId;
-      }
-      
-      if (generateGetTransactionsPayload().scheduleNumber) {
-        requestParam += '&scheduleNumber=' + generateGetTransactionsPayload().scheduleNumber;
-      }
-      
-      if (generateGetTransactionsPayload().storeInstanceId) {
-        requestParam += '&storeInstanceId=' + generateGetTransactionsPayload().storeInstanceId;
-      }
-      
-      if (generateGetTransactionsPayload().storeNumber) {
-        requestParam += '&storeNumber=' + generateGetTransactionsPayload().storeNumber;
-      }
-      
-      $scope.windowRef = window.open('/transactions/epos-sales-receipts.html?' + requestParam);
+      $scope.windowRef = window.open('/transactions/epos-sales-receipts.html?' + $scope.requestParam);
     };
     
     $scope.checkUncheckHeader = function () {
@@ -338,10 +362,6 @@ angular.module('ts5App')
         $scope.transactions[i].selected = $scope.isAllChecked;
       }
     };
-    
-    function showMessage(message, messageType) {
-      messageService.display(messageType, '<strong>EPOS Receipts</strong>: ' + message);
-    }
     
     function sanitizeSearchPayload(payload) {
       payloadUtility.sanitize(payload);
@@ -376,6 +396,7 @@ angular.module('ts5App')
       payload.transactionEndDate = payloadUtility.serializeDate(payload.transactionEndDate ? payload.transactionEndDate : dateUtility.tomorrowFormattedDatePicker());
 
       sanitizeSearchPayload(payload);
+      
       return payload;
     }
 
@@ -449,6 +470,7 @@ angular.module('ts5App')
     function clearTransactions() {
       $scope.transactions = [];
       $scope.isAllChecked = false;
+      $scope.requestParam = false;
     }
 
     function setCompanyCurrencies(dataFromAPI) {
@@ -488,4 +510,3 @@ angular.module('ts5App')
 
     init();
   });
-
