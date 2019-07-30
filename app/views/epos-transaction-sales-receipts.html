@@ -12,13 +12,13 @@
     
       <form name="salesReceiptSearchForm" ng-submit="generateTransactionSalesReceipts()">
        
-	  	 <div class="form-group">
+	  	 <div class="form-group" >
 		  	  <date-picker
 	              element-class="col-xs-2 col-sm-2"
 	              start-date-model="search.transactionStartDate"
 	              end-date-model="search.transactionEndDate"
-	              label-from="Effective From *"
-	              label-to="Effective To *"
+	              label-from="Transaction Start Date *"
+	              label-to="Transaction End Date *"
 	              required="true"
 	              is-search-field="true">
 	            </date-picker>
@@ -39,7 +39,7 @@
 	  	  </div>
 	  	  
 	  	  <div class="form-group">
-		      <label class="col-sm-2 control-label" for="payment-id">Transaction ID</label>
+		      <label class="col-sm-2 control-label" for="payment-id">Transaction Id</label>
 		      <span class="col-sm-2 input-group">
 		       <input ng-model="search.paymentId" type="text" class="form-control" id="payment-id" form="salesReceiptSearchForm" />
 		      </span>
