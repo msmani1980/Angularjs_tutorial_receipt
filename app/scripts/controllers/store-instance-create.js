@@ -401,7 +401,7 @@ angular.module('ts5App').controller('StoreInstanceCreateCtrl',
     this.getStoresList = function () {
       var query = $this.isActionState('dispatch') ? this.getFormattedDatesPayload() : {};
       if (this.isActionState('replenish')) {
-        query.readyToUse = false;
+        query.storeNumber = $scope.formData.storeNumber;
       }
 
       return storeInstanceFactory.getStoresList(query).then($this.setStoresList);
