@@ -863,6 +863,16 @@ angular.module('ts5App')
           package: 'SALESTARGETS',
           role: 'SALESTARGETS'
         }]
+      }, {
+        title: 'Pre-Orders',
+        menuItems: [{
+          name: 'Manage Pre-Orders',
+          route: '/#/pre-orders',
+          icon: 'icon-manage-menu',
+          className: 'dashboard-managePreOrders',
+          package: 'PREORDERS',
+          role: 'PREORDERS'
+        }]
       }];
     };
 
