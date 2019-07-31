@@ -237,6 +237,19 @@ angular.module('ts5App')
       }
     ];
 
+    $this.itemConfigOptions = [
+      {
+        name: 'Item Configuration - Show SAT fields',
+        featureCode: 'ITM',
+        optionCode: 'SAT',
+        choiceCode: 'ACT',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'itemConfigurationShowSatFields',
+        values: angular.copy($this.radioButtonValues)
+      }
+    ];
+
     this.configFeatureOptionsDefinition = function () {
       return {
         cashBagConfigOptions: $this.cashBagConfigOptions,
@@ -244,6 +257,7 @@ angular.module('ts5App')
         stationOpsConfigOptions: $this.stationOpsConfigOptions,
         reconcileConfigOptions: $this.reconcileConfigOptions,
         userConfigOptions: $this.userConfigOptions,
+        itemConfigOptions: $this.itemConfigOptions,
       };
     };
   });
