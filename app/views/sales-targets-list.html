@@ -60,7 +60,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="ng-scope" ng-repeat="salesTarget in preOrderList">
+        <tr class="ng-scope" ng-repeat="salesTarget in salesTargetList">
           <td>{{ salesTarget.name }}</td>
           <td>{{ salesTarget.description}}</td>
           <td>{{ salesTarget.startDate}}</td>
@@ -75,7 +75,7 @@
               <i class="fa fa-pencil"></i>
             </button>
             <button class="btn btn-danger btn-xs"
-                    ng-click="deleteRecordDialog(preOrderList[$index], ['name', 'startDate', 'endDate'])"
+                    ng-click="deleteRecordDialog(salesTargetList[$index], ['name', 'startDate', 'endDate'])"
                     tabindex="0"
                     ng-show="isCRUD && showDeleteButton(salesTarget)">
               <i class="fa fa-trash"></i>
@@ -85,10 +85,10 @@
         </tbody>
       </table>
     </div>
-    <alert ng-show="!loadingBarVisible && preOrderList.length == 0" type="info">
+    <alert ng-show="!loadingBarVisible && salesTargetList.length == 0" type="info">
       <span class="fa fa-flag"></span> Your search returned no results.
     </alert>
-    <p ng-if="preOrderList.length > 0" class="record-count small text-center">Showing {{preOrderList.length}} records</p>
+    <p ng-if="salesTargetList.length > 0" class="record-count small text-center">Showing {{salesTargetList.length}} records</p>
     <p class="loading-more alert alert-info text-center"><i class="fa fa-spin fa-circle-o-notch"></i> Loading more...</p>
   </div>
 </div>
