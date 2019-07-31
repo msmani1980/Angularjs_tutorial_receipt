@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, width=device-height">
+<title>ePOS Sales Receipts</title>
+<link rel="stylesheet" href="bootstrap-331.min.css">
+<script src="jquery-2.1.1.min.js"></script>
+<script src="bootstrap-331.js"></script>
+<script src="knockout-2.2.1.js"></script>
+<script src="moment-with-locales-2-10-6.js"></script>
+<script src="jquery-barcode.min.js"></script>
+<script src="flashcanvas.js"></script>
+<script src="jSignature.min.js"></script>
+</head>
+<style>
+.center {
+  padding: 20px 0;
+  text-align: center;
+  font: 18em;
+  font-weight: bold;
+  color: orange;
+}
+.centerTable {
+  padding: 70px 0;
+  text-align: center;
+  font: 18em;
+  font-weight: bold;
+}
+table, th, td {
+  border: 1px solid black;
+  padding: 10px;
+}
+
+thead, th {
+	text-align: center;
+}
+tfoot {
+    background-color: #333;
+    color: #fff;
+}
+</style>
+<body>
+<div>
+<button id="pdfButton" type="button" onclick="generatePDF()" class="btn btn-warning" style="float: right;margin-top:10px; margin-right: 30px" disabled>Print Receipts</button><br>
+<div id="pageLoading" class="center"> <p>Page Loading... Please wait!</p> </div><br>
+</div>
+<br>
+<br>
+<div id="receipt-header">
+</div>
+
+<div id="dynamicReceipt" style="margin-top:100px"></div> <!-- //style="margin-left:400px" -->
+
+<script type="text/javascript">
+String.prototype.format = function () {
+	var args = arguments;
+	return this.replace(/{(\d+)}/g, function (match, number) {
+	return typeof args[number] !== 'undefined' ? args[number] : match;
+});
+};
+
+Number.prototype.format = function (c, d, t) {
+	var n = this,
+	c = isNaN(c = Math.abs(c)) ? 2 : c,
+	d = d === undefined ? "." : d,
+	t = t === undefined ? "," : t,
+	s = n < 0 ? "-" : "",
+	i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "",
+	j = (j = i.length) > 3 ? j % 3 : 0;
+	return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
+
+//for printing receipt
+String.prototype.formatLine = function (length, justify) {
+    var blank = "                                          ";
+    var text = this;
+    var line;
+    var len;
+    var temp;
+    switch (justify) {
+        case "L":
+            temp = text + blank;
+            line = temp.substr(0, length);
+            break;
+        case "R":
+            temp = blank + text;
+            line = temp.substr(temp.length - length);
+            break;
+        case "C":
+            len = (length - text.length) / 2;
+            line = blank.substr(0, len) + text + blank;
+            line = line.substr(0, length);
+            break;
+        default:
+            throw "formatLine() Invalid justification: " + justify;
+    }
+    return line;
+};
+// for printing receipt
+String.prototype.repeatString = function repeatString(count) {
+    var text = this;
+    var ret = "";
+    for (var i = 0; i < count; i++) {
+        ret = ret + text;
+    }
+    return ret;
+};
+
+function getParameterByName(name) {
+	var name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]"),
+	regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+	results = regex.exec(location.search);
+	return (typeof results === "undefined" || results === undefined || results === null)? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function GenerateBarCodes(shoppingCart) {
+	var idx = 0;
+	$('.couponBarcodeImage').each(function (index, item) {
+		var coupon = shoppingCart.couponsIssued[idx];
+		if (typeof coupon !== "undefined" && coupon !== null && typeof coupon.Barcode !== "undefined" && coupon.Barcode !== null && coupon.Barcode.length > 0) {$(item).barcode(coupon.Barcode, 'code39');}
+		idx++;
+	});
+	
+	idx = 0;
+	var voucher;
+	$('.voucherBarcodeImage').each(function (index, item) {
+		voucher = shoppingCart.voucherIssuedItems[idx];
+		if (typeof voucher !== "undefined" && voucher.dynamicBarcode) {if (voucher.dynamicBarcode.length > 0) {$(item).barcode(voucher.dynamicBarcode, 'code39');}}
+		else {
+			if (typeof voucher !== "undefined" && typeof voucher.barcode !== "undefined" && voucher.barcode && voucher.barcode.Value.length) {
+				var barcodeType = voucher.barcode.Type.replace(/\s+/g, '-').toLowerCase();
+				if (
+				barcodeType === 'ean8' ||
+				barcodeType === 'ean13' ||
+				barcodeType === 'upc' ||
+				barcodeType === 'int25' || // interleaved 2 of 5
+				barcodeType === 'std25' || // standard 2 of 5 (industrial)
+				barcodeType === 'code39' ||
+				barcodeType === 'code11' ||
+				barcodeType === 'code93' ||
+				barcodeType === 'code128' ||
+				barcodeType === 'codabar' ||
+				barcodeType === 'msi' ||
+				barcodeType === 'datamatrix') {
+					$(item).barcode(voucher.barcode.Value, barcodeType);
+				}
+				else {$(item).barcode(voucher.barcode.Value, 'code39');}
+			}
+		}
+		idx++;
+	});
+	
+	idx = 0;
+	$('.barcodeImage').each(function (index, item) {
+		var vp = shoppingCart.virtualProducts[idx];
+		if (typeof vp !== "undefined" && !(vp.barcode === undefined) && vp.barcode!=null && vp.barcode.Value.length > 0) {
+			var barcodeType = vp.barcode.Type.replace(/\s+/g, '-').toLowerCase();
+			if (
+			barcodeType === 'ean8' ||
+			barcodeType === 'ean13' ||
+			barcodeType === 'upc' ||
+			barcodeType === 'int25' || // interleaved 2 of 5
+			barcodeType === 'std25' || // standard 2 of 5 (industrial)
+			barcodeType === 'code39' ||
+			barcodeType === 'code11' ||
+			barcodeType === 'code93' ||
+			barcodeType === 'code128' ||
+			barcodeType === 'codabar' ||
+			barcodeType === 'msi' ||
+			barcodeType === 'datamatrix') {
+				$(item).barcode(vp.barcode.Value, barcodeType);
+			}else {$(item).barcode(vp.barcode.Value, 'code39');}
+		}
+		idx++;
+	});
+}
+
+$(function () {
+     
+	  var tableOfContent =  '<table align="center"><thead><tr><th colspan="2">Report   Receipts</th></tr></thead><tbody>';
+		  tableOfContent += '<tr><td>For Date Range &nbsp&nbsp </td><td> From&nbsp&nbsp'+getParameterByName("startDate")+' To&nbsp&nbsp '+getParameterByName("endDate")+'</td></tr>';
+		  tableOfContent += '<tr><td>For Transaction ID &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("paymentId") === '' ? '' : getParameterByName("paymentId"))+'</td></tr>';
+		  tableOfContent += '<tr><td>For Flight Number &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("scheduleNumber") === '' ? '' : getParameterByName("scheduleNumber"))+'</td></tr>';
+		  tableOfContent += '<tr><td>For Store Number &nbsp&nbsp </td><td>&nbsp&nbsp'+(getParameterByName("storeNumber") === '' ? '' : getParameterByName("storeNumber"))+'</td></tr>';
+		  tableOfContent += '</tbody></table>';
+	
+    $("#receipt-header").append(tableOfContent);
+    
+	var transactionIds = [];
+    
+	if (localStorage.getItem('receiptTxnIds') !== null && localStorage.getItem('receiptTxnIds') !== '') {
+		transactionIds = localStorage.getItem('receiptTxnIds').split(",");
+	} else {
+		return;
+	}
+	if(transactionIds.length == 0){ return;}
+	
+	var index = 0;
+	
+	ko.utils.arrayForEach(transactionIds, function (transactionId) {
+		 index++;
+		 $("#dynamicReceipt").append('<div id=receiptId-'+index+'-'+transactionId+'><section id=receipt-template-'+index+'-'+transactionId+'></section>'
+												  +'<div class=\"text-center\" style=\"padding-top:20px\">'
+												  +'<section id=copyright-section-'+index+'-'+transactionId+' class=text-center>'
+												  //+'<p>Copyright &copy; eGate Solutions</p>'
+												  +'</div></section><section><div id=signature-section-'+index+'-'+transactionId+ ' style=\"display:none; margin:20px; width: 580px;\"><p>SIGNATURE</p>'
+												  +'<div id=signature-'+index+'-'+transactionId+ ' style=\"border:1px; border-style:solid; width: 570px;\"></div></div></section><br></div>');
+		    $.ajax({
+			   type: 'GET',
+			   url: '/rsvr-email/caa/sales-receipt-template/'+transactionId,
+			   async: false,
+			   success: function(data){
+			      $("#receiptId-"+index+"-"+transactionId).append(data);
+			      $.ajax({
+					   type: 'GET',
+					   url: '/rsvr-email/caa/data/'+transactionId,
+					   async: false,
+					   success: function(data){
+						    var cart = {};
+							cart = data;
+							var paymentByType = {cash: [], credit: [], coupon: [], voucher: []};
+							ko.utils.arrayForEach(cart.payments, function (payment) {
+								switch (payment.paymentType) {
+									case 1:
+									case 3:
+									paymentByType.coupon.push(payment);    // FFCard, Discount
+									break;
+									case 4:
+									paymentByType.cash.push(payment);      // Cash
+									break;
+									case 5:
+									paymentByType.credit.push(payment);    // Credit
+									break;
+									case 6:
+									paymentByType.voucher.push(payment);   // Voucher
+									break;
+								}
+								sign = payment.signature;
+								if(!(sign === undefined) && sign!=null && sign.length>1){
+									$("#signature-section-"+index+"-"+transactionId).show();
+									$("#signature-"+index+"-"+transactionId).jSignature();
+									$("#signature-"+index+"-"+transactionId).jSignature("setData", "data:" + sign[0]+","+sign[1]);
+									var over = '<div id=over-'+index+'-'+transactionId+' style="position:absolute; width: 100%; height: 100%; top:100%; bottom:0; left:0; right: 0;"></div>';
+									var $over = $(over); 
+									$("#signature-"+index+"-"+transactionId).append($over);
+								}
+							});
+							
+							cart.paymentByType = paymentByType;
+							
+							/* //Refund template temp fix by hardCode - starts - todo
+							cart.printed = null;
+							
+							if(cart.route){
+								cart.arrivalStation = cart.route.arrivalStation;
+								cart.departureStation = cart.route.departureStation;
+							}
+							
+							if(cart.refundDateTime !== null){
+								cart.refundDateTime = cart.currentRefund.createdOn;
+							}
+							
+							if(cart.refundId == null){
+								cart.refundId = '';
+							}
+						
+							cart.promotionAdjustment = cart.currentRefund.promotionAdjustment;
+							cart.payment = paymentByType;
+							
+							//Refund template issues has been fixed by hardCode - ends */
+							
+							ko.cleanNode(document.getElementById("receiptId-"+index+"-"+transactionId));
+							ko.applyBindings(cart, document.getElementById("receiptId-"+index+"-"+transactionId));
+							GenerateBarCodes(cart);
+					   },
+					   error: function() {
+					     console.log('error ->'+transactionId);
+					   }
+					});
+			   },
+			   error: function() {
+				   console.log('error ->'+transactionId);
+			   }
+			});
+	});
+});
+
+var onPageCompelete = setInterval(function(){ onPageStatus() }, 3000);
+
+function onPageStatus(){
+	
+	if (document.readyState == 'loading') {
+	    console.log('loading -->'+document.readyState);
+	} else if(document.readyState == 'interactive'){
+		console.log('interactive -->'+document.readyState);
+	} else if(document.readyState == 'complete') {
+		console.log('interactive -->'+document.readyState);
+		clearInterval(onPageCompelete);
+		setTimeout(function(){ $('#pageLoading').hide(); document.getElementById("pdfButton").disabled = false; }, 3000);
+		//generatePDF();
+	}
+		
+}
+
+function generatePDF(){
+	$('#pdfButton').hide();
+	window.print();
+	setTimeout(function(){ $('#pdfButton').show(); }, 1000);
+}
+
+</script>
+</body>
+</html>
