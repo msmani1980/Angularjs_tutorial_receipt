@@ -89,6 +89,12 @@
                 </div>
                 <div class="col-xs-12 col-sm-2">
                   <div class="form-group">
+                    <label>Seat Number</label><br />
+                    {{ order.seatNumber }}
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                  <div class="form-group">
                     <label>Departure Time</label><br />
                     {{ order.departureTime }}
                   </div>
@@ -103,6 +109,12 @@
                   <div class="form-group">
                     <label>Arrival Station</label><br />
                     {{ order.arrivalStation }}
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                  <div class="form-group">
+                    <label>Total Amount</label><br />
+                    {{ order.totalPrice }} {{ preOrder.totalAmountCurrency }}
                   </div>
                 </div>
               </div>
@@ -132,13 +144,7 @@
                           <td>{{ item.itemSubCategory }}</td>
                           <td>{{ item.itemPrice }} {{ preOrder.totalAmountCurrency }}</td>
                           <td>{{ item.qtyOrdered }}</td>
-                          <td>{{ item.itemPrice * item.qtyOrdered }}</td>
-                        </tr>
-                        <tr>
-                          <td colspan="5"></td>
-                          <td><strong>Total:</strong></td>
-                          <td><strong>{{ order.totalItems }}</strong></td>
-                          <td><strong>{{ order.totalPrice }} {{ preOrder.totalAmountCurrency }}</strong></td>
+                          <td>{{ item.itemPrice * item.qtyOrdered }} {{ preOrder.totalAmountCurrency }}</td>
                         </tr>
                       </tbody>
                     </table>
