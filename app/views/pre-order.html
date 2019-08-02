@@ -1,0 +1,179 @@
+<div class="module-container">
+  <div class="edit-controls">
+    <div class="row">
+      <div class="col-xs-6">
+        <h2 class="view-name">{{viewName}}: {{ preOrder.paxFirstName }} {{ preOrder.paxLastName }}</h2>
+      </div>
+
+      <div class="col-xs-6 text-right">
+        <a class="btn btn-default" ng-href="#/pre-orders" class="btn">Back</a>
+      </div>
+    </div>
+  </div>
+  <error-dialog form-object="preOrderDataForm" error-response="errorResponse" display="displayError"></error-dialog>
+  <!-- Data Input Section -->
+  <form name="preOrderDataForm" class="edit-form" novalidate>
+    <div class="panel panel-default">
+      <div class="panel-body">
+
+        <h3><strong>Payment</strong></h3>
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                  <label>First Name</label><br />
+                  {{ preOrder.paxFirstName }}
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                  <label>Last Name</label><br />
+                  {{ preOrder.paxLastName }}
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-4">
+                <div class="form-group">
+                  <label>Frequent Flyer Number</label><br />
+                  {{ preOrder.frequentFlyerNumber }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                  <label>Payment Type</label><br />
+                  {{ preOrder.paymentMethodName }}
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                  <label>Amount Paid</label><br />
+                  {{ preOrder.paymentAmount }} {{ preOrder.paymentCurency }}
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                  <label>Card Type</label><br />
+                  {{ preOrder.ccType }}
+                </div>
+              </div>
+              <div class="col-xs-12 col-sm-2">
+                <div class="form-group">
+                  <label>Last 4 Digits</label><br />
+                  {{ preOrder.ccLast4Digit }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3><strong>Orders</strong></h3>
+
+        <div id="orders">
+          <div ng-repeat="order in preOrder.flightData" class="panel panel-default">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-xs-12 col-sm-2">
+                  <div class="form-group">
+                    <label>Flight Number</label><br />
+                    {{ order.flightNumber }}
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                  <div class="form-group">
+                    <label>Flight Date</label><br />
+                    {{ order.flightDate }}
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                  <div class="form-group">
+                    <label>Seat Number</label><br />
+                    {{ order.seatNumber }}
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                  <div class="form-group">
+                    <label>Departure Time</label><br />
+                    {{ order.departureTime }}
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                  <div class="form-group">
+                    <label>Departure Station</label><br />
+                    {{ order.departureStation }}
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                  <div class="form-group">
+                    <label>Arrival Station</label><br />
+                    {{ order.arrivalStation }}
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-2">
+                  <div class="form-group">
+                    <label>Total Amount</label><br />
+                    {{ order.totalPrice }} {{ preOrder.totalAmountCurrency }}
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12 col-sm-12">
+                  <h3><strong>Items</strong></h3>
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                      <thead>
+                        <tr>
+                          <th>Code</th>
+                          <th>Name</th>
+                          <th>Description</th>
+                          <th>Category</th>
+                          <th>Sub Category</th>
+                          <th>Price Per Item</th>
+                          <th>Quantity</th>
+                          <th>Total Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="ng-scope" ng-repeat="item in order.itemData">
+                          <td>{{ item.itemCode }}</td>
+                          <td>{{ item.itemName }}</td>
+                          <td>{{ item.itemDescription }}</td>
+                          <td>{{ item.itemCategory }}</td>
+                          <td>{{ item.itemSubCategory }}</td>
+                          <td>{{ item.itemPrice }} {{ preOrder.totalAmountCurrency }}</td>
+                          <td>{{ item.qtyOrdered }}</td>
+                          <td>{{ item.itemPrice * item.qtyOrdered }} {{ preOrder.totalAmountCurrency }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xs-12 col-sm-12 form-group"></div>
+          </div>
+        </div>
+
+        <div class="panel-footer text-right">
+          <a class="btn btn-default" ng-href="#/pre-orders" class="btn">Back</a>
+        </div>
+      </div>
+    </div>
+  </form>
+
+</div>
+<!-- /Container -->
+
+<form-success-modal></form-success-modal>
+
+<form-update-modal></form-update-modal>
+
+<leave-view-modal></leave-view-modal>
+
+<dynamic-left-nav title="Pre-Orders"></dynamic-left-nav>
