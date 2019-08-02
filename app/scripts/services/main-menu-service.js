@@ -595,7 +595,14 @@ angular.module('ts5App')
           className: 'dashboard-manageTransactions',
           package: 'TRANSACTION',
           role: 'TRANSACTION'
-        }]
+        }, {
+            name: 'EPOS Sales Receipt',
+            route: '/#/epos-transaction-sales-receipts',
+            icon: 'icon-manage-transactions',
+            className: 'dashboard-manageTransactions',
+            package: 'TRANSACTION',
+            role: 'TRANSACTION'
+          }]
       }, {
         title: 'Post Trip Data',
         menuItems: [{
