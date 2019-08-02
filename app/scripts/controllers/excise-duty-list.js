@@ -1,4 +1,5 @@
 'use strict';
+/*jshint maxcomplexity:6*/
 /**
  * @ngdoc function
  * @name ts5App.controller:ExciseDutyListCtrl
@@ -183,7 +184,7 @@ angular.module('ts5App')
       return payload;
     }
 
-    $scope.saveEdit = function () {
+    $scope.saveEdit = function (exciseDuty) {
       showLoadingModal('Editing Record');
       
       $this.clearErrors();
@@ -191,6 +192,10 @@ angular.module('ts5App')
         $this.clearCustomErrors();
       }
 
+      if (!dateUtility.isAfterTodayDatePicker(exciseDuty.startDate)) {
+        $scope.recordToEdit.startDate = exciseDuty.startDate;
+      }
+      
       $scope.displayError = false;
       var dutyRateRawValue = $scope.exciseDutyEditForm.dutyRate.$$rawModelValue;
       if ($scope.isFieldEmpty($scope.recordToEdit.dutyRate) && !$scope.isFieldEmpty(dutyRateRawValue)) {
