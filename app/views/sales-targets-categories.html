@@ -31,7 +31,7 @@
                 ng-disabled="isDisabled()">
             </div>
           </div>
-          <div class="col-xs-12 col-sm-4" ng-class="validation.calendarCssClass(salesTargetCategoryDataForm, salesTargetCategory.startDate)">
+          <div class="col-xs-12 col-sm-4" ng-class="validation.calendarCssClassWithAdditionalChecks(salesTargetCategoryDataForm, salesTargetCategory.startDate, salesTargetCategory.endDate)">
             <date-picker-field
               ng-if="isLoadingCompleted"
               form="salesTargetCategoryDataForm"
@@ -43,9 +43,8 @@
               ng-model="salesTargetCategory.startDate">
             </date-picker-field>
           </div>
-          <div class="col-xs-12 col-sm-4" ng-class="validation.calendarCssClass(salesTargetCategoryDataForm, salesTargetCategory.endDate)">
+          <div class="col-xs-12 col-sm-4" ng-class="validation.calendarCssClassWithAdditionalChecks(salesTargetCategoryDataForm, salesTargetCategory.startDate, salesTargetCategory.endDate)">
             <date-picker-field
-              ng-if="isLoadingCompleted"
               form="salesTargetCategoryDataForm"
               name="EffectiveEndDate"
               label="Effective End Date"
