@@ -660,7 +660,6 @@ angular.module('ts5App')
       if ($scope.promotion.discountItem && $scope.promotion.discountItem.id !== null) {
         $scope.promotion.discountItem.isExpired = !angular.isDefined(lodash.find($scope.selectOptions.masterItems, { id: $scope.promotion.discountItem.id }));
       }
-
     }
 
     function getMasterItems() {
