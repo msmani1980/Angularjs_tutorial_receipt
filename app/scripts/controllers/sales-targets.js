@@ -80,7 +80,24 @@ angular.module('ts5App')
         return false;
       }
 
+      if ($this.isEndDateBeforeStartDate()) {
+        $this.showEndDateHasToBeAfterOrEqualStartDate();
+        return false;
+      }
+
       return $scope.salesTargetDataForm.$valid;
+    };
+
+    this.isEndDateBeforeStartDate = function () {
+      return !dateUtility.isAfterOrEqualDatePicker($scope.salesTarget.endDate, $scope.salesTarget.startDate);
+    };
+
+    this.showEndDateHasToBeAfterOrEqualStartDate = function () {
+      $scope.errorCustom = [{
+        field: 'End Date',
+        value: 'End date must be greater than Start date'
+      }];
+      $scope.displayError = true;
     };
 
     this.stationsHasDuplicates = function() {
