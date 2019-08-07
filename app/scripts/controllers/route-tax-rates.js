@@ -592,7 +592,7 @@ angular.module('ts5App')
     };
 
     $scope.isDisabled = function(taxRate) {
-      return !(dateUtility.isAfterTodayDatePicker(taxRate.startDate));
+      return !(!taxRate.startDate || dateUtility.isAfterTodayDatePicker(taxRate.startDate));
     };
 
     $scope.isDisabledEndDateForm = function(taxRate) {
