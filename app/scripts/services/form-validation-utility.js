@@ -37,11 +37,11 @@ angular.module('ts5App')
       var hasError = false;
 
       if (form && form.$submitted) {
-        hasError = !startDate && form.$submitted;
+        hasError = !startDate;
       }
 
       if (form && form.$submitted) {
-        hasError = !endDate && form.$submitted;
+        hasError = !endDate;
       }
 
       if (form && form.$submitted && startDate && endDate) {
