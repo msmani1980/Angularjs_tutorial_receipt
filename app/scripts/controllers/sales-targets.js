@@ -247,14 +247,18 @@ angular.module('ts5App')
     };
 
     this.mapCrewsPayload = function () {
-      return $scope.salesTarget.employees.map(function (employee) {
-        var persistedEmployee = lodash.find($scope.persistedSalesTarget.crews, { crewId: employee.id });
+      return $scope.salesTarget.employees
+        .filter(function (employee) {
+          return employee !== null && employee !== undefined;
+        })
+        .map(function (employee) {
+          var persistedEmployee = lodash.find($scope.persistedSalesTarget.crews, { crewId: employee.id });
 
-        return {
-          id: (persistedEmployee) ? persistedEmployee.id : null,
-          crewId: employee.id
-        };
-      });
+          return {
+            id: (persistedEmployee) ? persistedEmployee.id : null,
+            crewId: employee.id
+          };
+        });
     };
 
     this.mapStationsPayload = function () {
