@@ -20,6 +20,8 @@ angular.module('ts5App')
     $scope.itemMasterList = [];
     $scope.validation = formValidationUtility;
     $scope.salesTarget = {
+      startDate: '',
+      endDate: '',
       schedules:[],
       stores: [],
       employees: [],
