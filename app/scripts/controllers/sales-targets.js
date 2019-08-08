@@ -419,7 +419,6 @@ angular.module('ts5App')
         description: response.description,
         startDate: startDate,
         endDate: endDate,
-        category: $this.findItemById($scope.salesTargetCategoryList, response.targetCategoryId),
         value: response.targetValue,
         schedules: response.schedules.map($this.mapScheduleFromResponse),
         stores: response.stores.map($this.mapStoreFromResponse),
@@ -431,7 +430,17 @@ angular.module('ts5App')
         items: response.items.map($this.mapItemFromResponse)
       };
 
-      $scope.isLoadingCompleted = true;
+      $this.getSalesTargetCategories().then(function () {
+        var category = $this.findItemById($scope.salesTargetCategoryList, response.targetCategoryId);
+
+        $scope.categoryExpired = false;
+        if (!category && response.targetCategoryId) {
+          $scope.categoryExpired = true;
+        }
+
+        $scope.salesTarget.category = category;
+        $scope.isLoadingCompleted = true;
+      });
     };
 
     this.findItemById = function (array, id) {
