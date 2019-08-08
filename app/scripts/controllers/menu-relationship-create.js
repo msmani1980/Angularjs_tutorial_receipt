@@ -8,7 +8,7 @@
  */
 angular.module('ts5App')
   .controller('MenuRelationshipCreateCtrl', function($scope, $location, $routeParams, $q, dateUtility, menuService,
-    catererStationService, menuCatererStationsService, messageService, $http, formValidationUtility) {
+    catererStationService, menuCatererStationsService, messageService, $http, formValidationUtility, $filter) {
 
     var $this = this;
     $scope.validation = formValidationUtility;
@@ -153,7 +153,7 @@ angular.module('ts5App')
     }, true);
 
     this.setCatererStationList = function(apiResponse) {
-      $scope.stationList = apiResponse.response;
+      $scope.stationList = $filter('unique')(apiResponse.response, 'id');
 
       $scope.catererStationListIsEmpty = $scope.stationList.length === 0;
 
