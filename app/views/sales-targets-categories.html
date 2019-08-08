@@ -32,7 +32,7 @@
             </div>
           </div>
           <div class="col-xs-12 col-sm-4" ng-class="validation.calendarCssClassWithAdditionalChecks(salesTargetCategoryDataForm, salesTargetCategory.startDate, salesTargetCategory.endDate)">
-            <div ng-if="!isDisabled()">
+            <div ng-if="isLoadingCompleted">
               <date-picker-field
                 form="salesTargetCategoryDataForm"
                 name="EffectiveStartDate"
@@ -43,37 +43,21 @@
                 ng-model="salesTargetCategory.startDate">
               </date-picker-field>
             </div>
-            <!-- Manually show normal input fields as for some reason calendar is not working on this page for past dates -->
-            <div ng-if="isDisabled()">
-              <fieldset ng-disabled="true">
-                <div class="form-group" >
-                  <label>Effective Start Date *</label>
-                  <p class="input-group">
-                    <span class="input-group-btn">
-                      <span class="btn btn-default disabled"><i class="glyphicon glyphicon-calendar"></i></span>
-                    </span>
-                    <input name="EffectiveStartDate"
-                           type="text"
-                           class="form-control"
-                           autocomplete="off"
-                           ng-model="salesTargetCategory.startDate" />
-                  </p>
-                </div>
-              </fieldset>
-            </div>
           </div>
           <div class="col-xs-12 col-sm-4" ng-class="validation.calendarCssClassWithAdditionalChecks(salesTargetCategoryDataForm, salesTargetCategory.startDate, salesTargetCategory.endDate)">
-            <date-picker-field
-              form="salesTargetCategoryDataForm"
-              name="EffectiveEndDate"
-              label="Effective End Date"
-              disable="readOnly || shouldDisableEndDate"
-              ng-model="salesTargetCategory.endDate"
-              end-current-effective="!viewEditItem"
-              custom-effective="true"
-              custom-date="salesTargetCategory.endDate"
-              required="true">
-            </date-picker-field>
+            <div ng-if="isLoadingCompleted">
+              <date-picker-field
+                form="salesTargetCategoryDataForm"
+                name="EffectiveEndDate"
+                label="Effective End Date"
+                disable="readOnly || shouldDisableEndDate"
+                ng-model="salesTargetCategory.endDate"
+                end-current-effective="!viewEditItem"
+                custom-effective="true"
+                custom-date="salesTargetCategory.endDate"
+                required="true">
+              </date-picker-field>
+            </div>
           </div>
         </div>
         <div class="row">
