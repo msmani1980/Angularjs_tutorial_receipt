@@ -269,8 +269,8 @@ angular.module('ts5App')
         .map(function (station) {
           return {
             id: station.entityId,
-            departureStationId: (station.departure) ? station.departure.stationId : null,
-            arrivalStationId: (station.arrival) ? station.arrival.stationId : null
+            departureStationId: (station.departure) ? station.departure.id : null,
+            arrivalStationId: (station.arrival) ? station.arrival.id : null
           };
         });
     };
@@ -468,8 +468,8 @@ angular.module('ts5App')
     this.mapStationFromResponse = function (station) {
       return {
         entityId: station.id,
-        departure: lodash.find($scope.stationList, { stationId: station.departureStationId }),
-        arrival: lodash.find($scope.stationList, { stationId: station.arrivalStationId })
+        departure: lodash.find($scope.stationList, { id: station.departureStationId }),
+        arrival: lodash.find($scope.stationList, { id: station.arrivalStationId })
       };
     };
 
@@ -555,7 +555,7 @@ angular.module('ts5App')
     };
 
     this.getStations = function () {
-      return stationsFactory.getStationList(0).then($this.setStations);
+      return stationsFactory.getGlobalStationList().then($this.setStations);
     };
 
     this.setStations = function (dataFromAPI) {
