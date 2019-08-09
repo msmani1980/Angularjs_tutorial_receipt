@@ -18,55 +18,31 @@
 
         <h3><strong>Payment</strong></h3>
 
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-xs-12 col-sm-2">
-                <div class="form-group">
-                  <label>First Name</label><br />
-                  {{ preOrder.paxFirstName }}
-                </div>
-              </div>
-              <div class="col-xs-12 col-sm-2">
-                <div class="form-group">
-                  <label>Last Name</label><br />
-                  {{ preOrder.paxLastName }}
-                </div>
-              </div>
-              <div class="col-xs-12 col-sm-4">
-                <div class="form-group">
-                  <label>Frequent Flyer Number</label><br />
-                  {{ preOrder.frequentFlyerNumber }}
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xs-12 col-sm-2">
-                <div class="form-group">
-                  <label>Payment Type</label><br />
-                  {{ preOrder.paymentMethodName }}
-                </div>
-              </div>
-              <div class="col-xs-12 col-sm-2">
-                <div class="form-group">
-                  <label>Amount Paid</label><br />
-                  {{ preOrder.paymentAmount }} {{ preOrder.paymentCurency }}
-                </div>
-              </div>
-              <div class="col-xs-12 col-sm-2">
-                <div class="form-group">
-                  <label>Card Type</label><br />
-                  {{ preOrder.ccType }}
-                </div>
-              </div>
-              <div class="col-xs-12 col-sm-2">
-                <div class="form-group">
-                  <label>Last 4 Digits</label><br />
-                  {{ preOrder.ccLast4Digit }}
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+              <th style="width:14.28%">First Name</th>
+              <th style="width:14.28%">Last Name</th>
+              <th style="width:14.28%">Frequent Flyer Number</th>
+              <th style="width:14.28%">Payment Type</th>
+              <th style="width:14.28%">Amount Paid</th>
+              <th style="width:14.28%">Card Type</th>
+              <th style="width:14.28%">Last 4 Digits</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="ng-scope">
+              <td>{{ preOrder.paxFirstName }}</td>
+              <td>{{ preOrder.paxLastName }}</td>
+              <td>{{ preOrder.frequentFlyerNumber }}</td>
+              <td>{{ preOrder.paymentMethodName }}</td>
+              <td>{{ preOrder.paymentAmount }} {{ preOrder.paymentCurency }}</td>
+              <td>{{ preOrder.ccType }}</td>
+              <td>{{ preOrder.ccLast4Digit }}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
 
         <h3><strong>Orders</strong></h3>
@@ -74,50 +50,34 @@
         <div id="orders">
           <div ng-repeat="order in preOrder.flightData" class="panel panel-default">
             <div class="panel-body">
-              <div class="row">
-                <div class="col-xs-12 col-sm-2">
-                  <div class="form-group">
-                    <label>Flight Number</label><br />
-                    {{ order.flightNumber }}
-                  </div>
-                </div>
-                <div class="col-xs-12 col-sm-2">
-                  <div class="form-group">
-                    <label>Flight Date</label><br />
-                    {{ order.flightDate }}
-                  </div>
-                </div>
-                <div class="col-xs-12 col-sm-2">
-                  <div class="form-group">
-                    <label>Seat Number</label><br />
-                    {{ order.seatNumber }}
-                  </div>
-                </div>
-                <div class="col-xs-12 col-sm-2">
-                  <div class="form-group">
-                    <label>Departure Time</label><br />
-                    {{ order.departureTime }}
-                  </div>
-                </div>
-                <div class="col-xs-12 col-sm-2">
-                  <div class="form-group">
-                    <label>Departure Station</label><br />
-                    {{ order.departureStation }}
-                  </div>
-                </div>
-                <div class="col-xs-12 col-sm-2">
-                  <div class="form-group">
-                    <label>Arrival Station</label><br />
-                    {{ order.arrivalStation }}
-                  </div>
-                </div>
-                <div class="col-xs-12 col-sm-2">
-                  <div class="form-group">
-                    <label>Total Amount</label><br />
-                    {{ order.totalPrice }} {{ preOrder.totalAmountCurrency }}
-                  </div>
-                </div>
+              <h3><strong>Order</strong></h3>
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                  <thead>
+                  <tr>
+                    <th style="width:14.28%">Flight Number</th>
+                    <th style="width:14.28%">Flight Date</th>
+                    <th style="width:14.28%">Seat Number</th>
+                    <th style="width:14.28%">Departure Time</th>
+                    <th style="width:14.28%">Departure Station</th>
+                    <th style="width:14.28%">Arrival Station</th>
+                    <th style="width:14.28%">Total Amount</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr class="ng-scope">
+                    <td>{{ order.flightNumber }}</td>
+                    <td>{{ order.flightDate }}</td>
+                    <td>{{ order.seatNumber }}</td>
+                    <td>{{ order.departureTime }}</td>
+                    <td>{{ order.departureStation }}</td>
+                    <td>{{ order.arrivalStation }}</td>
+                    <td>{{ order.totalPrice }} {{ preOrder.totalAmountCurrency }}</td>
+                  </tr>
+                  </tbody>
+                </table>
               </div>
+
               <div class="row">
                 <div class="col-xs-12 col-sm-12">
                   <h3><strong>Items</strong></h3>
