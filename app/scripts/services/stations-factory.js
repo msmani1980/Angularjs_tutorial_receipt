@@ -11,8 +11,8 @@ angular.module('ts5App')
   .factory('stationsFactory', function (stationsService, globalMenuService) {
 
     // Global stations
-    var getGlobalStationList = function() {
-      return stationsService.getGlobalStationList();
+    var getGlobalStationList = function(payload) {
+      return stationsService.getGlobalStationList(payload);
     };
 
     // Stations
