@@ -555,12 +555,7 @@ angular.module('ts5App')
     };
 
     this.getStations = function () {
-      var payload = {
-        startDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker()),
-        endDate: dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker())
-      };
-
-      return stationsFactory.getGlobalStationList(payload).then($this.setStations);
+      return stationsFactory.getGlobalStationList().then($this.setStations);
     };
 
     this.setStations = function (dataFromAPI) {
