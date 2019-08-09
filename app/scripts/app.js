@@ -539,6 +539,10 @@ angular.module('ts5App', [
     templateUrl: 'views/sales-targets.html',
     controller: 'SalesTargetsCtrl',
     controllerAs: 'salesTargets'
+  }).when('/epos-transaction-sales-receipts', {
+    templateUrl: 'views/epos-transaction-sales-receipts.html',
+    controller: 'EposTransactionSalesReceiptsCtrl',
+    controllerAs: 'eposTransactionSalesReceipts'
   }).when('/pre-orders/view/:id?', {
     templateUrl: 'views/pre-order.html',
     controller: 'PreOrderCtrl',
@@ -572,4 +576,3 @@ angular.module('ts5App', [
     });
   });
 });
-
