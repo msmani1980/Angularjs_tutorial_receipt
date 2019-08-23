@@ -544,6 +544,14 @@ angular.module('ts5App', [
     templateUrl: 'views/epos-transaction-sales-receipts.html',
     controller: 'EposTransactionSalesReceiptsCtrl',
     controllerAs: 'eposTransactionSalesReceipts'
+  }).when('/pre-orders/view/:id?', {
+    templateUrl: 'views/pre-order.html',
+    controller: 'PreOrderCtrl',
+    controllerAs: 'preOrder'
+  }).when('/pre-orders', {
+    templateUrl: 'views/pre-order-list.html',
+    controller: 'PreOrderListCtrl',
+    controllerAs: 'preOrderList'
   }).otherwise({
     redirectTo: '/'
   });
