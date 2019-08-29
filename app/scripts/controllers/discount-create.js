@@ -263,6 +263,9 @@ angular.module('ts5App')
     this.deserializeBenefits = function(discountData) {
       $scope.formData.discountTypeId = discountData.rateTypeId;
       $scope.formData.percentageDiscountValue = discountData.percentage;
+      $scope.formData.benefitsMilesPoints = discountData.benefitsMilesPoints;
+      $scope.formData.limitPerShopMilesPoints = discountData.limitPerShopMilesPoints;
+      $scope.formData.limitPerTransactionMilesPoints = discountData.limitPerTransactionMilesPoints;
 
       angular.forEach(discountData.rates, function(rate) {
         $scope.formData.amountDiscountValue[rate.companyCurrencyId] = Number(rate.amount).toFixed(2);
@@ -379,6 +382,10 @@ angular.module('ts5App')
     this.serializeBenefits = function(formData, discount) {
       discount.rateTypeId = formData.discountTypeId;
       discount.percentage = formData.percentageDiscountValue;
+      discount.benefitsMilesPoints = formData.benefitsMilesPoints;
+      discount.limitPerShopMilesPoints = formData.limitPerShopMilesPoints;
+      discount.limitPerTransactionMilesPoints = formData.limitPerTransactionMilesPoints;
+
       angular.forEach(formData.amountDiscountValue, function(amount, currencyId) {
         var original = $this.originalAmountDiscountValueForCurrency(currencyId);
         if (original) {
