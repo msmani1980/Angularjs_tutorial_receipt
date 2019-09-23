@@ -39,6 +39,10 @@ angular.module('ts5App')
       {
         name: 'Item Configuration',
         title: 'Item  Configuration'
+      },
+      {
+        name: 'Loyalty Backup Payment',
+        title: 'Loyalty Backup Payment'
       }
     ];
 
@@ -131,6 +135,8 @@ angular.module('ts5App')
         $scope.configOptions = angular.copy($scope.configOptionDefinition.stationOpsConfigOptions);
       } else if ($scope.selectedFeature && $scope.selectedFeature.name === 'Item Configuration') {
         $scope.configOptions = angular.copy($scope.configOptionDefinition.itemConfigOptions);
+      } else if ($scope.selectedFeature && $scope.selectedFeature.name === 'Loyalty Backup Payment') {
+        $scope.configOptions = angular.copy($scope.configOptionDefinition.loyaltyBackupConfigOptions);
       }
     };
 
