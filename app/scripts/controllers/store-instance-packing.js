@@ -244,7 +244,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           const stockDashboardItemsList = angular.copy(dataFromAPI.response);
           stockDashboardItemsList.forEach(function (stockItem) {
             $scope.stockItemLmpCurrentQuantityDictionary[stockItem.itemMasterId + ''] = stockItem;
-            // $scope.stockItemLmpCurrentQuantityDictionary[stockItem.itemCode] = stockItem.currentQuantity;
           });
         });
 
@@ -294,7 +293,6 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       const allPickListItems = $scope.pickListItems.concat($scope.newPickListItems);
 
       angular.forEach(allPickListItems, function(item) {
-        debugger;
         const itemMasterIdAsString = item.itemMasterId + '';
         if (itemMasterIdAsString in $scope.stockItemLmpCurrentQuantityDictionary) {
           const cateringStationItem = $scope.stockItemLmpCurrentQuantityDictionary[itemMasterIdAsString];
@@ -661,6 +659,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       $scope.shouldUpdateStatus = shouldUpdateStatus;
       $this.validateUllageReasonFields();
+      $this.validatePickedItemQuantities();
       const isFormInvalid = $scope.storeInstancePackingForm.$invalid || $scope.areThereSockItemQuantityErrors;
       $scope.displayError = isFormInvalid;
 
