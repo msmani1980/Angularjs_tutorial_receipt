@@ -300,7 +300,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           const pickedQuantity = ($scope.shouldDisplayQuantityField('picked') || $scope.shouldDisplayQuantityField('dispatch')) ?
             item.pickedQuantity : item.calculatedPickQuantity;
 
-          if (pickedQuantity > cateringStationItem.currentQuantity) {
+          if (pickedQuantity > 0 && pickedQuantity > cateringStationItem.currentQuantity) {
             $scope.errorCustom.push({
               field: 'Item with code ' + cateringStationItem.itemCode,
               value: ' Picked quantity of ' + pickedQuantity + ' is more than warehouse current count of ' + cateringStationItem.currentQuantity
