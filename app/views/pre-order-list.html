@@ -135,12 +135,12 @@
           <th>PNR Number</th>
           <th>Order Status</th>
           <th>Order Total</th>
-          <th>Currency</th>
+          <th>Action</th>
         </tr>
         </thead>
         <tbody>
         <tr class="ng-scope" ng-repeat="preOrder in preOrders">
-          <td><a ng-href="/#/pre-orders/view/{{ preOrder.id }}">{{ preOrder.preOrderNumber }}</a></td>
+          <td>{{ preOrder.preOrderNumber }}</td>
           <td>{{ preOrder.orderDate }}</td>
           <td>{{ preOrder.paxFirstName }}</td>
           <td>{{ preOrder.paxLastName }}</td>
