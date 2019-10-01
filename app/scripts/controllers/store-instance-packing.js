@@ -293,7 +293,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       const allPickListItems = $scope.pickListItems.concat($scope.newPickListItems);
 
       angular.forEach(allPickListItems, function(item) {
-        const itemMasterIdAsString = item.itemMasterId + '';
+        const itemMasterIdAsString = $this.extractItemMasterIdAsString(item);
         if (itemMasterIdAsString in $scope.stockItemLmpCurrentQuantityDictionary) {
           const cateringStationItem = $scope.stockItemLmpCurrentQuantityDictionary[itemMasterIdAsString];
 
@@ -310,6 +310,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       });
 
       $scope.areThereSockItemQuantityErrors = $scope.errorCustom.length > 0;
+    };
+
+    this.extractItemMasterIdAsString = function(item) {
+      if (item.itemMasterId) {
+        return item.itemMasterId + '';
+      } else if (item.masterItem) {
+        return item.masterItem.id + '';
+      }
+
+      return null;
     };
 
     $scope.canProceed = function() {
