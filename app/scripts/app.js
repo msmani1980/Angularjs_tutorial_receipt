@@ -66,7 +66,6 @@ angular.module('ts5App', [
   decimal: /^\d+\.\d{0,4}$/,
   numberAndDecimal: /^[0-9]+([.][0-9]+)?$/,
   sixNumberWithTwoDecimal:/^\d{0,6}(\.\d{0,2})?$/,
-  tenNumberWithTwoDecimal:/^\d{0,10}(\.\d{0,2})?$/,
   numberWithTwoDecimal:/^\d{0,10}(\.\d{0,2})?$/,
   percentage: /^[-+]?([0-9]\d?(\.\d{1,3})?|0\.(\d?[1-9]|[1-9]\d))$|^100$|^100.00$/,
   currencyWithFourDecimalPlace: [

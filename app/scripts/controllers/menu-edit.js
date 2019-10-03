@@ -524,8 +524,7 @@ angular.module('ts5App')
           $this.completeInitPromises();
         } else {
           hideLoadingModal();
-          $scope.isDateChanged = true;
-        }  
+        }
       } else {
         $this.completeInitPromises();
       }

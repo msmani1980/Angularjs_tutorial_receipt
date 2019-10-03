@@ -144,7 +144,7 @@ idx++;
 }
 $(function () {
 if(getParameterByName("transactionId")==''){return;}
-$("#receipt-template").load("/rsvr-email/caa/sales-receipt-template/" + getParameterByName("transactionId"), onTemplateLoaded);
+$("#receipt-template").load("/rsvr-email/caa/template/" + getParameterByName("transactionId"), onTemplateLoaded);
 function onTemplateLoaded() {
 $.getJSON("/rsvr-email/caa/data/" + getParameterByName("transactionId"), function (data) {
 var cart = data;

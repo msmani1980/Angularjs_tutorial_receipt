@@ -70,18 +70,17 @@
             <div class="form-group">
               <label for="salesTargetName">Value *</label>
               <input
-                name="Value"
                 ng-model="salesTarget.value"
-                ng-required="true"
-                ng-disabled="isDisabled()"
                 type="text"
+                custom-validity
+                custom-pattern="number"
+                name="Value"
+                required
                 class="form-control"
-                maxlength="13"
-                placeholder="1.00"
-                ng-pattern="regexp.tenNumberWithTwoDecimal"
-                id="salesTargetValue">
-
-            </div>
+                id="salesTargetValue"
+                placeholder="Value"
+                ng-disabled="isDisabled()"
+                maxlength="10">
             </div>
           </div>
         </div>

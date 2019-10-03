@@ -42,7 +42,6 @@ angular.module('ts5App').directive('stockTakeReason', function() {
       $scope.newUllage = null;
       $scope.comment = null;
       $scope.stockAdjustmentReason = null;
-      $scope.displayError = false;
       displayStockReasonModal();
     };
 
@@ -53,7 +52,6 @@ angular.module('ts5App').directive('stockTakeReason', function() {
       $scope.newCount = null;
       $scope.newUllage = null;
       $scope.stockAdjustmentReason = null;
-      $scope.displayError = false;
     };
 
     $scope.stockTakeReasonClose = function() {
@@ -65,12 +63,6 @@ angular.module('ts5App').directive('stockTakeReason', function() {
       hideLoadingModal();
       showToastMessage('success', 'Stock Adjustment', 'successfully updated!');
       $scope.updateStockItems();
-    }
-    
-    function adjustStockErrorResponse(response) {
-      $scope.errorResponse = angular.copy(response);
-      $scope.displayError = true;
-      hideLoadingModal();
     }
 
     function createPayload() {
@@ -91,7 +83,7 @@ angular.module('ts5App').directive('stockTakeReason', function() {
       $scope.clearScopeVars();
       hideStockReasonModal();
       displayLoadingModal('Updating item count');
-      stockManagementStationItemsService.updateStockManagementStationItems(_id, payload).then(adjustStockResponse, adjustStockErrorResponse);
+      stockManagementStationItemsService.updateStockManagementStationItems(_id, payload).then(adjustStockResponse);
     };
 
   };

@@ -10,12 +10,11 @@
 
 angular.module('ts5App').controller('StockDashboardCtrl',
   function($scope, $http, globalMenuService, stockManagementStationItemsService, catererStationService,
-    companyReasonCodesService, dateUtility, $filter, ENV, stockTakeFactory, identityAccessFactory, accessService, categoryFactory, companyPreferencesService,
-    lodash) {
+    companyReasonCodesService, dateUtility, $filter, ENV, stockTakeFactory, identityAccessFactory, accessService, categoryFactory, companyPreferencesService) {
 
     $scope.viewName = 'Stock Dashboard';
     $scope.search = {};
-    $scope.todaysDate = dateUtility.nowFormattedDatePicker();
+    $scope.todaysDate = dateUtility.nowFormatted();
     $scope.stockTakeList = [];
     $scope.stockDashboardItemsList = [];
     $scope.showWastageCount = false;
@@ -84,14 +83,7 @@ angular.module('ts5App').controller('StockDashboardCtrl',
     };
 
     this.getCatererStationListSuccessHandler = function(dataFromAPI) {
-      var stations = dataFromAPI.response.map(function (catering) {
-        catering.station.id = catering.station.stationId;
-
-        return catering.station;
-      });
-
-      $scope.cateringStationList = lodash.uniq(stations, 'stationId');
-
+      $scope.cateringStationList = angular.copy(dataFromAPI.response);
       if ($scope.cateringStationList.length === 1) {
         $scope.selectedCateringStation = $scope.cateringStationList[0];
       }

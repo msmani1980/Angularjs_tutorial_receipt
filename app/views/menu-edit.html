@@ -45,7 +45,7 @@
     <div class="form-group col-sm-3" ng-class="validation.fieldCssClass(menuEditForm, 'menuCode')">
       <label>Menu Code *</label>
       <input custom-pattern="alphanumeric"
-      		 custom-validity
+             custom-validity
              required
              type="text"
              maxlength="20"
@@ -53,13 +53,14 @@
              name="menuCode"
              ng-model="menu.menuCode"
              placeholder="Alphanumeric Only"
-             ng-readonly="isMenuReadOnly()"/>
+             ng-readonly="isMenuReadOnly()"
+             ui-on-Drop=""/>
     </div>
 
     <div class="form-group col-sm-3" ng-class="validation.fieldCssClass(menuEditForm, 'menuName')">
       <label>Menu Name *</label>
       <input custom-pattern="alphanumericSpaces"
-      		 custom-validity
+             custom-validity
              required
              type="text"
              maxlength="25"
@@ -67,7 +68,8 @@
              name="menuName"
              ng-model="menu.menuName"
              placeholder="Alphanumeric Space"
-             ng-readonly="isMenuReadOnly()"/>
+             ng-readonly="isMenuReadOnly()"
+             ui-on-Drop=""/>
     </div>
 
     <div class="col-xs-12 col-sm-3 col-md-3" ng-class="validation.calendarCssClass(menuEditForm, menu.startDate)">
@@ -103,7 +105,8 @@
              name="menuDescription"
              ng-model="menu.description"
              placeholder="ITM001"
-             ng-readonly="isMenuReadOnly()"/>
+             ng-readonly="isMenuReadOnly()"
+             ui-on-Drop=""/>
     </div>
 
     <div class="form-group col-sm-3" ng-hide="true">
@@ -121,7 +124,6 @@
         <i class="fa fa-plus"></i> Add Item
       </button>
     </h3>
-
     <div class="table">
       <table class="table table-bordered table-hover">
         <thead>

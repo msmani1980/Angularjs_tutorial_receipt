@@ -302,7 +302,7 @@
               <div class="form-group">
                 <label>Back Office Default Language*</label>
                                 <select ng-model="formData.defaultLanguage" class="form-control" id="backOfficeDefaultLanguage"
-                                name="backOfficeDefaultLanguage" ng-change="onChangeDefaultLanguage()" required="true">
+                                name="backOfficeDefaultLanguage"  ng-change="onChangeDefaultLanguage()" required="true">
                                     <option value="{{ lng.id }}" ng-repeat="lng in defaultLanguages | orderBy:'languageName'">{{ lng.languageName }}</option>
                                 </select>
               </div>
@@ -311,7 +311,7 @@
               <div class="form-group">
                 <label>Default Language*</label>
                                 <select ng-model="formData.defaultLanguage" class="form-control" id="defaultLanguage"
-                                name="defaultLanguage" ng-change="onChangeDefaultLanguage()" required="true">
+                                name="defaultLanguage"  ng-change="onChangeDefaultLanguage()" required="true">
                                     <option value="{{ lng.id }}" ng-repeat="lng in defaultLanguages | orderBy:'languageName'">{{ lng.languageName }}</option>
                                 </select>
               </div>

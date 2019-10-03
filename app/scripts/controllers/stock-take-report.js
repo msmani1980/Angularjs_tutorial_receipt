@@ -134,13 +134,7 @@ angular.module('ts5App')
 
     this.getCatererStationList = function() {
       stockTakeFactory.getCatererStationList().then(function(data) {
-        var stations = data.response.map(function (catering) {
-          catering.station.id = catering.station.stationId;
-
-          return catering.station;
-        });
-
-        $scope.stationsList = lodash.uniq(stations, 'stationId');
+        $scope.stationsList = data.response;
         if ($scope.stationsList.length === 1) {
           $scope.catererStationId = $scope.stationsList[0].id.toString();
         }

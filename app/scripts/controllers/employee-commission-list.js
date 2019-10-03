@@ -120,7 +120,7 @@ angular.module('ts5App')
         return false;
       }
 
-      return dateUtility.isAfterTodayDatePicker(commission.endDate) || dateUtility.isTodayDatePicker(commission.endDate);
+      return dateUtility.isAfterTodayDatePicker(commission.endDate);
     };
 
     function showToastMessage(className, type, message) {

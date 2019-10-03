@@ -190,9 +190,7 @@ angular.module('ts5App')
       setBaseCurrency(currencyList);
       setCashBagCurrencyList(angular.copy(responseCollection[1].response), currencyList, angular.copy(responseCollection[2].dailyExchangeRateCurrencies));
       setVerifiedData(angular.copy(responseCollection[3]));
-      if (angular.isDefined($scope.manualCreditForm)) { 
-        $scope.manualCreditForm.$setPristine();
-      }
+      $scope.manualCreditForm.$setPristine();
     }
 
     function getInitDependencies(storeInstanceDataFromAPI) {
@@ -200,7 +198,7 @@ angular.module('ts5App')
       var dateForFilter = dateUtility.formatDateForAPI(dateUtility.formatDateForApp($scope.storeInstance.scheduleDate));
 
       var promises = [
-        manualEposFactory.getCurrencyList({ startDate: dateForFilter, endDate: dateForFilter, isOperatedCurrency: true }),
+        manualEposFactory.getCurrencyList({ startDate: dateForFilter, endDate: dateForFilter }),
         manualEposFactory.getCashBagCreditList($routeParams.cashBagId, {}),
         manualEposFactory.getDailyExchangeRate($scope.cashBag.dailyExchangeRateId),
         manualEposFactory.checkCashBagVerification($routeParams.cashBagId)
