@@ -79,13 +79,7 @@ angular.module('ts5App')
     }
 
     function setCatererStationListFromResponse(response) {
-      var stations = response.response.map(function (catering) {
-        catering.station.id = catering.station.stationId;
-
-        return catering.station;
-      });
-
-      $scope.catererStationList = lodash.uniq(stations, 'stationId');
+      $scope.catererStationList = response.response;
     }
 
     function getCatererStationList() {

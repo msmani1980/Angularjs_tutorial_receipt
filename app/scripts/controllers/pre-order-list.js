@@ -128,7 +128,7 @@ angular.module('ts5App')
     };
 
     this.getStations = function () {
-      return stationsFactory.getGlobalStationList().then($this.setStations);
+      return stationsFactory.getStationList(0).then($this.setStations);
     };
 
     this.setStations = function (dataFromAPI) {
