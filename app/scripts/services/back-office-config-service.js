@@ -250,6 +250,46 @@ angular.module('ts5App')
       }
     ];
 
+    $this.loyaltyBackupConfigOptions = [
+      {
+        name: 'Use Backup payment method',
+        featureCode: 'LOY',
+        optionCode: 'UBP',
+        choiceCode: 'ACT',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'RADIO_BUTTON',
+        id: 'useBackupPaymentMethod',
+        values: angular.copy($this.radioButtonValues)
+      },
+      {
+        name: 'Payment method',
+        featureCode: 'LOY',
+        optionCode: 'BPM',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'SELECT',
+        id: 'selectBackupPayment',
+        values: [
+          {
+            name: 'Credit Card',
+            choiceCode: 'SBPCC'
+          },
+          {
+            name: 'Voucher',
+            choiceCode: 'SBPV'
+          }
+        ]
+      },
+      {
+        name: 'Backup Payment Threshold',
+        featureCode: 'LOY',
+        optionCode: 'BPT',
+        choiceCode: 'BPTA',
+        configSource: 'COMPANY_FEATURE',
+        inputType: 'NUMBER',
+        id: 'backupPaymentThresholdAmt'
+      },
+    ];
+
     this.configFeatureOptionsDefinition = function () {
       return {
         cashBagConfigOptions: $this.cashBagConfigOptions,
@@ -258,6 +298,7 @@ angular.module('ts5App')
         reconcileConfigOptions: $this.reconcileConfigOptions,
         userConfigOptions: $this.userConfigOptions,
         itemConfigOptions: $this.itemConfigOptions,
+        loyaltyBackupConfigOptions: $this.loyaltyBackupConfigOptions
       };
     };
   });
