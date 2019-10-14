@@ -8,7 +8,7 @@
  */
 angular.module('ts5App')
   .controller('ManageGoodsReceivedCtrl', function($scope, $filter, dateUtility, deliveryNoteFactory, messageService,
-    lodash, accessService) {
+    lodash, accessService, stationsFactory) {
 
     var $this = this;
     this.meta = {
@@ -113,7 +113,7 @@ angular.module('ts5App')
     };
 
     this.getCatererStationList = function() {
-      deliveryNoteFactory.getCatererStationList().then(function(data) {
+      stationsFactory.getGlobalStationList().then(function(data) {
         $scope.stationsList = data.response;
       });
     };
