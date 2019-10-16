@@ -150,7 +150,7 @@
             <ui-select-match placeholder="Tax Type">
               {{ $select.selected.taxTypeCode }}
             </ui-select-match>
-            <ui-select-choices repeat="taxType in taxTypesList | filter: $select.search | orderBy:'taxTypeCode'" position={{taxRate.position}}>
+            <ui-select-choices style="width:auto !important;" repeat="taxType in taxTypesList | filter: $select.search | orderBy:'taxTypeCode'" position={{taxRate.position}}>
               <div ng-bind-html="taxType.taxTypeCode | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
@@ -160,7 +160,7 @@
             <ui-select-match placeholder="Tax Type">
               {{ $select.selected.taxTypeCode }}
             </ui-select-match>
-            <ui-select-choices repeat="taxType in taxTypesList | filter: $select.search | orderBy:'taxTypeCode'" position='auto'>
+            <ui-select-choices style="width:auto !important;" repeat="taxType in taxTypesList | filter: $select.search | orderBy:'taxTypeCode'" position='auto'>
               <div ng-bind-html="taxType.taxTypeCode | highlight: $select.search"></div>
             </ui-select-choices>
           </ui-select>
