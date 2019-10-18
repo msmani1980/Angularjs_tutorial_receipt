@@ -570,11 +570,10 @@ angular.module('ts5App')
 
       delete taxRate.edited;
       delete taxRate.readOnly;
-
       var payload = {
         id: taxRate.id,
         taxRateValue: $this.validateNewData('taxRateValue', taxRate.taxRateValue, taxRate),
-        taxRateType: $this.validateNewData('taxRateType', taxRate.taxRateType.taxRateType, taxRate),
+        taxRateType: $this.validateNewData('taxRateType', taxRate.taxRateType ? taxRate.taxRateType.taxRateType : '', taxRate),
         startDate: $this.validateNewData('startDate', dateUtility.formatDateForAPI(taxRate.startDate), taxRate),
         endDate: $this.validateNewData('endDate', dateUtility.formatDateForAPI(taxRate.endDate), taxRate),
         companyTaxTypeId: $this.validateNewData('companyTaxTypeId', taxRate.taxTypeCode ? taxRate.taxTypeCode.id : taxRate.companyTaxTypeId, taxRate),

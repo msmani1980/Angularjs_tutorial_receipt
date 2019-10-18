@@ -149,6 +149,16 @@
                         ng-required="formData.discountTypeId === 2 && $parent.shouldValidatePrice()" />
                     </div>
                   </div>
+                  <div ng-class="validation.fieldCssClass(form, 'benefitsMilesPoints')">
+                    <label class="control-label">Miles/Points</label>
+                    <input
+                      ng-model="formData.benefitsMilesPoints"
+                      name="benefitsMilesPoints"
+                      ng-disabled="$parent.isDisabled()"
+                      type="text" class="form-control"
+                      ng-pattern="regexp.positiveNumber"
+                      maxlength="10"/>
+                  </div>
                 </div>
               </div>
             </div>
@@ -195,6 +205,16 @@
                     </div>
                     <input ng-model="formData.amountLimitPerShopValue[currency.id]" name="{{ currency.code }}AmountLimitPerShopValue" ng-disabled="$parent.isDisabled()" ng-required="formData.isAmountLimitPerShop" ng-pattern="regexp.price" type="text" class="form-control" />
                   </div>
+                </div>
+                <div ng-class="validation.fieldCssClass(form, 'limitPerShopMilesPoints')">
+                  <label class="control-label">Miles/Points</label>
+                  <input
+                    ng-model="formData.limitPerShopMilesPoints"
+                    name="limitPerShopMilesPoints"
+                    ng-disabled="$parent.isDisabled()"
+                    type="text" class="form-control"
+                    ng-pattern="regexp.positiveNumber"
+                    maxlength="10"/>
                 </div>
               </div>
             </div>
@@ -270,6 +290,16 @@
                     </div>
                     <input ng-model="formData.amountLimitPerTransactionValue[currency.id]" name="{{ currency.code }}AmountLimitPerTransactionValue" ng-required="formData.isAmountLimitPerTransaction" ng-disabled="$parent.isDisabled()" ng-pattern="regexp.price" type="text" class="form-control" />
                   </div>
+                </div>
+                <div ng-class="validation.fieldCssClass(form, 'limitPerTransactionMilesPoints')">
+                  <label class="control-label">Miles/Points</label>
+                  <input
+                    ng-model="formData.limitPerTransactionMilesPoints"
+                    name="limitPerTransactionMilesPoints"
+                    ng-disabled="$parent.isDisabled()"
+                    type="text" class="form-control"
+                    ng-pattern="regexp.positiveNumber"
+                    maxlength="10"/>
                 </div>
               </div>
             </div>

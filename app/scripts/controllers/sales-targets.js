@@ -20,6 +20,8 @@ angular.module('ts5App')
     $scope.itemMasterList = [];
     $scope.validation = formValidationUtility;
     $scope.salesTarget = {
+      startDate: '',
+      endDate: '',
       schedules:[],
       stores: [],
       employees: [],
@@ -80,7 +82,24 @@ angular.module('ts5App')
         return false;
       }
 
+      if ($this.isEndDateBeforeStartDate()) {
+        $this.showEndDateHasToBeAfterOrEqualStartDate();
+        return false;
+      }
+
       return $scope.salesTargetDataForm.$valid;
+    };
+
+    this.isEndDateBeforeStartDate = function () {
+      return !dateUtility.isAfterOrEqualDatePicker($scope.salesTarget.endDate, $scope.salesTarget.startDate);
+    };
+
+    this.showEndDateHasToBeAfterOrEqualStartDate = function () {
+      $scope.errorCustom = [{
+        field: 'End Date',
+        value: 'End date must be greater than Start date'
+      }];
+      $scope.displayError = true;
     };
 
     this.stationsHasDuplicates = function() {
@@ -228,14 +247,18 @@ angular.module('ts5App')
     };
 
     this.mapCrewsPayload = function () {
-      return $scope.salesTarget.employees.map(function (employee) {
-        var persistedEmployee = lodash.find($scope.persistedSalesTarget.crews, { crewId: employee.id });
+      return $scope.salesTarget.employees
+        .filter(function (employee) {
+          return employee !== null && employee !== undefined;
+        })
+        .map(function (employee) {
+          var persistedEmployee = lodash.find($scope.persistedSalesTarget.crews, { crewId: employee.id });
 
-        return {
-          id: (persistedEmployee) ? persistedEmployee.id : null,
-          crewId: employee.id
-        };
-      });
+          return {
+            id: (persistedEmployee) ? persistedEmployee.id : null,
+            crewId: employee.id
+          };
+        });
     };
 
     this.mapStationsPayload = function () {
@@ -246,8 +269,8 @@ angular.module('ts5App')
         .map(function (station) {
           return {
             id: station.entityId,
-            departureStationId: (station.departure) ? station.departure.stationId : null,
-            arrivalStationId: (station.arrival) ? station.arrival.stationId : null
+            departureStationId: (station.departure) ? station.departure.id : null,
+            arrivalStationId: (station.arrival) ? station.arrival.id : null
           };
         });
     };
@@ -402,7 +425,6 @@ angular.module('ts5App')
         description: response.description,
         startDate: startDate,
         endDate: endDate,
-        category: $this.findItemById($scope.salesTargetCategoryList, response.targetCategoryId),
         value: response.targetValue,
         schedules: response.schedules.map($this.mapScheduleFromResponse),
         stores: response.stores.map($this.mapStoreFromResponse),
@@ -414,7 +436,17 @@ angular.module('ts5App')
         items: response.items.map($this.mapItemFromResponse)
       };
 
-      $scope.isLoadingCompleted = true;
+      $this.getSalesTargetCategories().then(function () {
+        var category = $this.findItemById($scope.salesTargetCategoryList, response.targetCategoryId);
+
+        $scope.categoryExpired = false;
+        if (!category && response.targetCategoryId) {
+          $scope.categoryExpired = true;
+        }
+
+        $scope.salesTarget.category = category;
+        $scope.isLoadingCompleted = true;
+      });
     };
 
     this.findItemById = function (array, id) {
@@ -436,8 +468,8 @@ angular.module('ts5App')
     this.mapStationFromResponse = function (station) {
       return {
         entityId: station.id,
-        departure: lodash.find($scope.stationList, { stationId: station.departureStationId }),
-        arrival: lodash.find($scope.stationList, { stationId: station.arrivalStationId })
+        departure: lodash.find($scope.stationList, { id: station.departureStationId }),
+        arrival: lodash.find($scope.stationList, { id: station.arrivalStationId })
       };
     };
 
@@ -523,7 +555,7 @@ angular.module('ts5App')
     };
 
     this.getStations = function () {
-      return stationsFactory.getStationList(0).then($this.setStations);
+      return stationsFactory.getGlobalStationList().then($this.setStations);
     };
 
     this.setStations = function (dataFromAPI) {

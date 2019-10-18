@@ -31,9 +31,8 @@
                 ng-disabled="isDisabled()">
             </div>
           </div>
-          <div class="col-xs-12 col-sm-2" ng-class="validation.calendarCssClass(salesTargetDataForm, salesTarget.startDate)">
+          <div class="col-xs-12 col-sm-2" ng-class="validation.calendarCssClassWithAdditionalChecks(salesTargetDataForm, salesTarget.startDate, salesTarget.endDate)">
             <date-picker-field
-              ng-if="isLoadingCompleted"
               form="salesTargetDataForm"
               name="EffectiveStartDate"
               label="Effective Start Date"
@@ -43,9 +42,8 @@
               ng-model="salesTarget.startDate">
             </date-picker-field>
           </div>
-          <div class="col-xs-12 col-sm-2" ng-class="validation.calendarCssClass(salesTargetDataForm, salesTarget.endDate)">
+          <div class="col-xs-12 col-sm-2" ng-class="validation.calendarCssClassWithAdditionalChecks(salesTargetDataForm, salesTarget.startDate, salesTarget.endDate)">
             <date-picker-field
-              ng-if="isLoadingCompleted"
               form="salesTargetDataForm"
               name="EffectiveEndDate"
               label="Effective End Date"
@@ -72,16 +70,18 @@
             <div class="form-group">
               <label for="salesTargetName">Value *</label>
               <input
-                ng-model="salesTarget.value"
-                type="text"
-                custom-validity
-                custom-pattern="number"
                 name="Value"
-                required
+                ng-model="salesTarget.value"
+                ng-required="true"
+                ng-disabled="isDisabled()"
+                type="text"
                 class="form-control"
-                id="salesTargetValue"
-                placeholder="Value"
-                ng-disabled="isDisabled()">
+                maxlength="13"
+                placeholder="1.00"
+                ng-pattern="regexp.tenNumberWithTwoDecimal"
+                id="salesTargetValue">
+
+            </div>
             </div>
           </div>
         </div>

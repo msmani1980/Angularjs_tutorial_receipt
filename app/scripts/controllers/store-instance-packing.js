@@ -8,7 +8,7 @@
  * Controller of the ts5App
  */
 angular.module('ts5App').controller('StoreInstancePackingCtrl',
-  function($scope, storeInstancePackingFactory, $routeParams, lodash, storeInstanceWizardConfig,
+  function($scope, storeInstancePackingFactory, stockManagementStationItemsService, $routeParams, lodash, storeInstanceWizardConfig,
            $location, $q, dateUtility, socketIO, $filter, $localStorage) {
 
     var $this = this;
@@ -16,6 +16,9 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     $scope.undispatch = false;
     $scope.areWizardStepsInitialized = false;
     $scope.pickListOrder = [];
+    $scope.stockItemLmpCurrentQuantityDictionary = {};
+    $scope.areThereSockItemQuantityErrors = false;
+    $scope.errorCustom = [];
 
     // jshint ignore: start
     // jscs:disable
@@ -236,6 +239,14 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
           $scope.itemSortOrder = $scope.storeDetails.packingListSortOrderType;
         }
 
+        // Load catering station stock items
+        stockManagementStationItemsService.getStockManagementStationItems($scope.storeDetails.cateringStationId).then(function(dataFromAPI) {
+          const stockDashboardItemsList = angular.copy(dataFromAPI.response);
+          stockDashboardItemsList.forEach(function (stockItem) {
+            $scope.stockItemLmpCurrentQuantityDictionary[stockItem.itemMasterId + ''] = stockItem;
+          });
+        });
+
         $this.initWizardSteps($scope.storeDetails.replenishStoreInstanceId);
       }, this.errorHandler);
     };
@@ -276,6 +287,39 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       }
 
       return true;
+    };
+
+    this.validatePickedItemQuantities = function() {
+      const allPickListItems = $scope.pickListItems.concat($scope.newPickListItems);
+
+      angular.forEach(allPickListItems, function(item) {
+        const itemMasterIdAsString = $this.extractItemMasterIdAsString(item);
+        if (itemMasterIdAsString in $scope.stockItemLmpCurrentQuantityDictionary) {
+          const cateringStationItem = $scope.stockItemLmpCurrentQuantityDictionary[itemMasterIdAsString];
+
+          const pickedQuantity = ($scope.shouldDisplayQuantityField('picked') || $scope.shouldDisplayQuantityField('dispatch')) ?
+            item.pickedQuantity : item.calculatedPickQuantity;
+
+          if (pickedQuantity > 0 && pickedQuantity > cateringStationItem.currentQuantity) {
+            $scope.errorCustom.push({
+              field: 'Item with code ' + cateringStationItem.itemCode,
+              value: ' Picked quantity of ' + pickedQuantity + ' is more than warehouse current count of ' + cateringStationItem.currentQuantity
+            });
+          }
+        }
+      });
+
+      $scope.areThereSockItemQuantityErrors = $scope.errorCustom.length > 0;
+    };
+
+    this.extractItemMasterIdAsString = function(item) {
+      if (item.itemMasterId) {
+        return item.itemMasterId + '';
+      } else if (item.masterItem) {
+        return item.masterItem.id + '';
+      }
+
+      return null;
     };
 
     $scope.canProceed = function() {
@@ -371,7 +415,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.setItemDescription = function(item) {
-      item.itemDescription = item.masterItem.itemCode + ' - ' + item.masterItem.itemName; 
+      item.itemDescription = item.masterItem.itemCode + ' - ' + item.masterItem.itemName;
       item.itemName = item.masterItem.itemName;
       item.salesCategoryName = $this.findSalesCategoryName(item.masterItem.versions);
     };
@@ -621,9 +665,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
     };
 
     $scope.submit = function(shouldUpdateStatus) {
+      $this.clearErrors();
+
       $scope.shouldUpdateStatus = shouldUpdateStatus;
       $this.validateUllageReasonFields();
-      var isFormInvalid = $scope.storeInstancePackingForm.$invalid;
+      $this.validatePickedItemQuantities();
+      const isFormInvalid = $scope.storeInstancePackingForm.$invalid || $scope.areThereSockItemQuantityErrors;
       $scope.displayError = isFormInvalid;
 
       var isVarianceOk = false;
@@ -634,6 +681,18 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if (isVarianceOk) {
         $scope.save();
       }
+    };
+
+    this.clearCustomErrors = function () {
+      $scope.errorCustom = [];
+      $scope.displayError = false;
+    };
+
+    this.clearErrors = function () {
+      $this.clearCustomErrors();
+      $scope.displayError = false;
+      $scope.errorResponse = [];
+      $scope.errorCustom = [];
     };
 
     function handleItemResponseErrors(errorResponseFromAPI) {
@@ -846,7 +905,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       return ignoreEposData;
     }
-    
+
     this.handleWastageItems = function(item, newItem) {
       if (!(($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance') && $scope.defaultUllageCountsToIboundCountsForWastage)) {
         return;
@@ -1016,7 +1075,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       if ($scope.shouldDefaultInboundToEpos && ($routeParams.action === 'redispatch' || $routeParams.action === 'end-instance')) {
         $this.mergeEposInboundQuantities(angular.copy(responseCollection[3].response), angular.copy(responseCollection[2].response), responseCollection[4]);
       }
-      
+
       $scope.filterOffloadListItems();
       $scope.filterPickListItems();
       $this.hideLoadingModal();

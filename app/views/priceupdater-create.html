@@ -90,7 +90,7 @@
     	          						{{ currency.code }} *
 									</div>
 									<input name="Price Increase/Decrease By - {{ currency.code }}" ng-model="currency.price" ng-required="!rule.percentage"  
-											ng-disabled="isDisabled()" type="text" custom-validity custom-pattern="numberOrDecimal" class="form-control" maxlength="8" placeholder="1.00"/>
+											ng-disabled="isDisabled()" type="text" custom-validity custom-pattern="numberOrDecimal10Precision4" class="form-control" maxlength="11" placeholder="1.00"/>
 								</div>
 							</div>
 						</div>
@@ -111,7 +111,7 @@
     	          						{{ currency.code }} *
 									</div>
 									<input name="Threshold Limit - {{ currency.code }}" ng-model="currency.limitPrice" ng-required="true"  
-											ng-disabled="isDisabled()" type="text" custom-validity custom-pattern="numberOrDecimal" class="form-control" maxlength="8" placeholder="1.00"/>
+											ng-disabled="isDisabled()" type="text" custom-validity custom-pattern="numberOrDecimal10Precision4" class="form-control" maxlength="11" placeholder="1.00"/>
 								</div>
 							</div>
 						</div>
@@ -205,8 +205,8 @@
 					    	          						{{ stnCurrency.code }} *
 														</div>
 														<input name="Station Currencies List - {{ stnCurrency.code }}" ng-model="stnCurrency.price" ng-required="bulkStationException.startDate && bulkStationException.endDate"  
-																ng-disabled="isDisabled()" custom-validity custom-pattern="numberOrDecimal" 
-																type="text" class="form-control" maxlength="8" placeholder="1.00"/>
+																ng-disabled="isDisabled()" custom-validity custom-pattern="numberOrDecimal10Precision4" 
+																type="text" class="form-control" maxlength="11" placeholder="1.00"/>
 													</div>
 												</div>
 											</div>

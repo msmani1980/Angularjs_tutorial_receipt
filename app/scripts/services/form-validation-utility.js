@@ -8,7 +8,7 @@
  * Service in the ts5App.
  */
 angular.module('ts5App')
-  .service('formValidationUtility', function () {
+  .service('formValidationUtility', function (dateUtility) {
     this.fieldCssClass = function(form, fieldName) {
       var hasError = false;
       var hasSuccess = false;
@@ -31,5 +31,25 @@ angular.module('ts5App')
       }
 
       return { 'has-error': hasError, 'has-success': hasSuccess };
+    };
+
+    this.calendarCssClassWithAdditionalChecks = function(form, startDate, endDate) {
+      var hasError = false;
+
+      if (form && form.$submitted) {
+        hasError = !startDate;
+      }
+
+      if (form && form.$submitted) {
+        hasError = !endDate;
+      }
+
+      if (form && form.$submitted && startDate && endDate) {
+        if (!dateUtility.isAfterOrEqualDatePicker(endDate, startDate)) {
+          hasError = true;
+        }
+      }
+
+      return { 'has-error': hasError, 'has-success': !hasError };
     };
   });
