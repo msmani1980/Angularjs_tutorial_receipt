@@ -13,7 +13,7 @@
             </button>
             <button class="btn btn-primary" ng-click="save()"
                     ng-hide="readOnly"
-                    ng-disabled="readOnly || (!isCreate() && (isAnyRetailItemExpired() || isAnyPromotionCategoryExpired()))">
+                    ng-disabled="readOnly || (isAnyRetailItemExpired() || isAnyPromotionCategoryExpired())">
               <span class="fa fa-check-square-o" aria-hidden="true"></span>
               <span class="hidden-xs">{{ saveButtonText }}</span>
             </button>
@@ -254,7 +254,7 @@
                 <div ng-bind-html="masterItem.itemName | highlight: $select.search"></div>
               </ui-select-choices>
             </ui-select>
-            <div ng-if="!readOnly && !isCreate() && retailItemData.retailItem.isExpired" style="color:red">This retail item expired!</div>
+            <div ng-if="!readOnly && retailItemData.retailItem.isExpired" style="color:red">This retail item expired!</div>
           </div>
         </div>
         <div class="col-xs-6 col-sm-2">
