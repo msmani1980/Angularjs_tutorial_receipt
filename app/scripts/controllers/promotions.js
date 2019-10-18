@@ -641,23 +641,19 @@ angular.module('ts5App')
       // Check if retail items expired for provided start/end dates
       $scope.promotion.items.forEach(function (value, index) {
         if ($scope.itemCategorySelects[index]) {
-          console.log('skip 1')
           return;
         }
 
         $scope.repeatableItemListSelectOptions[index] = dataFromAPI.masterItems;
 
         if (!value.retailItem) {
-          console.log('skip 2')
           return;
         }
 
         if (!lodash.find($scope.repeatableItemListSelectOptions[index], { id: value.retailItem.id })) {
           value.retailItem.isExpired = true;
-          console.log('expired')
         } else {
           value.retailItem.isExpired = false;
-          console.log('not expired')
         }
       });
 
