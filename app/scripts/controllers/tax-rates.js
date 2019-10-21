@@ -42,7 +42,7 @@ angular.module('ts5App')
     };
 
     this.setTaxTypesList = function (dataFromAPI) {
-      $scope.taxTypesList = lodash.filter(angular.copy(dataFromAPI.response), { applicableTo: 'Station' });
+      $scope.taxTypesList = lodash.filter(angular.copy(dataFromAPI.response), { applicableTo: 'Station', enabled: true });
     };
 
     this.setTaxRateTypesList = function (dataFromAPI) {
