@@ -37,7 +37,7 @@
               <td>{{ preOrder.paxLastName }}</td>
               <td>{{ preOrder.frequentFlyerNumber }}</td>
               <td>{{ preOrder.paymentMethodName }}</td>
-              <td>{{ preOrder.paymentAmount }} {{ preOrder.paymentCurency }}</td>
+              <td>{{ preOrder.prePaidAmount }} {{ preOrder.paymentCurency }}</td>
               <td>{{ preOrder.ccType }}</td>
               <td>{{ preOrder.ccLast4Digit }}</td>
             </tr>
@@ -72,7 +72,7 @@
                     <td>{{ order.departureTime }}</td>
                     <td>{{ order.departureStation }}</td>
                     <td>{{ order.arrivalStation }}</td>
-                    <td>{{ order.totalPrice }} {{ preOrder.totalAmountCurrency }}</td>
+                    <td>{{ preOrder.totalAmount }} {{ preOrder.totalAmountCurrency }}</td>
                   </tr>
                   </tbody>
                 </table>
@@ -104,7 +104,7 @@
                           <td>{{ item.itemSubCategory }}</td>
                           <td>{{ item.itemPrice }} {{ preOrder.totalAmountCurrency }}</td>
                           <td>{{ item.qtyOrdered }}</td>
-                          <td>{{ item.itemPrice * item.qtyOrdered }} {{ preOrder.totalAmountCurrency }}</td>
+                          <td>{{ item.amount }} {{ preOrder.totalAmountCurrency }}</td>
                         </tr>
                       </tbody>
                     </table>
