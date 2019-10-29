@@ -1125,9 +1125,23 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       });
     };
 
+    // Adds a country exception collection in the form
+    $scope.addCountryException = function(priceIndex) {
+      $scope.formData.prices[priceIndex].priceCountryExceptions.push({
+        startDate: '',
+        endDate: '',
+        priceCountryExceptionCurrencies: []
+      });
+    };
+
     // Removes a station exception collection from the form
     $scope.removeStationException = function(priceIndex, key) {
       $scope.formData.prices[priceIndex].stationExceptions.splice(key, 1);
+    };
+
+    // Removes a country exception collection from the form
+    $scope.removeCountryException = function(priceIndex, key) {
+      $scope.formData.prices[priceIndex].priceCountryExceptions.splice(key, 1);
     };
 
     // gets a list of stations from the API filtered by station's start and end date
@@ -1173,10 +1187,30 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return listToReturn;
     };
 
+    // generate a list of station exception currencies
+    this.generatePriceCountryCurrenciesList = function(countryException, currenciesList) {
+      const listToReturn = [];
+
+      angular.forEach(currenciesList, function (currency) {
+        const newCurrency = $this.generateCurrency(currency);
+        const existingCurrency = lodash.findWhere(countryException.priceCountryExceptionCurrencies, { companyCurrencyId: newCurrency.companyCurrencyId });
+        newCurrency.id = (existingCurrency) ? existingCurrency.id : newCurrency.id;
+        newCurrency.price = (existingCurrency) ? existingCurrency.price : newCurrency.price;
+        listToReturn.push(newCurrency);
+      });
+
+      return listToReturn;
+    };
+
     // sets the stations currenies list
     this.setStationsCurrenciesList = function(stationException, data) {
       var stationExceptionCurrencies = this.generateStationCurrenciesList(stationException, data.response);
       stationException.stationExceptionCurrencies = stationExceptionCurrencies;
+    };
+
+    this.setCountryExceptionCurrenciesList = function(countryException, data) {
+      const countryExceptionCurrencies = this.generatePriceCountryCurrenciesList(countryException, data.response);
+      countryException.priceCountryExceptionCurrencies = countryExceptionCurrencies;
     };
 
     // Updates the station exception with stations list and currencies list
@@ -1189,6 +1223,16 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
       this.getStationsCurrenciesList(stationException).then(function(data) {
         $this.setStationsCurrenciesList(stationException, data);
+      });
+    };
+
+    // Updates the country exception with currencies list
+    this.updateCountryException = function(priceIndex, countryExceptionIndex) {
+      const $this = this;
+      const countryException = $scope.formData.prices[priceIndex].priceCountryExceptions[countryExceptionIndex];
+
+      this.getStationsCurrenciesList(countryException).then(function(data) {
+        $this.setCountryExceptionCurrenciesList(countryException, data);
       });
     };
 
@@ -1240,7 +1284,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         startDate: '',
         endDate: '',
         priceCurrencies: [],
-        stationExceptions: []
+        stationExceptions: [],
+        priceCountryExceptions: []
       });
     };
 
@@ -1254,7 +1299,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.saveWithSortNumberInUse = function() {
       angular.element('#confirmation-modal').modal('hide');
       var action = $scope.editingItem ? 'updateItem' : 'createItem';
-      var payload = $scope.mypayload; 
+      var payload = $scope.mypayload;
       $this[action](payload);
     };
 
@@ -1327,11 +1372,16 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         return false;
       }
 
-      for (var priceIndex in $scope.formData.prices) {
+      for (const priceIndex in $scope.formData.prices) {
         this.checkPriceGroup(newPrices, oldPrices, priceIndex);
-        for (var stationExceptionIndex in $scope.formData.prices[priceIndex].stationExceptions) {
+        for (const stationExceptionIndex in $scope.formData.prices[priceIndex].stationExceptions) {
           this.checkStationException(newPrices, oldPrices, priceIndex, stationExceptionIndex);
         }
+
+        for (const countryExceptionIndex in $scope.formData.prices[priceIndex].priceCountryExceptions) {
+          this.checkCountryException(newPrices, oldPrices, priceIndex, countryExceptionIndex);
+        }
+
       }
     };
 
@@ -1356,8 +1406,24 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return false;
     };
 
+    this.countryExceptionExist = function(newPrice, oldPrice) {
+      if (!newPrice || !oldPrice) {
+        return false;
+      }
+
+      if (newPrice.priceCountryExceptions && oldPrice.priceCountryExceptions) {
+        return true;
+      }
+
+      return false;
+    };
+
     this.stationsAreEmpty = function(newStationException, oldStationException) {
       return (!oldStationException || !newStationException.startDate || !newStationException.endDate);
+    };
+
+    this.areCountryExceptionDatesDefined = function(newCountryException, oldCountryException) {
+      return (!oldCountryException || !newCountryException.startDate || !newCountryException.endDate);
     };
 
     this.stationExceptionDatesAreValid = function(newPrice, oldPrice, stationExceptionIndex) {
@@ -1375,9 +1441,32 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       return false;
     };
 
+    this.countryExceptionDatesAreValid = function(newPrice, oldPrice, countryExceptionIndex) {
+      const newPriceCountryException = newPrice.priceCountryExceptions[countryExceptionIndex];
+      const oldPriceCountryException = oldPrice.priceCountryExceptions[countryExceptionIndex];
+      if ($this.areCountryExceptionDatesDefined(newPriceCountryException, oldPriceCountryException)) {
+        return false;
+      }
+
+      if (newPriceCountryException.startDate !== oldPriceCountryException.startDate || newPriceCountryException.endDate !==
+        oldPriceCountryException.endDate) {
+        return true;
+      }
+
+      return false;
+    };
+
     this.isStationExceptionValid = function(newPrice, oldPrice, stationExceptionIndex) {
       if (this.stationExceptionExist(newPrice, oldPrice)) {
         return this.stationExceptionDatesAreValid(newPrice, oldPrice, stationExceptionIndex);
+      }
+
+      return false;
+    };
+
+    this.isCountryExceptionValid = function(newPrice, oldPrice, countryExceptionIndex) {
+      if (this.countryExceptionExist(newPrice, oldPrice)) {
+        return this.countryExceptionDatesAreValid(newPrice, oldPrice, countryExceptionIndex);
       }
 
       return false;
@@ -1388,6 +1477,14 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       var oldPrice = oldPrices[priceIndex];
       if (this.isStationExceptionValid(newPrice, oldPrice, stationExceptionIndex)) {
         this.updateStationException(priceIndex, stationExceptionIndex);
+      }
+    };
+
+    this.checkCountryException = function(newPrices, oldPrices, priceIndex, countryExceptionIndex) {
+      const newPrice = newPrices[priceIndex];
+      const oldPrice = oldPrices[priceIndex];
+      if (this.isCountryExceptionValid(newPrice, oldPrice, countryExceptionIndex)) {
+        this.updateCountryException(priceIndex, countryExceptionIndex);
       }
     };
 
@@ -1466,7 +1563,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
       var $this = this;
       this.showLoadingModal('We are updating your item');
-      
+
       $this.removeEmptyPrices(itemData);
 
       var payload = {
@@ -1500,7 +1597,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         var itemData = angular.copy(formData);
         var payload = $this.formatPayload(itemData);
         var action = $scope.editingItem ? 'updateItem' : 'createItem';
-        $scope.mypayload = payload; 
+        $scope.mypayload = payload;
         var masterItemId = -1;
         if (angular.isDefined(payload.masterItem)) {
           masterItemId = parseInt(payload.masterItem.id);
@@ -1512,7 +1609,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           angular.element('#confirmation-modal').modal('show');
           return;
         }
-        
+
         $this[action](payload);
       }
     };
@@ -1607,8 +1704,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     $scope.isMeasurementRequired = function() {
       var isRequired = false;
       if ($scope.form) {
-        if (($scope.form.Length.$$rawModelValue && $scope.form.Length.$$rawModelValue.length) || 
-            ($scope.form.Width.$$rawModelValue && $scope.form.Width.$$rawModelValue.length) || 
+        if (($scope.form.Length.$$rawModelValue && $scope.form.Length.$$rawModelValue.length) ||
+            ($scope.form.Width.$$rawModelValue && $scope.form.Width.$$rawModelValue.length) ||
             ($scope.form.Height.$$rawModelValue && $scope.form.Height.$$rawModelValue.length)) {
           isRequired = true;
         }
