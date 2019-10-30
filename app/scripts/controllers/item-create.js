@@ -399,6 +399,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         }
 
         $this.formatStationExceptions(price);
+        $this.formatPriceCountryExceptions(price);
       }
     };
 
@@ -409,6 +410,19 @@ angular.module('ts5App').controller('ItemCreateCtrl',
           delete exception.id;
           for (var currencyKey in exception.stationExceptionCurrencies) {
             var currency = exception.stationExceptionCurrencies[currencyKey];
+            delete currency.id;
+          }
+        }
+      }
+    };
+
+    this.formatPriceCountryExceptions = function(priceData) {
+      for (const exceptionKey in priceData.priceCountryExceptions) {
+        const exception = priceData.priceCountryExceptions[exceptionKey];
+        if ($scope.cloningItem) {
+          delete exception.id;
+          for (const currencyKey in exception.priceCountryExceptionCurrencies) {
+            const currency = exception.priceCountryExceptionCurrencies[currencyKey];
             delete currency.id;
           }
         }
@@ -503,6 +517,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         price.endDate = dateUtility.formatDateForApp(price.endDate);
         this.updatePriceGroup(priceIndex);
         this.formatStationExceptionDates(price);
+        this.formatPriceCountryExceptionDates(price);
       }
     };
 
@@ -511,6 +526,14 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         var stationException = price.stationExceptions[stationExceptionIndex];
         stationException.startDate = dateUtility.formatDateForApp(stationException.startDate);
         stationException.endDate = dateUtility.formatDateForApp(stationException.endDate);
+      }
+    };
+
+    this.formatPriceCountryExceptionDates = function(price) {
+      for (const exceptionIndex in price.priceCountryExceptions) {
+        const exception = price.priceCountryExceptions[exceptionIndex];
+        exception.startDate = dateUtility.formatDateForApp(exception.startDate);
+        exception.endDate = dateUtility.formatDateForApp(exception.endDate);
       }
     };
 
@@ -1020,12 +1043,21 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       }
     };
 
+    this.formatPriceCountryExceptionPayloadDates = function(itemData, priceIndex) {
+      for (const exceptionIndex in itemData.prices[priceIndex].priceCountryExceptions) {
+        const exception = itemData.prices[priceIndex].priceCountryExceptions[exceptionIndex];
+        exception.startDate = dateUtility.formatDateForAPI(exception.startDate);
+        exception.endDate = dateUtility.formatDateForAPI(exception.endDate);
+      }
+    };
+
     this.formatPricePayloadDates = function(itemData) {
       for (var priceIndex in itemData.prices) {
         var price = itemData.prices[priceIndex];
         price.startDate = dateUtility.formatDateForAPI(price.startDate);
         price.endDate = dateUtility.formatDateForAPI(price.endDate);
         this.formatStationExceptionPayloadDates(itemData, priceIndex);
+        this.formatPriceCountryExceptionPayloadDates(itemData, priceIndex);
       }
     };
 
