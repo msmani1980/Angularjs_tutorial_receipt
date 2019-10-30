@@ -52,10 +52,11 @@
                 id="fromCountry"
                 ng-required="false"
                 style="min-height: 34px;"
+                ng-disabled="$parent.$parent.isAddPriceDisabled()"
                 ng-class="{ 'has-error' : !countryException.fromCountryId && displayError , 'has-success' : countryException.fromCountryId }">
-                <ui-select-match placeholder="From Country" allow-clear>{{ $select.selected.countryName }}</ui-select-match>
+                <ui-select-match placeholder="All Countries" allow-clear>{{ $select.selected.countryName }}</ui-select-match>
                 <ui-select-choices
-                  repeat="country.id as country in $parent.$parent.countries | filter: $select.search | orderBy:'countryName'">
+                  repeat="country.id as country in $parent.$parent.countryExceptionCountries | filter: $select.search | orderBy:'countryName'">
                   <div ng-bind-html="country.countryName | highlight: $select.search"></div>
                 </ui-select-choices>
               </ui-select>
@@ -73,10 +74,11 @@
                 id="toCountry"
                 ng-required="false"
                 style="min-height: 34px;"
+                ng-disabled="$parent.$parent.isAddPriceDisabled()"
                 ng-class="{ 'has-error' : !countryException.toCountryId && displayError , 'has-success' : countryException.toCountryId }">
-                <ui-select-match placeholder="From Country" allow-clear>{{ $select.selected.countryName }}</ui-select-match>
+                <ui-select-match placeholder="All Countries" allow-clear>{{ $select.selected.countryName }}</ui-select-match>
                 <ui-select-choices
-                  repeat="country.id as country in $parent.$parent.countries | filter: $select.search | orderBy:'countryName'">
+                  repeat="country.id as country in $parent.$parent.countryExceptionCountries | filter: $select.search | orderBy:'countryName'">
                   <div ng-bind-html="country.countryName | highlight: $select.search"></div>
                 </ui-select-choices>
               </ui-select>

@@ -31,6 +31,11 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       voucherDurationId: null
     };
 
+    $scope.allCountriesDefaultValue = {
+      countryCode: 'All Countries',
+      countryName: 'All Countries',
+      id: null
+    };
     $scope.viewName = 'Create Item';
     $scope.buttonText = 'Create';
     $scope.itemIsActive = false;
@@ -951,6 +956,8 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.setCountryList = function(data) {
       $scope.countries = data.countries;
+      $scope.countryExceptionCountries =  angular.copy(data.countries);
+      $scope.countryExceptionCountries.unshift($scope.allCountriesDefaultValue);
     };
 
     this.setSATFields = function(data) {
