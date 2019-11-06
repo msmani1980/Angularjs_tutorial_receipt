@@ -52,7 +52,7 @@
                 id="fromCountry"
                 ng-required="false"
                 style="min-height: 34px;"
-                ng-disabled="$parent.$parent.isAddPriceDisabled()"
+                ng-disabled="viewOnly || itemIsActive"
                 ng-class="{ 'has-error' : !countryException.fromCountryId && displayError , 'has-success' : countryException.fromCountryId }">
                 <ui-select-match placeholder="All Countries" allow-clear>{{ $select.selected.countryName }}</ui-select-match>
                 <ui-select-choices
@@ -74,7 +74,7 @@
                 id="toCountry"
                 ng-required="false"
                 style="min-height: 34px;"
-                ng-disabled="$parent.$parent.isAddPriceDisabled()"
+                ng-disabled="viewOnly || itemIsActive"
                 ng-class="{ 'has-error' : !countryException.toCountryId && displayError , 'has-success' : countryException.toCountryId }">
                 <ui-select-match placeholder="All Countries" allow-clear>{{ $select.selected.countryName }}</ui-select-match>
                 <ui-select-choices
