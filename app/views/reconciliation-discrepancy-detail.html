@@ -255,6 +255,32 @@
                   </tr>
                 </table>
               </div>
+
+              <h5 class="text-center"><b>Expected Charity</b></h5>
+              <table class="table table-condensed table-bordered col-xs-12" style="margin-bottom: 5px;">
+                <tr class="active">
+                  <td>Card Type</td>
+                  <td>Currency</td>
+                  <td>Value</td>
+                  <td>{{report.operatingCurrency}}</td>
+                </tr>
+                <tr ng-repeat="charity in report.charity">
+                  <td>{{charity.cardType}}</td>
+                  <td>{{charity.currencyCode}}</td>
+                  <td>{{charity.total}}</td>
+                  <td>{{charity.baseTotal}}</td>
+                </tr>
+                <tr ng-if="!report.charity.length">
+                  <td colspan="2">No expected charity added</td>
+                  <td>0.00</td>
+                  <td>0.00</td>
+                </tr>
+                <tr class="active">
+                  <td colspan="3">Expected Charity Total</td>
+                  <td>{{report.charityTotal ? report.charityTotal : '0.00'}}</td>
+                </tr>
+              </table>
+              <p class="ng-binding" style="">Note: This is not included in Barset revenue</p>
             </div>
           </div>
         </div>
