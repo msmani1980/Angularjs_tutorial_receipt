@@ -80,7 +80,7 @@
 
 				<div class="form-group" ng-repeat="(currencyKey,currency) in itemPrice.priceCurrencies track by $index" >
 
-					<div class="input-group" ng-class="{ 'has-error' : !currency.price && displayError && $parent.shouldValidatePrice() , 'has-success' : currency.price && $parent.shouldValidatePrice() }">
+					<div class="input-group" ng-class="{ 'has-error' : !currency.price && displayError && !(($parent.isAddPriceDisabled() || !$parent.isItemPriceNewOrIsExitingAndValidForEdit(itemPrice)) && !$parent.cloningItem) , 'has-success' : currency.price && !(($parent.isAddPriceDisabled() || !$parent.isItemPriceNewOrIsExitingAndValidForEdit(itemPrice)) && !$parent.cloningItem) }">
 
 						<div class="input-group-addon">
                         	{{ currency.code }} *
@@ -89,7 +89,7 @@
 						<input
 							name="Currencies List - {{ currency.code }}"
 							ng-model="currency.price"
-							ng-required="$parent.shouldValidatePrice()"
+							ng-required="!(($parent.isAddPriceDisabled() || !$parent.isItemPriceNewOrIsExitingAndValidForEdit(itemPrice)) && !$parent.cloningItem)"
 							ng-disabled="($parent.isAddPriceDisabled() || !$parent.isItemPriceNewOrIsExitingAndValidForEdit(itemPrice)) && !$parent.cloningItem"
 							type="text"
 							class="form-control"
