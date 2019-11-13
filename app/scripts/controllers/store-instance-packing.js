@@ -310,10 +310,12 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
             }
           }
         });
+
         if ($scope.errorCustom.length > 0) {
           $this.showWarningModal();
         }
       }
+
       $scope.areThereSockItemQuantityErrors = $scope.errorCustom.length > 0;
     };
 
