@@ -178,7 +178,7 @@
         </tr>
 
         <!-- New Pick List Items-->
-        <tr ng-repeat="item in newPickListItems | filter:{itemDescription: itemFilterText} | orderBy:itemSortOrder" ng-hide="readOnly">
+        <tr ng-repeat="item in newPickListItems | filter:{itemDescription: itemFilterText} | orderBy:itemSortOrder" ng-class="showVarianceWarningClass(item)" ng-hide="readOnly">
           <td>
             <input type="text" ng-model="item.itemDescription" disabled ng-hide="true"/>
             <ui-select required="required" ng-model="item.masterItem" theme="bootstrap" on-select="filterPickListItems()" name="newPickListItem{{ $index }}" ng-change="setItemDescription(item)">
@@ -422,7 +422,7 @@
       </div>
       <div class="modal-body">
         <h3>Attempting to dispatch more items than there are in stock.</h3>
-        <h4>Correct highlighted rows Picked Quantity or Save & Exit the store and update the LMP stock levels.</h4>
+        <h4>Correct highlighted rows or Save & Exit the store and update the LMP stock levels.</h4>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

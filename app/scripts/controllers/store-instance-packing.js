@@ -307,6 +307,16 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
                 field: 'Item with code ' + cateringStationItem.itemCode,
                 value: ' Picked quantity of ' + pickedQuantity + ' is more than warehouse current count of ' + cateringStationItem.currentQuantity
               });
+            } else {
+              item.exceedsVariance = false;
+            }
+          } else {
+            if (item.itemName !== undefined) { // ignore if new record added but item not picked from list box
+              item.exceedsVariance = true;
+              $scope.errorCustom.push({
+                field: 'Item ' + item.itemName,
+                value: ' Not found in ' + $scope.storeDetails.displayLMPStation + ' warehouse.'
+              });
             }
           }
         });
