@@ -86,14 +86,14 @@
                         	{{ currency.code }} *
 						</div>
 
-						<input 
-							name="Currencies List - {{ currency.code }}" 
-							ng-model="currency.price" 
+						<input
+							name="Currencies List - {{ currency.code }}"
+							ng-model="currency.price"
 							ng-required="!(($parent.isAddPriceDisabled() || !$parent.isItemPriceNewOrIsExitingAndValidForEdit(itemPrice)) && !$parent.cloningItem)"
-							ng-disabled="($parent.isAddPriceDisabled() || !$parent.isItemPriceNewOrIsExitingAndValidForEdit(itemPrice)) && !$parent.cloningItem" 
-							type="text" 
-							class="form-control" 
-							maxlength="9" 
+							ng-disabled="($parent.isAddPriceDisabled() || !$parent.isItemPriceNewOrIsExitingAndValidForEdit(itemPrice)) && !$parent.cloningItem"
+							type="text"
+							class="form-control"
+							maxlength="9"
 							placeholder="1.00"
 							ng-pattern="regexp.sixNumberWithTwoDecimal"/>
 
@@ -130,6 +130,26 @@
 
         <div ng-repeat="(key,stationException) in itemPrice.stationExceptions track by $index">
           <input-station-exception> </input-station-exception>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div ng-show="itemPrice.startDate && itemPrice.endDate" class="station-exceptions">
+
+      <h3>Country Exceptions</h3>
+
+      <p>
+        <button type="button" ng-disabled="($parent.isAddPriceDisabled() || !$parent.isItemPriceNewOrIsExitingAndValidForEdit(itemPrice)) && !$parent.cloningItem" class="btn btn-primary" ng-click="addCountryException($parent.key)">
+          <i class="fa fa-plus"></i> Add Country Exception
+        </button>
+      </p>
+
+      <div id="country-exception-container">
+
+        <div ng-repeat="(key,countryException) in itemPrice.priceCountryExceptions track by $index">
+          <input-country-exception> </input-country-exception>
         </div>
 
       </div>
