@@ -422,11 +422,11 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.formatPriceCountryExceptions = function(priceData) {
-      for (const exceptionKey in priceData.priceCountryExceptions) {
+      for (var exceptionKey in priceData.priceCountryExceptions) {
         const exception = priceData.priceCountryExceptions[exceptionKey];
         if ($scope.cloningItem) {
           delete exception.id;
-          for (const currencyKey in exception.priceCountryExceptionCurrencies) {
+          for (var currencyKey in exception.priceCountryExceptionCurrencies) {
             const currency = exception.priceCountryExceptionCurrencies[currencyKey];
             delete currency.id;
           }
@@ -535,7 +535,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.formatPriceCountryExceptionDates = function(price) {
-      for (const exceptionIndex in price.priceCountryExceptions) {
+      for (var exceptionIndex in price.priceCountryExceptions) {
         const exception = price.priceCountryExceptions[exceptionIndex];
         exception.startDate = dateUtility.formatDateForApp(exception.startDate);
         exception.endDate = dateUtility.formatDateForApp(exception.endDate);
@@ -1051,7 +1051,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.formatPriceCountryExceptionPayloadDates = function(itemData, priceIndex) {
-      for (const exceptionIndex in itemData.prices[priceIndex].priceCountryExceptions) {
+      for (var exceptionIndex in itemData.prices[priceIndex].priceCountryExceptions) {
         const exception = itemData.prices[priceIndex].priceCountryExceptions[exceptionIndex];
         exception.startDate = dateUtility.formatDateForAPI(exception.startDate);
         exception.endDate = dateUtility.formatDateForAPI(exception.endDate);
@@ -1411,13 +1411,13 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         return false;
       }
 
-      for (const priceIndex in $scope.formData.prices) {
+      for (var priceIndex in $scope.formData.prices) {
         this.checkPriceGroup(newPrices, oldPrices, priceIndex);
-        for (const stationExceptionIndex in $scope.formData.prices[priceIndex].stationExceptions) {
+        for (var stationExceptionIndex in $scope.formData.prices[priceIndex].stationExceptions) {
           this.checkStationException(newPrices, oldPrices, priceIndex, stationExceptionIndex);
         }
 
-        for (const countryExceptionIndex in $scope.formData.prices[priceIndex].priceCountryExceptions) {
+        for (var countryExceptionIndex in $scope.formData.prices[priceIndex].priceCountryExceptions) {
           this.checkCountryException(newPrices, oldPrices, priceIndex, countryExceptionIndex);
         }
 
