@@ -43,7 +43,7 @@
 
             <div class="form-group" ng-disabled="$parent.$parent.isAddPriceDisabled()" ng-class="{ 'has-error' : !countryException.toCountryId && displayError, 'has-success' : countryException.toCountryId }">
 
-              <label>From Country *</label>
+              <label>From Country</label>
 
               <ui-select
                 name="fromCountry"
@@ -53,7 +53,7 @@
                 ng-required="false"
                 style="min-height: 34px;"
                 ng-disabled="viewOnly || itemIsActive"
-                ng-class="{ 'has-error' : !countryException.fromCountryId && displayError , 'has-success' : countryException.fromCountryId }">
+                ng-class="'has-success'">
                 <ui-select-match placeholder="All Countries" allow-clear>{{ $select.selected.countryName }}</ui-select-match>
                 <ui-select-choices
                   repeat="country.id as country in $parent.$parent.countryExceptionCountries | filter: $select.search | orderBy:'countryName'">
@@ -65,7 +65,7 @@
 
             <div class="form-group" ng-disabled="$parent.$parent.isAddPriceDisabled()" ng-class="{ 'has-error' : !countryException.toCountryId && displayError, 'has-success' : countryException.toCountryId }">
 
-              <label>To Country *</label>
+              <label>To Country</label>
 
               <ui-select
                 name="toCountry"
@@ -75,7 +75,7 @@
                 ng-required="false"
                 style="min-height: 34px;"
                 ng-disabled="viewOnly || itemIsActive"
-                ng-class="{ 'has-error' : !countryException.toCountryId && displayError , 'has-success' : countryException.toCountryId }">
+                ng-class="'has-success'">
                 <ui-select-match placeholder="All Countries" allow-clear>{{ $select.selected.countryName }}</ui-select-match>
                 <ui-select-choices
                   repeat="country.id as country in $parent.$parent.countryExceptionCountries | filter: $select.search | orderBy:'countryName'">
