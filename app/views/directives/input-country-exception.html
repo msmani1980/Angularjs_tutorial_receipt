@@ -41,7 +41,7 @@
 
 					<div class="col-xs-12 col-sm-6">
 
-            <div class="form-group" ng-disabled="$parent.$parent.isAddPriceDisabled()" ng-class="{ 'has-error' : !countryException.toCountryId && displayError, 'has-success' : countryException.toCountryId }">
+            <div class="form-group" ng-disabled="$parent.$parent.isAddPriceDisabled()">
 
               <label>From Country</label>
 
@@ -50,10 +50,8 @@
                 ng-model="countryException.fromCountryId"
                 theme="bootstrap"
                 id="fromCountry"
-                ng-required="false"
                 style="min-height: 34px;"
-                ng-disabled="viewOnly || itemIsActive"
-                ng-class="'has-success'">
+                ng-disabled="viewOnly || itemIsActive">
                 <ui-select-match placeholder="All Countries" allow-clear>{{ $select.selected.countryName }}</ui-select-match>
                 <ui-select-choices
                   repeat="country.id as country in $parent.$parent.countryExceptionCountries | filter: $select.search | orderBy:'countryName'">
@@ -63,7 +61,7 @@
 
             </div>
 
-            <div class="form-group" ng-disabled="$parent.$parent.isAddPriceDisabled()" ng-class="{ 'has-error' : !countryException.toCountryId && displayError, 'has-success' : countryException.toCountryId }">
+            <div class="form-group" ng-disabled="$parent.$parent.isAddPriceDisabled()">
 
               <label>To Country</label>
 
@@ -72,10 +70,8 @@
                 ng-model="countryException.toCountryId"
                 theme="bootstrap"
                 id="toCountry"
-                ng-required="false"
                 style="min-height: 34px;"
-                ng-disabled="viewOnly || itemIsActive"
-                ng-class="'has-success'">
+                ng-disabled="viewOnly || itemIsActive">
                 <ui-select-match placeholder="All Countries" allow-clear>{{ $select.selected.countryName }}</ui-select-match>
                 <ui-select-choices
                   repeat="country.id as country in $parent.$parent.countryExceptionCountries | filter: $select.search | orderBy:'countryName'">
