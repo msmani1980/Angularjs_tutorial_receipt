@@ -9,7 +9,8 @@
  */
 angular.module('ts5App')
   .controller('BackOfficeConfigCtrl', function ($scope, dateUtility, eposConfigFactory, $location, $routeParams, $q, $localStorage, _, lodash,
-                                                backOfficeConfigService, companyPreferencesService, globalMenuService, featureThresholdsFactory, accessService, recordsService) {
+                                                backOfficeConfigService, companyPreferencesService, globalMenuService, featureThresholdsFactory,
+                                                $filter, accessService, recordsService) {
     var $this = this;
 
     var _companyId = null;
@@ -65,6 +66,8 @@ angular.module('ts5App')
     };
     $scope.initialRadioButtonModuleOptionPopulatedIds = {};
     $scope.initialCheckBoxModuleOptionPopulatedIds = {};
+
+    $scope.errorCustom = [];
 
     $scope.resetValues = function () {
       $scope.formData = {};
@@ -349,25 +352,48 @@ angular.module('ts5App')
       return $scope.moduleConfiguration && $scope.moduleConfiguration.moduleVersions.length === 0;
     };
 
-    $scope.saveBackOfficeConfig = function () {
-      $this.showLoadingModal('Saving');
-      $this.resetErrors();
-
-      var promises = [];
-
-      var companyPreferencePayload = $this.constructSaveOrUpdateDataForCompanyPreference($scope.formData);
-      var salesThresholdPayload = $this.constructPayloadForSalesThreshold($scope.formData);
-
-      promises.push(companyPreferencesService.createOrUpdateCompanyPreference(companyPreferencePayload, _companyId));
-      _.forEach(salesThresholdPayload, function(payload) {
-        if (payload.id) {
-          promises.push(featureThresholdsFactory.updateThreshold(payload.featureCode, payload, payload.id));
-        } else {
-          promises.push(featureThresholdsFactory.createThreshold(payload.featureCode, payload));
+    this.allOptionsSelected = function(formData) {
+      $scope.errorCustom = [];
+      angular.forEach(formData, function (option) {
+        if (option.value === undefined || option.value === null) {
+          $scope.errorCustom.push({
+            field: 'Option ' + $filter('filter')($scope.configOptions, { optionCode: option.optionCode })[0].name,
+            value: ' Cannot be blank.'
+          });
         }
       });
 
-      $q.all(promises).then($this.createOrUpdateSuccess, $this.errorHandler);
+      if ($scope.errorCustom.length > 0) {
+        $scope.displayError = true;
+        $this.showWarningModal();
+        return false;
+      } else {
+        $scope.displayError = false;
+        return true;
+      }
+    };
+
+    $scope.saveBackOfficeConfig = function () {
+      if ($this.allOptionsSelected($scope.formData)) {
+        $this.showLoadingModal('Saving');
+        $this.resetErrors();
+
+        var promises = [];
+
+        var companyPreferencePayload = $this.constructSaveOrUpdateDataForCompanyPreference($scope.formData);
+        var salesThresholdPayload = $this.constructPayloadForSalesThreshold($scope.formData);
+
+        promises.push(companyPreferencesService.createOrUpdateCompanyPreference(companyPreferencePayload, _companyId));
+        _.forEach(salesThresholdPayload, function(payload) {
+          if (payload.id) {
+            promises.push(featureThresholdsFactory.updateThreshold(payload.featureCode, payload, payload.id));
+          } else {
+            promises.push(featureThresholdsFactory.createThreshold(payload.featureCode, payload));
+          }
+        });
+
+        $q.all(promises).then($this.createOrUpdateSuccess, $this.errorHandler);
+      }
     };
 
     this.constructPayloadForSalesThreshold = function(formData) {
@@ -457,6 +483,10 @@ angular.module('ts5App')
 
     this.init = function() {
       recordsService.getFeatures().then($this.initSuccess, $this.initDependenciesError);
+    };
+
+    this.showWarningModal = function () {
+      angular.element('#warning').modal('show');
     };
 
     this.init();
