@@ -1543,7 +1543,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
 
     this.handlePriceExceptionErrors = function() {
       $scope.countryPriceExceptionErrors = {};
-      for (let errorIndex in $scope.errorResponse.data) {
+      for (var errorIndex in $scope.errorResponse.data) {
         const error = $scope.errorResponse.data[errorIndex];
         if (error.field && error.field.match('price[1-9]*priceCountryException[1-9]*')) {
           const priceErrorIndex = Number(error.field.match('price[1-9]*')[0].replace('price', ''));
@@ -1556,7 +1556,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     $scope.doesCountryExceptionFieldHasErrors = function(priceIndex, countryExceptionIndex, fieldName) {
-      let fieldErrorKey = priceIndex + '_' + countryExceptionIndex + '_' + fieldName;
+      const fieldErrorKey = priceIndex + '_' + countryExceptionIndex + '_' + fieldName;
       return $scope.countryPriceExceptionErrors[fieldErrorKey];
     };
 
