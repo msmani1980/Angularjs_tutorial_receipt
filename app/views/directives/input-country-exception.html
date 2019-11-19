@@ -19,14 +19,21 @@
 
         <div class="row">
 
-          <div class="col-xs-12 col-sm-6" ng-class="{ 'has-error' : !countryException.startDate && displayError, 'has-success' : countryException.startDate }">
+          <div
+            class="col-xs-12 col-sm-6"
+            ng-class="{ 'has-error' : (!countryException.startDate || $parent.$parent.doesCountryExceptionFieldHasErrors($parent.$parent.key+1, $parent.key+1, 'startDate')) && displayError, 'has-success' : countryException.startDate && !$parent.$parent.doesCountryExceptionFieldHasErrors($parent.$parent.key+1, $parent.key+1, 'startDate') }"
+          >
             <date-picker-field ng-if="minDate" min-date="$parent.minDate"
               disable="viewOnly || itemIsActive" form="form" label="Effective From"
               name="Country Exception {{ $parent.key+1 }} Effective From" ng-model="countryException.startDate" required="true">
             </date-picker-field>
           </div>
 
-          <div class="col-xs-12 col-sm-6" ng-class="{ 'has-error' : !countryException.endDate && displayError , 'has-success' : countryException.endDate }">
+          <div
+            class="col-xs-12 col-sm-6"
+            ng-class="{ 'has-error' : (!countryException.endDate || $parent.$parent.doesCountryExceptionFieldHasErrors($parent.$parent.key+1, $parent.key+1, 'endDate')) && displayError, 'has-success' : countryException.endDate && !$parent.$parent.doesCountryExceptionFieldHasErrors($parent.$parent.key+1, $parent.key+1, 'endDate') }"
+
+          >
             <date-picker-field ng-if="minDate" min-date="$parent.minDate"
               disable="viewOnly || itemIsInactive" form="form" label="Effective To"
               end-current-effective="$parent.isAddPriceDisabled() || $parent.editingItem"

@@ -75,6 +75,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       { prefix: 'contains', name: 'Contains' },
       { prefix: 'may_contain', name: 'May contain' }
     ];
+    $scope.countryPriceExceptionErrors = {};
 
     this.checkFormState = function() {
       var path = $location.path();
@@ -1533,6 +1534,32 @@ angular.module('ts5App').controller('ItemCreateCtrl',
       $scope.errorResponse = angular.copy(dataFromAPI);
     };
 
+    this.errorHandlerSubmitForm = function(dataFromAPI) {
+      $scope.errorResponse = angular.copy(dataFromAPI);
+      angular.element('#loading').modal('hide');
+      $this.handlePriceExceptionErrors();
+      $scope.displayError = true;
+    };
+
+    this.handlePriceExceptionErrors = function() {
+      $scope.countryPriceExceptionErrors = {};
+      for (var errorIndex in $scope.errorResponse.data) {
+        const error = $scope.errorResponse.data[errorIndex];
+        if (error.field && error.field.match('price[1-9]*priceCountryException[1-9]*')) {
+          const priceErrorIndex = Number(error.field.match('price[1-9]*')[0].replace('price', ''));
+          const priceCountryExceptionErrorIndex = Number(error.field.match('priceCountryException[1-9]*')[0].replace('priceCountryException', ''));
+          const errorFieldName = error.field.replace(error.field.match('price[1-9]*priceCountryException[1-9]*')[0], '');
+          const errorDictKey = priceErrorIndex + '_' + priceCountryExceptionErrorIndex + '_' + errorFieldName;
+          $scope.countryPriceExceptionErrors[errorDictKey] = true;
+        }
+      }
+    };
+
+    $scope.doesCountryExceptionFieldHasErrors = function(priceIndex, countryExceptionIndex, fieldName) {
+      const fieldErrorKey = priceIndex + '_' + countryExceptionIndex + '_' + fieldName;
+      return $scope.countryPriceExceptionErrors[fieldErrorKey];
+    };
+
     this.updateSuccessHandler = function(response) {
       $this.updateFormData(response[0].retailItem);
       $scope.deserializeSubstitutionsAfterItemSet();
@@ -1609,7 +1636,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         retailItem: itemData
       };
       var promises = $this.makeUpdatePromises(payload);
-      $q.all(promises).then($this.updateSuccessHandler, $this.errorHandler);
+      $q.all(promises).then($this.updateSuccessHandler, $this.errorHandlerSubmitForm);
     };
 
     this.createItem = function(itemData) {
@@ -1627,7 +1654,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
         angular.element('#loading').modal('hide').find('p').text('We are loading the Items data!');
         angular.element('#create-success').modal('show');
         return true;
-      }, $this.errorHandler);
+      }, $this.errorHandlerSubmitForm);
     };
 
     $scope.submitForm = function(formData) {
@@ -1654,6 +1681,7 @@ angular.module('ts5App').controller('ItemCreateCtrl',
     };
 
     this.validateForm = function() {
+      $scope.countryPriceExceptionErrors = {};
       $scope.displayError = !$scope.form.$valid;
       return $scope.form.$valid;
     };
