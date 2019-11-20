@@ -152,7 +152,7 @@ angular.module('ts5App')
       var targetCashBag = $scope.rearrangeTargetCashBag;
       var sectorsToMove = $scope.sectorsToMove;
       var promises = [];
-      
+
       angular.forEach(sectorsToMove, function (sector) {
         promises.push(storeInstanceAmendFactory.rearrangeFlightSector(originCashBag.id, targetCashBag.id, sector.id));
       });
@@ -164,7 +164,7 @@ angular.module('ts5App')
       angular.element('.rearrange-sectors-modal').modal('hide');
       $scope.closeRearrangeSectorModal();
     };
-    
+
     $scope.showRearrangeSectorModal = function () {
       angular.element('#rearrangeSectorModal').modal('show');
     };
@@ -238,7 +238,7 @@ angular.module('ts5App')
         $scope.sectorsToMove.splice(matchIndex, 1);
       }
       */
-      
+
       // only one schedule can be selected to move
       var matchIndex = lodash.findIndex($scope.sectorsToMove, sector);
       if (matchIndex < 0) {
@@ -312,7 +312,7 @@ angular.module('ts5App')
 
     $scope.showOverwriteCashBag = function () {
       angular.element('.overwrite-cashbag-warning-modal').modal('show');
-    }; 
+    };
 
     $scope.overwriteCashBag = function () {
       angular.element('.overwrite-cashbag-warning-modal').modal('hide');
@@ -355,7 +355,7 @@ angular.module('ts5App')
               isSchedule = true;
             }
           });
-        }  
+        }
 
         if (isSchedule) {
           return false;
@@ -374,7 +374,7 @@ angular.module('ts5App')
               isSchedule = true;
             }
           });
-        }  
+        }
 
         if (isSchedule) {
           return false;
@@ -398,7 +398,7 @@ angular.module('ts5App')
               isSchedule = true;
             }
           });
-        }  
+        }
 
         if (isSchedule) {
           return false;
@@ -441,13 +441,15 @@ angular.module('ts5App')
         Regular: 'Regular Product Revenue',
         Virtual: 'Virtual Product Revenue',
         Voucher: 'Voucher Product Revenue',
-        Promotion: 'ePOS Discount'
+        Promotion: 'ePOS Discount',
+        CrewDisc: 'ePOS Crew Discount'
       };
       var modalNamToTableHeaderMap = {
         Regular: 'Regular Product Name',
         Virtual: 'Virtual Product Name',
         Voucher: 'Voucher Product Name',
-        Promotion: 'Promotion Name'
+        Promotion: 'Promotion Name',
+        CrewDisc: 'Crew Discount Name'
       };
 
       var amountKey = (modalName === 'Regular') ? 'Retail' : modalName;
@@ -764,7 +766,7 @@ angular.module('ts5App')
 
       if ($scope.moveCashBagAction === 'overwrite') {
         return searchForOverwriteCashBag();
-      }      
+      }
     };
 
     $scope.editCashBagNumberShow = function () {
@@ -773,7 +775,7 @@ angular.module('ts5App')
         return;
       }
 
-      $scope.numberExist = false;  
+      $scope.numberExist = false;
       angular.forEach($scope.cashBags, function (cashBag) {
         if (!cashBag.delete && cashBag.cashBagNumber === $scope.moveSearch.cashBag) {
           $scope.numberExist = true;
@@ -784,7 +786,7 @@ angular.module('ts5App')
         angular.element('.edit-cashbag-number-warning-modal').modal('show');
       } else {
         angular.element('.cashbag-number-exist-warning-modal').modal('show');
-      }  
+      }
     };
 
     $scope.editCashBagNumber = function () {
@@ -1054,6 +1056,21 @@ angular.module('ts5App')
       };
     }
 
+      function getTotalsForCrewDiscount(crewTotals) {
+          var total = 0;
+          var qty = 0;
+          angular.forEach(crewTotals, function (crewItem) {
+            total += crewItem.lineItemAmount;
+            qty += crewItem.qty;
+          });
+
+          return {
+             totalLMP: $scope.formatAsCurrency(total),
+            totalEPOS: $scope.formatAsCurrency(total),
+            totalQty: qty
+          };
+        }
+
     function setupNetTotals () {
       angular.forEach($this.stockTotals, function (stockItem) {
         stockItem.itemTypeName = lodash.findWhere($scope.itemTypes, {
@@ -1062,6 +1079,7 @@ angular.module('ts5App')
       });
 
       var totalPromotion = getTotalsForPromotions($this.promotionTotals);
+      var totalCrewDisc = getTotalsForCrewDiscount($this.crewDiscountTotals);
       var totalItems = getTotalsFor($this.stockTotals, 'Regular');
       var totalVirtual = getTotalsFor($this.stockTotals, 'Virtual');
       var totalVoucher = getTotalsFor($this.stockTotals, 'Voucher');
@@ -1070,11 +1088,14 @@ angular.module('ts5App')
         totalRetail: totalItems,
         totalVirtual: totalVirtual,
         totalVoucher: totalVoucher,
-        totalPromotion: totalPromotion
+        totalPromotion: totalPromotion,
+        totalCrewDisc: totalCrewDisc
       };
 
-      var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedLMP;
-      var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedEPOS;
+      var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher
+      .parsedEPOS - stockTotals.totalPromotion.parsedLMP - stockTotals.totalCrewDisc.totalLMP;
+      var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher
+      .parsedEPOS - stockTotals.totalPromotion.parsedEPOS - stockTotals.totalCrewDisc.totalEPOS;
 
       var netTotals = {
         netLMP: $scope.formatAsCurrency(netLMP),
@@ -1235,7 +1256,7 @@ angular.module('ts5App')
           flightSectors: [],
           flightSectorsForRearrange: [],
           isVerifiedManual: (cashBag.verificationConfirmedOn) ? true : false,
-          isAmended: (cashBag.isAddedPosttrip || cashBag.isDeletedPosttrip) 
+          isAmended: (cashBag.isAddedPosttrip || cashBag.isDeletedPosttrip)
         };
       });
     }
@@ -1304,6 +1325,29 @@ angular.module('ts5App')
 
     function getStockTotals () {
       return reconciliationFactory.getStockTotals($routeParams.storeInstanceId).then(setStockTotals);
+    }
+
+    function setCrewDiscountTotals(crewDiscountTotalsFromAPI) {
+          $this.crewDiscountTotals = angular.copy(crewDiscountTotalsFromAPI.response);
+           consolidateCrewDiscountTotals();
+          angular.forEach($this.crewDiscountTotals, function (crewDiscountTotal) {
+            var itemMatchName = lodash.findWhere($this.masterItemList, { id: crewDiscountTotal.itemMasterId });
+            crewDiscountTotal.itemName = !!itemMatchName ? itemMatchName.itemName : '';
+          });
+        }
+
+    function consolidateCrewDiscountTotals() {
+              var consolidatedDiscount = [];
+              angular.forEach($this.crewDiscountTotals, function (crewdiscount) {
+                crewdiscount.lineItemAmount = makeFinite(crewdiscount.qty * crewdiscount.crewDiscountAmount);
+                consolidatedDiscount.push(crewdiscount);
+              });
+
+              $this.crewDiscountList = consolidatedDiscount;
+    }
+
+    function getCrewDiscountTotals() {
+          return reconciliationFactory.getCrewDiscountTotals($routeParams.storeInstanceId).then(setCrewDiscountTotals);
     }
 
     function consolidateDuplicatePromotions() {
@@ -1678,6 +1722,7 @@ angular.module('ts5App')
         getCashBags(),
         getStockTotals(),
         getPromotionTotals(),
+        getCrewDiscountTotals(),
         getCompanyPreferences(),
         getCashRevenue(),
         getEPOSRevenue(),
@@ -1721,7 +1766,7 @@ angular.module('ts5App')
                 }
               });
             }
-          } 
+          }
         });
       }
     }
