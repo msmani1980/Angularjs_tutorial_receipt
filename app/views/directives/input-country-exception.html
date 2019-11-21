@@ -1,0 +1,145 @@
+<div class="panel panel-default">
+
+  <div class="panel-heading">
+    <p class="panel-title">
+			<i class="fa fa-tags"></i> Country Price Exception {{ $parent.key+1 }}
+
+      <span class="pull-right btn btn-danger btn-xs" ng-hide="viewOnly || itemIsActive" ng-click="removeCountryException($parent.$parent.key,$parent.key)">
+        <i class="fa fa-close"></i>
+      </span>
+
+		</p>
+  </div>
+
+  <div class="panel-body">
+
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-8">
+
+        <div class="row">
+
+          <div
+            class="col-xs-12 col-sm-6"
+            ng-class="{ 'has-error' : (!countryException.startDate || $parent.$parent.doesCountryExceptionFieldHasErrors($parent.$parent.key+1, $parent.key+1, 'startDate')) && displayError, 'has-success' : countryException.startDate && !$parent.$parent.doesCountryExceptionFieldHasErrors($parent.$parent.key+1, $parent.key+1, 'startDate') }"
+          >
+            <date-picker-field ng-if="minDate" min-date="$parent.minDate"
+              disable="viewOnly || itemIsActive" form="form" label="Effective From"
+              name="Country Exception {{ $parent.key+1 }} Effective From" ng-model="countryException.startDate" required="true">
+            </date-picker-field>
+          </div>
+
+          <div
+            class="col-xs-12 col-sm-6"
+            ng-class="{ 'has-error' : (!countryException.endDate || $parent.$parent.doesCountryExceptionFieldHasErrors($parent.$parent.key+1, $parent.key+1, 'endDate')) && displayError, 'has-success' : countryException.endDate && !$parent.$parent.doesCountryExceptionFieldHasErrors($parent.$parent.key+1, $parent.key+1, 'endDate') }"
+
+          >
+            <date-picker-field ng-if="minDate" min-date="$parent.minDate"
+              disable="viewOnly || itemIsInactive" form="form" label="Effective To"
+              end-current-effective="$parent.isAddPriceDisabled() || $parent.editingItem"
+              name="Country Exception {{ $parent.key+1 }} EffectiveTo" ng-model="countryException.endDate"
+              required="true">
+            </date-picker-field>
+          </div>
+
+        </div>
+
+				<div class="row" ng-if="countryException.startDate && countryException.endDate">
+
+					<div class="col-xs-12 col-sm-6">
+
+            <div class="form-group" ng-disabled="$parent.$parent.isAddPriceDisabled()">
+
+              <label>From Country</label>
+
+              <ui-select
+                name="fromCountry"
+                ng-model="countryException.fromCountryId"
+                theme="bootstrap"
+                id="fromCountry"
+                style="min-height: 34px;"
+                ng-disabled="viewOnly || itemIsActive">
+                <ui-select-match placeholder="All Countries" allow-clear>{{ $select.selected.countryName }}</ui-select-match>
+                <ui-select-choices
+                  repeat="country.id as country in $parent.$parent.countryExceptionCountries | filter: $select.search | orderBy:'countryName'">
+                  <div ng-bind-html="country.countryName | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+
+            </div>
+
+            <div class="form-group" ng-disabled="$parent.$parent.isAddPriceDisabled()">
+
+              <label>To Country</label>
+
+              <ui-select
+                name="toCountry"
+                ng-model="countryException.toCountryId"
+                theme="bootstrap"
+                id="toCountry"
+                style="min-height: 34px;"
+                ng-disabled="viewOnly || itemIsActive">
+                <ui-select-match placeholder="All Countries" allow-clear>{{ $select.selected.countryName }}</ui-select-match>
+                <ui-select-choices
+                  repeat="country.id as country in $parent.$parent.countryExceptionCountries | filter: $select.search | orderBy:'countryName'">
+                  <div ng-bind-html="country.countryName | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
+
+            </div>
+
+					</div>
+
+					<div class="col-xs-12 col-sm-6">
+
+						<div class="form-group" ng-disabled="$parent.$parent.isAddPriceDisabled()" ng-class="{ 'has-error' : !countryException.taxIs && displayError, 'has-success' : countryException.taxIs }">
+
+							<label>Tax Is *</label>
+
+							<select name="Tax Is" required ng-disabled="viewOnly || itemIsActive" ng-model="countryException.taxIs" class="form-control">
+								<option value="Included">Included</option>
+								<option value="Excluded">Excluded</option>
+								<option value="Exempt">Exempt</option>
+							</select>
+
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="col-xs-12 col-sm-4" ng-show="countryException.startDate && countryException.endDate">
+
+				<p>Currencies List</p>
+
+				<div class="form-group" ng-repeat="(exceptionCurrencyKey,exceptionCurrency) in countryException.priceCountryExceptionCurrencies track by $index">
+
+					<div class="input-group" ng-class="{ 'has-error' : !exceptionCurrency.price && displayError, 'has-success' : exceptionCurrency.price }">
+
+						<div class="input-group-addon">
+							{{ masterCurrenciesList[exceptionCurrency.companyCurrencyId] }} *
+						</div>
+
+						<input
+							ng-model="exceptionCurrency.price"
+							required
+							name="Currencies List - {{ masterCurrenciesList[exceptionCurrency.companyCurrencyId] }}"
+							ng-disabled="viewOnly || itemIsActive"
+							type="text"
+							class="form-control"
+							maxlength="9"
+							ng-pattern="regexp.sixNumberWithTwoDecimal"/>
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+</div>

@@ -115,37 +115,37 @@
                   <input  type="text"  class="form-control"  ng-model="formData.quickSearchCode"  name="ePOS Quick Search Code" ng-pattern="regexp.alphanumeric" ng-disabled="isDisabled()"
                           placeholder="ePOS Quick Search Code" max-length="15">
                   </input>
-              </div>    
+              </div>
 
               <div class="form-group" ng-class="{ 'has-error' : !formData.desc && displayError , 'has-success' : formData.desc }">
                   <label>Item Description *</label>&nbsp;
                   <input  type="text"  class="form-control"  ng-model="formData.desc"  name="Item Description" required="form.$submitted" ng-pattern="regexp.alphaWithSpecialCharMenuItem" ng-disabled="isDisabled()"
                           placeholder="A simple description..." max-length="255">
                   </input>
-              </div>    
+              </div>
 
               <div class="form-group"  ng-class="{ 'has-error' : form.eposDisplaySortOrder.$invalid && displayError , 'has-success' : formData.eposDisplaySortOrder }">
                   <label>ePos Display Sort Order</label>&nbsp;
                   <input type="text"  class="form-control"  ng-model="formData.eposDisplaySortOrder" name="eposDisplaySortOrder" ng-pattern="regexp.greaterThanZero" max-length="2" ng-disabled="isDisabledEndDateForm()">
                   </input>
-              </div>    
+              </div>
 
               <div class="form-group">
                   <label>Keywords</label>&nbsp;
                   <input type="text"  class="form-control"  ng-model="formData.keywords" name="Keywords" ng-pattern="regexp.word" ng-disabled="isDisabled()"
                          placeholder="keywords..." max-length="500">
                   </input>
-              </div>    
+              </div>
 
               <div class="form-group">
                   <label>Unique Selling Point</label>&nbsp;
                   <input type="text"  class="form-control"  ng-model="formData.sellingPoint" name="Unique Selling Point" ng-pattern="regexp.word" ng-disabled="isDisabled()"
                           placeholder="A unique selling point" max-length="100"></input>
-              </div>            
+              </div>
 
               <div class="form-group">
               	<input ng-model="formData.isPrintReceipt" type="checkbox" ng-disabled="isDisabled()"/>
-                <label>Print Receipt</label>	
+                <label>Print Receipt</label>
               </div>
 
             </fieldset>
