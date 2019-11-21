@@ -289,25 +289,42 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
       return true;
     };
 
-    this.validatePickedItemQuantities = function() {
-      const allPickListItems = $scope.pickListItems.concat($scope.newPickListItems);
+    this.validatePickedItemQuantities = function(nextStep) {
+      if (nextStep) { // check stock only if proceeding to next step, ignore if saving
+        const allPickListItems = $scope.pickListItems.concat($scope.newPickListItems);
 
-      angular.forEach(allPickListItems, function(item) {
-        const itemMasterIdAsString = $this.extractItemMasterIdAsString(item);
-        if (itemMasterIdAsString in $scope.stockItemLmpCurrentQuantityDictionary) {
-          const cateringStationItem = $scope.stockItemLmpCurrentQuantityDictionary[itemMasterIdAsString];
+        angular.forEach(allPickListItems, function(item) {
+          const itemMasterIdAsString = $this.extractItemMasterIdAsString(item);
+          if (itemMasterIdAsString in $scope.stockItemLmpCurrentQuantityDictionary) {
+            const cateringStationItem = $scope.stockItemLmpCurrentQuantityDictionary[itemMasterIdAsString];
 
-          const pickedQuantity = ($scope.shouldDisplayQuantityField('picked') || $scope.shouldDisplayQuantityField('dispatch')) ?
-            item.pickedQuantity : item.calculatedPickQuantity;
+            const pickedQuantity = ($scope.shouldDisplayQuantityField('picked') || $scope.shouldDisplayQuantityField('dispatch')) ?
+              item.pickedQuantity : item.calculatedPickQuantity;
 
-          if (pickedQuantity > 0 && pickedQuantity > cateringStationItem.currentQuantity) {
-            $scope.errorCustom.push({
-              field: 'Item with code ' + cateringStationItem.itemCode,
-              value: ' Picked quantity of ' + pickedQuantity + ' is more than warehouse current count of ' + cateringStationItem.currentQuantity
-            });
+            if (pickedQuantity > 0 && pickedQuantity > cateringStationItem.currentQuantity) {
+              item.exceedsVariance = true;
+              $scope.errorCustom.push({
+                field: 'Item with code ' + cateringStationItem.itemCode,
+                value: ' Picked quantity of ' + pickedQuantity + ' is more than warehouse current count of ' + cateringStationItem.currentQuantity
+              });
+            } else {
+              item.exceedsVariance = false;
+            }
+          } else {
+            if (item.itemName !== undefined) { // ignore if new record added but item not picked from list box
+              item.exceedsVariance = true;
+              $scope.errorCustom.push({
+                field: 'Item ' + item.itemName,
+                value: ' Not found in ' + $scope.storeDetails.displayLMPStation + ' warehouse.'
+              });
+            }
           }
+        });
+
+        if ($scope.errorCustom.length > 0) {
+          $this.showWarningModal();
         }
-      });
+      }
 
       $scope.areThereSockItemQuantityErrors = $scope.errorCustom.length > 0;
     };
@@ -669,7 +686,7 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
       $scope.shouldUpdateStatus = shouldUpdateStatus;
       $this.validateUllageReasonFields();
-      $this.validatePickedItemQuantities();
+      $this.validatePickedItemQuantities(shouldUpdateStatus);
       const isFormInvalid = $scope.storeInstancePackingForm.$invalid || $scope.areThereSockItemQuantityErrors;
       $scope.displayError = isFormInvalid;
 
@@ -1180,6 +1197,10 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
 
     this.completeInitializeAfterDependencies = function() {
       $this.getAllItems();
+    };
+
+    this.showWarningModal = function () {
+      angular.element('#warning').modal('show');
     };
 
     this.init = function() {
