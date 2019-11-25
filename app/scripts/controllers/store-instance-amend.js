@@ -152,7 +152,7 @@ angular.module('ts5App')
       var targetCashBag = $scope.rearrangeTargetCashBag;
       var sectorsToMove = $scope.sectorsToMove;
       var promises = [];
-      
+
       angular.forEach(sectorsToMove, function (sector) {
         promises.push(storeInstanceAmendFactory.rearrangeFlightSector(originCashBag.id, targetCashBag.id, sector.id));
       });
@@ -164,7 +164,7 @@ angular.module('ts5App')
       angular.element('.rearrange-sectors-modal').modal('hide');
       $scope.closeRearrangeSectorModal();
     };
-    
+
     $scope.showRearrangeSectorModal = function () {
       angular.element('#rearrangeSectorModal').modal('show');
     };
@@ -238,7 +238,7 @@ angular.module('ts5App')
         $scope.sectorsToMove.splice(matchIndex, 1);
       }
       */
-      
+
       // only one schedule can be selected to move
       var matchIndex = lodash.findIndex($scope.sectorsToMove, sector);
       if (matchIndex < 0) {
@@ -312,7 +312,7 @@ angular.module('ts5App')
 
     $scope.showOverwriteCashBag = function () {
       angular.element('.overwrite-cashbag-warning-modal').modal('show');
-    }; 
+    };
 
     $scope.overwriteCashBag = function () {
       angular.element('.overwrite-cashbag-warning-modal').modal('hide');
@@ -355,7 +355,7 @@ angular.module('ts5App')
               isSchedule = true;
             }
           });
-        }  
+        }
 
         if (isSchedule) {
           return false;
@@ -374,7 +374,7 @@ angular.module('ts5App')
               isSchedule = true;
             }
           });
-        }  
+        }
 
         if (isSchedule) {
           return false;
@@ -398,7 +398,7 @@ angular.module('ts5App')
               isSchedule = true;
             }
           });
-        }  
+        }
 
         if (isSchedule) {
           return false;
@@ -766,7 +766,7 @@ angular.module('ts5App')
 
       if ($scope.moveCashBagAction === 'overwrite') {
         return searchForOverwriteCashBag();
-      }      
+      }
     };
 
     $scope.editCashBagNumberShow = function () {
@@ -775,7 +775,7 @@ angular.module('ts5App')
         return;
       }
 
-      $scope.numberExist = false;  
+      $scope.numberExist = false;
       angular.forEach($scope.cashBags, function (cashBag) {
         if (!cashBag.delete && cashBag.cashBagNumber === $scope.moveSearch.cashBag) {
           $scope.numberExist = true;
@@ -786,7 +786,7 @@ angular.module('ts5App')
         angular.element('.edit-cashbag-number-warning-modal').modal('show');
       } else {
         angular.element('.cashbag-number-exist-warning-modal').modal('show');
-      }  
+      }
     };
 
     $scope.editCashBagNumber = function () {
@@ -1254,7 +1254,7 @@ angular.module('ts5App')
           flightSectors: [],
           flightSectorsForRearrange: [],
           isVerifiedManual: (cashBag.verificationConfirmedOn) ? true : false,
-          isAmended: (cashBag.isAddedPosttrip || cashBag.isDeletedPosttrip) 
+          isAmended: (cashBag.isAddedPosttrip || cashBag.isDeletedPosttrip)
         };
       });
     }
@@ -1764,7 +1764,7 @@ angular.module('ts5App')
                 }
               });
             }
-          } 
+          }
         });
       }
     }
