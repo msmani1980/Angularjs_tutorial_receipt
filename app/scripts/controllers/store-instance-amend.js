@@ -1056,20 +1056,20 @@ angular.module('ts5App')
       };
     }
 
-      function getTotalsForCrewDiscount(crewTotals) {
-          var total = 0;
-          var qty = 0;
-          angular.forEach(crewTotals, function (crewItem) {
-            total += crewItem.lineItemAmount;
-            qty += crewItem.qty;
-          });
+    function getTotalsForCrewDiscount(crewTotals) {
+      var total = 0;
+      var qty = 0;
+      angular.forEach(crewTotals, function (crewItem) {
+        total += crewItem.lineItemAmount;
+        qty += crewItem.qty;
+      });
 
-          return {
-             totalLMP: $scope.formatAsCurrency(total),
-            totalEPOS: $scope.formatAsCurrency(total),
-            totalQty: qty
-          };
-        }
+      return {
+        totalLMP: $scope.formatAsCurrency(total),
+        totalEPOS: $scope.formatAsCurrency(total),
+        totalQty: qty
+      };
+    }
 
     function setupNetTotals () {
       angular.forEach($this.stockTotals, function (stockItem) {
@@ -1092,10 +1092,8 @@ angular.module('ts5App')
         totalCrewDisc: totalCrewDisc
       };
 
-      var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher
-      .parsedEPOS - stockTotals.totalPromotion.parsedLMP - stockTotals.totalCrewDisc.totalLMP;
-      var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher
-      .parsedEPOS - stockTotals.totalPromotion.parsedEPOS - stockTotals.totalCrewDisc.totalEPOS;
+      var netLMP = stockTotals.totalRetail.parsedLMP + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedLMP - stockTotals.totalCrewDisc.totalLMP;
+      var netEPOS = stockTotals.totalRetail.parsedEPOS + stockTotals.totalVirtual.parsedEPOS + stockTotals.totalVoucher.parsedEPOS - stockTotals.totalPromotion.parsedEPOS - stockTotals.totalCrewDisc.totalEPOS;
 
       var netTotals = {
         netLMP: $scope.formatAsCurrency(netLMP),
@@ -1328,26 +1326,26 @@ angular.module('ts5App')
     }
 
     function setCrewDiscountTotals(crewDiscountTotalsFromAPI) {
-          $this.crewDiscountTotals = angular.copy(crewDiscountTotalsFromAPI.response);
-           consolidateCrewDiscountTotals();
-          angular.forEach($this.crewDiscountTotals, function (crewDiscountTotal) {
-            var itemMatchName = lodash.findWhere($this.masterItemList, { id: crewDiscountTotal.itemMasterId });
-            crewDiscountTotal.itemName = !!itemMatchName ? itemMatchName.itemName : '';
-          });
-        }
+      $this.crewDiscountTotals = angular.copy(crewDiscountTotalsFromAPI.response);
+      consolidateCrewDiscountTotals();
+      angular.forEach($this.crewDiscountTotals, function (crewDiscountTotal) {
+        var itemMatchName = lodash.findWhere($this.masterItemList, { id: crewDiscountTotal.itemMasterId });
+        crewDiscountTotal.itemName = !!itemMatchName ? itemMatchName.itemName : '';
+      });
+    }
 
     function consolidateCrewDiscountTotals() {
-              var consolidatedDiscount = [];
-              angular.forEach($this.crewDiscountTotals, function (crewdiscount) {
-                crewdiscount.lineItemAmount = makeFinite(crewdiscount.qty * crewdiscount.crewDiscountAmount);
-                consolidatedDiscount.push(crewdiscount);
-              });
+      var consolidatedDiscount = [];
+      angular.forEach($this.crewDiscountTotals, function (crewdiscount) {
+        crewdiscount.lineItemAmount = makeFinite(crewdiscount.qty * crewdiscount.crewDiscountAmount);
+        consolidatedDiscount.push(crewdiscount);
+      });
 
-              $this.crewDiscountList = consolidatedDiscount;
+      $this.crewDiscountList = consolidatedDiscount;
     }
 
     function getCrewDiscountTotals() {
-          return reconciliationFactory.getCrewDiscountTotals($routeParams.storeInstanceId).then(setCrewDiscountTotals);
+      return reconciliationFactory.getCrewDiscountTotals($routeParams.storeInstanceId).then(setCrewDiscountTotals);
     }
 
     function consolidateDuplicatePromotions() {
