@@ -52,7 +52,9 @@ angular.module('ts5App')
           limitByShopDiscountType: 1,
           limitByTransactionDiscountType: 1,
           limitBySeatDiscountType: 1,
-          filters: []
+          filters: [],
+          qrCodeValue: '',
+          qrCodeImgUrl: null
         };
       } else {
         return {
@@ -67,7 +69,9 @@ angular.module('ts5App')
           limitByShopDiscountType: 1,
           limitByTransactionDiscountType: 1,
           limitBySeatDiscountType: 1,
-          filters: []
+          filters: [],
+          qrCodeValue: '',
+          qrCodeImgUrl: null
         };
       }
     };
@@ -171,8 +175,8 @@ angular.module('ts5App')
 
     $scope.$watchGroup(['formData.startDate', 'formData.endDate'], function () {
       if ($scope.formData && $scope.formData.startDate && $scope.formData.endDate) {
-        $this.getRetailItemsList();            
-      }  
+        $this.getRetailItemsList();
+      }
     });
 
     this.getDiscount = function(id) {
@@ -251,6 +255,8 @@ angular.module('ts5App')
       $scope.formData.discountName = discountData.name;
       $scope.formData.globalDiscountTypeId = discountData.discountTypeId;
       $scope.formData.barCode = discountData.barcode;
+      $scope.formData.qrCodeImgUrl = discountData.qrCodeImgUrl;
+      $scope.formData.qrCodeValue = discountData.qrCodeValue;
       $scope.formData.description = discountData.description;
       $scope.formData.note = discountData.note;
       $scope.formData.limitByShopDiscountType = parseInt(discountData.limitByShopDiscountType);
@@ -353,6 +359,8 @@ angular.module('ts5App')
 
       $this.deserializeDiscountInformation(discountData);
 
+      $scope.activeTab = $scope.formData.barCode !== null ? 'barCode' : 'qrCreate';
+
       $scope.shouldDisableStartDate = !(dateUtility.isAfterTodayDatePicker($scope.formData.startDate));
       $scope.shouldDisableEndDate = !(dateUtility.isAfterTodayDatePicker($scope.formData.endDate) || dateUtility.isTodayDatePicker($scope.formData.endDate));
       $scope.calendarsReady = true;
@@ -375,6 +383,8 @@ angular.module('ts5App')
       discount.description = formData.description;
       discount.note = formData.note;
       discount.barcode = formData.barCode;
+      discount.qrCodeImgUrl = formData.qrCodeImgUrl;
+      discount.qrCodeValue = formData.qrCodeValue;
       discount.startDate = dateUtility.formatDateForAPI(formData.startDate);
       discount.endDate = dateUtility.formatDateForAPI(formData.endDate);
     };
@@ -965,6 +975,7 @@ angular.module('ts5App')
       $this.validateDiscountLimitPerShop();
       $this.validateItemLimitPerTransaction();
       $this.validateDiscountLimitPerTransaction();
+      $this.validateQRCode();
 
       $scope.form.$setSubmitted(true);
       if (formData && $this.validateForm() && $scope.errorCustom.length === 0) {
@@ -973,7 +984,7 @@ angular.module('ts5App')
         angular.forEach(payload.companyDiscount.restrictedCategories, function(restrictedCategorie) {
           if (restrictedCategorie.salesCategoryId === 0) {
             payload.companyDiscount.restrictedCategories = [];
-            angular.forEach($scope.salesCategoriesList, function(category) { 
+            angular.forEach($scope.salesCategoriesList, function(category) {
               if (category.id === 0) { return; }
 
               payload.companyDiscount.restrictedCategories.push({
@@ -1085,5 +1096,38 @@ angular.module('ts5App')
     $scope.isCurrentEffectiveDate = function (discountData) {
       return (dateUtility.isTodayOrEarlierDatePicker(discountData.startDate) && dateUtility.isAfterTodayDatePicker(discountData.endDate));
     };
-    
+
+    this.validateQRCode = function() {
+      if ($scope.formData.barCode && !$scope.qrCodeImgUrl) { // if bar code entered clear qr code
+        $scope.formData.qrCodeValue = '';
+      }
+
+      if (!$scope.formData.qrCodeImgUrl && ($scope.activeTab === 'qrCreate' || $scope.activeTab === 'qrUpload')) { // if qr selected but not saved warn user
+        $scope.errorCustom.push(
+          {
+            field: 'QR Code',
+            code: 'custom',
+            value: 'is required, save generated or upload existing image'
+          }
+        );
+      }
+    };
+
+    $scope.isQrCodeSet = function() {
+      return ($scope.formData && $scope.formData.qrCodeImgUrl);
+    };
+
+    $scope.isQrCreateHidden = function() {
+      var isQrCodeSet = $scope.isQrCodeSet();
+      return ($scope.viewOnly || $scope.itemIsActive || isQrCodeSet);
+    };
+
+    $scope.removeQRCode = function() {
+      $scope.formData.qrCodeImgUrl = '';
+      $scope.formData.qrCodeValue = '';
+    };
+
+    $scope.setActiveTab = function(activeTab) {
+      $scope.activeTab = activeTab;
+    };
   });
