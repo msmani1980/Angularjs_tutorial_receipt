@@ -975,7 +975,9 @@ angular.module('ts5App')
       $this.validateDiscountLimitPerShop();
       $this.validateItemLimitPerTransaction();
       $this.validateDiscountLimitPerTransaction();
-      $this.validateQRCode();
+      if ($scope.formData.globalDiscountTypeId === 1) {
+        $this.validateQRCode();
+      }
 
       $scope.form.$setSubmitted(true);
       if (formData && $this.validateForm() && $scope.errorCustom.length === 0) {
