@@ -46,7 +46,7 @@
             <input-text label="User Name" name="userName" required="true" pattern="regexp.sentence"
                         placeholder="User Name" min-length="1" max-length="40"></input-text>
 
-            <input-text label="Email" name="email" required="true" pattern="regexp.sentence"
+            <input-text label="Email" name="email" required="true" pattern="regexp.email"
                         placeholder="Email" min-length="1" max-length="40"></input-text>
             
             <div class="form-group" ng-class="{ 'has-error' : !formData.organization && displayError, 'has-success' : formData.organization}">
