@@ -46,12 +46,19 @@
             <input-text label="User Name" name="userName" required="true" pattern="regexp.sentence"
                         placeholder="User Name" min-length="1" max-length="40"></input-text>
 
-            <input-text label="Email" name="email" required="true" pattern="regexp.sentence"
+            <input-text label="Email" name="email" required="true" pattern="regexp.email"
                         placeholder="Email" min-length="1" max-length="40"></input-text>
             
             <div class="form-group" ng-class="{ 'has-error' : !formData.organization && displayError, 'has-success' : formData.organization}">
             <label>Organization *</label>
-            <ui-select name="organization" ng-model="formData.organization" theme="bootstrap" required ng-disabled="viewOnly">
+            <ui-select
+              name="organization"
+              ng-model="formData.organization"
+              theme="bootstrap"
+              required
+              ng-disabled="viewOnly"
+              ng-class="{ 'has-error' : !formData.organization && displayError , 'has-success' : formData.organization }"
+            >
               <ui-select-match placeholder="Start typing to find an organization">{{ $select.selected.name }}</ui-select-match>
               <ui-select-choices repeat="organization in organizations | filter: $select.search | orderBy:'name'">
                 <div ng-bind-html="organization.name | highlight: $select.search"></div>
