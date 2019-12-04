@@ -359,8 +359,6 @@ angular.module('ts5App')
 
       $this.deserializeDiscountInformation(discountData);
 
-      $scope.activeTab = $scope.formData.barCode !== null ? 'barCode' : 'qrCreate';
-
       $scope.shouldDisableStartDate = !(dateUtility.isAfterTodayDatePicker($scope.formData.startDate));
       $scope.shouldDisableEndDate = !(dateUtility.isAfterTodayDatePicker($scope.formData.endDate) || dateUtility.isTodayDatePicker($scope.formData.endDate));
       $scope.calendarsReady = true;
@@ -975,9 +973,7 @@ angular.module('ts5App')
       $this.validateDiscountLimitPerShop();
       $this.validateItemLimitPerTransaction();
       $this.validateDiscountLimitPerTransaction();
-      if ($scope.formData.globalDiscountTypeId === 1) {
-        $this.validateQRCode();
-      }
+      $this.validateCouponBarQrCode();
 
       $scope.form.$setSubmitted(true);
       if (formData && $this.validateForm() && $scope.errorCustom.length === 0) {
@@ -1099,19 +1095,15 @@ angular.module('ts5App')
       return (dateUtility.isTodayOrEarlierDatePicker(discountData.startDate) && dateUtility.isAfterTodayDatePicker(discountData.endDate));
     };
 
-    this.validateQRCode = function() {
-      if ($scope.formData.barCode && !$scope.qrCodeImgUrl) { // if bar code entered clear qr code
+    this.validateCouponBarQrCode = function() {
+      if ($scope.formData.globalDiscountTypeId === 1) {
+        if (!$scope.formData.qrCodeImgUrl) { // if qr code not saved clear qr value
+          $scope.formData.qrCodeValue = '';
+        }
+      } else {
         $scope.formData.qrCodeValue = '';
-      }
-
-      if (!$scope.formData.qrCodeImgUrl && ($scope.activeTab === 'qrCreate' || $scope.activeTab === 'qrUpload')) { // if qr selected but not saved warn user
-        $scope.errorCustom.push(
-          {
-            field: 'QR Code',
-            code: 'custom',
-            value: 'is required, save generated or upload existing image'
-          }
-        );
+        $scope.formData.qrCodeImgUrl = null;
+        $scope.formData.barCode = null;
       }
     };
 
@@ -1127,9 +1119,5 @@ angular.module('ts5App')
     $scope.removeQRCode = function() {
       $scope.formData.qrCodeImgUrl = '';
       $scope.formData.qrCodeValue = '';
-    };
-
-    $scope.setActiveTab = function(activeTab) {
-      $scope.activeTab = activeTab;
     };
   });

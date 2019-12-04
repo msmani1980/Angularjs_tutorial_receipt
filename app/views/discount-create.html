@@ -59,14 +59,13 @@
             </div>
             <div class="form-group" ng-if="formData.globalDiscountTypeId === 1" ng-class="validation.fieldCssClass(form, 'barCode')">
               <tabset justified="true" ng-hide="isQrCreateHidden()">
-                <tab heading="Bar Code" select="setActiveTab('barCode')">
-                  <input class="form-control" ng-model="formData.barCode" name="barCode" ng-pattern="regexp.word"
-                         ng-required="formData.globalDiscountTypeId === 1 && !formData.qrCodeValue.length && activeTab === 'barCode'" />
+                <tab heading="Bar Code">
+                  <input class="form-control" ng-model="formData.barCode" name="barCode" ng-pattern="regexp.word" />
                 </tab>
-                <tab heading="QR Create" disable="formData.barCode.length" select="setActiveTab('qrCreate')">
+                <tab heading="QR Create" disable="formData.barCode.length">
                   <qr-create></qr-create>
                 </tab>
-                <tab heading="QR Upload" disable="formData.barCode.length" select="setActiveTab('qrUpload')">
+                <tab heading="QR Upload" disable="formData.barCode.length">
                   <qr-upload></qr-upload>
                 </tab>
               </tabset>
