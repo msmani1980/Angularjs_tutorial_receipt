@@ -299,13 +299,15 @@ angular.module('ts5App').controller('StoreInstancePackingCtrl',
             const cateringStationItem = $scope.stockItemLmpCurrentQuantityDictionary[itemMasterIdAsString];
 
             const pickedQuantity = ($scope.shouldDisplayQuantityField('picked') || $scope.shouldDisplayQuantityField('dispatch')) ?
-              item.pickedQuantity : item.calculatedPickQuantity;
+              item.pickedQuantity : $scope.calculatePickedQtyFromTotal(item);
 
-            if (pickedQuantity > 0 && pickedQuantity > cateringStationItem.currentQuantity) {
+            const inboundQuantity = parseInt(item.inboundQuantity) || 0;
+            if (pickedQuantity > 0 && pickedQuantity > cateringStationItem.currentQuantity + inboundQuantity) {
               item.exceedsVariance = true;
+              const pickQuantity = inboundQuantity > 0 ? $scope.calculatePickedQtyFromTotal(item) : pickedQuantity;
               $scope.errorCustom.push({
                 field: 'Item with code ' + cateringStationItem.itemCode,
-                value: ' Picked quantity of ' + pickedQuantity + ' is more than warehouse current count of ' + cateringStationItem.currentQuantity
+                value: ' Picked quantity of ' + pickQuantity + ' is more than warehouse current count of ' + cateringStationItem.currentQuantity
               });
             } else {
               item.exceedsVariance = false;
