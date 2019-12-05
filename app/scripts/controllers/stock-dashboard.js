@@ -117,7 +117,9 @@ angular.module('ts5App').controller('StockDashboardCtrl',
       loadingProgress = true;
 
       showLoadingBar();
-      stockManagementStationItemsService.getStockManagementStationItems($scope.selectedCateringStation.id).then(
+
+      const nowDate = dateUtility.formatDateForAPI(dateUtility.nowFormattedDatePicker());
+      stockManagementStationItemsService.getStockManagementStationItems($scope.selectedCateringStation.id, nowDate).then(
         $this.getStockDashboardItemsSuccessHandler);
     };
 
