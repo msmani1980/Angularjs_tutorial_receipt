@@ -52,7 +52,9 @@ angular.module('ts5App')
           limitByShopDiscountType: 1,
           limitByTransactionDiscountType: 1,
           limitBySeatDiscountType: 1,
-          filters: []
+          filters: [],
+          qrCodeValue: '',
+          qrCodeImgUrl: null
         };
       } else {
         return {
@@ -67,7 +69,9 @@ angular.module('ts5App')
           limitByShopDiscountType: 1,
           limitByTransactionDiscountType: 1,
           limitBySeatDiscountType: 1,
-          filters: []
+          filters: [],
+          qrCodeValue: '',
+          qrCodeImgUrl: null
         };
       }
     };
@@ -171,8 +175,8 @@ angular.module('ts5App')
 
     $scope.$watchGroup(['formData.startDate', 'formData.endDate'], function () {
       if ($scope.formData && $scope.formData.startDate && $scope.formData.endDate) {
-        $this.getRetailItemsList();            
-      }  
+        $this.getRetailItemsList();
+      }
     });
 
     this.getDiscount = function(id) {
@@ -251,6 +255,8 @@ angular.module('ts5App')
       $scope.formData.discountName = discountData.name;
       $scope.formData.globalDiscountTypeId = discountData.discountTypeId;
       $scope.formData.barCode = discountData.barcode;
+      $scope.formData.qrCodeImgUrl = discountData.qrCodeImgUrl;
+      $scope.formData.qrCodeValue = discountData.qrCodeValue;
       $scope.formData.description = discountData.description;
       $scope.formData.note = discountData.note;
       $scope.formData.limitByShopDiscountType = parseInt(discountData.limitByShopDiscountType);
@@ -375,6 +381,8 @@ angular.module('ts5App')
       discount.description = formData.description;
       discount.note = formData.note;
       discount.barcode = formData.barCode;
+      discount.qrCodeImgUrl = formData.qrCodeImgUrl;
+      discount.qrCodeValue = formData.qrCodeValue;
       discount.startDate = dateUtility.formatDateForAPI(formData.startDate);
       discount.endDate = dateUtility.formatDateForAPI(formData.endDate);
     };
@@ -965,6 +973,7 @@ angular.module('ts5App')
       $this.validateDiscountLimitPerShop();
       $this.validateItemLimitPerTransaction();
       $this.validateDiscountLimitPerTransaction();
+      $this.validateCouponBarQrCode();
 
       $scope.form.$setSubmitted(true);
       if (formData && $this.validateForm() && $scope.errorCustom.length === 0) {
@@ -973,7 +982,7 @@ angular.module('ts5App')
         angular.forEach(payload.companyDiscount.restrictedCategories, function(restrictedCategorie) {
           if (restrictedCategorie.salesCategoryId === 0) {
             payload.companyDiscount.restrictedCategories = [];
-            angular.forEach($scope.salesCategoriesList, function(category) { 
+            angular.forEach($scope.salesCategoriesList, function(category) {
               if (category.id === 0) { return; }
 
               payload.companyDiscount.restrictedCategories.push({
@@ -1085,5 +1094,30 @@ angular.module('ts5App')
     $scope.isCurrentEffectiveDate = function (discountData) {
       return (dateUtility.isTodayOrEarlierDatePicker(discountData.startDate) && dateUtility.isAfterTodayDatePicker(discountData.endDate));
     };
-    
+
+    this.validateCouponBarQrCode = function() {
+      if ($scope.formData.globalDiscountTypeId === 1) {
+        if (!$scope.formData.qrCodeImgUrl) { // if qr code not saved clear qr value
+          $scope.formData.qrCodeValue = '';
+        }
+      } else {
+        $scope.formData.qrCodeValue = '';
+        $scope.formData.qrCodeImgUrl = null;
+        $scope.formData.barCode = null;
+      }
+    };
+
+    $scope.isQrCodeSet = function() {
+      return ($scope.formData && $scope.formData.qrCodeImgUrl);
+    };
+
+    $scope.isQrCreateHidden = function() {
+      var isQrCodeSet = $scope.isQrCodeSet();
+      return ($scope.viewOnly || $scope.itemIsActive || isQrCodeSet);
+    };
+
+    $scope.removeQRCode = function() {
+      $scope.formData.qrCodeImgUrl = '';
+      $scope.formData.qrCodeValue = '';
+    };
   });

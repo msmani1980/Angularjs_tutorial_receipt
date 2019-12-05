@@ -58,8 +58,31 @@
               <div>{{ getGlobalDiscountDescriptionById(formData.globalDiscountTypeId) }}</div>
             </div>
             <div class="form-group" ng-if="formData.globalDiscountTypeId === 1" ng-class="validation.fieldCssClass(form, 'barCode')">
-              <label class="control-label">Bar Code</label>
-              <input class="form-control" ng-model="formData.barCode" name="barCode" ng-pattern="regexp.word" ng-required="formData.globalDiscountTypeId === '1'" />
+              <tabset justified="true" ng-hide="isQrCreateHidden()">
+                <tab heading="Bar Code">
+                  <input class="form-control" ng-model="formData.barCode" name="barCode" ng-pattern="regexp.word" />
+                </tab>
+                <tab heading="QR Create" disable="formData.barCode.length">
+                  <qr-create></qr-create>
+                </tab>
+                <tab heading="QR Upload" disable="formData.barCode.length">
+                  <qr-upload></qr-upload>
+                </tab>
+              </tabset>
+              <div class="panel panel-default" ng-show="isQrCodeSet()">
+                <div class="panel-heading">
+                  <p class="panel-title">
+                    <i class="fa fa-image"></i> QR Code
+                    <span class="pull-right btn btn-danger btn-xs" ng-hide="isDisabled()" ng-click="removeQRCode()">
+  						        <i class="fa fa-close"></i>
+  						      </span>
+                  </p>
+                  </p>
+                </div>
+                <div class="panel-body">
+                  <img ng-src="{{ formData.qrCodeImgUrl }}"/>
+                </div>
+              </div>
             </div>
           </fieldset>
         </div>
@@ -139,13 +162,13 @@
                       <div class="input-group-addon">
                         {{ currency.code }} *
                       </div>
-                      <input 
-                        ng-model="formData.amountDiscountValue[currency.id]" 
-                        name="{{ currency.code }}AmountDiscountValue" 
-                        ng-disabled="$parent.isDisabled()" 
-                        type="text" class="form-control" 
+                      <input
+                        ng-model="formData.amountDiscountValue[currency.id]"
+                        name="{{ currency.code }}AmountDiscountValue"
+                        ng-disabled="$parent.isDisabled()"
+                        type="text" class="form-control"
                         ng-pattern="regexp.sixNumberWithTwoDecimal"
-                        maxlength="9" 
+                        maxlength="9"
                         ng-required="formData.discountTypeId === 2 && $parent.shouldValidatePrice()" />
                     </div>
                   </div>
