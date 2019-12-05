@@ -24,6 +24,7 @@ angular.module('ts5App')
     $scope.stationList = [];
     $scope.loadingBarVisible = false;
     $scope.isSearch = false;
+    $scope.searchInProgress = false;
     $scope.daysOfOperation = [
       { id: 1, name: 'Monday' },
       { id: 2, name: 'Tuesday' },
@@ -134,6 +135,7 @@ angular.module('ts5App')
       }));
 
       hideLoadingBar();
+      $scope.searchInProgress = false;
     };
 
     function loadSchedules() {
@@ -160,6 +162,7 @@ angular.module('ts5App')
     };
 
     $scope.searchScheduleData = function() {
+      $scope.searchInProgress = true;
       $scope.schedules = [];
       $this.meta = {
         count: undefined,
