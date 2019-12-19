@@ -5,7 +5,13 @@ npm config set registry http://registry.npmjs.org/
 npm cache clean
 
 echo "!!!!!!!!!!!!!!!! NPM config - start  !!!!!!!!!!!!!!!!"
+npm config get production
+
 npm config list
+
+npm config ls -l
+
+
 echo "!!!!!!!!!!!!!!!! NPM config - start  !!!!!!!!!!!!!!!!"
 
 echo "******* NPM INSTALL - start  *******"
