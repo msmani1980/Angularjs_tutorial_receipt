@@ -4,12 +4,14 @@
 npm config set registry http://registry.npmjs.org/
 npm cache clean
 
+cat package.json
 echo "******* NPM INSTALL - start  *******"
 npm install grunt --save-dev
 npm install --save-dev time-grunt
 npm install --save-dev load-grunt-tasks
 npm install --save-dev jshint-stylish
 npm install autoprefixer-core --save-dev
+npm install csswring --save-dev
 npm install
 echo "******* NPM INSTALL - finish  *******"
 
