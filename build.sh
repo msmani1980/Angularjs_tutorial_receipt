@@ -4,7 +4,10 @@
 npm config set registry http://registry.npmjs.org/
 npm cache clean
 
-cat package.json
+echo "!!!!!!!!!!!!!!!! NPM config - start  !!!!!!!!!!!!!!!!"
+npm config list
+echo "!!!!!!!!!!!!!!!! NPM config - start  !!!!!!!!!!!!!!!!"
+
 echo "******* NPM INSTALL - start  *******"
 npm install grunt --save-dev
 npm install --save-dev time-grunt
@@ -12,7 +15,6 @@ npm install --save-dev load-grunt-tasks
 npm install --save-dev jshint-stylish
 npm install autoprefixer-core --save-dev
 npm install csswring --save-dev
-
 npm install grunt-concurrent --save-dev
 npm install grunt-contrib-clean --save-dev
 npm install grunt-contrib-concat --save-dev
@@ -39,6 +41,13 @@ npm install grunt-wiredep --save-dev
 npm install jasmine-core --save-dev
 npm install jasmine-reporters --save-dev
 npm install jshint-stylish --save-dev
+npm install karma --save-dev
+npm install karma-chrome-launch --save-dev
+npm install karma-covera --save-dev
+npm install karma-firefox-launch --save-dev
+npm install karma-jasmi --save-dev
+npm install karma-ng-html2js-preprocess --save-dev
+npm install karma-ng-json2js-preprocess --save-dev
 npm install pre-commit --save-dev
 npm install
 echo "******* NPM INSTALL - finish  *******"
