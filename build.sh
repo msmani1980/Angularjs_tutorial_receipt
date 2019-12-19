@@ -3,6 +3,7 @@
 
 npm config set registry http://registry.npmjs.org/
 npm cache clean
+npm install grunt --save-dev
 npm install
 bower install
 # grunt test
