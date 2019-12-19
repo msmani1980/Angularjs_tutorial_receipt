@@ -6,8 +6,7 @@ npm cache clean
 npm install grunt --save-dev
 npm install --save-dev time-grunt
 npm install --save-dev load-grunt-tasks
-npm install --save-dev jshint-stylish
-npm install -force
+npm install
 bower install
 # grunt test
 grunt build && grunt jshint && grunt jscs
